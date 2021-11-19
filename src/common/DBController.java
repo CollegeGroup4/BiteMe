@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import logic.Order;
 
@@ -64,7 +65,7 @@ public class DBController {
 	public static ArrayList<String> getOrders(Connection con1) {
 		Statement stmt;
 		Order order;
-		int amountOfOrders = 0, i;
+		int amountOfOrders = 0;
 		ArrayList<String> results = new ArrayList<String>();
 		results.add("GETALL");
 		results.add("ORDER");
@@ -86,7 +87,6 @@ public class DBController {
 		}
 		return results;
 	}
-
 
 	public static ArrayList<String> getOrder(Connection con1, String orderNum) {
 		PreparedStatement stmt;
@@ -113,20 +113,18 @@ public class DBController {
 	}
 
 	public static void updateOrder(Connection con, Order order) {
+		PreparedStatement updateOrder;
 		try {
-			PreparedStatement postOrder = con.prepareStatement(
-					"INSERT INTO biteme.order (Resturant, OrderTime, PhoneNumber, TypeOfOrder, OrderAddress)"
-							+ " VALUES (?,?,?,?,?);");
-			postOrder.setString(1, order.getResturant());
-			postOrder.setTime(2, order.getOrderTime());
-			postOrder.setString(3, order.getPhoneNumber());
-			postOrder.setString(4, order.getOrderType());
-			postOrder.setString(5, order.getOrderAddress());
-			postOrder.execute();
+			updateOrder = con.prepareStatement(
+					"UPDATE biteme.orders " + "SET OrderAddress = ? , TypeOfOrder = ? WHERE OrderNumber = ?");
+			updateOrder.setString(1, order.getOrderAddress());
+			updateOrder.setString(2, order.getOrderType());
+			updateOrder.setInt(2, order.getOrderNum());
+			updateOrder.executeUpdate();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 }
