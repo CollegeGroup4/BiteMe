@@ -5,6 +5,7 @@ package Server;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import common.DBController;
 import ocsf.server.AbstractServer;
@@ -53,12 +54,22 @@ public class EchoServer extends AbstractServer {
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		System.out.println("Message received: " + msg + " from " + client);
-			this.sendToAllClients("Error");
+		ArrayList<String> retDBmsg;
+		String[] temp = (String[]) msg;
+		if (temp[0].equals("EDIT")) {
+			retDBmsg = DBController.getOrder(DBConnect, temp[0]);
+			try {
+				client.sendToClient(retDBmsg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	public void getOrder(Object msg, ConnectionToClient client) {
 		System.out.println("Message received: " + msg + " from " + client);
-		
+
 		try {
 			client.sendToClient(DBController.getOrders(DBConnect));
 		} catch (IOException e) {

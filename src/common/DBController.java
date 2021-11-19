@@ -8,18 +8,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import logic.Order;
 
 public class DBController {
-	
+
 	public static final int ORDER_NUM = 1;
 	public static final int RESTURANT = 2;
 	public static final int ORDER_TIME = 3;
 	public static final int PHONE_NUM = 4;
 	public static final int TYPE_OF_ORDER = 5;
 	public static final int ORDER_ADDRESS = 6;
-	
+
+	public static String[] msg;
+
 	@SuppressWarnings("deprecation")
 	public static Connection getMySQLConnection() {
 		Connection conn = null;
@@ -45,8 +48,9 @@ public class DBController {
 
 	public static void insertOrder(Connection con, Order order) {
 		try {
-			PreparedStatement postOrder = con.prepareStatement("INSERT INTO biteme.order (Resturant, OrderTime, PhoneNumber, TypeOfOrder, OrderAddress)"
-					+ " VALUES (?,?,?,?,?);");
+			PreparedStatement postOrder = con.prepareStatement(
+					"INSERT INTO biteme.order (Resturant, OrderTime, PhoneNumber, TypeOfOrder, OrderAddress)"
+							+ " VALUES (?,?,?,?,?);");
 			postOrder.setString(1, order.getResturant());
 			postOrder.setTime(2, order.getOrderTime());
 			postOrder.setString(3, order.getPhoneNumber());
@@ -57,26 +61,70 @@ public class DBController {
 			e.printStackTrace();
 		}
 	}
-	
-	 public static ArrayList<Order> getOrders(Connection con1) {
-			Statement stmt;
-			Order order;
-			ArrayList<Order> orders = new ArrayList<>();
-			try {
-				stmt = con1.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-				ResultSet rs = stmt.executeQuery("SELECT * FROM biteme.order");
-				while (rs.next()) {
-					order = new Order(rs.getString(DBController.RESTURANT), 
-							rs.getString(DBController.ORDER_ADDRESS),
-							rs.getString(DBController.PHONE_NUM),
-							rs.getTime(DBController.ORDER_TIME),
-							rs.getString(DBController.TYPE_OF_ORDER));
-					order.setOrderNum(DBController.ORDER_NUM);
-					orders.add(order);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+
+	public static ArrayList<String> getOrders(Connection con1) {
+		Statement stmt;
+		Order order;
+		int amountOfOrders = 0;
+		ArrayList<String> results = new ArrayList<String>();
+		results.add("GETALL");
+		results.add("ORDER");
+		try {
+			stmt = con1.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM biteme.order");
+			while (rs.next()) {
+				order = new Order(rs.getString(RESTURANT), rs.getString(ORDER_ADDRESS), rs.getString(PHONE_NUM),
+						rs.getTime(ORDER_TIME), rs.getString(TYPE_OF_ORDER));
+				order.setOrderNum(rs.getInt(ORDER_NUM));
+				results.add(order.toString());
+				amountOfOrders++;
 			}
-			return orders;
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		if (amountOfOrders == 0) {
+			results.add("ERROR");
+		}
+		return results;
+	}
+
+	public static ArrayList<String> getOrder(Connection con1, String orderNum) {
+		PreparedStatement stmt;
+		Order order;
+		ArrayList<String> result = new ArrayList<String>();
+		try {
+			stmt = con1.prepareStatement("SELECT * FROM biteme.order WHERE OrderNumber = ?");
+			stmt.setString(1, orderNum);
+			result.add("GETONE");
+			result.add("ORDER");
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				order = new Order(rs.getString(RESTURANT), rs.getString(ORDER_ADDRESS), rs.getString(PHONE_NUM),
+						rs.getTime(ORDER_TIME), rs.getString(TYPE_OF_ORDER));
+				order.setOrderNum(rs.getInt(ORDER_NUM));
+				result.add(order.toString());
+			} else {
+				result.add("ERROR");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public static void updateOrder(Connection con, Order order) {
+		PreparedStatement updateOrder;
+		try {
+			updateOrder = con.prepareStatement(
+					"UPDATE biteme.orders " + "SET OrderAddress = ? , TypeOfOrder = ? WHERE OrderNumber = ?");
+			updateOrder.setString(1, order.getOrderAddress());
+			updateOrder.setString(2, order.getOrderType());
+			updateOrder.setInt(2, order.getOrderNum());
+			updateOrder.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

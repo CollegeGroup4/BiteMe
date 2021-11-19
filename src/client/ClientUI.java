@@ -1,5 +1,5 @@
 package client;
-import gui.AcademicFrameController;
+import gui.MainScreenController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -16,7 +16,7 @@ public class ClientUI extends Application {
 		 chat= new ClientController("localhost", 5555);
 		// TODO Auto-generated method stub
 						  		
-		AcademicFrameController aFrame = new AcademicFrameController(); // create StudentFrame
+		MainScreenController aFrame = new MainScreenController(); // create StudentFrame
 		 
 		aFrame.start(primaryStage);
 	}
