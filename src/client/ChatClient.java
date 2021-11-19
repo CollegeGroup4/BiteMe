@@ -26,6 +26,7 @@ public class ChatClient extends AbstractClient {
 	 * method in the client.
 	 */
 	ChatIF clientUI;
+	public static String[] serverAns;
 	public static boolean awaitResponse = false;
 
 	// Constructors ****************************************************
@@ -37,11 +38,11 @@ public class ChatClient extends AbstractClient {
 	 * @param port     The port number to connect on.
 	 * @param clientUI The interface type variable.
 	 */
-
+	
 	public ChatClient(String host, int port, ChatIF clientUI) throws IOException {
 		super(host, port); // Call the superclass constructor
 		this.clientUI = clientUI;
-		// openConnection();
+		openConnection();
 	}
 
 	// Instance methods ************************************************
@@ -55,7 +56,8 @@ public class ChatClient extends AbstractClient {
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("--> handleMessageFromServer");
-
+		awaitResponse = false;
+		serverAns = (String[]) msg;
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class ChatClient extends AbstractClient {
 	 * @param message The message from the UI.
 	 */
 
-	public void handleMessageFromClientUI(String message) {
+	public void handleMessageFromClientUI(Object message) {
 		try {
 			openConnection();// in order to send more than one message
 			awaitResponse = true;
