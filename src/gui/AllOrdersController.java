@@ -58,14 +58,20 @@ public class AllOrdersController implements Initializable {
 		id[0] = new String("GETALL");
 		id[1] = new String("ORDER");
 		ClientUI.chat.accept(id);
-	
+
 		if (ChatClient.serverAns.get(2).equals("Error")) {
 			System.out.println("Can't find any orders");
-	
+
 		} else {
-			orderList.add(null)
+			ArrayList<String> orders = ChatClient.serverAns;
+			for (int i = 3; i < orders.size(); i++) {
+ 				String[] result = orders.get(i).split("\\s");
+				Order temp = new Order(result[0], result[1], result[2], Time.valueOf(result[3]), result[4]);
+				orderList.add(temp);
+			}
+
 		}
-		
+
 	}
 
 //	//ahhhh
@@ -85,10 +91,6 @@ public class AllOrdersController implements Initializable {
 //	}
 
 }
-
-
-
-
 
 //@FXML
 //private TableView<Order> tblID;
