@@ -5,11 +5,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="207.0" prefWidth="246.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AcademicFrameController">
+<AnchorPane prefHeight="207.0" prefWidth="246.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainScreenController">
    <children>
-      <Button id="btnExit" fx:id="btnExit" layoutX="160.0" layoutY="164.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
-      <Button id="btnStudentInfo" fx:id="btnSend" layoutX="49.0" layoutY="104.0" mnemonicParsing="false" onAction="#Send" text="Send" />
-      <Label layoutX="11.0" layoutY="53.0" text="Student ID:" />
-      <TextField fx:id="idtxt" layoutX="76.0" layoutY="50.0" />
+      <Button id="btnExit" fx:id="btnExit" layoutX="200.0" layoutY="164.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
+      <Button id="btnStudentInfo" layoutX="15.0" layoutY="164.0" mnemonicParsing="false" onAction="#ShowAllOrders" text="All Orders" />
+      <Label layoutX="15.0" layoutY="87.0" text="Order ID:" />
+      <TextField fx:id="idtxt" layoutX="72.0" layoutY="83.0" prefHeight="25.0" prefWidth="80.0" />
+      <Label layoutX="15.0" layoutY="48.0" />
+      <Button layoutX="165.0" layoutY="83.0" mnemonicParsing="false" onAction="#EditOrder" text="Edit Order" />
    </children>
 </AnchorPane>
