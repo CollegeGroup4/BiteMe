@@ -68,4 +68,17 @@ public class Order {
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuffer tostring = new StringBuffer();
+		tostring.append("[");
+		tostring.append(getOrderNum() + ", ");
+		tostring.append(getResturant() + ", ");
+		tostring.append(getOrderTime() + ", ");
+		tostring.append(getPhoneNumber() + ", ");
+		tostring.append(getOrderType() + ", ");
+		tostring.append(getOrderAddress() + "]");
+		return tostring.toString();
+	}
 }

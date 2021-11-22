@@ -2,7 +2,6 @@ package gui;
 
 import java.io.IOException;
 
-
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
@@ -19,122 +18,123 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+public class MainScreenController {
 
-public  class MainScreenController   {
-	private StudentFormController sfc;	
-	private static int itemIndex = 3;
-	
-    @FXML
-    private Button btnExit;
+	@FXML
+	private Button btnExit;
 
-    @FXML
-    private TextField idtxt;
+	@FXML
+	private TextField idtxt;
 
-    @FXML
-    void EditOrder(ActionEvent event) {
+	@FXML
+	private Button showAllBTN;
 
+	@FXML
+	void EditOrder(ActionEvent event) {
+		/*
+		 * String[] id = new String[2]; FXMLLoader loader = new FXMLLoader(); id[0] =
+		 * new String("EDIT"); id[1] = new String(idtxt.getText()); if
+		 * (id[1].trim().isEmpty()) { System.out.println("You must enter an id number");
+		 * } else { ClientUI.chat.accept(id);
+		 * 
+		 * if (ChatClient.serverAns[0].equals("Error")) {
+		 * System.out.println("Student ID Not Found");
+		 * 
+		 * } else { System.out.println("Student ID Found"); ((Node)
+		 * event.getSource()).getScene().getWindow().hide(); // hiding primary window
+		 * Stage primaryStage = new Stage(); Pane root =
+		 * loader.load(getClass().getResource("/gui/StudentForm.fxml").openStream());
+		 * StudentFormController studentFormController = loader.getController();
+		 * studentFormController.loadStudent(ChatClient.serverAns);
+		 * 
+		 * Scene scene = new Scene(root);
+		 * scene.getStylesheets().add(getClass().getResource("/gui/StudentForm.css").
+		 * toExternalForm()); primaryStage.setTitle("Student Managment Tool");
+		 * 
+		 * primaryStage.setScene(scene); primaryStage.show(); } }
+		 */
+	}
+
+	@FXML
+	void ShowAllOrders(ActionEvent event) throws Exception {
 		String[] id = new String[2];
 		FXMLLoader loader = new FXMLLoader();
-		id[0] = new String("EDIT");
-		id[1] = new String(idtxt.getText());
-		if (id[1].trim().isEmpty()) {
-			System.out.println("You must enter an id number");
+		id[0] = new String("GETALL");
+		id[1] = new String("ORDER");
+		ClientUI.chat.accept(id);
+
+		if (ChatClient.serverAns.get(2).equals("Error")) {
+			System.out.println("Can't find any orders");
+
 		} else {
-			ClientUI.chat.accept(id);
+			System.out.println("Orders Found");
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			Pane root = loader.load(getClass().getResource("/gui/AllOrders.fxml").openStream());
+			AllOrdersController allorderscontroller = loader.getController();
+			allorderscontroller.insertOrders(ChatClient.serverAns);
 
-			if (ChatClient.serverAns[0].equals("Error")) {
-				System.out.println("Student ID Not Found");
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(getClass().getResource("/gui/AllOrdersForm.css").toExternalForm());
+			primaryStage.setTitle("Student Managment Tool");
 
-			} else {
-				System.out.println("Student ID Found");
-				((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-				Stage primaryStage = new Stage();
-				Pane root = loader.load(getClass().getResource("/gui/StudentForm.fxml").openStream());
-				StudentFormController studentFormController = loader.getController();
-				studentFormController.loadStudent(ChatClient.serverAns);
-
-				Scene scene = new Scene(root);
-				scene.getStylesheets().add(getClass().getResource("/gui/StudentForm.css").toExternalForm());
-				primaryStage.setTitle("Student Managment Tool");
-
-				primaryStage.setScene(scene);
-				primaryStage.show();
-			}
+			primaryStage.setScene(scene);
+			primaryStage.show();
 		}
-    }
+	}
 
-    @FXML
-    void ShowAllOrders(ActionEvent event) {
+	@FXML
+	void getExitBtn(ActionEvent event) {
+		System.out.println("exit Academic Tool");
+		System.exit(0);
+	}
 
-    }
-
-    @FXML
-    void getExitBtn(ActionEvent event) {
-    	System.out.println("exit Academic Tool");
-    	System.exit(0);
-    }
-	
 	private String getID() {
 		return idtxt.getText();
 	}
-	
+
 	public void Send(ActionEvent event) throws Exception {
-		String id;
-		FXMLLoader loader = new FXMLLoader();
-		
-		id=getID();
-		if(id.trim().isEmpty())
-		{
-
-			System.out.println("You must enter an id number");	
-		}
-		else
-		{
-			ClientUI.chat.accept(id);
-			
-		
-			if(ChatClient.s1.getId().equals("Error"))
-			{
-				System.out.println("Student ID Not Found");
-				
-			}
-			else {
-				System.out.println("Student ID Found");
-				((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-				Stage primaryStage = new Stage();
-				Pane root = loader.load(getClass().getResource("/gui/StudentForm.fxml").openStream());
-				StudentFormController studentFormController = loader.getController();		
-				studentFormController.loadStudent(ChatClient.s1);
-			
-				Scene scene = new Scene(root);			
-				scene.getStylesheets().add(getClass().getResource("/gui/StudentForm.css").toExternalForm());
-				primaryStage.setTitle("Student Managment Tool");
-	
-				primaryStage.setScene(scene);		
-				primaryStage.show();
-			}
-		}
+		/*
+		 * String id; FXMLLoader loader = new FXMLLoader();
+		 * 
+		 * id=getID(); if(id.trim().isEmpty()) {
+		 * 
+		 * System.out.println("You must enter an id number"); } else {
+		 * ClientUI.chat.accept(id);
+		 * 
+		 * 
+		 * if(ChatClient.s1.getId().equals("Error")) {
+		 * System.out.println("Student ID Not Found");
+		 * 
+		 * } else { System.out.println("Student ID Found");
+		 * ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary
+		 * window Stage primaryStage = new Stage(); Pane root =
+		 * loader.load(getClass().getResource("/gui/StudentForm.fxml").openStream());
+		 * AllOrders studentFormController = loader.getController();
+		 * studentFormController.loadStudent(ChatClient.s1);
+		 * 
+		 * Scene scene = new Scene(root);
+		 * scene.getStylesheets().add(getClass().getResource("/gui/StudentForm.css").
+		 * toExternalForm()); primaryStage.setTitle("Student Managment Tool");
+		 * 
+		 * primaryStage.setScene(scene); primaryStage.show(); } }
+		 */
 	}
 
-	public void start(Stage primaryStage) throws Exception {	
-		Parent root = FXMLLoader.load(getClass().getResource("/gui/AcademicFrame.fxml"));
-				
+	public void start(Stage primaryStage) throws Exception {
+		Parent root = FXMLLoader.load(getClass().getResource("/gui/MainScreen.fxml"));
+
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/AcademicFrame.css").toExternalForm());
-		primaryStage.setTitle("Academic Managment Tool");
+		scene.getStylesheets().add(getClass().getResource("/gui/MainScreen.css").toExternalForm());
+		primaryStage.setTitle("Order Manager");
 		primaryStage.setScene(scene);
-		
-		primaryStage.show();	 	   
+
+		primaryStage.show();
 	}
-	
-	
-//	public void loadStudent(Student s1) {
-//		this.sfc.loadStudent(s1);
-//	}	
-	
-	public  void display(String message) {
+
+	public void display(String message) {
 		System.out.println("message");
-		
+
 	}
-	
+
 }
