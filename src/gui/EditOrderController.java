@@ -15,29 +15,29 @@ import logic.Order;
 
 public class EditOrderController {
 
-	@FXML
-	private ComboBox cmbTypeOfOrder;
+    @FXML
+    private ComboBox cmbTypeOfOrder;
 
-	@FXML
-	private TextField txtOrderID;
+    @FXML
+    private TextField txtOrderID;
 
-	@FXML
-	private TextField txtRestaurant;
+    @FXML
+    private TextField txtRestaurant;
 
-	@FXML
-	private TextField txtAddress;
+    @FXML
+    private TextField txtAddress;
 
-	@FXML
-	private Text txtTime;
+    @FXML
+    private TextField txtTime;
 
-	@FXML
-	private TextField txtPhone;
+    @FXML
+    private TextField txtPhone;
 
-	@FXML
-	private Button btnUpdate;
+    @FXML
+    private Button btnUpdate;
 
-	@FXML
-	private Button btnBack;
+    @FXML
+    private Button btnBack;
 
 	ObservableList<String> list;
 
