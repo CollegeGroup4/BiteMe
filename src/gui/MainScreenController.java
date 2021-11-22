@@ -29,6 +29,8 @@ public class MainScreenController {
 	@FXML
 	private Button showAllBTN;
 
+	FXMLLoader loader = new FXMLLoader();
+	
 	@FXML
 	void EditOrder(ActionEvent event) {
 		/*
@@ -82,6 +84,7 @@ public class MainScreenController {
 			primaryStage.show();
 		}
 	}
+
 
 	@FXML
 	void getExitBtn(ActionEvent event) {
