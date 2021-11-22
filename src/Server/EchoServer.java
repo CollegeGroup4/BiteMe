@@ -62,7 +62,17 @@ public class EchoServer extends AbstractServer {
 			if (temp[1].equals("ORDER")) {
 				orders = DBController.getOrders(con);
 			}
+		} else
+		if (temp[0].equals("GET")) {
+			if (temp[1].equals("ORDER")) {
+					orders = DBController.getOrder(con, temp[2]);
+			}
 		}
+		
+		
+		
+		
+		
 		try {
 			client.sendToClient(orders);
 		} catch (IOException e) {

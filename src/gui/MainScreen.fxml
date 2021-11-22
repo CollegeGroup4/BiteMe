@@ -10,7 +10,7 @@
       <Button id="btnExit" fx:id="btnExit" layoutX="200.0" layoutY="164.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
       <Button id="btnStudentInfo" fx:id="showAllBTN" layoutX="15.0" layoutY="164.0" mnemonicParsing="false" onAction="#ShowAllOrders" text="All Orders" />
       <Label layoutX="15.0" layoutY="87.0" text="Order ID:" />
-      <TextField fx:id="idtxt" layoutX="72.0" layoutY="83.0" prefHeight="25.0" prefWidth="80.0" />
+      <TextField fx:id="idID" layoutX="72.0" layoutY="83.0" prefHeight="25.0" prefWidth="80.0" />
       <Label layoutX="15.0" layoutY="48.0" />
       <Button layoutX="165.0" layoutY="83.0" mnemonicParsing="false" onAction="#EditOrder" text="Edit Order" />
    </children>
