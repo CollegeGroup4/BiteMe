@@ -46,8 +46,7 @@ public class AllOrdersController implements Initializable {
     @FXML
     private Button btnBack;
 
-	ObservableList<Order> orderList = FXCollections
-			.observableArrayList(new Order("steak", "raines", "055", Time.valueOf("19:05:23"), "delivered"));
+	ObservableList<Order> orderList = FXCollections.observableArrayList();
 	
     @FXML
     void Back(ActionEvent event) {
@@ -84,7 +83,7 @@ public class AllOrdersController implements Initializable {
 
 		} else {
 			ArrayList<String> orders = ChatClient.serverAns;
-			for (int i = 3; i < orders.size(); i++) {
+			for (int i = 2; i < orders.size(); i++) {
  				String[] result = orders.get(i).split(",");
 				Order temp = new Order(result[0], result[1], result[2], Time.valueOf(result[3]), result[4]);
 				temp.setOrderNum(Integer.valueOf(result[5]));

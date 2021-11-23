@@ -3,6 +3,7 @@ package gui;
 import javafx.event.ActionEvent;
 import java.net.InetAddress;
 
+import Server.ServerPortFrameController;
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
@@ -97,7 +98,7 @@ public class ClientMainScreenController {
 
 				Scene scene = new Scene(root);
 				scene.getStylesheets().add(getClass().getResource("/gui/MainScreen.css").toExternalForm());
-				primaryStage.setTitle("Student Managment Tool");
+				primaryStage.setTitle("Order");
 
 				primaryStage.setScene(scene);
 				primaryStage.show();

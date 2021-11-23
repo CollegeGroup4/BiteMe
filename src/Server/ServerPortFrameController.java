@@ -1,4 +1,4 @@
-package gui;
+package Server;
 
 import java.net.InetAddress;
 import java.net.URL;
@@ -34,8 +34,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import ocsf.server.ConnectionToClient;
-import Server.EchoServer;
-import Server.ServerUI;
 import common.DBController;
 
 public class ServerPortFrameController implements Initializable {
@@ -183,9 +181,9 @@ public class ServerPortFrameController implements Initializable {
 
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
-		Parent root = FXMLLoader.load(getClass().getResource("/gui/ServerPort.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/Server/ServerPort.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/ServerPort.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/Server/ServerPort.css").toExternalForm());
 		ServerPortFrameController serverPortFrameController = loader.getController();
 		setAllLables();
 		primaryStage.setTitle("Server");
