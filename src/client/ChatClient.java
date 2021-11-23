@@ -5,6 +5,7 @@
 package client;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import common.ChatIF;
 import ocsf.client.AbstractClient;
@@ -26,7 +27,7 @@ public class ChatClient extends AbstractClient {
 	 * method in the client.
 	 */
 	ChatIF clientUI;
-	public static String[] serverAns;
+	public static ArrayList<String> serverAns = new ArrayList<String>();
 	public static boolean awaitResponse = false;
 
 	// Constructors ****************************************************
@@ -42,7 +43,6 @@ public class ChatClient extends AbstractClient {
 	public ChatClient(String host, int port, ChatIF clientUI) throws IOException {
 		super(host, port); // Call the superclass constructor
 		this.clientUI = clientUI;
-		openConnection();
 	}
 
 	// Instance methods ************************************************
@@ -53,11 +53,12 @@ public class ChatClient extends AbstractClient {
 	 * @param msg The message from the server.
 	 */
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("--> handleMessageFromServer");
 		awaitResponse = false;
-		serverAns = (String[]) msg;
+		serverAns = (ArrayList<String>) msg;
 	}
 
 	/**

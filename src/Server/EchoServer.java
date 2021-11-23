@@ -8,8 +8,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import common.DBController;
-import ocsf.server.AbstractServer;
-import ocsf.server.ConnectionToClient;
+import ocsf.server.*;
 
 /**
  * This class overrides some of the methods in the abstract superclass in order
@@ -24,7 +23,7 @@ import ocsf.server.ConnectionToClient;
 
 public class EchoServer extends AbstractServer {
 	// Class variables *************************************************
-	Connection DBConnect;
+
 	/**
 	 * The default port to listen on.
 	 */
@@ -38,6 +37,8 @@ public class EchoServer extends AbstractServer {
 	 * @param port The port number to connect on.
 	 * 
 	 */
+	public static ArrayList<String> orders = new ArrayList<String>();
+	Connection con;
 
 	public EchoServer(int port) {
 		super(port);
@@ -53,28 +54,32 @@ public class EchoServer extends AbstractServer {
 	 * @param
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
+
 		System.out.println("Message received: " + msg + " from " + client);
-		ArrayList<String> retDBmsg;
+
 		String[] temp = (String[]) msg;
-		if (temp[0].equals("EDIT")) {
-			retDBmsg = DBController.getOrder(DBConnect, temp[0]);
-			try {
-				client.sendToClient(retDBmsg);
-			} catch (IOException e) {
-				e.printStackTrace();
+		if (temp[0].equals("GETALL")) {
+			if (temp[1].equals("ORDER")) {
+				orders = DBController.getOrders(con);
+			}
+		} else
+		if (temp[0].equals("GET")) {
+			if (temp[1].equals("ORDER")) {
+					orders = DBController.getOrder(con, temp[2]);
 			}
 		}
-
-	}
-
-	public void getOrder(Object msg, ConnectionToClient client) {
-		System.out.println("Message received: " + msg + " from " + client);
-
+		
+		
+		
+		
+		
 		try {
-			client.sendToClient(DBController.getOrders(DBConnect));
+			client.sendToClient(orders);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 	/**
@@ -82,7 +87,8 @@ public class EchoServer extends AbstractServer {
 	 * starts listening for connections.
 	 */
 	protected void serverStarted() {
-		DBConnect = DBController.getMySQLConnection();
+		System.out.println("Server listening for connections on port " + getPort());
+		con = DBController.getMySQLConnection();
 	}
 
 	/**

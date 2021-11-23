@@ -20,12 +20,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Faculty;
-import logic.Student;
 import Server.EchoServer;
 import Server.ServerUI;
 
 public class ServerPortFrameController  {
-	private StudentFormController sfc;	
+	private AllOrdersController sfc;	
 	
 	String temp="";
 	

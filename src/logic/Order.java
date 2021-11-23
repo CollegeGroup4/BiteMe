@@ -68,4 +68,21 @@ public class Order {
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder tostring = new StringBuilder();
+		tostring.append(getResturant() + ",");
+		tostring.append(getOrderAddress() + ",");
+		tostring.append(getPhoneNumber() + ",");
+		tostring.append(getOrderTime() + ",");
+		tostring.append(getOrderType() + ",");
+		tostring.append(getOrderNum());
+		return tostring.toString();
+	}
+//	@Override
+//	public String toString(){
+//		return String.format("%s,%s,%s,%s,%s,%s",getResturant(),getOrderAddress(),getPhoneNumber(),getOrderTime().toString(), getOrderType(), getOrderNum());
+//	}
+
 }
