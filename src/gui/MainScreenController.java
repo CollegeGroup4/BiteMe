@@ -43,10 +43,10 @@ public class MainScreenController {
 		} else {
 			ClientUI.chat.accept(id);
 
-			if (ChatClient.serverAns.get(2).equals("Error")) {
-				System.out.println("Student ID Not Found");
+			if (ChatClient.serverAns.get(2).equals("ERROR")) {
+				System.out.println("Order ID Not Found");
 			} else {
-				System.out.println("Student ID Found");
+				System.out.println("Order ID Found");
 				((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 				Stage primaryStage = new Stage();
 				Pane root = loader.load(getClass().getResource("/gui/EditOrderForm.fxml").openStream());
@@ -132,7 +132,6 @@ public class MainScreenController {
 
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/MainScreen.fxml"));
-
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/MainScreen.css").toExternalForm());
 		primaryStage.setTitle("Order Manager");

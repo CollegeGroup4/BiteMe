@@ -9,11 +9,15 @@ import client.ChatClient;
 import client.ClientUI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import logic.Order;
 
 public class AllOrdersController implements Initializable {
@@ -38,9 +42,25 @@ public class AllOrdersController implements Initializable {
 
 	@FXML
 	private TableColumn<Order, String> OrderAddress;
+	
+    @FXML
+    private Button btnBack;
 
 	ObservableList<Order> orderList = FXCollections
 			.observableArrayList(new Order("steak", "raines", "055", Time.valueOf("19:05:23"), "delivered"));
+	
+    @FXML
+    void Back(ActionEvent event) {
+		((Node) event.getSource()).getScene().getWindow().hide();
+		Stage primaryStage = new Stage();
+		MainScreenController aFrame = new MainScreenController(); // create StudentFrame
+		try {
+			aFrame.start(primaryStage);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
 	@Override
 	public void initialize(URL url, ResourceBundle db) {

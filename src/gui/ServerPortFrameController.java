@@ -70,6 +70,15 @@ public class ServerPortFrameController implements Initializable {
 	private Button btnDsconnect;
 
 	public class Client {
+
+		@Override
+		public boolean equals(Object obj) {
+			Client temp = (Client) obj;
+			if(ip.equals(temp.getIp()))
+				return true;
+			return false;
+		}
+
 		private String ip;
 		private String hostName;
 
@@ -95,6 +104,10 @@ public class ServerPortFrameController implements Initializable {
 			this.hostName = hostName;
 		}
 
+		private ServerPortFrameController getEnclosingInstance() {
+			return ServerPortFrameController.this;
+		}
+
 	}
 
 	ObservableList<Client> listClients = FXCollections.observableArrayList();
@@ -117,9 +130,13 @@ public class ServerPortFrameController implements Initializable {
 //		}
 	}
 
-	public void insertClients(ConnectionToClient ConnectionClient) {
-		listClients.add(new Client(ConnectionClient.getInetAddress().getCanonicalHostName(),
-				ConnectionClient.getInetAddress().getHostAddress()));
+	public void manageClientsList(ConnectionToClient ConnectionClient) {
+		Client client = new Client(ConnectionClient.getInetAddress().getCanonicalHostName(),
+				ConnectionClient.getInetAddress().getHostAddress());
+		if (listClients.contains(client))
+			listClients.remove(client);
+		else
+			listClients.add(client);
 	}
 
 	@FXML

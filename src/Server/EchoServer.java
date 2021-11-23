@@ -5,12 +5,14 @@ package Server;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Time;
 import java.util.ArrayList;
 
 import com.mysql.cj.admin.ServerController;
 
 import common.DBController;
 import gui.ServerPortFrameController;
+import logic.Order;
 import ocsf.server.*;
 
 /**
@@ -33,9 +35,8 @@ public class EchoServer extends AbstractServer {
 	// final public static int DEFAULT_PORT = 5555;
 
 	// Constructors ****************************************************
-	public static String url,username,password;
+	public static String url, username, password;
 
-	
 	/**
 	 * Constructs an instance of the echo server.
 	 *
@@ -44,9 +45,13 @@ public class EchoServer extends AbstractServer {
 	 */
 	public static ArrayList<String> orders = new ArrayList<String>();
 	Connection con;
+	public static ServerPortFrameController serverController;
 
 	public EchoServer(int port) {
 		super(port);
+	}
+	public void setController(ServerPortFrameController aFrame) {
+		serverController = aFrame;
 	}
 
 	// Instance methods ************************************************
@@ -67,17 +72,18 @@ public class EchoServer extends AbstractServer {
 			if (temp[1].equals("ORDER")) {
 				orders = DBController.getOrders(con);
 			}
-		} else
-		if (temp[0].equals("GET")) {
+		} else if (temp[0].equals("GET")) {
 			if (temp[1].equals("ORDER")) {
-					orders = DBController.getOrder(con, temp[2]);
+				orders = DBController.getOrder(con, temp[2]);
 			}
+		} else if (temp[0].equals("UPDATE")) {
+			if (temp[1].equals("ORDER")) {
+				orders = DBController.updateOrder(con, stringToOrder(temp[2]));
+			}
+		} else if (temp[0].equals("PING")) {
+			serverController.manageClientsList(client);
 		}
-		
-		
-		
-		
-		
+
 		try {
 			client.sendToClient(orders);
 		} catch (IOException e) {
@@ -85,6 +91,14 @@ public class EchoServer extends AbstractServer {
 			e.printStackTrace();
 		}
 
+	}
+
+	private Order stringToOrder(String orderString) {
+		String[] result = orderString.split(",");
+		Order temp = new Order(result[0], result[1], result[2], Time.valueOf(result[3]), result[4]);
+		temp.setOrderNum(Integer.valueOf(result[5]));
+		System.out.println(temp);
+		return temp;
 	}
 
 	/**
