@@ -124,6 +124,11 @@ public class EditOrderController implements Initializable{
 	// @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		setFacultyComboBox();
+		txtOrderID.setEditable(false);
+		txtPhone.setEditable(false);
+		txtRestaurant.setEditable(false);
+		txtTime.setEditable(false);
+		
 	}
 
 	private void setType(String type1, String type2, String type3) {

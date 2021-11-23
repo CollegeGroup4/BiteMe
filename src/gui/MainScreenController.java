@@ -1,15 +1,13 @@
 package gui;
 
-import java.io.IOException;
-
 import client.ChatClient;
-import client.ClientController;
+
 import client.ClientUI;
-import common.ChatIF;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+
 import javafx.scene.Parent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -30,9 +28,9 @@ public class MainScreenController {
 	private Button showAllBTN;
 
 	FXMLLoader loader = new FXMLLoader();
-	
+
 	@FXML
-	void EditOrder(ActionEvent event) throws Exception{
+	void EditOrder(ActionEvent event) throws Exception {
 		String[] id = new String[3];
 		FXMLLoader loader = new FXMLLoader();
 		id[0] = new String("GET");
@@ -90,7 +88,6 @@ public class MainScreenController {
 			primaryStage.show();
 		}
 	}
-
 
 	@FXML
 	void getExitBtn(ActionEvent event) {

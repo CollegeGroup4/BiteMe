@@ -43,7 +43,8 @@ public class EchoServer extends AbstractServer {
 	 * @param port The port number to connect on.
 	 * 
 	 */
-	public static ArrayList<String> orders = new ArrayList<String>();
+	public static ArrayList<String> res;
+	public static String[] port = new String[2];
 	Connection con;
 	public static ServerPortFrameController serverController;
 
@@ -70,22 +71,25 @@ public class EchoServer extends AbstractServer {
 		String[] temp = (String[]) msg;
 		if (temp[0].equals("GETALL")) {
 			if (temp[1].equals("ORDER")) {
-				orders = DBController.getOrders(con);
+				res = DBController.getOrders(con);
 			}
 		} else if (temp[0].equals("GET")) {
 			if (temp[1].equals("ORDER")) {
-				orders = DBController.getOrder(con, temp[2]);
+				res = DBController.getOrder(con, temp[2]);
 			}
 		} else if (temp[0].equals("UPDATE")) {
 			if (temp[1].equals("ORDER")) {
-				orders = DBController.updateOrder(con, stringToOrder(temp[2]));
+				res = DBController.updateOrder(con, stringToOrder(temp[2]));
 			}
 		} else if (temp[0].equals("PING")) {
 			serverController.manageClientsList(client);
+			res = new ArrayList<String>();
+			res.add("PORT");
+			res.add(serverController.getport());
 		}
 
 		try {
-			client.sendToClient(orders);
+			client.sendToClient(res);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

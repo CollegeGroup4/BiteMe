@@ -6,6 +6,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.sun.tools.javac.util.List;
+
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -133,6 +136,7 @@ public class ServerPortFrameController implements Initializable {
 	public void manageClientsList(ConnectionToClient ConnectionClient) {
 		Client client = new Client(ConnectionClient.getInetAddress().getCanonicalHostName(),
 				ConnectionClient.getInetAddress().getHostAddress());
+		
 		if (listClients.contains(client))
 			listClients.remove(client);
 		else

@@ -1,12 +1,8 @@
 package gui;
 
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.net.ConnectException;
+import javafx.event.ActionEvent;
 import java.net.InetAddress;
 
-import Server.EchoServer;
-import Server.ServerUI;
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
@@ -54,7 +50,7 @@ public class ClientMainScreenController {
 	public String getportText() {
 		return portText.getText();
 	}
-	public void getportFromServet(String serverPort) {
+	public void getportFromServer(String serverPort) {
 		 port = serverPort;
 	}
 	public void start(Stage primaryStage) throws Exception {
@@ -76,6 +72,7 @@ public class ClientMainScreenController {
 	@FXML
 	void confirmClient(ActionEvent event) throws Exception {
 		ClientUI.chat= new ClientController("localhost", 5555);
+		FXMLLoader loader = new FXMLLoader();
 		String[] ipHostName = new String[3];
 		ipHostName[0] = "PING";
 		ipHostName[1] = InetAddress.getLocalHost().getCanonicalHostName();
@@ -85,7 +82,8 @@ public class ClientMainScreenController {
 		}catch(NullPointerException e) {
 			System.out.println("new ClientController didn't work");
 		}
-		FXMLLoader loader = new FXMLLoader();
+		if(ChatClient.serverAns.get(0).equals("PORT"))
+			getportFromServer(ChatClient.serverAns.get(1));
 		String p = getportText();
 		if (p.trim().isEmpty()) {
 			labelIncorect.setText("incorect");
@@ -94,13 +92,11 @@ public class ClientMainScreenController {
 			if (p.equals(port)) {
 				((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 				Stage primaryStage = new Stage();
-				Pane root = loader.load(getClass().getResource("/gui/MainSceen.fxml").openStream());
+				Pane root = loader.load(getClass().getResource("/gui/MainScreen.fxml").openStream());
 				MainScreenController mainScreenController = loader.getController();
-				// need to sent the client msg that the client connect!!
-				// mainScreenController.
 
 				Scene scene = new Scene(root);
-				scene.getStylesheets().add(getClass().getResource("/gui/MainSceen.css").toExternalForm());
+				scene.getStylesheets().add(getClass().getResource("/gui/MainScreen.css").toExternalForm());
 				primaryStage.setTitle("Student Managment Tool");
 
 				primaryStage.setScene(scene);
