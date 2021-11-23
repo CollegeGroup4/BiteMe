@@ -9,6 +9,8 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JTextField;
+
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -68,7 +71,8 @@ public class ServerPortFrameController implements Initializable {
 	private TextField lblDBName;// jdbc:mysql://localhost:3306/biteme
 
 	@FXML
-	private TextField lblDBPassword;
+	private PasswordField lblDBPassword;
+	
 	@FXML
 	private Label lblmsgConnect;
 
@@ -197,6 +201,15 @@ public class ServerPortFrameController implements Initializable {
 		System.exit(0);
 	}
 
+
+	private void setAllLables() {
+		setIP();
+		setport();
+		setDBName();
+		setlblDBUser();
+		setDBPassword();
+	}
+	
 	private void setIP() {
 
 		lblIP = new TextField("192.168.56.1");
@@ -207,26 +220,16 @@ public class ServerPortFrameController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		lblIP.setPromptText("jnvjnfjnv");
-//		lblIP.setFocusTraversable(false);
-		// lblIP.setText("192.168.56.1");
-
+		lblIP.setText("192.168.56.1");
 	}
 
-	private void setAllLables() {
-		setIP();
-		setport();
-		setDBName();
-		setlblDBUser();
-		setDBPassword();
-	}
 
 	public String getIP() {
 		return lblIP.getText();
 	}
 
 	private void setport() {
-		lblPort = new TextField();
+		lblPort = new TextField("5555");
 		lblPort.setText("5555");
 	}
 
@@ -253,7 +256,7 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	private void setDBPassword() {
-		lblDBPassword = new TextField("MoshPe2969999");
+		lblDBPassword = new PasswordField();
 		lblDBPassword.setText("MoshPe2969999");
 	}
 
