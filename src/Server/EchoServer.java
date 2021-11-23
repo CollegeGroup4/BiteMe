@@ -7,13 +7,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Time;
 import java.util.ArrayList;
-
-import com.mysql.cj.admin.ServerController;
+import java.util.HashMap;
+import java.util.Map;
 
 import common.DBController;
 import gui.ServerPortFrameController;
 import logic.Order;
-import ocsf.server.*;
+import ocsf.server.AbstractServer;
+import ocsf.server.ConnectionToClient;
 
 /**
  * This class overrides some of the methods in the abstract superclass in order
@@ -32,10 +33,11 @@ public class EchoServer extends AbstractServer {
 	/**
 	 * The default port to listen on.
 	 */
-	// final public static int DEFAULT_PORT = 5555;
+	public static int DEFAULT_PORT;
 
 	// Constructors ****************************************************
 	public static String url, username, password;
+	public static Map<String, String> clients = new HashMap<>();
 
 	/**
 	 * Constructs an instance of the echo server.
@@ -51,6 +53,7 @@ public class EchoServer extends AbstractServer {
 	public EchoServer(int port) {
 		super(port);
 	}
+
 	public void setController(ServerPortFrameController aFrame) {
 		serverController = aFrame;
 	}
@@ -82,12 +85,15 @@ public class EchoServer extends AbstractServer {
 				res = DBController.updateOrder(con, stringToOrder(temp[2]));
 			}
 		} else if (temp[0].equals("PING")) {
-			serverController.manageClientsList(client);
+			clients.put(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
 			res = new ArrayList<String>();
 			res.add("PORT");
-			res.add(serverController.getport());
+			res.add(String.valueOf(DEFAULT_PORT));
+			ServerPortFrameController.isAdded = true;
+		} else if (temp[0].equals("EXIT")) {
+			clients.remove(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
+			ServerPortFrameController.isAdded = true;
 		}
-
 		try {
 			client.sendToClient(res);
 		} catch (IOException e) {

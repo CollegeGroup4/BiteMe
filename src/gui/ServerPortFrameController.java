@@ -4,11 +4,14 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ResourceBundle;
-
-import com.sun.tools.javac.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -77,7 +80,7 @@ public class ServerPortFrameController implements Initializable {
 		@Override
 		public boolean equals(Object obj) {
 			Client temp = (Client) obj;
-			if(ip.equals(temp.getIp()))
+			if (ip.equals(temp.getIp()))
 				return true;
 			return false;
 		}
@@ -95,16 +98,8 @@ public class ServerPortFrameController implements Initializable {
 			return ip;
 		}
 
-		public void setIp(String ip) {
-			this.ip = ip;
-		}
-
 		public String getHostName() {
 			return hostName;
-		}
-
-		public void setHostName(String hostName) {
-			this.hostName = hostName;
 		}
 
 		private ServerPortFrameController getEnclosingInstance() {
@@ -114,14 +109,23 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	ObservableList<Client> listClients = FXCollections.observableArrayList();
+	public static boolean isAdded = false;
 
 	@Override
 	public void initialize(URL url, ResourceBundle db) {
-
 		ip.setCellValueFactory(new PropertyValueFactory<Client, String>("ip"));
 		hostName.setCellValueFactory(new PropertyValueFactory<Client, String>("hostName"));
-
 		tblIP.setItems(listClients);
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				if (isAdded) {
+					manageClientsList();
+					isAdded = false;
+				}
+			}
+		}, 0, 1000);
 		// this is us - we don't need it for the presentation
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //		try {
@@ -133,14 +137,13 @@ public class ServerPortFrameController implements Initializable {
 //		}
 	}
 
-	public void manageClientsList(ConnectionToClient ConnectionClient) {
-		Client client = new Client(ConnectionClient.getInetAddress().getCanonicalHostName(),
-				ConnectionClient.getInetAddress().getHostAddress());
-		
-		if (listClients.contains(client))
-			listClients.remove(client);
-		else
-			listClients.add(client);
+	public void manageClientsList() {
+		listClients.clear();
+		for (String value : EchoServer.clients.keySet()) {
+			Client clientToAdd = new Client(value, EchoServer.clients.get(value));
+			System.out.println(value);
+			listClients.add(clientToAdd);
+		}
 	}
 
 	@FXML
@@ -160,6 +163,7 @@ public class ServerPortFrameController implements Initializable {
 			EchoServer.url = getDBName();
 			EchoServer.username = getlblDBUser();
 			EchoServer.password = getDBPassword();
+			EchoServer.DEFAULT_PORT = Integer.valueOf(getport());
 			ServerUI.runServer(p);
 			// send the client name to DB
 
@@ -180,7 +184,6 @@ public class ServerPortFrameController implements Initializable {
 		scene.getStylesheets().add(getClass().getResource("/gui/ServerPort.css").toExternalForm());
 		ServerPortFrameController serverPortFrameController = loader.getController();
 		setAllLables();
-
 		primaryStage.setTitle("Server");
 		primaryStage.setScene(scene);
 

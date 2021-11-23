@@ -75,7 +75,7 @@ public class ClientMainScreenController {
 		FXMLLoader loader = new FXMLLoader();
 		String[] ipHostName = new String[3];
 		ipHostName[0] = "PING";
-		ipHostName[1] = InetAddress.getLocalHost().getCanonicalHostName();
+		ipHostName[1] = InetAddress.getLocalHost().getHostName();
 		ipHostName[2] = InetAddress.getLocalHost().getHostAddress();
 		try {
 			ClientUI.chat.accept(ipHostName);

@@ -19,7 +19,7 @@ public class ServerUI extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		ServerPortFrameController aFrame = new ServerPortFrameController(); // create StudentFrame
-		serverController = aFrame;
+		EchoServer.serverController = aFrame;
 		aFrame.start(primaryStage);
 	}
 

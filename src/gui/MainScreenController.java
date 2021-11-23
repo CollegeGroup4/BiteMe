@@ -1,5 +1,7 @@
 package gui;
 
+import java.net.InetAddress;
+
 import client.ChatClient;
 
 import client.ClientUI;
@@ -90,8 +92,17 @@ public class MainScreenController {
 	}
 
 	@FXML
-	void getExitBtn(ActionEvent event) {
-		System.out.println("exit Academic Tool");
+	void getExitBtn(ActionEvent event) throws Exception {
+		System.out.println("exit client Tool");
+		String[] ipHostName = new String[3];
+		ipHostName[0] = "EXIT";
+		ipHostName[1] = InetAddress.getLocalHost().getHostName();
+		ipHostName[2] = InetAddress.getLocalHost().getHostAddress();
+		try {
+			ClientUI.chat.accept(ipHostName);
+		}catch(NullPointerException e) {
+			System.out.println("new ClientController didn't work");
+		}
 		System.exit(0);
 	}
 
