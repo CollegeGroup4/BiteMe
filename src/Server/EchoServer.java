@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import com.mysql.cj.admin.ServerController;
+
 import common.DBController;
+import gui.ServerPortFrameController;
 import ocsf.server.*;
 
 /**
@@ -30,7 +33,9 @@ public class EchoServer extends AbstractServer {
 	// final public static int DEFAULT_PORT = 5555;
 
 	// Constructors ****************************************************
+	public static String url,username,password;
 
+	
 	/**
 	 * Constructs an instance of the echo server.
 	 *
@@ -88,7 +93,7 @@ public class EchoServer extends AbstractServer {
 	 */
 	protected void serverStarted() {
 		System.out.println("Server listening for connections on port " + getPort());
-		con = DBController.getMySQLConnection();
+		con = DBController.getMySQLConnection(EchoServer.url, EchoServer.username, EchoServer.password);
 	}
 
 	/**

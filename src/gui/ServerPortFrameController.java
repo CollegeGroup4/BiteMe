@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import ocsf.server.ConnectionToClient;
 import Server.EchoServer;
 import Server.ServerUI;
+import common.DBController;
 
 public class ServerPortFrameController implements Initializable {
 //	private StudentFormController sfc;
@@ -68,7 +69,6 @@ public class ServerPortFrameController implements Initializable {
 	@FXML
 	private Button btnDsconnect;
 
-
 	public class Client {
 		private String ip;
 		private String hostName;
@@ -96,16 +96,18 @@ public class ServerPortFrameController implements Initializable {
 		}
 
 	}
-	
+
 	ObservableList<Client> listClients = FXCollections.observableArrayList();
+
 	@Override
 	public void initialize(URL url, ResourceBundle db) {
-		
+
 		ip.setCellValueFactory(new PropertyValueFactory<Client, String>("ip"));
 		hostName.setCellValueFactory(new PropertyValueFactory<Client, String>("hostName"));
 
 		tblIP.setItems(listClients);
-	// this is us - we don't need it for the presentation	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// this is us - we don't need it for the presentation
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //		try {
 //			client = new Client(InetAddress.getLocalHost().getHostName(),
 //					InetAddress.getLocalHost().getHostAddress());
@@ -121,7 +123,7 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	@FXML
-	public void Done(ActionEvent event) throws Exception {
+	public void connect(ActionEvent event) throws Exception {
 		String p;
 
 		p = getport();
@@ -129,12 +131,14 @@ public class ServerPortFrameController implements Initializable {
 			System.out.println("You must enter a port number");
 
 		} else {
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			FXMLLoader loader = new FXMLLoader();
+//			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+//			Stage primaryStage = new Stage();
+//			FXMLLoader loader = new FXMLLoader();
 
 			lblmsgConnect.setText("You're in! The connection was successful");
-
+			EchoServer.url = getDBName();
+			EchoServer.username = getlblDBUser();
+			EchoServer.password = getDBPassword();
 			ServerUI.runServer(p);
 			// send the client name to DB
 
@@ -155,7 +159,7 @@ public class ServerPortFrameController implements Initializable {
 		scene.getStylesheets().add(getClass().getResource("/gui/ServerPort.css").toExternalForm());
 		ServerPortFrameController serverPortFrameController = loader.getController();
 		setAllLables();
-		
+
 		primaryStage.setTitle("Server");
 		primaryStage.setScene(scene);
 
@@ -193,7 +197,7 @@ public class ServerPortFrameController implements Initializable {
 		setDBPassword();
 	}
 
-	private String getIP() {
+	public String getIP() {
 		return lblIP.getText();
 	}
 
@@ -202,26 +206,26 @@ public class ServerPortFrameController implements Initializable {
 		lblPort.setText("5555");
 	}
 
-	private String getport() {
+	public String getport() {
 		return lblPort.getText();
 	}
 
 	private void setDBName() {
 		lblDBName = new TextField();
-		lblDBName.setText("jdbc:mysql://localhost/biteme");
+		lblDBName.setText("jdbc:mysql://localhost/biteme?serverTimezone=IST");
 	}
 
-	private String getDBName() {
+	public String getDBName() {
 		return lblDBName.getText();
 	}
 
 	private void setlblDBUser() {
-		lblDBPassword = new TextField("root");
-		lblDBPassword.setText("root");
+		lblDBUser = new TextField("root");
+		lblDBUser.setText("root");
 	}
 
-	private String getlblDBUser() {
-		return lblDBPassword.getText();
+	public String getlblDBUser() {
+		return lblDBUser.getText();
 	}
 
 	private void setDBPassword() {
@@ -229,7 +233,7 @@ public class ServerPortFrameController implements Initializable {
 		lblDBPassword.setText("MoshPe2969999");
 	}
 
-	private String getDBPassword() {
+	public String getDBPassword() {
 		return lblDBPassword.getText();
 	}
 

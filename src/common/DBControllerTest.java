@@ -19,7 +19,6 @@ public class DBControllerTest extends TestCase {
 	// public Order(String restaurant, String orderAddress, String phoneNumber, Time
 	// orderTime, String orderType)
 	public void setUp() throws Exception {
-		conn = DBController.getMySQLConnection();
 		o1 = new Order("PizzaLacha", "Avital 23", "050-9824463", Time.valueOf("19:05:11"), "order-in");
 		o2 = new Order("Rimini", "Avital 11", "050-9824423", Time.valueOf("19:01:23"), "take away");
 		o3 = new Order("McDonalds", "Avital 1", "050-1231231", Time.valueOf("19:07:14"), "order");

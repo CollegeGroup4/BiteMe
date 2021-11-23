@@ -32,7 +32,7 @@ public class ServerUI extends Application {
 			System.out.println("ERROR - Could not connect!");
 		}
 
-		EchoServer sv = new EchoServer(port);
+		EchoServer sv = new EchoServer(5555);
 		echoServer = sv;
 		try {
 			sv.listen(); // Start listening for connections

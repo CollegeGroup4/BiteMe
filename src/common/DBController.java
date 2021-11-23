@@ -22,7 +22,7 @@ public class DBController {
 	public static String[] msg;
 
 	@SuppressWarnings("deprecation")
-	public static Connection getMySQLConnection() {
+	public static Connection getMySQLConnection(String url, String username, String password) {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -33,7 +33,7 @@ public class DBController {
 		}
 
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/biteme?serverTimezone=IST", "root", "Tal4EvEr");
+			conn = DriverManager.getConnection(url, username, password);
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {/* handle any errors */
 			System.out.println("SQLException: " + ex.getMessage());
