@@ -24,7 +24,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-<<<<<<< HEAD
 import ocsf.server.ConnectionToClient;
 import Server.EchoServer;
 import Server.ServerUI;
@@ -43,17 +42,6 @@ public class ServerPortFrameController implements Initializable {
 
 	@FXML
 	private TableColumn<Client, String> hostName;
-=======
-import logic.Faculty;
-import Server.EchoServer;
-import Server.ServerUI;
-
-public class ServerPortFrameController  {
-	private AllOrdersController sfc;	
-	
-	String temp="";
-	
->>>>>>> master
 	@FXML
 	private Button btnExit = null;
 
@@ -220,7 +208,7 @@ public class ServerPortFrameController  {
 
 	private void setDBName() {
 		lblDBName = new TextField();
-		lblDBName.setText("jdbc:mysql://localhost:3306/biteme");
+		lblDBName.setText("jdbc:mysql://localhost/biteme");
 	}
 
 	private String getDBName() {
@@ -237,8 +225,8 @@ public class ServerPortFrameController  {
 	}
 
 	private void setDBPassword() {
-		lblDBPassword = new TextField("Aa123456");
-		lblDBPassword.setText("Aa123456");
+		lblDBPassword = new TextField("MoshPe2969999");
+		lblDBPassword.setText("MoshPe2969999");
 	}
 
 	private String getDBPassword() {

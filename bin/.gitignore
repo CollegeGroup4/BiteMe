@@ -1,6 +1,4 @@
-/Server/
+/gui/
 /client/
 /common/
-/gui/
-/logic/
-/test/
+/Server/

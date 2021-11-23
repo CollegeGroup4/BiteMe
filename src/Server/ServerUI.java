@@ -1,28 +1,14 @@
 package Server;
 
+import java.util.Vector;
+
+import gui.ServerPortFrameController;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import logic.Faculty;
-import logic.Order;
-
-import java.util.Vector;
-import gui.MainScreenController;
-import gui.ServerPortFrameController;
-import gui.AllOrdersController;
-import Server.EchoServer;
 
 public class ServerUI extends Application {
 	final public static int DEFAULT_PORT = 5555;
-<<<<<<< HEAD
 	private static EchoServer echoServer; 
-=======
-	//public static Vector<Student> students=new Vector<Student>();
-
-	public static void main( String args[] ) throws Exception
-	   {   
-		 launch(args);
-	  } // end main
->>>>>>> master
 	
 	public static void main(String args[]) throws Exception {
 		launch(args);

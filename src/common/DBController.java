@@ -181,19 +181,4 @@ public class DBController {
 		}
 		return amount;
 	}
-	
-<<<<<<< HEAD
-	
 }
-=======
-	public static void clearTable(Connection con) {
-		try {
-			PreparedStatement stmt = con.prepareStatement("DELETE FROM biteme.order");
-			stmt.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-}
->>>>>>> master

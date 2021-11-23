@@ -32,14 +32,12 @@ public class DBControllerTest extends TestCase {
 
 	@Test
 	public void testInsertOrder() {
-		DBController.clearTable(conn);
 		DBController.insertOrder(conn, o1);
 		assertTrue(DBController.getNumberOfOrders(conn) == 1);
 	}
 
 	@Test
 	public void testGetOrders() {
-		DBController.clearTable(conn);
 		DBController.insertOrder(conn, o1);
 		DBController.insertOrder(conn, o2);
 		DBController.insertOrder(conn, o3);
@@ -60,7 +58,6 @@ public class DBControllerTest extends TestCase {
 
 	@Test
 	public void testGetOrder() {
-		DBController.clearTable(conn);
 		DBController.insertOrder(conn, o1);
 		DBController.insertOrder(conn, o2);
 		String o1Order, o2Order, o3Order;
