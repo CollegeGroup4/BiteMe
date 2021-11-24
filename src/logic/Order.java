@@ -80,9 +80,4 @@ public class Order {
 		tostring.append(getOrderNum());
 		return tostring.toString();
 	}
-//	@Override
-//	public String toString(){
-//		return String.format("%s,%s,%s,%s,%s,%s",getResturant(),getOrderAddress(),getPhoneNumber(),getOrderTime().toString(), getOrderType(), getOrderNum());
-//	}
-
 }

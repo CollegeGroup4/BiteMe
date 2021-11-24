@@ -1,7 +1,5 @@
 package Server;
 
-import java.util.Vector;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -32,7 +30,7 @@ public class ServerUI extends Application {
 			System.out.println("ERROR - Could not connect!");
 		}
 
-		EchoServer sv = new EchoServer(5555);
+		EchoServer sv = new EchoServer(port);
 		echoServer = sv;
 		echoServer.setController(serverController);
 		try {

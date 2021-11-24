@@ -46,7 +46,7 @@ public class AllOrdersController implements Initializable {
     @FXML
     private Button btnBack;
 
-	ObservableList<Order> orderList = FXCollections.observableArrayList();
+	private ObservableList<Order> orderList = FXCollections.observableArrayList();
 	
     @FXML
     void Back(ActionEvent event) {
@@ -56,7 +56,6 @@ public class AllOrdersController implements Initializable {
 		try {
 			aFrame.start(primaryStage);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -72,7 +71,7 @@ public class AllOrdersController implements Initializable {
 		tblID.setItems(orderList);
 	}
 
-	public void insertOrders(ArrayList<String> serverAns) {
+	public void insertOrdersToTbl(ArrayList<String> serverAns) {
 		String[] id = new String[2];
 		id[0] = new String("GETALL");
 		id[1] = new String("ORDER");
@@ -89,7 +88,6 @@ public class AllOrdersController implements Initializable {
 				temp.setOrderNum(Integer.valueOf(result[5]));
 				orderList.add(temp);
 			}
-
 		}
 	}
 }

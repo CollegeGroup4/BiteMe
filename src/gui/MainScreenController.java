@@ -80,7 +80,7 @@ public class MainScreenController {
 			Stage primaryStage = new Stage();
 			Pane root = loader.load(getClass().getResource("/gui/AllOrders.fxml").openStream());
 			AllOrdersController allorderscontroller = loader.getController();
-			allorderscontroller.insertOrders(ChatClient.serverAns);
+			allorderscontroller.insertOrdersToTbl(ChatClient.serverAns);
 
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("/gui/AllOrdersForm.css").toExternalForm());
@@ -104,38 +104,6 @@ public class MainScreenController {
 			System.out.println("new ClientController didn't work");
 		}
 		System.exit(0);
-	}
-
-	private String getID() {
-		return idID.getText();
-	}
-
-	public void Send(ActionEvent event) throws Exception {
-		/*
-		 * String id; FXMLLoader loader = new FXMLLoader();
-		 * 
-		 * id=getID(); if(id.trim().isEmpty()) {
-		 * 
-		 * System.out.println("You must enter an id number"); } else {
-		 * ClientUI.chat.accept(id);
-		 * 
-		 * 
-		 * if(ChatClient.s1.getId().equals("Error")) {
-		 * System.out.println("Student ID Not Found");
-		 * 
-		 * } else { System.out.println("Student ID Found");
-		 * ((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary
-		 * window Stage primaryStage = new Stage(); Pane root =
-		 * loader.load(getClass().getResource("/gui/StudentForm.fxml").openStream());
-		 * AllOrders studentFormController = loader.getController();
-		 * studentFormController.loadStudent(ChatClient.s1);
-		 * 
-		 * Scene scene = new Scene(root);
-		 * scene.getStylesheets().add(getClass().getResource("/gui/StudentForm.css").
-		 * toExternalForm()); primaryStage.setTitle("Student Managment Tool");
-		 * 
-		 * primaryStage.setScene(scene); primaryStage.show(); } }
-		 */
 	}
 
 	public void start(Stage primaryStage) throws Exception {
