@@ -84,7 +84,7 @@ public class MainScreenController {
 
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("/gui/AllOrdersForm.css").toExternalForm());
-			primaryStage.setTitle("Student Managment Tool");
+			primaryStage.setTitle("All orders");
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
