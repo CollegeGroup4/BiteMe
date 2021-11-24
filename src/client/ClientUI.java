@@ -16,6 +16,4 @@ public class ClientUI extends Application {
 		ClientMainScreenController aFrame = new ClientMainScreenController();
 		aFrame.start(primaryStage);
 	}
-	
-	
 }

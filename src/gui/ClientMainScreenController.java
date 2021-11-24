@@ -32,6 +32,10 @@ public class ClientMainScreenController {
 
 	@FXML
 	private Button btnEXE;
+	
+    @FXML
+    private TextField serverId;
+
 
 	@FXML
 	void Exit(ActionEvent event) throws Exception {
@@ -61,7 +65,7 @@ public class ClientMainScreenController {
 
 	@FXML
 	void confirmClient(ActionEvent event) throws Exception {
-		ClientUI.chat = new ClientController("localhost", Integer.valueOf(getportText()));
+		ClientUI.chat = new ClientController(serverId.getText(), Integer.valueOf(getportText()));
 		FXMLLoader loader = new FXMLLoader();
 		//Here the client send ping to server to check if it's alive
 		String[] ipHostName = new String[3];

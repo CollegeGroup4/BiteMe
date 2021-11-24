@@ -1,5 +1,6 @@
 package Server;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -45,19 +46,19 @@ public class ServerPortFrameController implements Initializable {
 	private Button btnDone = null;
 
 	@FXML
-	private TextField lblIP;// 192.168.56.1
+	private TextField lblIP = new TextField();// 192.168.56.1
 
 	@FXML
-	private TextField lblPort = new TextField("5555");// 5555
+	private TextField lblPort = new TextField();// 5555
 
 	@FXML
-	private TextField lblDBUser;// root
+	private TextField lblDBUser = new TextField();// root
 
 	@FXML
-	private TextField lblDBName;// jdbc:mysql://localhost:3306/biteme
+	private TextField lblDBName = new TextField();// jdbc:mysql://localhost:3306/biteme
 
 	@FXML
-	private PasswordField lblDBPassword;
+	private PasswordField lblDBPassword = new PasswordField();
 	
 	@FXML
 	private Label lblmsgConnect;
@@ -101,6 +102,7 @@ public class ServerPortFrameController implements Initializable {
 		ip.setCellValueFactory(new PropertyValueFactory<Client, String>("ip"));
 		hostName.setCellValueFactory(new PropertyValueFactory<Client, String>("hostName"));
 		tblIP.setItems(listClients);
+		setAllLables();
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
@@ -111,15 +113,6 @@ public class ServerPortFrameController implements Initializable {
 				}
 			}
 		}, 0, 1000);
-		// this is us - we don't need it for the presentation
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//		try {
-//			client = new Client(InetAddress.getLocalHost().getHostName(),
-//					InetAddress.getLocalHost().getHostAddress());
-//			listClients.add(client);
-//		} catch (UnknownHostException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	public void manageClientsList() {
@@ -166,7 +159,6 @@ public class ServerPortFrameController implements Initializable {
 		Parent root = FXMLLoader.load(getClass().getResource("/Server/ServerPort.fxml"));
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/Server/ServerPort.css").toExternalForm());
-		setAllLables();
 		primaryStage.setTitle("Server");
 		primaryStage.setScene(scene);
 
@@ -181,7 +173,7 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 
-	private void setAllLables() {
+	public void setAllLables() {
 		setIP();
 		setport();
 		setDBName();
@@ -190,16 +182,14 @@ public class ServerPortFrameController implements Initializable {
 	}
 	
 	private void setIP() {
-
-		lblIP = new TextField("192.168.56.1");
 		try {
+			lblIP.setText(Inet4Address.getLoopbackAddress().getHostAddress());
 			System.out.println("host name: " + InetAddress.getLocalHost().getHostName());
 			System.out.println("ip: " + InetAddress.getLocalHost().getHostAddress());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		lblIP.setText("192.168.56.1");
 	}
 
 
@@ -208,7 +198,6 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	private void setport() {
-		lblPort = new TextField("5555");
 		lblPort.setText("5555");
 	}
 
@@ -217,7 +206,6 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	private void setDBName() {
-		lblDBName = new TextField();
 		lblDBName.setText("jdbc:mysql://localhost/biteme?serverTimezone=IST");
 	}
 
@@ -226,7 +214,6 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	private void setlblDBUser() {
-		lblDBUser = new TextField("root");
 		lblDBUser.setText("root");
 	}
 
@@ -235,7 +222,6 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	private void setDBPassword() {
-		lblDBPassword = new PasswordField();
 		lblDBPassword.setText("MoshPe2969999");
 	}
 
