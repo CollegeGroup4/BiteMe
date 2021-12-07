@@ -17,6 +17,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import mywork.CustomerPageController;
+import temporaryDatabase.UserTemp;
+import temporaryDatabase.myOwnDatabase;
 
 public class MainScreenController {
 
@@ -27,9 +30,34 @@ public class MainScreenController {
 	private TextField idID;
 
 	@FXML
+	private TextField idUser;
+
+	@FXML
 	private Button showAllBTN;
 
-	FXMLLoader loader = new FXMLLoader();
+	 FXMLLoader loader = new FXMLLoader(); 
+
+	@FXML
+	void UserLogin(ActionEvent event) throws Exception {// ****For development only*****
+		System.out.println("Logged in");
+		setTempDatabase(); // ****For development only*****
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+		Stage primaryStage = new Stage();
+		Pane root = loader.load(getClass().getResource("/mywork/CustomerPage.fxml").openStream());
+		CustomerPageController customerPageController = loader.getController();
+		customerPageController.setUser(myOwnDatabase.usersArray.get(Integer.parseInt(idUser.getText())));
+//Integer.parseInt(idUser.getText())
+		Scene scene = new Scene(root);
+		primaryStage.setTitle("Customer Page");
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+
+	private void setTempDatabase() { // ****For development only*****
+		myOwnDatabase.usersArray.add(new UserTemp(0, "Einan"));
+	}
 
 	@FXML
 	void EditOrder(ActionEvent event) throws Exception {
@@ -100,7 +128,7 @@ public class MainScreenController {
 		ipHostName[2] = InetAddress.getLocalHost().getHostAddress();
 		try {
 			ClientUI.chat.accept(ipHostName);
-		}catch(NullPointerException e) {
+		} catch (NullPointerException e) {
 			System.out.println("new ClientController didn't work");
 		}
 		System.exit(0);

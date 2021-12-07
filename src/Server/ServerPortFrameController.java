@@ -222,7 +222,7 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	private void setDBPassword() {
-		lblDBPassword.setText("MoshPe2969999");
+		lblDBPassword.setText("Man796484$");
 	}
 
 	public String getDBPassword() {

@@ -52,7 +52,7 @@ public class AllOrdersController implements Initializable {
     void Back(ActionEvent event) {
 		((Node) event.getSource()).getScene().getWindow().hide();
 		Stage primaryStage = new Stage();
-		MainScreenController aFrame = new MainScreenController(); // create StudentFrame
+		MainScreenController aFrame = new MainScreenController(); 
 		try {
 			aFrame.start(primaryStage);
 		} catch (Exception e) {

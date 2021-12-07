@@ -1,6 +1,8 @@
 package gui;
 
 import java.net.InetAddress;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import client.ChatClient;
 import client.ClientController;
@@ -8,6 +10,7 @@ import client.ClientUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,7 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class ClientMainScreenController {
+public class ClientMainScreenController implements Initializable {
 
 	private String port;
 
@@ -105,6 +108,13 @@ public class ClientMainScreenController {
 
 	public void getportFromServer(String serverPort) {
 		port = serverPort;
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) { // **** for development only *****
+		serverId.setText("127.0.0.1");
+		portText.setText("5555");
+		
 	}
 
 }

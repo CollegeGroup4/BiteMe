@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="800.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.CustomerPageController">
+   <children>
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="102.0" prefWidth="784.0" spacing="20.0" style="-fx-background-radius: 50px;">
+         <children>
+            <Label fx:id="welcomeLabel" prefHeight="17.0" prefWidth="233.0" text="Label">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="25.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnLogout" mnemonicParsing="false" prefHeight="37.0" prefWidth="83.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Hyperlink fx:id="BtnHome" prefHeight="27.0" prefWidth="61.0" text="Home" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <ImageView fx:id="imageBiteme1" fitHeight="102.0" fitWidth="301.0">
+               <image>
+                  <Image url="file:/C:/Users/einan/git/BiteMe/src/images/biteMe.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <AnchorPane layoutX="14.0" layoutY="96.0" prefHeight="534.0" prefWidth="772.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="237.0" layoutY="22.0" prefHeight="43.0" prefWidth="260.0" text="Customer Page" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="36.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnMyOrders" layoutX="269.0" layoutY="200.0" mnemonicParsing="false" onAction="#MyOrders" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="My Orders">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="btnOrderFood" layoutX="269.0" layoutY="113.0" mnemonicParsing="false" onAction="#OrderFood" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Order food">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </AnchorPane>
+      <HBox fx:id="Nav1" alignment="CENTER" layoutX="-2.0" layoutY="630.0" prefHeight="102.0" prefWidth="806.0" spacing="35.0" style="-fx-background-radius: 50px;">
+         <children>
+            <ImageView fx:id="imageBiteme2" fitHeight="71.0" fitWidth="193.0">
+               <image>
+                  <Image url="file:/C:/Users/einan/git/BiteMe/src/images/biteMe.png" />
+               </image>
+            </ImageView>
+            <AnchorPane prefHeight="107.0" prefWidth="91.0">
+               <children>
+                  <Hyperlink layoutX="-3.0" layoutY="23.0" text="Contect us:" textFill="WHITE">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+                     </font>
+                  </Hyperlink>
+                  <ImageView fx:id="imageFacebook" fitHeight="26.0" fitWidth="24.0" layoutX="39.0" layoutY="51.0">
+                     <image>
+                        <Image url="file:/C:/Users/einan/git/BiteMe/src/images/facebook-icon-preview-1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageInstergram" fitHeight="19.0" fitWidth="21.0" layoutX="66.0" layoutY="55.0">
+                     <image>
+                        <Image url="file:/C:/Users/einan/git/BiteMe/src/images/instagram.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="imageWhatsapp" fitHeight="22.0" fitWidth="24.0" layoutX="91.0" layoutY="54.0">
+                     <image>
+                        <Image url="file:/C:/Users/einan/git/BiteMe/src/images/WhatsApp.svg.png" />
+                     </image>
+                  </ImageView>
+                  <Line endX="-20.0" layoutX="101.0" layoutY="47.0" startX="-100.0" stroke="WHITE" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="107.0" prefWidth="91.0">
+               <children>
+                  <Hyperlink layoutX="-3.0" layoutY="52.0" text="contect@BiteMe.co.il" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink layoutX="2.0" layoutY="74.0" text="Israel Karmiel, Gan Ha'ir 100" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding>
+                  </Hyperlink>
+                  <Hyperlink layoutX="-4.0" layoutY="33.0" text="04-9999090" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+               <padding>
+                  <Insets right="30.0" />
+               </padding>
+            </AnchorPane>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
