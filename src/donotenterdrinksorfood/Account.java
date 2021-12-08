@@ -16,7 +16,6 @@ public class Account {
 	
 	public Account(int accountID, String userName, String firstName, String lastName, String email, String type,
 			String phone, boolean isBusiness, String status, String w4c_code, int branch_manager_ID, String area) {
-		super();
 		AccountID = accountID;
 		UserName = userName;
 		this.firstName = firstName;

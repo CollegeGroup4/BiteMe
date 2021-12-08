@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.ExpansionPanel?>
+<?import com.gluonhq.charm.glisten.control.ExpansionPanel.CollapsedPanel?>
+<?import com.gluonhq.charm.glisten.control.ExpansionPanelContainer?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="800.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="25.0" prefHeight="102.0" prefWidth="751.0" spacing="50.0" style="-fx-background-radius: 50px;">
+         <children>
+            <Label prefHeight="88.0" prefWidth="183.0" styleClass="f" text="Hello, Supplier">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" top="50.0" />
+               </padding>
+            </Label>
+            <Hyperlink prefHeight="27.0" prefWidth="74.0" text="Home" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="79.0" style="-fx-background-color: orage; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="102.0" fitWidth="301.0">
+               <image>
+                  <Image url="@img/biteMe.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <AnchorPane layoutX="14.0" layoutY="96.0" prefHeight="548.0" prefWidth="772.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+         <children>
+            <JFXComboBox layoutX="321.0" layoutY="15.0" prefHeight="27.0" prefWidth="120.0" promptText="Night menu" />
+            <ScrollPane layoutX="454.0" layoutY="122.0" prefHeight="349.0" prefWidth="300.0">
+               <content>
+                  <AnchorPane prefHeight="328.0" prefWidth="259.0">
+                     <children>
+                        <ExpansionPanelContainer layoutX="-1.0" prefHeight="358.0" prefWidth="299.0">
+                            <items>
+                                <ExpansionPanel>
+                                    <collapsedContent>
+                                        <ExpansionPanel.CollapsedPanel>
+                                            <titleNodes>
+                                                <Label text="Carbonara" />
+                                                <Label text="Italian" />
+                                            </titleNodes>
+                                        </ExpansionPanel.CollapsedPanel>
+                                    </collapsedContent>
+                                </ExpansionPanel>
+                                <ExpansionPanel>
+                                    <collapsedContent>
+                                        <ExpansionPanel.CollapsedPanel>
+                                            <titleNodes>
+                                                <Label text="Sushi" />
+                                                <Label text="Japan" />
+                                            </titleNodes>
+                                        </ExpansionPanel.CollapsedPanel>
+                                    </collapsedContent>
+                                </ExpansionPanel>
+                              <ExpansionPanel>
+                                 <collapsedContent>
+                                    <ExpansionPanel.CollapsedPanel prefWidth="252">
+                                       <titleNodes>
+                                          <Label text="Foie Gras" />
+                                          <Label text="France" />
+                                       </titleNodes>
+                                    </ExpansionPanel.CollapsedPanel>
+                                 </collapsedContent>
+                              </ExpansionPanel>
+                            </items>
+                        </ExpansionPanelContainer>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
+            <JFXButton layoutX="343.0" layoutY="225.0" prefHeight="35.0" prefWidth="86.0" style="-fx-background-color: whte; -fx-text-fill: black; -fx-border-color: orange; -fx-background-radius: 30; -fx-border-radius: 30;" text="Add &gt;" />
+            <JFXButton layoutX="343.0" layoutY="302.0" prefHeight="35.0" prefWidth="86.0" style="-fx-background-color: whte; -fx-text-fill: black; -fx-border-color: orange; -fx-background-radius: 30; -fx-border-radius: 30;" text=" &lt; Remove" />
+            <Button layoutX="562.0" layoutY="478.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="94.0" style="-fx-background-color: orange; -fx-border-radius: 30; -fx-background-radius: 30;" text="Delete menu">
+               <font>
+                  <Font size="10.0" />
+               </font></Button>
+            <JFXComboBox layoutX="22.0" layoutY="90.0" prefHeight="27.0" prefWidth="300.0" promptText="Italian" />
+            <JFXComboBox layoutX="456.0" layoutY="90.0" prefHeight="26.0" prefWidth="300.0" promptText="First Course" />
+            <ScrollPane layoutX="20.0" layoutY="122.0" prefHeight="349.0" prefWidth="300.0">
+               <content>
+                  <AnchorPane prefHeight="328.0" prefWidth="259.0">
+                     <children>
+                        <ExpansionPanelContainer layoutX="-1.0" prefHeight="358.0" prefWidth="299.0">
+                           <items>
+                              <ExpansionPanel>
+                                 <collapsedContent>
+                                    <ExpansionPanel.CollapsedPanel>
+                                       <titleNodes>
+                                          <Label text="Panzenella" />
+                                          <Label text="Italian" />
+                                       </titleNodes>
+                                    </ExpansionPanel.CollapsedPanel>
+                                 </collapsedContent>
+                              </ExpansionPanel>
+                              <ExpansionPanel>
+                                 <collapsedContent>
+                                    <ExpansionPanel.CollapsedPanel>
+                                       <titleNodes>
+                                          <Label text="Brushetta" />
+                                          <Label text="Italian" />
+                                       </titleNodes>
+                                    </ExpansionPanel.CollapsedPanel>
+                                 </collapsedContent>
+                              </ExpansionPanel>
+                              <ExpansionPanel>
+                                 <collapsedContent>
+                                    <ExpansionPanel.CollapsedPanel prefWidth="252">
+                                        <titleNodes>
+                                            <Label prefHeight="18.0" prefWidth="113.0" text="Focaccia" />
+                                            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="0.0" text="Italian" />
+                                        </titleNodes>
+                                    </ExpansionPanel.CollapsedPanel>
+                                 </collapsedContent>
+                              </ExpansionPanel>
+                              <ExpansionPanel>
+                                 <collapsedContent>
+                                    <ExpansionPanel.CollapsedPanel prefWidth="252">
+                                       <titleNodes>
+                                          <Label text="Carbonara" />
+                                          <Label text="Italian " />
+                                       </titleNodes>
+                                    </ExpansionPanel.CollapsedPanel>
+                                 </collapsedContent>
+                              </ExpansionPanel>
+                              <ExpansionPanel>
+                                 <collapsedContent>
+                                    <ExpansionPanel.CollapsedPanel prefWidth="252">
+                                       <titleNodes>
+                                          <Label text="Margheritta" />
+                                          <Label text="Italian" />
+                                       </titleNodes>
+                                    </ExpansionPanel.CollapsedPanel>
+                                 </collapsedContent>
+                              </ExpansionPanel>
+                           </items>
+                        </ExpansionPanelContainer>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
+            <Button layoutX="357.0" layoutY="503.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="63.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="save">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Button>
+            <Button layoutX="188.0" layoutY="12.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="120.0" style="-fx-text-fill: black; -fx-background-color: white; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: orange;" text="Edit name menu" />
+            <Label layoutX="98.0" layoutY="73.0" text="List of Items">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="549.0" layoutY="69.0" text="Night menu">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="20.0" />
+               </font>
+            </Label>
+            <Button layoutX="639.0" layoutY="12.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="88.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="New Menu">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <HBox fx:id="Nav1" alignment="CENTER" layoutX="-3.0" layoutY="629.0" prefHeight="102.0" prefWidth="806.0" spacing="35.0" style="-fx-background-radius: 50px;">
+         <children>
+            <ImageView fitHeight="71.0" fitWidth="193.0">
+               <image>
+                  <Image url="@img/biteMe.png" />
+               </image>
+            </ImageView>
+            <AnchorPane prefHeight="107.0" prefWidth="91.0">
+               <children>
+                  <Hyperlink layoutX="-3.0" layoutY="23.0" text="Contect us:" textFill="WHITE">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+                     </font>
+                  </Hyperlink>
+                  <ImageView fitHeight="26.0" fitWidth="24.0" layoutX="39.0" layoutY="51.0">
+                     <image>
+                        <Image url="@img/facebook-icon-preview-1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="19.0" fitWidth="21.0" layoutX="66.0" layoutY="55.0">
+                     <image>
+                        <Image url="@img/instagram.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="91.0" layoutY="54.0">
+                     <image>
+                        <Image url="@img/WhatsApp.svg.png" />
+                     </image>
+                  </ImageView>
+                  <Line endX="-20.0" layoutX="101.0" layoutY="47.0" startX="-100.0" stroke="WHITE" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="107.0" prefWidth="91.0">
+               <children>
+                  <Hyperlink layoutX="-3.0" layoutY="52.0" text="contect@BiteMe.co.il" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink layoutX="2.0" layoutY="74.0" text="Israel Karmiel, Gan Ha'ir 100" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding>
+                  </Hyperlink>
+                  <Hyperlink layoutX="-4.0" layoutY="33.0" text="04-9999090" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+               <padding>
+                  <Insets right="30.0" />
+               </padding>
+            </AnchorPane>
+            <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orage; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="back">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

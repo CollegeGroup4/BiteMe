@@ -7,9 +7,8 @@ public class Supplier {
 	private String name;
 	private String area;
 	public byte[] photo;
-	public Supplier(int iD, boolean isApproved, int branchManagerID, String name, String area, byte[] photo) {
-		super();
-		ID = iD;
+	public Supplier(int ID, boolean isApproved, int branchManagerID, String name, String area, byte[] photo) {
+		this.ID = ID;
 		this.isApproved = isApproved;
 		BranchManagerID = branchManagerID;
 		this.name = name;

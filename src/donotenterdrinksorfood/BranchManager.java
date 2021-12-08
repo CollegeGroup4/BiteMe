@@ -5,7 +5,6 @@ public class BranchManager {
 	private String AccountID;
 	private String area;
 	public BranchManager(String name, String accountID, String area) {
-		super();
 		this.name = name;
 		AccountID = accountID;
 		this.area = area;
@@ -28,6 +27,4 @@ public class BranchManager {
 	public void setArea(String area) {
 		this.area = area;
 	}
-	
-	
 }

@@ -4,7 +4,6 @@ public class Employee {
 	private String name;
 	private int w4c_card;
 	public Employee(String name, int w4c_card) {
-		super();
 		this.name = name;
 		this.w4c_card = w4c_card;
 	}

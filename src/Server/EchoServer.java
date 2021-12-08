@@ -3,15 +3,16 @@
 // license found at www.lloseng.com 
 package Server;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import com.mysql.cj.admin.ServerController;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import common.DBController;
-import gui.ServerPortFrameController;
-import ocsf.server.*;
+import ocsf.server.AbstractServer;
+import ocsf.server.ConnectionToClient;
 
 /**
  * This class overrides some of the methods in the abstract superclass in order
@@ -43,8 +44,13 @@ public class EchoServer extends AbstractServer {
 	 * 
 	 */
 	public static ArrayList<String> orders = new ArrayList<String>();
-	Connection con;
-
+	public Connection con;
+	public Gson gson;
+	private final String GET = "GET";
+	private final String POST = "POST";
+	private final String PUT = "PUT";
+	private final String DELETE = "DELETE";
+	
 	public EchoServer(int port) {
 		super(port);
 	}
@@ -59,32 +65,79 @@ public class EchoServer extends AbstractServer {
 	 * @param
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-
-		System.out.println("Message received: " + msg + " from " + client);
-
-		String[] temp = (String[]) msg;
-		if (temp[0].equals("GETALL")) {
-			if (temp[1].equals("ORDER")) {
-				orders = DBController.getOrders(con);
-			}
-		} else
-		if (temp[0].equals("GET")) {
-			if (temp[1].equals("ORDER")) {
-					orders = DBController.getOrder(con, temp[2]);
-			}
+		JsonObject m = gson.fromJson((String)msg, JsonObject.class);
+		String method = gson.fromJson(m.get("method"), String.class);
+		String path = gson.fromJson(m.get("path"), String.class);
+		JsonObject response = new JsonObject();
+		System.out.println("Message received: " + path + " "+ method + " from " + client);
+		
+		switch (path) {
+			case "/orders":
+				switch (method) {
+					case GET:
+							OrderApiService.allOrders(resturantID, response);
+						break;
+					case POST:
+							OrderApiService.addOrder(orderBody,response);
+						break;
+					}
+				break;
+			case "/orders/payment":
+				switch (method) {
+					case GET:
+							OrderApiService.getPaymentApproval(accountID,response);
+						break;
+					}
+				break;
+			case "/orders/resturants":
+				switch (method) {
+					case GET:
+						OrderApiService.getResturants(area,response);
+						break;	
+				}
+				break;
+			case "/orders/getOrderById":
+				switch (method) {
+					case GET:
+						OrderApiService.getOrderById(orderID,response);
+						break;
+					case PUT:
+						OrderApiService.updateOrderWithForm(orderId, address, delivery);
+						break;
+					case DELETE:
+						OrderApiService.deleteOrder(orderId);
+				}
+				break;
+			case "/branch_manager":
+				break;
+			case "/branch_manager/orders":
+				break;
+			case "/suppliers/menus":
+				break;
+			case "/suppliers/items":
+				break;
+			case "/suppliers/getItemsBeMenu":
+				break;
+			case "/suppliers/approveOrder":
+				break;
+			case "/accounts":
+				break;
+			case "/accounts/createWithArray":
+				break;
+			case "/accounts/createWithList":
+				break;
+			case "/accounts/login":
+				break;
+			case "/accounts/logout":
+				break;
+			case "/accounts/getUser":
+				break;
+	
+			default:
+				break;
 		}
+		client.sendToClient(gson.toJson(response));
 		
-		
-		
-		
-		
-		try {
-			client.sendToClient(orders);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	/**
@@ -94,6 +147,7 @@ public class EchoServer extends AbstractServer {
 	protected void serverStarted() {
 		System.out.println("Server listening for connections on port " + getPort());
 		con = DBController.getMySQLConnection(EchoServer.url, EchoServer.username, EchoServer.password);
+		Gson gson = new Gson();
 	}
 
 	/**

@@ -7,7 +7,6 @@ public class Shippment {
 	private String delivery;
 	private String phone;
 	public Shippment(String work_place, String address, String receiver_name, String delivery, String phone) {
-		super();
 		this.work_place = work_place;
 		this.address = address;
 		this.receiver_name = receiver_name;

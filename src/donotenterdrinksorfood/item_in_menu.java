@@ -6,7 +6,6 @@ public class item_in_menu {
 	private String menu_name;
 	private String course;
 	public item_in_menu(int itemID, int restaurantID, String menu_name, String course) {
-		super();
 		this.itemID = itemID;
 		this.restaurantID = restaurantID;
 		this.menu_name = menu_name;

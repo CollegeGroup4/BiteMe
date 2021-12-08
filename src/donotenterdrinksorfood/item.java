@@ -12,7 +12,6 @@ public class item {
 	public byte[] photo;
 	public item(int itemID, int restaurantID, String type, String name, float price, String description,
 			String ingrediants, Options[] options, byte[] photo) {
-		super();
 		this.itemID = itemID;
 		this.restaurantID = restaurantID;
 		Type = type;
