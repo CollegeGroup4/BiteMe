@@ -1,4 +1,4 @@
-package donotenterdrinksorfood;
+package logic;
 
 public class Employee {
 	private String name;

@@ -2,7 +2,7 @@ package Server;
 
 import java.util.List;
 
-import donotenterdrinksorfood.*;
+import logic.*;
 /**
  * BiteMe
  *

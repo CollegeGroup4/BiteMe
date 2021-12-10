@@ -1,4 +1,4 @@
-package donotenterdrinksorfood;
+package logic;
 
 public class Shippment {
 	private String work_place;

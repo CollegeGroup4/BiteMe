@@ -1,4 +1,4 @@
-package donotenterdrinksorfood;
+package logic;
 
 public class Account {
 	private int AccountID;

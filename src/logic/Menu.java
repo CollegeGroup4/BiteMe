@@ -1,4 +1,4 @@
-package donotenterdrinksorfood;
+package logic;
 
 public class Menu {
 	private String name;

@@ -1,4 +1,4 @@
-package donotenterdrinksorfood;
+package logic;
 
 public class Options {
 	private String option_category;
