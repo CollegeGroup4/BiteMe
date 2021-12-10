@@ -1,5 +1,10 @@
 package Server;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import logic.*;
@@ -17,17 +22,33 @@ public class OrderApiService{
     public static void addOrder(Order body, Response response) {
         // TODO: Implement...
         
-        
+
     }
     
     /**
      * Return all the orders
      *
      */
-    public static List<Order> allOrders(String resturantID, Response response) {
-        // TODO: Implement...
-        
-        return null;
+    public static void allOrders(String restaurantID, Response response) {
+        PreparedStatement stmt;
+        ArrayList<Order> orders = new ArrayList<>();
+        Order order;
+        try{
+            stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE RestaurantID = ?");
+            stmt.setString(1, restaurantID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                order = new Order(rs.getInt(finals.ORDER_NUM), rs.getString(finals.RESTAURANT_ID), rs.getString(finals.ORDER_TIME),
+                        rs.getTime(finals.CHECK_OUT_PRICE), rs.getString(finals.REQUIRED_TIME), rs.getString(finals.TYPE_OF_ORDER),
+                        rs.getString(finals.ACCOUNT_ID), rs.getString(rs.getString(finals.rs.getString(finals.ACCOUNT_ID)))
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        response.setCode(200);
+        response.setDescription("Success in fetching orders");
+        response.setBody(orders.toArray());
     }
     
     /**
@@ -66,7 +87,7 @@ public class OrderApiService{
      * Get resturants for the specific
      *
      */
-    public static List<Supplier> getResturants(String area, Response response) {
+    public static List<Resturant> getResturants(String area, Response response) {
         // TODO: Implement...
         
         return null;
