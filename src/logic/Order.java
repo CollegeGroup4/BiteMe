@@ -3,6 +3,7 @@ package logic;
 public class Order {
 	private int orderID;
 	private int restaurantID;
+	private String restaurantName;
 	private String time_taken;
 	private float check_out_price;
 	private String required_time;
@@ -11,14 +12,13 @@ public class Order {
 	private String phone;
 	private int discount_for_early_order;
 	private boolean isBuisness;
-	private item[] items;
+	private Item[] items;
+	private Shippment shippment;
 
-	public Order(int orderID, int restaurantID, String time_taken, float check_out_price, String required_time,
-				 String type_of_order, int accountID, String phone, int discount_for_early_order, boolean isBuisness,
-				 item[] items) {
-		super();
+	public Order(int orderID, int restaurantID, String restaurantName, String time_taken, float check_out_price, String required_time, String type_of_order, int accountID, String phone, int discount_for_early_order, boolean isBuisness, Item[] items, Shippment shippment) {
 		this.orderID = orderID;
 		this.restaurantID = restaurantID;
+		this.restaurantName = restaurantName;
 		this.time_taken = time_taken;
 		this.check_out_price = check_out_price;
 		this.required_time = required_time;
@@ -28,7 +28,9 @@ public class Order {
 		this.discount_for_early_order = discount_for_early_order;
 		this.isBuisness = isBuisness;
 		this.items = items;
+		this.shippment = shippment;
 	}
+
 	public int getOrderID() {
 		return orderID;
 	}
@@ -56,6 +58,15 @@ public class Order {
 	public String getRequired_time() {
 		return required_time;
 	}
+
+	public String getRestaurantName() {
+		return restaurantName;
+	}
+
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
+
 	public void setRequired_time(String required_time) {
 		this.required_time = required_time;
 	}
@@ -89,13 +100,19 @@ public class Order {
 	public void setBuisness(boolean isBuisness) {
 		this.isBuisness = isBuisness;
 	}
-	public item[] getItems() {
+	public Item[] getItems() {
 		return items;
 	}
-	public void setItems(item[] items) {
+	public void setItems(Item[] items) {
 		this.items = items;
 	}
 
+	public Shippment getShippment() {
+		return shippment;
+	}
 
+	public void setShippment(Shippment shippment) {
+		this.shippment = shippment;
+	}
 
 }

@@ -49,13 +49,16 @@ public class DBController {
 	public static void insertOrder(Connection con, Order order) {
 		try {
 			PreparedStatement postOrder = con.prepareStatement(
-					"INSERT INTO biteme.order (Resturant, OrderTime, PhoneNumber, TypeOfOrder, OrderAddress)"
-							+ " VALUES (?,?,?,?,?);");
-			postOrder.setString(1, order.getResturant());
-			postOrder.setTime(2, order.getOrderTime());
-			postOrder.setString(3, order.getPhoneNumber());
-			postOrder.setString(4, order.getOrderType());
-			postOrder.setString(5, order.getOrderAddress());
+					"INSERT INTO biteme.order (ResturantID, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order," +
+							"Check_out_price, isBusiness, required_time)"
+							+ " VALUES (?,?,?,?,?,?,?,?);");
+			postOrder.setString(1, order.getRestaurantID());
+			postOrder.setTime(2, order.getTime_taken());
+			postOrder.setString(3, order.getPhone());
+			postOrder.setString(4, order.getType_of_order());
+			postOrder.setString(5, order.getDiscount_for_early_order());
+			postOrder.setString(5, order.getCheck_out_price());
+			postOrder.setString(5, order.getDiscount_for_early_order());
 			postOrder.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
