@@ -1,6 +1,8 @@
 package Server;
 
+import java.util.List;
 
+import donotenterdrinksorfood.*;
 /**
  * BiteMe
  *
@@ -12,7 +14,7 @@ public class OrderApiService{
      * Add a new order
      *
      */
-    public static void addOrder(Order body) {
+    public static void addOrder(Order body, Response response) {
         // TODO: Implement...
         
         
@@ -22,7 +24,7 @@ public class OrderApiService{
      * Return all the orders
      *
      */
-    public static List<Order> allOrders(String resturantID) {
+    public static List<Order> allOrders(String resturantID, Response response) {
         // TODO: Implement...
         
         return null;
@@ -32,7 +34,7 @@ public class OrderApiService{
      * Deletes an order
      *
      */
-    public static void deleteOrder(Long orderId) {
+    public static void deleteOrder(Integer orderId, Response response) {
         // TODO: Implement...
         
         
@@ -44,7 +46,7 @@ public class OrderApiService{
      * Returns a single order
      *
      */
-    public static Order getOrderById(Long orderId) {
+    public static Order getOrderById(Integer orderId, Response response) {
         // TODO: Implement...
         
         return null;
@@ -54,7 +56,7 @@ public class OrderApiService{
      * Get payment approval for monthly budget
      *
      */
-    public static void getPaymentApproval(Long accountID) {
+    public static void getPaymentApproval(Integer accountID, Response response) {
         // TODO: Implement...
         
         
@@ -64,7 +66,7 @@ public class OrderApiService{
      * Get resturants for the specific
      *
      */
-    public static List<Resturant> getResturants(List<String> area) {
+    public static List<Supplier> getResturants(String area, Response response) {
         // TODO: Implement...
         
         return null;
@@ -74,7 +76,7 @@ public class OrderApiService{
      * Updates a order in the DB with form data
      *
      */
-    public static void updateOrderWithForm(OrdersGetOrderByIdBody body) {
+    public static void updateOrderWithForm(Order body, Response response) {
         // TODO: Implement...
         
         
@@ -84,7 +86,7 @@ public class OrderApiService{
      * Updates a order in the DB with form data
      *
      */
-    public static void updateOrderWithForm(Long orderId, String address, String delivery) {
+    public static void updateOrderWithForm(Long orderId, String address, String delivery, Response response) {
         // TODO: Implement...
         
         

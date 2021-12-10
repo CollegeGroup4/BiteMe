@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import common.DBController;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
+import donotenterdrinksorfood.*;
 
 /**
  * This class overrides some of the methods in the abstract superclass in order
@@ -68,23 +69,26 @@ public class EchoServer extends AbstractServer {
 		JsonObject m = gson.fromJson((String)msg, JsonObject.class);
 		String method = gson.fromJson(m.get("method"), String.class);
 		String path = gson.fromJson(m.get("path"), String.class);
-		JsonObject response = new JsonObject();
+		Response response = new Response();
 		System.out.println("Message received: " + path + " "+ method + " from " + client);
 		
 		switch (path) {
 			case "/orders":
 				switch (method) {
 					case GET:
+							String resturantID = gson.fromJson(m.get("resturantID"), String.class);
 							OrderApiService.allOrders(resturantID, response);
 						break;
 					case POST:
-							OrderApiService.addOrder(orderBody,response);
+							Order addOrder = gson.fromJson(m.get("order"), Order.class);
+							OrderApiService.addOrder(addOrder,response);
 						break;
 					}
 				break;
 			case "/orders/payment":
 				switch (method) {
 					case GET:
+							Integer accountID = gson.fromJson(m.get("accountID"), Integer.class);
 							OrderApiService.getPaymentApproval(accountID,response);
 						break;
 					}
@@ -92,20 +96,23 @@ public class EchoServer extends AbstractServer {
 			case "/orders/resturants":
 				switch (method) {
 					case GET:
-						OrderApiService.getResturants(area,response);
+							String area  = gson.fromJson(m.get("area"), String.class);
+							OrderApiService.getResturants(area,response);
 						break;	
 				}
 				break;
 			case "/orders/getOrderById":
 				switch (method) {
 					case GET:
+						Integer orderID  = gson.fromJson(m.get("orderId"), Integer.class);
 						OrderApiService.getOrderById(orderID,response);
 						break;
 					case PUT:
-						OrderApiService.updateOrderWithForm(orderId, address, delivery);
+						OrderApiService.updateOrderWithForm(orderId, address, delivery,response);
 						break;
 					case DELETE:
-						OrderApiService.deleteOrder(orderId);
+						orderID  = gson.fromJson(m.get("orderId"), Integer.class);
+						OrderApiService.deleteOrder(orderID,response);
 				}
 				break;
 			case "/branch_manager":
