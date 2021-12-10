@@ -4,7 +4,10 @@
 package Server;
 
 import java.sql.Connection;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -32,12 +35,12 @@ public class EchoServer extends AbstractServer {
 	/**
 	 * The default port to listen on.
 	 */
-	// final public static int DEFAULT_PORT = 5555;
+	public static int DEFAULT_PORT;
 
 	// Constructors ****************************************************
-	public static String url,username,password;
+	public static String url, username, password;
+	public static Map<String, String> clients = new HashMap<>();
 
-	
 	/**
 	 * Constructs an instance of the echo server.
 	 *
@@ -51,7 +54,7 @@ public class EchoServer extends AbstractServer {
 	private final String POST = "POST";
 	private final String PUT = "PUT";
 	private final String DELETE = "DELETE";
-	
+
 	public EchoServer(int port) {
 		super(port);
 	}
@@ -143,8 +146,7 @@ public class EchoServer extends AbstractServer {
 			default:
 				break;
 		}
-		client.sendToClient(gson.toJson(response));
-		
+		client.sendToClient(gson.toJson(response));		
 	}
 
 	/**

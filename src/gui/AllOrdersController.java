@@ -9,11 +9,15 @@ import client.ChatClient;
 import client.ClientUI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import logic.Order;
 
 public class AllOrdersController implements Initializable {
@@ -38,9 +42,23 @@ public class AllOrdersController implements Initializable {
 
 	@FXML
 	private TableColumn<Order, String> OrderAddress;
+	
+    @FXML
+    private Button btnBack;
 
-	ObservableList<Order> orderList = FXCollections
-			.observableArrayList(new Order("steak", "raines", "055", Time.valueOf("19:05:23"), "delivered"));
+	private ObservableList<Order> orderList = FXCollections.observableArrayList();
+	
+    @FXML
+    void Back(ActionEvent event) {
+		((Node) event.getSource()).getScene().getWindow().hide();
+		Stage primaryStage = new Stage();
+		MainScreenController aFrame = new MainScreenController(); // create StudentFrame
+		try {
+			aFrame.start(primaryStage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 
 	@Override
 	public void initialize(URL url, ResourceBundle db) {
@@ -53,7 +71,7 @@ public class AllOrdersController implements Initializable {
 		tblID.setItems(orderList);
 	}
 
-	public void insertOrders(ArrayList<String> serverAns) {
+	public void insertOrdersToTbl(ArrayList<String> serverAns) {
 		String[] id = new String[2];
 		id[0] = new String("GETALL");
 		id[1] = new String("ORDER");
@@ -64,13 +82,12 @@ public class AllOrdersController implements Initializable {
 
 		} else {
 			ArrayList<String> orders = ChatClient.serverAns;
-			for (int i = 3; i < orders.size(); i++) {
+			for (int i = 2; i < orders.size(); i++) {
  				String[] result = orders.get(i).split(",");
 				Order temp = new Order(result[0], result[1], result[2], Time.valueOf(result[3]), result[4]);
 				temp.setOrderNum(Integer.valueOf(result[5]));
 				orderList.add(temp);
 			}
-
 		}
 	}
 }

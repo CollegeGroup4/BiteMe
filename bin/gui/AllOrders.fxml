@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="368.0" prefWidth="856.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="gui.AllOrdersController">
+<AnchorPane prefHeight="368.0" prefWidth="856.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AllOrdersController">
    <children>
       <TableView fx:id="tblID" layoutX="107.0" layoutY="39.0" prefHeight="200.0" prefWidth="643.0">
         <columns>
@@ -17,5 +17,6 @@
             <TableColumn fx:id="OrderAddress" prefWidth="173.0" text="Order Address" />
         </columns>
       </TableView>
+      <Button fx:id="btnBack" layoutX="47.0" layoutY="303.0" mnemonicParsing="false" onAction="#Back" text="Back" />
    </children>
 </AnchorPane>

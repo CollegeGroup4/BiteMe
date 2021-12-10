@@ -1,5 +1,5 @@
 package client;
-import gui.MainScreenController;
+import gui.ClientMainScreenController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -13,13 +13,7 @@ public class ClientUI extends Application {
 	 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		 chat= new ClientController("localhost", 5555);
-		// TODO Auto-generated method stub
-						  		
-		MainScreenController aFrame = new MainScreenController(); // create StudentFrame
-		 
+		ClientMainScreenController aFrame = new ClientMainScreenController();
 		aFrame.start(primaryStage);
 	}
-	
-	
 }

@@ -128,21 +128,30 @@ public class DBController {
 	 * TypeOfOrder from the order in DB with the same Order ID of the given order
 	 * return 0 if the order isn't in DB, 1 if the order was updated
 	 */
-	public static int updateOrder(Connection con, Order order) {
+	public static ArrayList<String> updateOrder(Connection con, Order order) {
 		PreparedStatement updateOrder;
+		ArrayList<String> res = new ArrayList<String>();
 		int flag = 0;
+		res.add("UPDATE");
+		res.add("ORDER");
 		try {
 			updateOrder = con.prepareStatement(
-					"UPDATE biteme.orders " + "SET OrderAddress = ? , TypeOfOrder = ? WHERE OrderNumber = ?");
+					"UPDATE biteme.order " + "SET OrderAddress = ? , TypeOfOrder = ? WHERE OrderNum = ?");
 			updateOrder.setString(1, order.getOrderAddress());
 			updateOrder.setString(2, order.getOrderType());
-			updateOrder.setInt(2, order.getOrderNum());
+			updateOrder.setInt(3, order.getOrderNum());
 			flag = updateOrder.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return flag;
+		if(flag == 0) {
+			res.add("ERROR");
+		}
+		else {
+			res.add("SUCCESS");
+		}
+		return res;
 	}
 
 	public static int getOrderNum(Connection con1, Order orderToSearch) {

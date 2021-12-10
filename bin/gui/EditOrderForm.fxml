@@ -23,5 +23,6 @@
       <TextField fx:id="txtPhone" layoutX="104.0" layoutY="187.0" />
       <Button fx:id="btnUpdate" layoutX="199.0" layoutY="290.0" mnemonicParsing="false" onAction="#UpdateOrder" text="Update" />
       <Button fx:id="btnBack" layoutX="28.0" layoutY="290.0" mnemonicParsing="false" onAction="#Back" text="Back" />
+      <Label fx:id="txtStatus" layoutX="118.0" layoutY="294.0" />
    </children>
 </AnchorPane>
