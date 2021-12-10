@@ -48,7 +48,7 @@ public class EchoServer extends AbstractServer {
 	 * 
 	 */
 	public static ArrayList<String> orders = new ArrayList<String>();
-	public Connection con;
+	public static Connection con;
 	public Gson gson;
 	private final String GET = "GET";
 	private final String POST = "POST";

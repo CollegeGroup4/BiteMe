@@ -1,12 +1,13 @@
 package Server;
 
 public class Response {
-	private String code, description;
+	private Integer code;
+	private String description;
 	private Object body;
-	public String getCode() {
+	public Integer getCode() {
 		return code;
 	}
-	public void setCode(String code) {
+	public void setCode(Integer code) {
 		this.code = code;
 	}
 	public String getDescription() {

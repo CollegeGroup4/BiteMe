@@ -1,6 +1,6 @@
 package logic;
 
-public class item {
+public class Item {
 	private int itemID;
 	private int restaurantID;
 	private String Type;
@@ -10,8 +10,8 @@ public class item {
 	private String ingrediants;
 	private Options[] options;
 	public byte[] photo;
-	public item(int itemID, int restaurantID, String type, String name, float price, String description,
-			String ingrediants, Options[] options, byte[] photo) {
+	public Item(int itemID, int restaurantID, String type, String name, float price, String description,
+                String ingrediants, Options[] options, byte[] photo) {
 		this.itemID = itemID;
 		this.restaurantID = restaurantID;
 		Type = type;

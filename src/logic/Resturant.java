@@ -1,13 +1,13 @@
 package logic;
 
-public class Supplier {
+public class Resturant {
 	private int ID;
 	private boolean isApproved;
 	private int BranchManagerID;
 	private String name;
 	private String area;
 	public byte[] photo;
-	public Supplier(int ID, boolean isApproved, int branchManagerID, String name, String area, byte[] photo) {
+	public Resturant(int ID, boolean isApproved, int branchManagerID, String name, String area, byte[] photo) {
 		this.ID = ID;
 		this.isApproved = isApproved;
 		BranchManagerID = branchManagerID;
