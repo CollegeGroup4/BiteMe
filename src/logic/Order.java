@@ -1,83 +1,110 @@
 package logic;
 
-import java.sql.Time;
-
 public class Order {
-	private String resturant;
-	private String orderAddress;
-	private String phoneNumber;
-	private int orderNum;
-	private Time orderTime;
-	private String orderType;
-
-	public Order(String resturant, String orderAddress, String phoneNumber, Time orderTime,
-			String orderType) {
+	private int orderID;
+	private int restaurantID;
+	private String time_taken;
+	private float check_out_price;
+	private String required_time;
+	private String type_of_order;
+	private int accountID;
+	private String phone;
+	private int discount_for_early_order;
+	private boolean isBuisness;
+	
+	public Order(int orderID, int restaurantID, String time_taken, float check_out_price, String required_time,
+			String type_of_order, int accountID, String phone, int discount_for_early_order, boolean isBuisness) {
 		super();
-		this.resturant = resturant;
-		this.orderAddress = orderAddress;
-		this.phoneNumber = phoneNumber;
-		this.orderTime = orderTime;
-		this.orderType = orderType;
-
+		this.orderID = orderID;
+		this.restaurantID = restaurantID;
+		this.time_taken = time_taken;
+		this.check_out_price = check_out_price;
+		this.required_time = required_time;
+		this.type_of_order = type_of_order;
+		this.accountID = accountID;
+		this.phone = phone;
+		this.discount_for_early_order = discount_for_early_order;
+		this.isBuisness = isBuisness;
 	}
 
-	public String getResturant() {
-		return resturant;
+	public int getOrderID() {
+		return orderID;
 	}
 
-	public void setResturant(String resturant) {
-		this.resturant = resturant;
+	public void setOrderID(int orderID) {
+		this.orderID = orderID;
 	}
 
-	public String getOrderAddress() {
-		return orderAddress;
+	public int getRestaurantID() {
+		return restaurantID;
 	}
 
-	public void setOrderAddress(String orderAddress) {
-		this.orderAddress = orderAddress;
+	public void setRestaurantID(int restaurantID) {
+		this.restaurantID = restaurantID;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getTime_taken() {
+		return time_taken;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setTime_taken(String time_taken) {
+		this.time_taken = time_taken;
 	}
 
-	public int getOrderNum() {
-		return orderNum;
+	public float getCheck_out_price() {
+		return check_out_price;
 	}
 
-	public void setOrderNum(int orderNum) {
-		this.orderNum = orderNum;
+	public void setCheck_out_price(float check_out_price) {
+		this.check_out_price = check_out_price;
 	}
 
-	public Time getOrderTime() {
-		return orderTime;
+	public String getRequired_time() {
+		return required_time;
 	}
 
-	public void setOrderTime(Time orderTime) {
-		this.orderTime = orderTime;
+	public void setRequired_time(String required_time) {
+		this.required_time = required_time;
 	}
 
-	public String getOrderType() {
-		return orderType;
+	public String getType_of_order() {
+		return type_of_order;
 	}
 
-	public void setOrderType(String orderType) {
-		this.orderType = orderType;
+	public void setType_of_order(String type_of_order) {
+		this.type_of_order = type_of_order;
+	}
+
+	public int getAccountID() {
+		return accountID;
+	}
+
+	public void setAccountID(int accountID) {
+		this.accountID = accountID;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public int getDiscount_for_early_order() {
+		return discount_for_early_order;
+	}
+
+	public void setDiscount_for_early_order(int discount_for_early_order) {
+		this.discount_for_early_order = discount_for_early_order;
+	}
+
+	public boolean isBuisness() {
+		return isBuisness;
+	}
+
+	public void setBuisness(boolean isBuisness) {
+		this.isBuisness = isBuisness;
 	}
 	
-	@Override
-	public String toString() {
-		StringBuilder tostring = new StringBuilder();
-		tostring.append(getResturant() + ",");
-		tostring.append(getOrderAddress() + ",");
-		tostring.append(getPhoneNumber() + ",");
-		tostring.append(getOrderTime() + ",");
-		tostring.append(getOrderType() + ",");
-		tostring.append(getOrderNum());
-		return tostring.toString();
-	}
 }

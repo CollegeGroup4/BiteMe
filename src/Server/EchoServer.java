@@ -3,15 +3,18 @@
 // license found at www.lloseng.com 
 package Server;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import common.DBController;
-import logic.Order;
+import logic.*;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
 
@@ -44,17 +47,16 @@ public class EchoServer extends AbstractServer {
 	 * @param port The port number to connect on.
 	 * 
 	 */
-	public static ArrayList<String> res;
-	public static String[] port = new String[2];
-	Connection con;
-	public static ServerPortFrameController serverController;
+	public static ArrayList<String> orders = new ArrayList<String>();
+	public Connection con;
+	public Gson gson;
+	private final String GET = "GET";
+	private final String POST = "POST";
+	private final String PUT = "PUT";
+	private final String DELETE = "DELETE";
 
 	public EchoServer(int port) {
 		super(port);
-	}
-
-	public void setController(ServerPortFrameController aFrame) {
-		serverController = aFrame;
 	}
 
 	// Instance methods ************************************************
@@ -67,47 +69,84 @@ public class EchoServer extends AbstractServer {
 	 * @param
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-
-		System.out.println("Message received: " + msg + " from " + client);
-
-		String[] temp = (String[]) msg;
-		if (temp[0].equals("GETALL")) {
-			if (temp[1].equals("ORDER")) {
-				res = DBController.getOrders(con);
-			}
-		} else if (temp[0].equals("GET")) {
-			if (temp[1].equals("ORDER")) {
-				res = DBController.getOrder(con, temp[2]);
-			}
-		} else if (temp[0].equals("UPDATE")) {
-			if (temp[1].equals("ORDER")) {
-				res = DBController.updateOrder(con, stringToOrder(temp[2]));
-			}
-		} else if (temp[0].equals("PING")) {
-			clients.put(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
-			res = new ArrayList<String>();
-			res.add("PORT");
-			res.add(String.valueOf(DEFAULT_PORT));
-			ServerPortFrameController.isAdded = true;
-		} else if (temp[0].equals("EXIT")) {
-			clients.remove(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
-			ServerPortFrameController.isAdded = true;
+		JsonObject m = gson.fromJson((String)msg, JsonObject.class);
+		String method = gson.fromJson(m.get("method"), String.class);
+		String path = gson.fromJson(m.get("path"), String.class);
+		Response response = new Response();
+		System.out.println("Message received: " + path + " "+ method + " from " + client);
+		
+		switch (path) {
+			case "/orders":
+				switch (method) {
+					case GET:
+							String resturantID = gson.fromJson(m.get("resturantID"), String.class);
+							OrderApiService.allOrders(resturantID, response);
+						break;
+					case POST:
+							Order addOrder = gson.fromJson(m.get("order"), Order.class);
+							OrderApiService.addOrder(addOrder,response);
+						break;
+					}
+				break;
+			case "/orders/payment":
+				switch (method) {
+					case GET:
+							Integer accountID = gson.fromJson(m.get("accountID"), Integer.class);
+							OrderApiService.getPaymentApproval(accountID,response);
+						break;
+					}
+				break;
+			case "/orders/resturants":
+				switch (method) {
+					case GET:
+							String area  = gson.fromJson(m.get("area"), String.class);
+							OrderApiService.getResturants(area,response);
+						break;	
+				}
+				break;
+			case "/orders/getOrderById":
+				switch (method) {
+					case GET:
+						Integer orderID  = gson.fromJson(m.get("orderId"), Integer.class);
+						OrderApiService.getOrderById(orderID,response);
+						break;
+					case PUT:
+						OrderApiService.updateOrderWithForm(orderId, address, delivery,response);
+						break;
+					case DELETE:
+						orderID  = gson.fromJson(m.get("orderId"), Integer.class);
+						OrderApiService.deleteOrder(orderID,response);
+				}
+				break;
+			case "/branch_manager":
+				break;
+			case "/branch_manager/orders":
+				break;
+			case "/suppliers/menus":
+				break;
+			case "/suppliers/items":
+				break;
+			case "/suppliers/getItemsBeMenu":
+				break;
+			case "/suppliers/approveOrder":
+				break;
+			case "/accounts":
+				break;
+			case "/accounts/createWithArray":
+				break;
+			case "/accounts/createWithList":
+				break;
+			case "/accounts/login":
+				break;
+			case "/accounts/logout":
+				break;
+			case "/accounts/getUser":
+				break;
+	
+			default:
+				break;
 		}
-		try {
-			client.sendToClient(res);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	private Order stringToOrder(String orderString) {
-		String[] result = orderString.split(",");
-		Order temp = new Order(result[0], result[1], result[2], Time.valueOf(result[3]), result[4]);
-		temp.setOrderNum(Integer.valueOf(result[5]));
-		System.out.println(temp);
-		return temp;
+		client.sendToClient(gson.toJson(response));		
 	}
 
 	/**
@@ -117,6 +156,7 @@ public class EchoServer extends AbstractServer {
 	protected void serverStarted() {
 		System.out.println("Server listening for connections on port " + getPort());
 		con = DBController.getMySQLConnection(EchoServer.url, EchoServer.username, EchoServer.password);
+		Gson gson = new Gson();
 	}
 
 	/**
