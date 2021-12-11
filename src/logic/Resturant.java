@@ -7,6 +7,7 @@ public class Resturant {
 	private String name;
 	private String area;
 	public byte[] photo;
+	
 	public Resturant(int ID, boolean isApproved, int branchManagerID, String name, String area, byte[] photo) {
 		this.ID = ID;
 		this.isApproved = isApproved;
@@ -15,6 +16,7 @@ public class Resturant {
 		this.area = area;
 		this.photo = photo;
 	}
+	
 	public int getID() {
 		return ID;
 	}

@@ -16,7 +16,6 @@ public class ServerUI extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		ServerPortFrameController aFrame = new ServerPortFrameController(); // create StudentFrame
-		EchoServer.serverController = aFrame;
 		aFrame.start(primaryStage);
 	}
 
@@ -32,7 +31,6 @@ public class ServerUI extends Application {
 
 		EchoServer sv = new EchoServer(port);
 		echoServer = sv;
-		echoServer.setController(serverController);
 		try {
 			sv.listen(); // Start listening for connections
 		} catch (Exception ex) {

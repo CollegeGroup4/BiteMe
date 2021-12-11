@@ -20,7 +20,7 @@ public class OrderApiService{
      *
      */
     public static void addOrder(Order order, Response response) {
-        ResultSet rs
+        ResultSet rs;
         try {
             PreparedStatement postOrder = EchoServer.con.prepareStatement(
                     "INSERT INTO biteme.order (ResturantID, ResturantName,OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order," +
