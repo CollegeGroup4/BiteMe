@@ -1,8 +1,6 @@
-package logic;
+package client;
 
-import java.util.Arrays;
-
-public class Order {
+public class OrderC {
 	private int orderID;
 	private int restaurantID;
 	private String restaurantName;
@@ -14,19 +12,18 @@ public class Order {
 	private String phone;
 	private int discount_for_early_order;
 	private boolean isBuisness;
-	private Item[] items;
-	private Shippment shippment;
+	private String course;
 
 	@Override
 	public String toString() {
-		return "Order [orderID=" + orderID + ", restaurantID=" + restaurantID + ", restaurantName=" + restaurantName
+		return "OrderC [orderID=" + orderID + ", restaurantID=" + restaurantID + ", restaurantName=" + restaurantName
 				+ ", time_taken=" + time_taken + ", check_out_price=" + check_out_price + ", required_time="
 				+ required_time + ", type_of_order=" + type_of_order + ", accountID=" + accountID + ", phone=" + phone
-				+ ", discount_for_early_order=" + discount_for_early_order + ", isBuisness=" + isBuisness + ", items="
-				+ Arrays.toString(items) + ", shippment=" + shippment + "]";
+				+ ", discount_for_early_order=" + discount_for_early_order + ", isBuisness=" + isBuisness + ", course="
+				+ course + "]";
 	}
 
-	public Order(int orderID, int restaurantID, String restaurantName, String time_taken, float check_out_price, String required_time, String type_of_order, int accountID, String phone, int discount_for_early_order, boolean isBuisness, Item[] items, Shippment shippment) {
+	public OrderC(int orderID, int restaurantID, String restaurantName, String time_taken, float check_out_price, String required_time, String type_of_order, int accountID, String phone, int discount_for_early_order, boolean isBuisness, String course) {
 		this.orderID = orderID;
 		this.restaurantID = restaurantID;
 		this.restaurantName = restaurantName;
@@ -38,8 +35,15 @@ public class Order {
 		this.phone = phone;
 		this.discount_for_early_order = discount_for_early_order;
 		this.isBuisness = isBuisness;
-		this.items = items;
-		this.shippment = shippment;
+		this.course = course;
+	}
+
+	public String getCourse() {
+		return course;
+	}
+
+	public void setCourse(String course) {
+		this.course = course;
 	}
 
 	public int getOrderID() {
@@ -111,19 +115,6 @@ public class Order {
 	public void setBuisness(boolean isBuisness) {
 		this.isBuisness = isBuisness;
 	}
-	public Item[] getItems() {
-		return items;
-	}
-	public void setItems(Item[] items) {
-		this.items = items;
-	}
-
-	public Shippment getShippment() {
-		return shippment;
-	}
-
-	public void setShippment(Shippment shippment) {
-		this.shippment = shippment;
-	}
+	
 
 }

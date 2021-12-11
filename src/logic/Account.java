@@ -1,8 +1,8 @@
 package logic;
 
 public class Account {
-	private int AccountID;
-	private String UserName;
+	private int userID;
+	private String userName;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -14,10 +14,10 @@ public class Account {
 	private int branch_manager_ID;
 	private String area;
 	
-	public Account(int accountID, String userName, String firstName, String lastName, String email, String type,
+	public Account(int userID, String userName, String firstName, String lastName, String email, String type,
 			String phone, boolean isBusiness, String status, String w4c_code, int branch_manager_ID, String area) {
-		AccountID = accountID;
-		UserName = userName;
+		this.userID = userID;
+		this.userName = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -30,16 +30,16 @@ public class Account {
 		this.area = area;
 	}
 	public int getAccountID() {
-		return AccountID;
+		return userID;
 	}
-	public void setAccountID(int accountID) {
-		AccountID = accountID;
+	public void setAccountID(int userID) {
+		this.userID = userID;
 	}
 	public String getUserName() {
-		return UserName;
+		return userName;
 	}
 	public void setUserName(String userName) {
-		UserName = userName;
+		this.userName = userName;
 	}
 	public String getFirstName() {
 		return firstName;

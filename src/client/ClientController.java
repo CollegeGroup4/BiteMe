@@ -31,7 +31,7 @@ public class ClientController implements ChatIF
   /**
    * The instance of the client that created this ConsoleChat.
    */
-  ChatClient client;
+   UserClient client;
 
   //Constructors ****************************************************
 
@@ -45,7 +45,7 @@ public class ClientController implements ChatIF
   {
     try 
     {
-      client= new ChatClient(host, port, this);
+      client= new UserClient(host, port, this);
     } 
     catch(IOException exception) 
     {
