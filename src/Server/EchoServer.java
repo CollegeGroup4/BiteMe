@@ -74,8 +74,13 @@ public class EchoServer extends AbstractServer {
 		String path = gson.fromJson(m.get("path"), String.class);
 		Response response = new Response();
 		System.out.println("Message received: " + path + " "+ method + " from " + client);
-		
 		switch (path) {
+			case "/ping":
+				clients.put(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
+				ServerPortFrameController.isAdded = true;
+				response.setCode(200);
+				response.setDescription("A connaction with the server has been established at port " + DEFAULT_PORT);
+				break;
 			case "/orders":
 				switch (method) {
 					case GET:
