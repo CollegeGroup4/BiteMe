@@ -183,7 +183,7 @@ public class ServerPortFrameController implements Initializable {
 	
 	private void setIP() {
 		try {
-			lblIP.setText(Inet4Address.getLoopbackAddress().getHostAddress());
+			lblIP.setText(Inet4Address.getLocalHost().getHostAddress());
 			System.out.println("host name: " + InetAddress.getLocalHost().getHostName());
 			System.out.println("ip: " + InetAddress.getLocalHost().getHostAddress());
 		} catch (UnknownHostException e) {
@@ -222,7 +222,7 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	private void setDBPassword() {
-		lblDBPassword.setText("MoshPe2969999");
+		lblDBPassword.setText("Tc74123695");
 	}
 
 	public String getDBPassword() {

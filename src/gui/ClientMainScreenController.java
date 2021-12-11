@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -79,6 +80,7 @@ public class ClientMainScreenController {
 		}
 		if (ChatClient.serverAns.get(0).equals("PORT"))
 			getportFromServer(ChatClient.serverAns.get(1));
+		
 		String p = getportText();
 		if (p.trim().isEmpty()) {
 			labelIncorect.setText("incorect");
@@ -87,11 +89,9 @@ public class ClientMainScreenController {
 			if (p.equals(port)) {
 				((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 				Stage primaryStage = new Stage();
-				Pane root = loader.load(getClass().getResource("/gui/MainScreen.fxml").openStream());
+				AnchorPane root = loader.load(getClass().getResource("/guiNew/Login.fxml").openStream());
 				Scene scene = new Scene(root);
-				scene.getStylesheets().add(getClass().getResource("/gui/MainScreen.css").toExternalForm());
-				primaryStage.setTitle("Order");
-
+				primaryStage.setTitle("Login");
 				primaryStage.setScene(scene);
 				primaryStage.show();
 			} else

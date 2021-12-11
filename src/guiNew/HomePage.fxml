@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="800.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="guiNew.HomeController">
+   <children>
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="102.0" prefWidth="751.0" spacing="50.0" style="-fx-background-radius: 50px;">
+         <children>
+            <Hyperlink fx:id="hyperLinkSignin" onAction="#signin" style="-fx-border-color: white;" text="SignIn" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink fx:id="hyperLinkLogin" onAction="#login" text="Login" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font></Hyperlink>
+            <Hyperlink fx:id="hyperLinkAbout" onAction="#about" text="About" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font></Hyperlink>
+            <ImageView fitHeight="102.0" fitWidth="301.0">
+               <image>
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <AnchorPane layoutX="14.0" layoutY="96.0" prefHeight="534.0" prefWidth="772.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+         <children>
+            <AnchorPane layoutX="14.0" layoutY="31.0" prefHeight="218.0" prefWidth="725.0">
+               <children>
+                  <ImageView fitHeight="99.0" fitWidth="133.0" layoutX="564.0" layoutY="63.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/BBB.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="102.0" fitWidth="118.0" layoutX="485.0" layoutY="91.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/Atza.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="253.0" layoutY="20.0" prefHeight="54.0" prefWidth="240.0" text="Our restaurants">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="30.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="462.0" layoutY="141.0" mnemonicParsing="false" text="&gt;&gt;" />
+                  <ImageView fitHeight="87.0" fitWidth="105.0" layoutX="27.0" layoutY="79.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/M.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="91.0" fitWidth="153.0" layoutX="115.0" layoutY="98.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/PizzaHut.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="102.0" fitWidth="190.0" layoutX="272.0" layoutY="101.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/ruben.png" />
+                     </image>
+                  </ImageView>
+                  <Button layoutX="239.0" layoutY="140.0" mnemonicParsing="false" text="&lt;&lt;" />
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="16.0" layoutY="249.0" prefHeight="200.0" prefWidth="720.0" style="-fx-background-radius: 50px;">
+               <children>
+                  <ImageView fitHeight="120.0" fitWidth="701.0" layoutX="42.0" layoutY="63.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/Aboutus.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="20.0" layoutY="35.0" prefHeight="36.0" prefWidth="141.0" text="About us:">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="30.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <Button fx:id="btnJoin" layoutX="333.0" layoutY="449.0" mnemonicParsing="false" onAction="#login" prefHeight="35.0" prefWidth="133.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Join us">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <HBox fx:id="Nav1" alignment="CENTER" layoutX="-1.0" layoutY="631.0" prefHeight="102.0" prefWidth="806.0" spacing="35.0" style="-fx-background-radius: 50px;">
+         <children>
+            <ImageView fitHeight="71.0" fitWidth="193.0">
+               <image>
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+               </image>
+            </ImageView>
+            <AnchorPane prefHeight="107.0" prefWidth="91.0">
+               <children>
+                  <Hyperlink layoutX="-3.0" layoutY="23.0" text="Contect us:" textFill="WHITE">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+                     </font>
+                  </Hyperlink>
+                  <ImageView fitHeight="26.0" fitWidth="24.0" layoutX="39.0" layoutY="51.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/facebook-icon-preview-1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="19.0" fitWidth="21.0" layoutX="66.0" layoutY="55.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/instagram.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="91.0" layoutY="54.0">
+                     <image>
+                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/WhatsApp.svg.png" />
+                     </image>
+                  </ImageView>
+                  <Line endX="-20.0" layoutX="101.0" layoutY="47.0" startX="-100.0" stroke="WHITE" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="107.0" prefWidth="91.0">
+               <children>
+                  <Hyperlink layoutX="-3.0" layoutY="52.0" text="contect@BiteMe.co.il" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink layoutX="2.0" layoutY="74.0" text="Israel Karmiel, Gan Ha'ir 100" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding>
+                  </Hyperlink>
+                  <Hyperlink layoutX="-4.0" layoutY="33.0" text="04-9999090" textFill="WHITE">
+                     <font>
+                        <Font name="Bell MT Bold" size="15.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+               <padding>
+                  <Insets right="30.0" />
+               </padding>
+            </AnchorPane>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
