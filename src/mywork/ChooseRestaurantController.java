@@ -88,13 +88,17 @@ public class ChooseRestaurantController implements Initializable {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/mywork/ChooseMenu.fxml").openStream());
-		ChooseMenuController chooseMenuController = loader.getController();
-		chooseMenuController.setName();
-		chooseMenuController.setRestName();
+		Pane root = loader.load(getClass().getResource("/mywork/PrepareADish.fxml").openStream());
+		//PrepareADishController prepareADishController = loader.getController();
+		//prepareADishController.setName();
+		//prepareADishController.setRestName();
+		PrepareADishController.prepareADishController=loader.getController();
+		PrepareADishController.prepareADishController.setName();
+		PrepareADishController.prepareADishController.setRestName();
+
 
 		Scene scene = new Scene(root);
-		primaryStage.setTitle("Choose Menu Page");
+		primaryStage.setTitle("Prepare A Dish Page");
 
 		primaryStage.setScene(scene);
 		primaryStage.show();

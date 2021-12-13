@@ -55,12 +55,7 @@
                         <Font name="Berlin Sans FB Demi Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Label prefHeight="17.0" prefWidth="95.0" text="Choose Menu">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label prefHeight="17.0" prefWidth="95.0" text="Chooes Items">
+                  <Label prefHeight="17.0" prefWidth="106.0" text="Prepare a Dish">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>
