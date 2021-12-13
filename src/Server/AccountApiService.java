@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import javafx.scene.control.PasswordField;
 import logic.Account;
+import logic.User;
 
 /**
  * BiteMe
@@ -25,7 +27,7 @@ public class AccountApiService{
                     "INSERT INTO biteme.account (UserID, UserName,FirstName, LastName, PhoneNumber, Email,"
                     + " W4C, Type, status, branchManagerID, Area, isLoggedIn, isBusiness)"
                             + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
-            postAccount.setInt(1, account.getAccountID());
+            postAccount.setInt(1, account.getUserID());
             //Its the first userName that he had so the test is in users table on login
             postAccount.setString(2, account.getUserName());
             postAccount.setString(3, account.getFirstName());
@@ -41,7 +43,6 @@ public class AccountApiService{
             postAccount.setBoolean(12, false);
             postAccount.setBoolean(13, account.isBusiness());
             postAccount.execute();
-            rs = postAccount.getResultSet();
         }
     	catch (SQLException e) {
           if (e.getErrorCode() == 1062){
@@ -55,30 +56,9 @@ public class AccountApiService{
           return;
       }
         response.setCode(200);
-        response.setDescription("Success in registering" + account.getAccountID());
-        
+        response.setDescription("Success in registering" + account.getUserID());        
     }
-    
-    /**
-     * Creates list of Accounts with given input array
-     *
-     */
-    public static void createAccountsWithArrayInput(List<Account> body) {
-        // TODO: Implement...
-        
-        
-    }
-    
-    /**
-     * Creates list of Accounts with given input array
-     *
-     */
-    public void createAccountsWithListInput(List<Account> body) {
-        // TODO: Implement...
-        
-        
-    }
-    
+  
     /**
      * Delete Account
      *
@@ -105,17 +85,71 @@ public class AccountApiService{
      * Logs Account into the system
      *
      */
-    public static String loginAccount(String userName, String password) {
-        // TODO: Implement...
-        
-        return null;
+    public static void loginAccount(String userName, String password, Response response) {
+    		ResultSet rs;
+    		Account account = null;
+    	try {
+            PreparedStatement loginAccount = EchoServer.con.prepareStatement(
+                    "SELECT users.isLoggedIn FROM users biteme.users WHERE users.UserName = ? and users.Password = ?;"
+                    + "UPDATE users biteme.users SET isLoggedIn = 1 WHERE users.UserName = ? and users.Password = ?;");
+            loginAccount.setString(1, userName);
+            //Its the first userName that he had so the test is in users table on login
+            loginAccount.setString(2, password);
+            loginAccount.execute();
+            rs = loginAccount.getResultSet();
+            if(rs.getBoolean(1)) {
+            	throw new SQLException("User is already logged in", "400", 400);
+            }
+            else if (rs.getFetchSize() == 0) {
+            	throw new SQLException("User isn't exist");
+            }
+    	}
+    	catch (SQLException e) {
+          if (e.getErrorCode() == 400){
+              response.setCode(400);
+              response.setDescription(e.getMessage());
+          }
+          else {
+        	  response.setCode(404);
+              response.setDescription(e.getMessage());
+          }
+          try {
+        	  PreparedStatement loginAccount = EchoServer.con.prepareStatement("SELECT * FROM accounts biteme.account WHERE accounts.UserName = ?;");
+        	  rs = loginAccount.getResultSet();
+        	  account = new Account(
+        			  rs.getInt(finals.ACCOUNT_USER_ID),
+        			  rs.getString(finals.ACCOUNT_USER_NAME),
+        			  rs.getString(finals.ACCOUNT_FIRST_NAME),
+        			  rs.getString(finals.ACCOUNT_LAST_NAME),
+        			  rs.getString(finals.ACCOUNT_EMAIL),
+        			  rs.getString(finals.ACCOUNT_TYPE),
+        			  rs.getString(finals.ACCOUNT_PHONE),
+        			  rs.getBoolean(finals.ACCOUNT_IS_BUSINESS),
+        			  rs.getString(finals.ACCOUNT_STATUS),
+        			  rs.getString(finals.ACCOUNT_W4C_CODE),
+        			  rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID),
+        			  rs.getString(finals.ACCOUNT_AREA),
+        			  rs.getInt(finals.ACCOUNT_DEBT));
+        	  if(account.getStatus().equals("locked")) {
+        		 throw new SQLException("Account" + account.getUserID() + "is locked", "400", 401); 
+        	  }
+          }catch (SQLException e1) {
+        	  if (e1.getErrorCode() == 401){
+                  response.setCode(401);
+                  response.setDescription(e.getMessage());
+              }
+		}
+          response.setCode(200);
+          response.setDescription("Success in login " + account.getUserID());
+          response.setBody(account);
+      }
     }
     
     /**
      * Logs out current logged in Account session
      *
      */
-    public static void logoutAccount() {
+    public static void logoutAccount(String userName, Response response) {
         // TODO: Implement...
         
         
