@@ -1,5 +1,10 @@
 package Server;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
+import logic.Account;
 
 /**
  * BiteMe
@@ -14,9 +19,43 @@ public class AccountApiService{
      * This can only be done by the logged in Account.
      *
      */
-    public static void createAccount(Account body) {
-        // TODO: Implement...
-        
+    public static void createAccount(Account account, Response response) {
+        try {
+            PreparedStatement postAccount = EchoServer.con.prepareStatement(
+                    "INSERT INTO biteme.account (UserID, UserName,FirstName, LastName, PhoneNumber, Email,"
+                    + " W4C, Type, status, branchManagerID, Area, isLoggedIn, isBusiness)"
+                            + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
+            postAccount.setInt(1, account.getAccountID());
+            //Its the first userName that he had so the test is in users table on login
+            postAccount.setString(2, account.getUserName());
+            postAccount.setString(3, account.getFirstName());
+            postAccount.setString(4, account.getLastName());
+            postAccount.setString(5, account.getPhone());
+            postAccount.setString(6, account.getEmail());
+            postAccount.setString(7, account.getW4c_code());
+            postAccount.setString(8, account.getType());
+            postAccount.setString(9, account.getStatus());
+            postAccount.setInt(10, account.getBranch_manager_ID());
+            postAccount.setString(11, account.getArea());
+            // isLoggedIn
+            postAccount.setBoolean(12, false);
+            postAccount.setBoolean(13, account.isBusiness());
+            postAccount.execute();
+            rs = postAccount.getResultSet();
+        }
+    	catch (SQLException e) {
+          if (e.getErrorCode() == 1062){
+              response.setCode(404);
+              response.setDescription("User id already exist");
+          }
+          else {
+        	  response.setCode(400);
+              response.setDescription("Fields are missing");
+          }
+          return;
+      }
+        response.setCode(200);
+        response.setDescription("Success in registering" + account.getAccountID());
         
     }
     
