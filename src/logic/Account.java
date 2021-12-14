@@ -1,50 +1,51 @@
 package logic;
 
 public class Account {
-	private int userID;
+	private int accountID;
 	private String userName;
+	private String password;
 	private String firstName;
 	private String lastName;
 	private String email;
 	private String type;
 	private String phone;
-	private boolean isBusiness;
 	private String status;
-	private String w4c_code;
 	private int branch_manager_ID;
 	private String area;
 	private int debt;
-
-	public Account(int userID, String userName, String firstName, String lastName, String email, String type,
-			String phone, boolean isBusiness, String status, String w4c_code, int branch_manager_ID, String area,
-			int debt) {
+	public Account(int accountID, String userName, String password, String firstName, String lastName, String email,
+			String type, String phone, String status, int branch_manager_ID, String area, int debt) {
 		super();
-		this.userID = userID;
+		this.accountID = accountID;
 		this.userName = userName;
+		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.type = type;
 		this.phone = phone;
-		this.isBusiness = isBusiness;
 		this.status = status;
-		this.w4c_code = w4c_code;
 		this.branch_manager_ID = branch_manager_ID;
 		this.area = area;
 		this.debt = debt;
 	}
-	
 	public int getUserID() {
-		return userID;
+		return accountID;
 	}
 	public void setUserID(int userID) {
-		this.userID = userID;
+		this.accountID = userID;
 	}
 	public String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -76,23 +77,11 @@ public class Account {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public boolean isBusiness() {
-		return isBusiness;
-	}
-	public void setBusiness(boolean isBusiness) {
-		this.isBusiness = isBusiness;
-	}
 	public String getStatus() {
 		return status;
 	}
 	public void setStatus(String status) {
 		this.status = status;
-	}
-	public String getW4c_code() {
-		return w4c_code;
-	}
-	public void setW4c_code(String w4c_code) {
-		this.w4c_code = w4c_code;
 	}
 	public int getBranch_manager_ID() {
 		return branch_manager_ID;
@@ -112,5 +101,7 @@ public class Account {
 	public void setDebt(int debt) {
 		this.debt = debt;
 	}
+
+	
 	
 }

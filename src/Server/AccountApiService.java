@@ -26,24 +26,21 @@ public class AccountApiService {
 	public static void createAccount(Account account, Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.account (UserID, UserName,FirstName, LastName, PhoneNumber, Email,"
-							+ " W4C, Type, status, branchManagerID, Area, isLoggedIn, isBusiness)"
-							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
+					"INSERT INTO biteme.account (AccountID, UserName, Password, FirstName, LastName, PhoneNumber, Email,"
+							+ " Type, status, BranchManagerID, Area)"
+							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
 			postAccount.setInt(1, account.getUserID());
 			// Its the first userName that he had so the test is in users table on login
 			postAccount.setString(2, account.getUserName());
-			postAccount.setString(3, account.getFirstName());
-			postAccount.setString(4, account.getLastName());
-			postAccount.setString(5, account.getPhone());
-			postAccount.setString(6, account.getEmail());
-			postAccount.setString(7, account.getW4c_code());
+			postAccount.setString(3, account.getPassword());
+			postAccount.setString(4, account.getFirstName());
+			postAccount.setString(5, account.getLastName());
+			postAccount.setString(6, account.getPhone());
+			postAccount.setString(7, account.getEmail());
 			postAccount.setString(8, account.getType());
 			postAccount.setString(9, account.getStatus());
 			postAccount.setInt(10, account.getBranch_manager_ID());
 			postAccount.setString(11, account.getArea());
-			// isLoggedIn
-			postAccount.setBoolean(12, false);
-			postAccount.setBoolean(13, account.isBusiness());
 			postAccount.execute();
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
@@ -59,8 +56,10 @@ public class AccountApiService {
 		response.setDescription("Success in registering" + account.getUserID());
 		response.setBody(null);
 	}
+
 	/**
 	 * Generate a random hex string at size of 50
+	 * 
 	 * @param numchars
 	 * @return
 	 */
@@ -80,21 +79,20 @@ public class AccountApiService {
 	 * This can only be done by the logged in Account.
 	 *
 	 */
-	public static void deleteAccount(String userName, int userID, int branchManagerID, Response response) {
+	public static void deleteAccount(String userName, int accountID, Response response) {
 		Account account = null;
 		try {
 			PreparedStatement deleteAccount = EchoServer.con.prepareStatement(
-					"DELETE FROM accounts biteme.account WHERE accounts.UserName = ? and accounts.UserID = ? and accounts.BranchManagerID = ?;");
+					"DELETE FROM accounts biteme.account WHERE accounts.UserName = ? AND accounts.AccountID = ?;");
 			deleteAccount.setString(1, userName);
 			// Its the first userName that he had so the test is in users table on login
-			deleteAccount.setInt(2, userID);
-			deleteAccount.setInt(3, branchManagerID);
+			deleteAccount.setInt(2, accountID);
 			deleteAccount.execute();
 			deleteAccount.getResultSet();
 		} catch (SQLException e) {
 		}
 		response.setCode(200);
-		response.setDescription("Success in deleting account " + userID);
+		response.setDescription("Success in deleting account " + accountID);
 		response.setBody(null);
 	}
 
@@ -108,15 +106,14 @@ public class AccountApiService {
 		ArrayList<Account> acccounts = new ArrayList<>();
 		try {
 			PreparedStatement loginAccount = EchoServer.con
-					.prepareStatement("SELECT * FROM accounts biteme.account WHERE branchManagerID = ?;");
+					.prepareStatement("SELECT * FROM biteme.account WHERE BranchManagerID = ?;");
 			loginAccount.setInt(1, branch_manager_id);
 			rs = loginAccount.getResultSet();
 			while (rs.next()) {
-				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
+				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME), rs.getString(finals.ACCOUNT_PASSWORD),
 						rs.getString(finals.ACCOUNT_FIRST_NAME), rs.getString(finals.ACCOUNT_LAST_NAME),
 						rs.getString(finals.ACCOUNT_EMAIL), rs.getString(finals.ACCOUNT_TYPE),
-						rs.getString(finals.ACCOUNT_PHONE), rs.getBoolean(finals.ACCOUNT_IS_BUSINESS),
-						rs.getString(finals.ACCOUNT_STATUS), rs.getString(finals.ACCOUNT_W4C_CODE),
+						rs.getString(finals.ACCOUNT_PHONE), rs.getString(finals.ACCOUNT_STATUS),
 						rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
 						rs.getInt(finals.ACCOUNT_DEBT));
 				acccounts.add(account);
@@ -145,13 +142,13 @@ public class AccountApiService {
 			getAccount.setInt(3, branchManagerID);
 			getAccount.execute();
 			rs = getAccount.getResultSet();
-			account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
-					rs.getString(finals.ACCOUNT_FIRST_NAME), rs.getString(finals.ACCOUNT_LAST_NAME),
-					rs.getString(finals.ACCOUNT_EMAIL), rs.getString(finals.ACCOUNT_TYPE),
-					rs.getString(finals.ACCOUNT_PHONE), rs.getBoolean(finals.ACCOUNT_IS_BUSINESS),
-					rs.getString(finals.ACCOUNT_STATUS), rs.getString(finals.ACCOUNT_W4C_CODE),
-					rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
-					rs.getInt(finals.ACCOUNT_DEBT));
+			if (rs.next())
+				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME), rs.getString(finals.ACCOUNT_PASSWORD),
+						rs.getString(finals.ACCOUNT_FIRST_NAME), rs.getString(finals.ACCOUNT_LAST_NAME),
+						rs.getString(finals.ACCOUNT_EMAIL), rs.getString(finals.ACCOUNT_TYPE),
+						rs.getString(finals.ACCOUNT_PHONE), rs.getString(finals.ACCOUNT_STATUS),
+						rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
+						rs.getInt(finals.ACCOUNT_DEBT));
 		} catch (SQLException e) {
 		}
 		response.setCode(200);
@@ -168,47 +165,41 @@ public class AccountApiService {
 		Account account = null;
 		try {
 			PreparedStatement loginAccount = EchoServer.con.prepareStatement(
-					"SELECT users.isLoggedIn FROM users biteme.users WHERE users.UserName = ? and users.Password = ?;"
-							+ "UPDATE biteme.users AS users SET isLoggedIn = 1 WHERE users.UserName = ? and users.Password = ?;");
+					"SELECT * FROM biteme.account WHERE UserName = ? AND Password = ?;"
+							+ "UPDATE biteme.account SET isLoggedIn = 1 WHERE UserName = ? and Password = ?;");
 			loginAccount.setString(1, userName);
 			// Its the first userName that he had so the test is in users table on login
 			loginAccount.setString(2, password);
 			loginAccount.execute();
 			rs = loginAccount.getResultSet();
-			if (rs.getBoolean(1)) {
+			if (rs.getBoolean(finals.ACCOUNT_IS_LOGGED_IN)) {
 				throw new SQLException("User is already logged in", "400", 400);
 			} else if (rs.getFetchSize() == 0) {
 				throw new SQLException("User isn't exist");
 			}
-		} catch (SQLException e) {
+
+			account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME), rs.getString(finals.ACCOUNT_PASSWORD),
+					rs.getString(finals.ACCOUNT_FIRST_NAME), rs.getString(finals.ACCOUNT_LAST_NAME),
+					rs.getString(finals.ACCOUNT_EMAIL), rs.getString(finals.ACCOUNT_TYPE),
+					rs.getString(finals.ACCOUNT_PHONE), rs.getString(finals.ACCOUNT_STATUS),
+					rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
+					rs.getInt(finals.ACCOUNT_DEBT));
+			if (account.getStatus().equals("blocked")) {
+				throw new SQLException("Account" + account.getUserID() + "is blocked", "400", 400);
+			
+		}} catch (SQLException e) {
 			if (e.getErrorCode() == 400) {
 				response.setCode(400);
 				response.setDescription(e.getMessage());
-			} else {
+			} else if (e.getErrorCode() == 401) {
+				response.setCode(401);
+				response.setDescription(e.getMessage());
+				response.setBody(null);}
+				else{
 				response.setCode(404);
 				response.setDescription(e.getMessage());
 			}
-			try {
-				PreparedStatement loginAccount = EchoServer.con
-						.prepareStatement("SELECT * FROM accounts biteme.account WHERE accounts.UserName = ?;");
-				rs = loginAccount.getResultSet();
-				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
-						rs.getString(finals.ACCOUNT_FIRST_NAME), rs.getString(finals.ACCOUNT_LAST_NAME),
-						rs.getString(finals.ACCOUNT_EMAIL), rs.getString(finals.ACCOUNT_TYPE),
-						rs.getString(finals.ACCOUNT_PHONE), rs.getBoolean(finals.ACCOUNT_IS_BUSINESS),
-						rs.getString(finals.ACCOUNT_STATUS), rs.getString(finals.ACCOUNT_W4C_CODE),
-						rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
-						rs.getInt(finals.ACCOUNT_DEBT));
-				if (account.getStatus().equals("blocked")) {
-					throw new SQLException("Account" + account.getUserID() + "is blocked", "400", 401);
-				}
-			} catch (SQLException e1) {
-				if (e1.getErrorCode() == 401) {
-					response.setCode(401);
-					response.setDescription(e.getMessage());
-					response.setBody(null);
-				}
-			}
+
 			response.setCode(200);
 			response.setDescription("Success in login " + account.getUserID());
 			response.setBody(account);
@@ -223,7 +214,7 @@ public class AccountApiService {
 		ResultSet rs;
 		try {
 			PreparedStatement logOutAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.users AS users SET isLoggedIn = 0 WHERE users.UserName = ?;");
+					.prepareStatement("UPDATE biteme.account SET isLoggedIn = 0 WHERE account.UserName = ?;");
 			logOutAccount.setString(1, userName);
 			logOutAccount.execute();
 			rs = logOutAccount.getResultSet();
@@ -249,29 +240,23 @@ public class AccountApiService {
 	public static void updateAccount(Account account, Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"UPDATE biteme.account AS account SET (UserID = ?, UserName = ?,FirstName = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
-							+ " W4C = ?, Type = ?, status = ?, branchManagerID = ?, Area = ?, isLoggedIn = ?, isBusiness = ?)"
-							+ "WHERE account.UserID = ? and account.UserName = ? and account.branchManagerID = ?");
+					"UPDATE biteme.account AS account SET (UserID = ?, UserName = ?, Password = ?,FirstName = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
+							+ " Type = ?, status = ?, BranchManagerID = ?, Area = ?, isLoggedIn = ?)"
+							+ "WHERE AccountID = ? AND UserName = ?");
 			postAccount.setInt(1, account.getUserID());
 			// Its the first userName that he had so the test is in users table on login
 			postAccount.setString(2, account.getUserName());
-			postAccount.setString(3, account.getFirstName());
-			postAccount.setString(4, account.getLastName());
-			postAccount.setString(5, account.getPhone());
-			postAccount.setString(6, account.getEmail());
-			postAccount.setString(7, account.getW4c_code());
+			postAccount.setString(3, account.getPassword());
+			postAccount.setString(4, account.getFirstName());
+			postAccount.setString(5, account.getLastName());
+			postAccount.setString(6, account.getPhone());
+			postAccount.setString(7, account.getEmail());
 			postAccount.setString(8, account.getType());
 			postAccount.setString(9, account.getStatus());
 			postAccount.setInt(10, account.getBranch_manager_ID());
 			postAccount.setString(11, account.getArea());
-			// isLoggedIn
-			postAccount.setBoolean(12, false);
-			postAccount.setBoolean(13, account.isBusiness());
-			postAccount.setInt(14, account.getUserID());
-			postAccount.setString(14, account.getUserName());
-			postAccount.setInt(15, account.getBranch_manager_ID());
-
 			postAccount.execute();
+
 		} catch (SQLException e) {
 		} finally {
 			response.setCode(200);

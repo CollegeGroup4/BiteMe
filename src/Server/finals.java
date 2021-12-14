@@ -16,14 +16,15 @@ public class finals {
     public static final int REQUIRED_TIME = 11;
     
     //for items
-    public static final int ITEM_TYPE = 1;
-    public static final int ITEM_NAME = 2;
-    public static final int ITEM_PRICE = 3;
-    public static final int ITEM_ID = 4;
-    public static final int ITEM_INGRIDIENTS = 5;
-    public static final int ITEM_RES_ID = 6;
-    public static final int ITEM_IMAGE = 7;
-    public static final int ITEM_DESCRIPTION = 8;
+    public static final int ITEM_CATEGORY = 1;
+    public static final int	ITEM_SUB_CATEGORY = 2;
+    public static final int ITEM_NAME = 3;
+    public static final int ITEM_PRICE = 4;
+    public static final int ITEM_ID = 5;
+    public static final int ITEM_INGRIDIENTS = 6;
+    public static final int ITEM_RES_ID = 7;
+    public static final int ITEM_IMAGE = 8;
+    public static final int ITEM_DESCRIPTION = 9;
     		
     //for options
     public static final int OPTIONAL_TYPE = 1;
@@ -33,15 +34,15 @@ public class finals {
     //for accounts
     public static final int ACCOUNT_USER_ID = 1;
     public static final int ACCOUNT_USER_NAME = 2;
-    public static final int ACCOUNT_FIRST_NAME = 3;
-    public static final int ACCOUNT_LAST_NAME = 4;
-    public static final int ACCOUNT_EMAIL = 5;
-    public static final int ACCOUNT_TYPE = 6;
-    public static final int ACCOUNT_PHONE = 7;
-    public static final int ACCOUNT_IS_BUSINESS = 8;
+    public static final int ACCOUNT_PASSWORD = 3;
+    public static final int ACCOUNT_FIRST_NAME = 4;
+    public static final int ACCOUNT_LAST_NAME = 5;
+    public static final int ACCOUNT_EMAIL = 7;
+    public static final int ACCOUNT_TYPE = 8;
+    public static final int ACCOUNT_PHONE = 6;
     public static final int ACCOUNT_STATUS = 9;
-    public static final int ACCOUNT_W4C_CODE = 10;
-    public static final int ACCOUNT_BRANCH_MANAGER_ID = 11;
-    public static final int ACCOUNT_AREA = 12;
+    public static final int ACCOUNT_BRANCH_MANAGER_ID = 10;
+    public static final int ACCOUNT_AREA = 11;
+    public static final int ACCOUNT_IS_LOGGED_IN = 12;
     public static final int ACCOUNT_DEBT = 13;
 }

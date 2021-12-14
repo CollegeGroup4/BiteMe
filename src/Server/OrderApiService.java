@@ -19,18 +19,18 @@ import logic.*;
  */
 public class OrderApiService {
 	/**
-     * Add a new order
-     *
-     */
-    public static void addOrder(Order order, Response response) {
-    	ResultSet rs;
-    	int orderID = 0;
-    	Options options = null;
-    	try {
+	 * Add a new order
+	 *
+	 */
+	public static void addOrder(Order order, Response response) {
+		ResultSet rs;
+		int orderID = 0, shipmentID, price;
+		Options options = null;
+		try {
 			PreparedStatement postOrder = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.order (ResturantID, ResturantName,OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
+					"INSERT INTO biteme.order (ResturantID, ResturantName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
 							+ "Check_out_price, isBusiness, required_time)"
-							+ " VALUES (?,?,?,?,?,?,?,?);SELECT last_insert_id();");
+							+ " VALUES (?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
 			postOrder.setInt(1, order.getRestaurantID());
 			postOrder.setString(2, order.getRestaurantName());
 			postOrder.setString(3, order.getTime_taken());
@@ -49,15 +49,16 @@ public class OrderApiService {
 		}
 		try {
 			PreparedStatement postItem = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.item_in_menu_in_order (OrderNum, ItemID, Item_name, OptionalType, OptionalSpecify," + "Amount)"
+					"INSERT INTO biteme.item_in_menu_in_order (OrderNum, ItemID, Item_name, OptionalType, OptionalSpecify,"
+							+ "Amount)"
 							+ " VALUES (?,?,?,?,?,?);Select amount from biteme.item_in_menu_in_order WHRER OrderNum =?"
 							+ "AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?");
 			postItem.setInt(1, rs.getInt(1));
 			postItem.setInt(7, rs.getInt(1));
 			orderID = rs.getInt(1);
-			postItem.setInt(6, 1);
 			for (Item temp : order.getItems()) {
 				postItem.setInt(2, temp.getItemID());
+				postItem.setInt(6, temp.getAmount());
 				postItem.setInt(8, temp.getItemID());
 				postItem.setString(3, temp.getName());
 
@@ -72,26 +73,97 @@ public class OrderApiService {
 				}
 			}
 		} catch (SQLException e) {
-			
-			//item already exist, +1 to amount
+
+			// item already exist, +1 to amount
 			if (e.getErrorCode() == 1062) {
 				try {
-				PreparedStatement updateOrder = EchoServer.con.prepareStatement(
-						"UPDATE biteme.item_in_menu_in_order " + "SET Amount = ? WHERE OrderNum = ?"
-								+ "ItemID = ? OptionalType = ? OptionalSpecify = ?");
-				updateOrder.setInt(1, rs.getInt(1)+1);
-				updateOrder.setInt(2, orderID);
-				updateOrder.setInt(3, options.getItemID());
-				updateOrder.setString(4, options.getOption_category());
-				updateOrder.setString(4, options.getSpecify_option());
-				updateOrder.execute();
-				}catch (SQLException ex) {
+					PreparedStatement updateOrder = EchoServer.con.prepareStatement(
+							"UPDATE biteme.item_in_menu_in_order " + "SET Amount = ? WHERE OrderNum = ?"
+									+ "ItemID = ? OptionalType = ? OptionalSpecify = ?");
+					updateOrder.setInt(1, rs.getInt(1) + 1);
+					updateOrder.setInt(2, orderID);
+					updateOrder.setInt(3, options.getItemID());
+					updateOrder.setString(4, options.getOption_category());
+					updateOrder.setString(4, options.getSpecify_option());
+					updateOrder.execute();
+				} catch (SQLException ex) {
 					System.out.println(ex.toString());
 				}
 			}
 		}
-			
-    }
+		if (order.getShippment() != null) {
+			try {
+				PreparedStatement setShipment = EchoServer.con.prepareStatement(
+						"INSERT INTO biteme.shipment (workPlace, Address, receiver_name, receiver_phone_number"
+								+ ", deliveryType) VALUES (?,?,?,?,?);");
+
+				setShipment.setString(1, order.getShippment().getWork_place());
+				setShipment.setString(2, order.getShippment().getAddress());
+				setShipment.setString(3, order.getShippment().getReceiver_name());
+				setShipment.setString(4, order.getShippment().getPhone());
+				setShipment.setString(5, order.getShippment().getDelivery());
+				setShipment.execute();
+
+			} catch (SQLException ex) {
+				if (ex.getErrorCode() == 1062) {
+					try {
+						PreparedStatement getShipID = EchoServer.con
+								.prepareStatement("SELECT ShipmentID FROM biteme.shipment WHERE "
+										+ "workPlace = ? AND Address = ? AND receiver_name = ? AND receiver_phone_number = ? "
+										+ "AND deliveryType = ?;");
+						getShipID.setString(1, order.getShippment().getWork_place());
+						getShipID.setString(2, order.getShippment().getAddress());
+						getShipID.setString(3, order.getShippment().getReceiver_name());
+						getShipID.setString(4, order.getShippment().getPhone());
+						getShipID.setString(5, order.getShippment().getDelivery());
+						getShipID.execute();
+						rs = getShipID.getResultSet();
+
+						if (rs.next()) {
+							shipmentID = rs.getInt(1);
+
+							PreparedStatement setInShipment = EchoServer.con.prepareStatement(
+									"INSERT INTO biteme.orders_in_shipment (ShipmentID, orderID, AccountID, Price)"
+											+ "VALUES (?,?,?,?);");
+							setInShipment.setInt(1, rs.getInt(1));
+							setInShipment.setInt(2, orderID);
+							setInShipment.setInt(3, order.getAccountID());
+							setInShipment.setFloat(4, 25);
+
+							// calculate shipping price
+							PreparedStatement getAmountOfOrdersInShipment = EchoServer.con.prepareStatement(
+									"SELECT orderID, AccountID, COUNT(*) FROM biteme.orders_in_shipment"
+											+ " WHERE ShipmentID = ? GROUP BY orderID, AccountID;");
+
+							getAmountOfOrdersInShipment.setInt(1, shipmentID);
+							getAmountOfOrdersInShipment.execute();
+							rs = getAmountOfOrdersInShipment.getResultSet();
+
+							if (rs.next()) {
+								if (rs.getInt(1) >= 3)
+									price = 15;
+								else if (rs.getInt(1) == 2)
+									price = 20;
+								else
+									price = 25;
+
+								PreparedStatement updatePriceOrderInShipment = EchoServer.con.prepareStatement(
+										"UPDATE biteme.order_in_shipment " + "SET Price = ? WHERE ShipmentID = ?;");
+								updatePriceOrderInShipment.setInt(1, price);
+								updatePriceOrderInShipment.setInt(2, shipmentID);
+								updatePriceOrderInShipment.execute();
+							}
+
+						}
+
+					} catch (SQLException e) {
+						// TODO: handle exception
+					}
+				}
+			}
+		}
+
+	}
 
 	/**
 	 * Return all the orders
@@ -107,10 +179,11 @@ public class OrderApiService {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				order = new Order(rs.getInt(finals.ORDER_NUM), rs.getInt(finals.RESTAURANT_ID),
-						rs.getString(finals.RESTAURANT_NAME), rs.getString(finals.ORDER_TIME), rs.getFloat(finals.CHECK_OUT_PRICE),
-						rs.getString(finals.REQUIRED_TIME), rs.getString(finals.TYPE_OF_ORDER),
-						rs.getInt(finals.ACCOUNT_ID), rs.getString(finals.PHONE_NUM),
-						rs.getInt(finals.DISCOUNT_FOR_EARLY_ORDER), rs.getBoolean(finals.IS_BUISNESS), null, null);
+						rs.getString(finals.RESTAURANT_NAME), rs.getString(finals.ORDER_TIME),
+						rs.getFloat(finals.CHECK_OUT_PRICE), rs.getString(finals.REQUIRED_TIME),
+						rs.getString(finals.TYPE_OF_ORDER), rs.getInt(finals.ACCOUNT_ID),
+						rs.getString(finals.PHONE_NUM), rs.getInt(finals.DISCOUNT_FOR_EARLY_ORDER),
+						rs.getBoolean(finals.IS_BUISNESS), null, null);
 				orders.add(order);
 			}
 		} catch (SQLException e) {
@@ -155,10 +228,11 @@ public class OrderApiService {
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
 				order = new Order(rs.getInt(finals.ORDER_NUM), rs.getInt(finals.RESTAURANT_ID),
-						rs.getString(finals.RESTAURANT_NAME), rs.getString(finals.ORDER_TIME), rs.getFloat(finals.CHECK_OUT_PRICE),
-						rs.getString(finals.REQUIRED_TIME), rs.getString(finals.TYPE_OF_ORDER),
-						rs.getInt(finals.ACCOUNT_ID), rs.getString(finals.PHONE_NUM),
-						rs.getInt(finals.DISCOUNT_FOR_EARLY_ORDER), rs.getBoolean(finals.IS_BUISNESS), null, null);
+						rs.getString(finals.RESTAURANT_NAME), rs.getString(finals.ORDER_TIME),
+						rs.getFloat(finals.CHECK_OUT_PRICE), rs.getString(finals.REQUIRED_TIME),
+						rs.getString(finals.TYPE_OF_ORDER), rs.getInt(finals.ACCOUNT_ID),
+						rs.getString(finals.PHONE_NUM), rs.getInt(finals.DISCOUNT_FOR_EARLY_ORDER),
+						rs.getBoolean(finals.IS_BUISNESS), null, null);
 			}
 		} catch (SQLException e) {
 			response.setCode(404);
@@ -174,7 +248,7 @@ public class OrderApiService {
 	 * Get payment approval for monthly budget
 	 *
 	 */
-	public static void getPaymentApproval(Integer accountID, Response response) {
+	public static void getPaymentApproval(Integer accountID, int amount, Response response) {
 		// TODO: Implement...
 
 	}
@@ -183,10 +257,9 @@ public class OrderApiService {
 	 * Get resturants for the specific
 	 *
 	 */
-	public static List<Resturant> getResturants(String area, Response response) {
+	public static void getResturants(String area, Response response) {
 		// TODO: Implement...
 
-		return null;
 	}
 
 	/**
@@ -195,18 +268,17 @@ public class OrderApiService {
 	 */
 	public static void updateOrderWithForm(Order body, Response response) {
 		try {
-			PreparedStatement updateOrder = EchoServer.con.prepareStatement(
-					"UPDATE biteme.order " + "SET Amount = ? WHERE OrderNum = ?"
-							+ "ItemID = ? OptionalType = ? OptionalSpecify = ?");
-			updateOrder.setInt(1, rs.getInt(1)+1);
+			PreparedStatement updateOrder = EchoServer.con.prepareStatement("UPDATE biteme.order "
+					+ "SET Amount = ? WHERE OrderNum = ?" + "ItemID = ? OptionalType = ? OptionalSpecify = ?");
+			updateOrder.setInt(1, rs.getInt(1) + 1);
 			updateOrder.setInt(2, orderID);
 			updateOrder.setInt(3, options.getItemID());
 			updateOrder.setString(4, options.getOption_category());
 			updateOrder.setString(4, options.getSpecify_option());
 			updateOrder.execute();
-			}catch (SQLException ex) {
-				System.out.println(ex.toString());
-			}
+		} catch (SQLException ex) {
+			System.out.println(ex.toString());
+		}
 	}
 
 	/**
