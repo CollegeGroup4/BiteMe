@@ -9,7 +9,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import logic.item_in_menu;
+import temporaryDatabase.myOwnDatabase;
 
 public class IngredientsAndQuantityController implements Initializable{
 
@@ -20,7 +23,7 @@ public class IngredientsAndQuantityController implements Initializable{
     private Label priceOfItem;
 
     @FXML
-    private Label quantityOfItem;
+    private TextField quantityOfItem;
     
 	public void start(Stage stage) throws Exception {
 		Parent root=FXMLLoader.load(getClass().getResource("IngredientsAnd.fxml"));
@@ -31,7 +34,8 @@ public class IngredientsAndQuantityController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+	itemName.setText(ItemsFromMenuController.itemtSelected.getCourse());
+	priceOfItem.setText(String.valueOf(ItemsFromMenuController.itemtSelected.getPrice()));
 		
 	}
 

@@ -1,5 +1,6 @@
 package mywork;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -14,10 +15,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.item_in_menu;
 import temporaryDatabase.myOwnDatabase;
 
 public class ItemsFromMenuController implements Initializable, EventHandler<ActionEvent> {
 
+	public static item_in_menu itemtSelected;
 	@FXML
 	private VBox Items;
 
@@ -33,11 +36,11 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 		ArrayList<Button> b = new ArrayList<Button>();
 		int indexOfMenu = -1;
 		for (int i = 0; i < myOwnDatabase.MenusArrayList.size(); i++) {// get index of the menu
-			if (myOwnDatabase.MenusArrayList.get(i).getName().equals(PrepareADishController.menutName))
+			if (myOwnDatabase.MenusArrayList.get(i).getName().equals(PrepareADishController.menuSelected.getName()))
 				indexOfMenu = i;
 		}
+		//System.out.println(indexOfMenu); // ******** for test only ********
 		// Finds all the dishes for a particular menu and add button for each of them
-		System.out.println(indexOfMenu); // ******** for test only ********
 		if (indexOfMenu >= 0)
 			for (int i = 0; i < myOwnDatabase.MenusArrayList.get(indexOfMenu).getItems().size(); i++) {
 				Button temp = new Button(myOwnDatabase.MenusArrayList.get(indexOfMenu).getItems().get(i).getCourse());
@@ -54,9 +57,24 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 	}
 
 	@Override
-	public void handle(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void handle(ActionEvent event) {
+		String stringFromEvent = event.getSource().toString();
+		stringFromEvent=stringFromEvent.split("'",2)[1];
+		stringFromEvent = stringFromEvent.substring(0, stringFromEvent.length() - 1);
+		for(int i=0;i<PrepareADishController.menuSelected.getItems().size();i++) {
+			if(PrepareADishController.menuSelected.getItems().get(i).getCourse().equals(stringFromEvent)) {
+				itemtSelected=PrepareADishController.menuSelected.getItems().get(i);
+				break;
+			}
+		}
 
+		Parent root = null;
+		try {
+			root = FXMLLoader.load(getClass().getResource("IngredientsAndQuantity.fxml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 PrepareADishController.prepareADishController.getPaneForSelections().setCenter(root);
 	}
 
 }

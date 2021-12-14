@@ -35,6 +35,10 @@ import temporaryDatabase.myOwnDatabase;
 public class PrepareADishController implements Initializable, EventHandler<ActionEvent> {
 	
 	public static PrepareADishController prepareADishController=null;
+	
+	//public static String menuName;
+	
+	public static Menu menuSelected;
 
 	@FXML
 	private HBox Nav;
@@ -63,6 +67,14 @@ public class PrepareADishController implements Initializable, EventHandler<Actio
     @FXML
     private BorderPane paneForSelections;
 
+	public BorderPane getPaneForSelections() {
+		return paneForSelections;
+	}
+
+	public void setPaneForSelections(BorderPane paneForSelections) {
+		this.paneForSelections = paneForSelections;
+	}
+
 	@FXML
 	private HBox Nav1;
 
@@ -81,7 +93,7 @@ public class PrepareADishController implements Initializable, EventHandler<Actio
 	@FXML
 	private Button btnBack;
 
-	public static String menutName;
+	
 
 	@FXML
 	void goBack(ActionEvent event) {
@@ -121,8 +133,15 @@ public class PrepareADishController implements Initializable, EventHandler<Actio
 	@Override
 	public void handle(ActionEvent event) {
 		String stringFromEvent = event.getSource().toString();
-		stringFromEvent = stringFromEvent.substring(35, stringFromEvent.length() - 1);
-		menutName = stringFromEvent;
+		stringFromEvent=stringFromEvent.split("'",2)[1];
+		stringFromEvent = stringFromEvent.substring(0, stringFromEvent.length() - 1);
+		for(int i=0;i<myOwnDatabase.MenusArrayList.size();i++) {
+			if(myOwnDatabase.MenusArrayList.get(i).getName().equals(stringFromEvent)) {
+				menuSelected=myOwnDatabase.MenusArrayList.get(i);
+				break;
+			}
+		}
+				
 		Parent root = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("ItemsFromMenu.fxml"));
