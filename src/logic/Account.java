@@ -7,14 +7,14 @@ public class Account {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String type;
+	private String role;
 	private String phone;
 	private String status;
 	private int branch_manager_ID;
 	private String area;
 	private int debt;
 	public Account(int accountID, String userName, String password, String firstName, String lastName, String email,
-			String type, String phone, String status, int branch_manager_ID, String area, int debt) {
+			String role, String phone, String status, int branch_manager_ID, String area, int debt) {
 		super();
 		this.accountID = accountID;
 		this.userName = userName;
@@ -22,7 +22,7 @@ public class Account {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.type = type;
+		this.role = role;
 		this.phone = phone;
 		this.status = status;
 		this.branch_manager_ID = branch_manager_ID;
@@ -65,11 +65,11 @@ public class Account {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getType() {
-		return type;
+	public String getRole() {
+		return role;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setRole(String role) {
+		this.role = role;
 	}
 	public String getPhone() {
 		return phone;
