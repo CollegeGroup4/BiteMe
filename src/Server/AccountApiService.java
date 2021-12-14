@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import logic.Account;
 
@@ -58,6 +59,20 @@ public class AccountApiService {
 		response.setDescription("Success in registering" + account.getUserID());
 		response.setBody(null);
 	}
+	/**
+	 * Generate a random hex string at size of 50
+	 * @param numchars
+	 * @return
+	 */
+	public static String getRandomHexString() {
+		int numchars = 50;
+		Random r = new Random();
+		StringBuffer sb = new StringBuffer();
+		while (sb.length() < numchars) {
+			sb.append(Integer.toHexString(r.nextInt()));
+		}
+		return sb.toString().substring(0, numchars);
+	}
 
 	/**
 	 * Delete Account
@@ -76,7 +91,8 @@ public class AccountApiService {
 			deleteAccount.setInt(3, branchManagerID);
 			deleteAccount.execute();
 			deleteAccount.getResultSet();
-		} catch (SQLException e) {}
+		} catch (SQLException e) {
+		}
 		response.setCode(200);
 		response.setDescription("Success in deleting account " + userID);
 		response.setBody(null);
@@ -136,7 +152,8 @@ public class AccountApiService {
 					rs.getString(finals.ACCOUNT_STATUS), rs.getString(finals.ACCOUNT_W4C_CODE),
 					rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
 					rs.getInt(finals.ACCOUNT_DEBT));
-		} catch (SQLException e) {}
+		} catch (SQLException e) {
+		}
 		response.setCode(200);
 		response.setDescription("Success in fetching account " + account.getUserID());
 		response.setBody(account);
