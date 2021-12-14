@@ -30,5 +30,18 @@ public class finals {
     public static final int OPTIONAL_SPECIFY = 2;
     public static final int OPTIONAL_ITEM_ID = 3;
     
-	
+    //for accounts
+    public static final int ACCOUNT_USER_ID = 1;
+    public static final int ACCOUNT_USER_NAME = 2;
+    public static final int ACCOUNT_FIRST_NAME = 3;
+    public static final int ACCOUNT_LAST_NAME = 4;
+    public static final int ACCOUNT_EMAIL = 5;
+    public static final int ACCOUNT_TYPE = 6;
+    public static final int ACCOUNT_PHONE = 7;
+    public static final int ACCOUNT_IS_BUSINESS = 8;
+    public static final int ACCOUNT_STATUS = 9;
+    public static final int ACCOUNT_W4C_CODE = 10;
+    public static final int ACCOUNT_BRANCH_MANAGER_ID = 11;
+    public static final int ACCOUNT_AREA = 12;
+    public static final int ACCOUNT_DEBT = 13;
 }

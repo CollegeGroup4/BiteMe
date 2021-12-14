@@ -207,7 +207,6 @@ public class OrderApiService {
 			}catch (SQLException ex) {
 				System.out.println(ex.toString());
 			}
-
 	}
 
 	/**

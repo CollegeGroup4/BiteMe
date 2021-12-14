@@ -26,6 +26,5 @@ public class Menu {
 	}
 	public void setRestaurantID(int restaurantID) {
 		this.restaurantID = restaurantID;
-	}
-	
+	}	
 }

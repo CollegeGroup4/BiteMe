@@ -13,9 +13,12 @@ public class Account {
 	private String w4c_code;
 	private int branch_manager_ID;
 	private String area;
-	
+	private int debt;
+
 	public Account(int userID, String userName, String firstName, String lastName, String email, String type,
-			String phone, boolean isBusiness, String status, String w4c_code, int branch_manager_ID, String area) {
+			String phone, boolean isBusiness, String status, String w4c_code, int branch_manager_ID, String area,
+			int debt) {
+		super();
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
@@ -28,11 +31,13 @@ public class Account {
 		this.w4c_code = w4c_code;
 		this.branch_manager_ID = branch_manager_ID;
 		this.area = area;
+		this.debt = debt;
 	}
-	public int getAccountID() {
+	
+	public int getUserID() {
 		return userID;
 	}
-	public void setAccountID(int userID) {
+	public void setUserID(int userID) {
 		this.userID = userID;
 	}
 	public String getUserName() {
@@ -101,4 +106,11 @@ public class Account {
 	public void setArea(String area) {
 		this.area = area;
 	}
+	public int getDebt() {
+		return debt;
+	}
+	public void setDebt(int debt) {
+		this.debt = debt;
+	}
+	
 }
