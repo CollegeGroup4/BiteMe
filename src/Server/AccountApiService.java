@@ -175,10 +175,10 @@ public class AccountApiService {
 				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID), rs.getString(QueryConsts.ACCOUNT_USER_NAME),
 						rs.getString(QueryConsts.ACCOUNT_PASSWORD), rs.getString(QueryConsts.ACCOUNT_FIRST_NAME),
 						rs.getString(QueryConsts.ACCOUNT_LAST_NAME), rs.getString(QueryConsts.ACCOUNT_EMAIL),
-						rs.getString(QueryConsts.ACCOUNT_TYPE), rs.getString(QueryConsts.ACCOUNT_PHONE),
+						rs.getString(QueryConsts.ACCOUNT_ROLE), rs.getString(QueryConsts.ACCOUNT_PHONE),
 						rs.getString(QueryConsts.ACCOUNT_STATUS), rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID),
 						rs.getString(QueryConsts.ACCOUNT_AREA), rs.getInt(QueryConsts.ACCOUNT_DEBT),
-						rs.getString(QueryConsts.ACCOUNT_W4C));
+						rs.getString(QueryConsts.ACCOUNT_W4C), rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS));
 				accounts.add(account);
 //				PreparedStatement getPrivateAccount = EchoServer.con
 //						.prepareStatement("SELECT * FROM biteme.private_account WHERE UserID = ?");

@@ -197,7 +197,6 @@ public class RestaurantApiService {
 		response.setCode(200);
 		response.setDescription("Success in fetching categories for restaurantID" + Integer.toString(restaurantID));
 		response.setBody(categories.toArray()); 
-
 	}
 
 	/**
