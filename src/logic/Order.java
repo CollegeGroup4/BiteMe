@@ -13,7 +13,7 @@ public class Order {
 	private int accountID;
 	private String phone;
 	private int discount_for_early_order;
-	private boolean isBuisness;
+	private boolean isApproved;
 	private Item[] items;
 	private Shippment shippment;
 
@@ -22,7 +22,7 @@ public class Order {
 		return "Order [orderID=" + orderID + ", restaurantID=" + restaurantID + ", restaurantName=" + restaurantName
 				+ ", time_taken=" + time_taken + ", check_out_price=" + check_out_price + ", required_time="
 				+ required_time + ", type_of_order=" + type_of_order + ", accountID=" + accountID + ", phone=" + phone
-				+ ", discount_for_early_order=" + discount_for_early_order + ", isBuisness=" + isBuisness + ", items="
+				+ ", discount_for_early_order=" + discount_for_early_order + ", isBuisness=" + isApproved + ", items="
 				+ Arrays.toString(items) + ", shippment=" + shippment + "]";
 	}
 
@@ -37,7 +37,7 @@ public class Order {
 		this.accountID = accountID;
 		this.phone = phone;
 		this.discount_for_early_order = discount_for_early_order;
-		this.isBuisness = isBuisness;
+		this.isApproved = isBuisness;
 		this.items = items;
 		this.shippment = shippment;
 	}
@@ -105,11 +105,11 @@ public class Order {
 	public void setDiscount_for_early_order(int discount_for_early_order) {
 		this.discount_for_early_order = discount_for_early_order;
 	}
-	public boolean isBuisness() {
-		return isBuisness;
+	public boolean isApproved() {
+		return isApproved;
 	}
-	public void setBuisness(boolean isBuisness) {
-		this.isBuisness = isBuisness;
+	public void setIsApproved(boolean isApproved) {
+		this.isApproved = isApproved;
 	}
 	public Item[] getItems() {
 		return items;

@@ -127,7 +127,7 @@ public class OrderApiService {
 											+ "VALUES (?,?,?,?);");
 							setInShipment.setInt(1, rs.getInt(1));
 							setInShipment.setInt(2, orderID);
-							setInShipment.setInt(3, order.getUserID());
+							setInShipment.setInt(3, order.getAccountID());
 							setInShipment.setFloat(4, 25);
 
 							// calculate shipping price
@@ -175,12 +175,12 @@ public class OrderApiService {
 			stmt.setString(1, restaurantID);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				order = new Order(rs.getInt(QueryConsts.ORDER_NUM), rs.getInt(QueryConsts.RESTAURANT_ID),
-						rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_TIME),
-						rs.getFloat(QueryConsts.CHECK_OUT_PRICE), rs.getString(QueryConsts.REQUIRED_TIME),
-						rs.getString(QueryConsts.TYPE_OF_ORDER), rs.getInt(QueryConsts.ACCOUNT_ID),
-						rs.getString(QueryConsts.PHONE_NUM), rs.getInt(QueryConsts.DISCOUNT_FOR_EARLY_ORDER),
-						rs.getBoolean(QueryConsts.IS_BUISNESS), null, null);
+				order = new Order(rs.getInt(QueryConsts.ORDER_ORDER_NUM), rs.getInt(QueryConsts.ORDER_RESTAURANT_ID),
+						rs.getString(QueryConsts.ORDER_RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_ORDER_TIME),
+						rs.getFloat(QueryConsts.ORDER_CHECK_OUT_PRICE), rs.getString(QueryConsts.ORDER_REQUIRED_TIME),
+						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getInt(QueryConsts.ORDER_ACCOUNT_ID),
+						rs.getString(QueryConsts.ORDER_PHONE_NUM), rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER),
+						rs.getBoolean(QueryConsts.ORDER_IS_BUISNESS), null, null);
 				orders.add(order);
 			}
 		} catch (SQLException e) {
@@ -224,12 +224,12 @@ public class OrderApiService {
 			stmt.setInt(1, orderId);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
-				order = new Order(rs.getInt(QueryConsts.ORDER_NUM), rs.getInt(QueryConsts.RESTAURANT_ID),
-						rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_TIME),
-						rs.getFloat(QueryConsts.CHECK_OUT_PRICE), rs.getString(QueryConsts.REQUIRED_TIME),
-						rs.getString(QueryConsts.TYPE_OF_ORDER), rs.getInt(QueryConsts.ACCOUNT_ID),
-						rs.getString(QueryConsts.PHONE_NUM), rs.getInt(QueryConsts.DISCOUNT_FOR_EARLY_ORDER),
-						rs.getBoolean(QueryConsts.IS_BUISNESS), null, null);
+				order = new Order(rs.getInt(QueryConsts.ORDER_ORDER_NUM), rs.getInt(QueryConsts.ORDER_RESTAURANT_ID),
+						rs.getString(QueryConsts.ORDER_RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_ORDER_TIME),
+						rs.getFloat(QueryConsts.ORDER_CHECK_OUT_PRICE), rs.getString(QueryConsts.ORDER_REQUIRED_TIME),
+						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getInt(QueryConsts.ORDER_ACCOUNT_ID),
+						rs.getString(QueryConsts.ORDER_PHONE_NUM), rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER),
+						rs.getBoolean(QueryConsts.ORDER_IS_BUISNESS), null, null);
 			}
 		} catch (SQLException e) {
 			response.setCode(404);
@@ -297,15 +297,7 @@ public class OrderApiService {
 	public static void updateOrderWithForm(int orderId, String address, String delivery, Response response) {
 		PreparedStatement getOrder;
 		ResultSet rs;
-		
-		try {
-			 
-			
-			
-			
-		}catch(SQLException e) {
-			
-		}
+
 		
 		
 

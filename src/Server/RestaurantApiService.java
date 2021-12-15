@@ -48,13 +48,13 @@ public class RestaurantApiService {
     					+ type + ";");
     			ResultSet rs = stmt.executeQuery();
     			while (rs.next()) {
-    				restaurant = new Restaurant(rs.getInt(finals.RESTAURANT_ID), rs.getBoolean(finals.RESTAURANT_IS_APPROVED),
-    						rs.getInt(finals.RESTAURANT_BRANCH_MANAGER_ID), rs.getString(finals.RESTAURANT_NAME),
-    						rs.getString(finals.RESTAURANT_AREA), rs.getString(finals.RESTAURANT_TYPE),
-    						rs.getInt(finals.RESTAURANT_USER_ID), rs.getString(finals.RESTAURANT_PHOTO));
+    				restaurant = new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID), rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
+    						rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.RESTAURANT_NAME),
+    						rs.getString(QueryConsts.RESTAURANT_AREA), rs.getString(QueryConsts.RESTAURANT_TYPE),
+    						rs.getInt(QueryConsts.RESTAURANT_USER_ID), rs.getString(QueryConsts.RESTAURANT_PHOTO));
     				restaurants.add(restaurant);
     				MyPhoto msg= new MyPhoto(Integer.toString(restaurant.getID())); //"diagnosisE.jpg"
-    				String path = finals.LocalfilePath + Integer.toString(restaurant.getID());
+    				String path = QueryConsts.LocalfilePath + Integer.toString(restaurant.getID());
     				  try{
     					      File newFile = new File (path);		      		      
     					      byte [] mybytearray  = new byte [(int)newFile.length()];
@@ -62,11 +62,12 @@ public class RestaurantApiService {
     					      BufferedInputStream bis = new BufferedInputStream(fis);			    					      
     					      msg.initArray(mybytearray.length);
     					      msg.setSize(mybytearray.length);  					      
-    					      bis.read(msg.getMybytearray(),0,mybytearray.length);		      
+    					      bis.read(msg.getMybytearray(),0,mybytearray.length);
     					    }
     					catch (Exception e) {
     						System.out.println("Error send (Files)msg) to Server");
     					}
+    				  photos.add(msg);
     			}
     		} catch (SQLException e) {
     			e.printStackTrace();
@@ -234,10 +235,11 @@ public class RestaurantApiService {
 				rs2 = getItems.getResultSet();
 
 				while (rs2.next()) {
-					itemp = new Item(rs2.getInt(finals.ITEM_ID), restaurantID, rs2.getString(finals.ITEM_TYPE),
-							rs2.getString(finals.ITEM_NAME), rs2.getFloat(finals.ITEM_PRICE),
-							rs2.getString(finals.ITEM_DESCRIPTION), rs2.getString(finals.ITEM_INGRIDIENTS), null,
-							rs2.getBytes(finals.ITEM_IMAGE));
+	
+					itemp = new Item(rs2.getString(QueryConsts.ITEM_CATEGORY), rs2.getString(QueryConsts.ITEM_SUB_CATEGORY),rs2.getInt(QueryConsts.ITEM_ID),
+							rs2.getInt(QueryConsts.ITEM_RES_ID),rs2.getString(QueryConsts.ITEM_NAME), rs2.getFloat(QueryConsts.ITEM_PRICE),
+							rs2.getString(QueryConsts.ITEM_DESCRIPTION), rs2.getString(QueryConsts.ITEM_INGRIDIENTS), null,
+							rs2.getString(QueryConsts.ITEM_IMAGE), rs2.getInt(QueryConsts.ITEM_AMOUNT));
 
 					// get optional for each item
 
@@ -248,7 +250,7 @@ public class RestaurantApiService {
 					rs3 = getOptions.getResultSet();
 
 					while (rs3.next()) {
-						otemp = new Options(rs3.getString(finals.OPTIONAL_TYPE), rs3.getString(finals.OPTIONAL_SPECIFY),
+						otemp = new Options(rs3.getString(QueryConsts.OPTIONAL_TYPE), rs3.getString(QueryConsts.OPTIONAL_SPECIFY),
 								itemp.getItemID());
 
 						options.add(otemp);
@@ -293,10 +295,10 @@ public class RestaurantApiService {
 //				rs1 = getItems.getResultSet();
 //
 //				while (rs1.next()) {
-//					itemp = new Item(rs1.getInt(finals.ITEM_ID), restaurantID, rs1.getString(finals.ITEM_TYPE),
-//							rs1.getString(finals.ITEM_NAME), rs1.getFloat(finals.ITEM_PRICE),
-//							rs1.getString(finals.ITEM_DESCRIPTION), rs1.getString(finals.ITEM_INGRIDIENTS), null,
-//							rs1.getBytes(finals.ITEM_IMAGE));
+//					itemp = new Item(rs1.getInt(QueryConsts.ITEM_ID), restaurantID, rs1.getString(QueryConsts.ITEM_TYPE),
+//							rs1.getString(QueryConsts.ITEM_NAME), rs1.getFloat(QueryConsts.ITEM_PRICE),
+//							rs1.getString(QueryConsts.ITEM_DESCRIPTION), rs1.getString(QueryConsts.ITEM_INGRIDIENTS), null,
+//							rs1.getBytes(QueryConsts.ITEM_IMAGE));
 //
 //					// get optional for each item
 //
@@ -307,7 +309,7 @@ public class RestaurantApiService {
 //					rs2 = getOptions.getResultSet();
 //
 //					while (rs2.next()) {
-//						otemp = new Options(rs2.getString(finals.OPTIONAL_TYPE), rs2.getString(finals.OPTIONAL_SPECIFY),
+//						otemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE), rs2.getString(QueryConsts.OPTIONAL_SPECIFY),
 //								itemp.getItemID());
 //
 //						options.add(otemp);
