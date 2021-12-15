@@ -291,6 +291,32 @@ public class AccountApiService {
 		response.setDescription("Success in logging out");
 		response.setBody(null);
 	}
+	/**
+	 * login Account with W4C code
+	 *
+	 * This can only be done by the logged in Account.
+	 *
+	 */
+	public static void loginAccountW4C(String w4cCode, Response response) {
+		ResultSet rs;
+		try {
+			PreparedStatement logOutAccount = EchoServer.con
+					.prepareStatement("SELECT * biteme.account WHERE isLoggedIn = 0 WHERE account.UserName = ?;");
+			logOutAccount.setString(1, w4cCode);
+			logOutAccount.execute();
+			rs = logOutAccount.getResultSet();
+			if (rs.rowUpdated() == false) {
+				throw new SQLException("couldn't log out");
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription(e.getMessage());
+			response.setBody(null);
+		}
+		response.setCode(200);
+		response.setDescription("Success in logging out");
+		response.setBody(null);
+	}
 
 	/**
 	 * Updated Account

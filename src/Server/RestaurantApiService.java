@@ -20,7 +20,57 @@ import logic.item_in_menu;
  * https://github.com/swagger-api/swagger-codegen)
  *
  */
-public class SupplierApiService {
+public class RestaurantApiService {
+    
+    /**
+     * Get resturants for the specific location
+     *
+     */
+    public static void getResturants(String area) {
+        // TODO: Implement...
+        
+
+    }
+    
+    /**
+     * Get resturants for the specific location
+     *
+     */
+    public static void getResturantsByType(String area, String type) {
+        // TODO: Implement...
+        
+
+    }
+    /**
+     * Get all categories
+     *
+     * This can only be done by the logged in supplier.
+     *
+     */
+    public static void getAllCategories(String menuName) {
+        // TODO: Implement...
+        
+    }
+	/**
+     * Getting list of all related items
+     *
+     * This can only be done by the logged in supplier.
+     *
+     */
+	public static void allCategoryItems(String menuName, String itemCategory, Long resturantID, Response response) {
+        // TODO: Implement...
+        
+    }
+	/**
+     * Getting list of all related items
+     *
+     * This can only be done by the logged in supplier.
+     *
+     */
+    public static void allSubCategoryItems(String menuName, String itemCategory, String itemSubCategory, Long resturantID) {
+        // TODO: Implement...
+        
+    }
 	/**
 	 * Getting list of all related items
 	 *
