@@ -37,7 +37,7 @@ CREATE TABLE `account` (
   `isLoggedIn` tinyint DEFAULT '0',
   `Debt` float NOT NULL DEFAULT '0',
   `W4C` varchar(50) NOT NULL,
-  PRIMARY KEY (`UserID`,`UserName`,`W4C`,`Role`),
+  PRIMARY KEY (`UserID`,`UserName`,`Role`),
   KEY `fk_from_BM_account_idx` (`BranchManagerID`),
   CONSTRAINT `fk_from_BM_account` FOREIGN KEY (`BranchManagerID`) REFERENCES `branch_manager` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -366,6 +366,7 @@ CREATE TABLE `order` (
   `Check_out_price` float NOT NULL,
   `isBusiness` tinyint NOT NULL,
   `required_time` varchar(10) NOT NULL,
+  `isApproved` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`OrderNum`),
   KEY `fk_account_idx` (`UserID`),
   KEY `fk_restaurantID_idx` (`RestaurantID`),
@@ -585,4 +586,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-15 17:13:47
+-- Dump completed on 2021-12-15 19:54:35

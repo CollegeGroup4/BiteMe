@@ -39,16 +39,16 @@ public class QueryConsts {
     public static final int ACCOUNT_PASSWORD = 3;
     public static final int ACCOUNT_FIRST_NAME = 4;
     public static final int ACCOUNT_LAST_NAME = 5;
+    public static final int ACCOUNT_PHONE = 6;
     public static final int ACCOUNT_EMAIL = 7;
     public static final int ACCOUNT_TYPE = 8;
-    public static final int ACCOUNT_PHONE = 6;
     public static final int ACCOUNT_STATUS = 9;
     public static final int ACCOUNT_BRANCH_MANAGER_ID = 10;
     public static final int ACCOUNT_AREA = 11;
     public static final int ACCOUNT_IS_LOGGED_IN = 12;
     public static final int ACCOUNT_DEBT = 13;
-    public static final int ACCOUNT_BUSINESS = 14;
-    public static final int ACCOUNT_PRIVATE = 15;
+    public static final int ACCOUNT_W4C = 14;
+
     
     //for restaurant
     public static final int RESTAURANT_ID = 1;
