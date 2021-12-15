@@ -9,9 +9,9 @@ public class BusinessAccount extends Account {
 	private float currentSpent;
 
 	public BusinessAccount(int userID, String userName, String password, String firstName, String lastName,
-			String email, String role, String phone, String status, int branch_manager_ID, String area, int debt,
+			String email, String role, String phone, String status, boolean isBusiness,int branch_manager_ID, String area, int debt,
 			String w4c_card, float monthBillingCeiling, Boolean isApproved, String businessName, float currentSpent) {
-		super(userID, userName, password, firstName, lastName, email, role, phone, status, branch_manager_ID, area,
+		super(userID, userName, password, firstName, lastName, email, role, phone, status, isBusiness,branch_manager_ID, area,
 				debt, w4c_card);
 		this.userID = userID;
 		this.monthBillingCeiling = monthBillingCeiling;

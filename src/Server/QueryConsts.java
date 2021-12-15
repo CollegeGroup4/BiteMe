@@ -27,6 +27,7 @@ public class QueryConsts {
     public static final int ITEM_RES_ID = 7;
     public static final int ITEM_IMAGE = 8;
     public static final int ITEM_DESCRIPTION = 9;
+    public static final int ITEM_AMOUNT = 9;
     		
     //for options
     public static final int OPTIONAL_TYPE = 1;

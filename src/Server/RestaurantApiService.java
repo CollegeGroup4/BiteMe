@@ -14,6 +14,7 @@ import logic.Category;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.mysql.cj.Query;
 
 import common.MyPhoto;
 import logic.Item;
@@ -162,6 +163,7 @@ public class RestaurantApiService {
 	public static void allItems(String menuName, int restaurantID, Response response) {
 		PreparedStatement stmt;
 		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<Options> options = new ArrayList<>();
 		Item item = null;
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM items biteme.item, itemInMenu biteme.item_in_menu"
@@ -170,20 +172,23 @@ public class RestaurantApiService {
 			stmt.setInt(1, restaurantID);
 			stmt.setInt(2, restaurantID);
 			stmt.setString(3, menuName);
-			ResultSet rs = stmt.executeQuery();
+			stmt.executeQuery();
+			ResultSet rs = stmt.getResultSet();
 			while (rs.next()) {
-				String category, String subcategory, int itemID, int restaurantID, String name, 
-				float price, String description, String ingrediants, Options[] options, byte[] photo, int amount)‬
-				item = new Item(rs.getString(finals.It), menuName, restaurantID, restaurantID, menuName,
-						restaurantID, menuName, menuName, null, null, restaurantID)
-			}
-			for (String category2 : cat.keySet()) {
-				category = new Category(category2);
-				
-				for (String category3 : cat.get(category2)) {
-					category.getSubCategory().add(category3);
+				item = new Item(rs.getString(QueryConsts.ITEM_CATEGORY), rs.getString(QueryConsts.ITEM_SUB_CATEGORY), rs.getInt(QueryConsts.ITEM_ID), 
+						rs.getInt(QueryConsts.ITEM_RES_ID),rs.getString(QueryConsts.ITEM_NAME), rs.getFloat(QueryConsts.ITEM_PRICE), 
+						rs.getString(QueryConsts.ITEM_DESCRIPTION),rs.getString(QueryConsts.ITEM_INGRIDIENTS), null, rs.getString(QueryConsts.ITEM_IMAGE),
+						rs.getInt(QueryConsts.ITEM_AMOUNT));
+				stmt = EchoServer.con.prepareStatement("SELECT * FROM options biteme.optional_category WHERE options.itemID = ?;");
+				stmt.setInt(1, item.getItemID());
+				stmt.executeQuery();
+				ResultSet rs2 = stmt.getResultSet();
+				while(rs2.next()) {
+					options.add(new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE), rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getInt(QueryConsts.OPTIONAL_ITEM_ID)));
 				}
-				categories.add(category);
+				item.setOptions((Options[])options.toArray());
+				options.clear();
+				items.add(item);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

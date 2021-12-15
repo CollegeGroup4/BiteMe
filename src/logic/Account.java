@@ -10,14 +10,15 @@ public class Account {
 	private String role;
 	private String phone;
 	private String status;
+	private boolean isBusiness;
 	private int branch_manager_ID;
 	private String area;
 	private int debt;
 	private String w4c_card;
 
 	public Account(int userID, String userName, String password, String firstName, String lastName, String email,
-			String role, String phone, String status, int branch_manager_ID, String area, int debt, String w4c_card) {
-		super();
+			String role, String phone, String status, boolean isBusiness, int branch_manager_ID, String area, int debt,
+			String w4c_card) {
 		this.userID = userID;
 		this.userName = userName;
 		this.password = password;
@@ -27,6 +28,7 @@ public class Account {
 		this.role = role;
 		this.phone = phone;
 		this.status = status;
+		this.isBusiness = isBusiness;
 		this.branch_manager_ID = branch_manager_ID;
 		this.area = area;
 		this.debt = debt;
@@ -135,6 +137,14 @@ public class Account {
 
 	public void setW4c_card(String w4c_card) {
 		this.w4c_card = w4c_card;
+	}
+
+	public boolean isBusiness() {
+		return isBusiness;
+	}
+
+	public void setBusiness(boolean isBusiness) {
+		this.isBusiness = isBusiness;
 	}
 
 }

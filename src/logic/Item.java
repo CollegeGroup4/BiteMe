@@ -10,11 +10,11 @@ public class Item {
 	private String description;
 	private String ingrediants;
 	private Options[] options;
-	private byte[] photo;
+	private String photo;
 	private int amount;
 	
 	public Item(String category, String subcategory, int itemID, int restaurantID, String name, float price,
-			String description, String ingrediants, Options[] options, byte[] photo, int amount) {
+			String description, String ingrediants, Options[] options, String photo, int amount) {
 		this.category = category;
 		this.subcategory = subcategory;
 		this.itemID = itemID;
@@ -82,10 +82,10 @@ public class Item {
 	public void setOptions(Options[] options) {
 		this.options = options;
 	}
-	public byte[] getPhoto() {
+	public String getPhoto() {
 		return photo;
 	}
-	public void setPhoto(byte[] photo) {
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
 	public int getAmount() {
