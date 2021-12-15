@@ -123,17 +123,17 @@ public class OrderApiService {
 							shipmentID = rs.getInt(1);
 
 							PreparedStatement setInShipment = EchoServer.con.prepareStatement(
-									"INSERT INTO biteme.orders_in_shipment (ShipmentID, orderID, AccountID, Price)"
+									"INSERT INTO biteme.orders_in_shipment (ShipmentID, orderID, UserID, Price)"
 											+ "VALUES (?,?,?,?);");
 							setInShipment.setInt(1, rs.getInt(1));
 							setInShipment.setInt(2, orderID);
-							setInShipment.setInt(3, order.getAccountID());
+							setInShipment.setInt(3, order.getUserID());
 							setInShipment.setFloat(4, 25);
 
 							// calculate shipping price
 							PreparedStatement getAmountOfOrdersInShipment = EchoServer.con.prepareStatement(
-									"SELECT orderID, AccountID, COUNT(*) FROM biteme.orders_in_shipment"
-											+ " WHERE ShipmentID = ? GROUP BY orderID, AccountID;");
+									"SELECT orderID, UserID, COUNT(*) FROM biteme.orders_in_shipment"
+											+ " WHERE ShipmentID = ? GROUP BY orderID, UserID;");
 
 							getAmountOfOrdersInShipment.setInt(1, shipmentID);
 							getAmountOfOrdersInShipment.execute();
@@ -235,6 +235,7 @@ public class OrderApiService {
 			response.setCode(404);
 			response.setDescription("Order not found");
 			response.setBody(null);
+			return;
 		}
 		response.setCode(200);
 		response.setDescription("Success in fetching order" + orderId);
@@ -245,26 +246,69 @@ public class OrderApiService {
 	 * Get payment approval for monthly budget
 	 *
 	 */
-	public static void getPaymentApproval(Integer accountID, int amount, Response response) {
-		// TODO: Implement...
+	public static void getPaymentApproval(Integer UserID, float amount, Response response) {
+		PreparedStatement getAccount, getBusinessAccount, updateCurrentSpend;
+		ResultSet rs;
+		float monthBillingCelling, currentSpent;
+		try {
+			getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.account WHERE UserID = ?");
+			getAccount.setInt(1, UserID);
+			getAccount.execute();
+			rs = getAccount.getResultSet();
+			if (rs.next()) {
+				getBusinessAccount = EchoServer.con
+						.prepareStatement("SELECT * FROM biteme.business_account WHERE UserID = ?");
+				getBusinessAccount.setInt(1, UserID);
+				getBusinessAccount.execute();
+				rs.close();
+				rs = getBusinessAccount.getResultSet();
+				if (rs.next()) {
+					monthBillingCelling = rs.getFloat(2);
+					currentSpent = rs.getFloat(5);
+					if (monthBillingCelling < currentSpent + amount) {
+						throw new SQLException("Account" + UserID + "will exceed monthlry billing celling", "400",
+								400);
+					} else {
+						updateCurrentSpend = EchoServer.con.prepareStatement(
+								"UPDATE biteme.business_account SET CurrentSpend = ? WHERE UserID = ?;");
+						updateCurrentSpend.setFloat(1, currentSpent + amount);
+						updateCurrentSpend.setInt(2, UserID);
+						updateCurrentSpend.execute();
+					}
+				}
 
-	}
-
-	/**
-	 * Get resturants for the specific
-	 *
-	 */
-	public static void getResturants(String area, Response response) {
-		// TODO: Implement...
-
+			} else {
+				throw new SQLException("Account" + UserID + "is not found in table", "401", 401);
+			}
+		} catch (SQLException e) {
+			response.setCode(e.getErrorCode());
+			response.setDescription(e.getMessage());
+			response.setBody(null);
+		}
+		response.setCode(200);
+		response.setDescription("Payment approved");
+		response.setBody(null);
 	}
 
 	/**
 	 * Updates a order in the DB with form data
 	 *
 	 */
-	public static void updateOrderWithForm(Long orderId, String address, String delivery, Response response) {
-		// TODO: Implement...
+	public static void updateOrderWithForm(int orderId, String address, String delivery, Response response) {
+		PreparedStatement getOrder;
+		ResultSet rs;
+		
+		try {
+			
+			getOrder = 
+			
+			
+			
+		}catch(SQLException e) {
+			
+		}
+		
+		
 
 	}
 
