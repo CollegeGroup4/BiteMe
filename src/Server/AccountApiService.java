@@ -9,6 +9,8 @@ import java.util.Random;
 import org.graalvm.compiler.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
 
 import logic.Account;
+import logic.BusinessAccount;
+import logic.PrivateAccount;
 
 /**
  * BiteMe
@@ -39,7 +41,7 @@ public class AccountApiService {
 			postAccount.setString(5, account.getLastName());
 			postAccount.setString(6, account.getPhone());
 			postAccount.setString(7, account.getEmail());
-			postAccount.setString(8, account.getType());
+			postAccount.setString(8, account.getRole());
 			postAccount.setString(9, account.getStatus());
 			postAccount.setInt(10, account.getBranch_manager_ID());
 			postAccount.setString(11, account.getArea());
@@ -54,31 +56,26 @@ public class AccountApiService {
 			}
 			return;
 		}
-		
-		switch (account.getType()) {
+
+		switch (account.getRole()) {
 		case "private":
+			PrivateAccount privateAccount = account.getPrivateAccount();
+			if (privateAccount == null)														//need to add response
+				break;
 			try {
 				PreparedStatement postPrivateAccount = EchoServer.con.prepareStatement(
-						"INSERT INTO biteme.account (AccountID, UserName, Password, FirstName, LastName, PhoneNumber, Email,"
-								+ " Type, status, BranchManagerID, Area)"
-								+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
-				postAccount.setInt(1, account.getUserID());
-				// Its the first userName that he had so the test is in users table on login
-				postAccount.setString(2, account.getUserName());
-				postAccount.setString(3, account.getPassword());
-				postAccount.setString(4, account.getFirstName());
-				postAccount.setString(5, account.getLastName());
-				postAccount.setString(6, account.getPhone());
-				postAccount.setString(7, account.getEmail());
-				postAccount.setString(8, account.getType());
-				postAccount.setString(9, account.getStatus());
-				postAccount.setInt(10, account.getBranch_manager_ID());
-				postAccount.setString(11, account.getArea());
-				postAccount.execute();
+						"INSERT INTO biteme.private_account (AccountID, CreditCardNumber, CreditCardCVV, CreditCardExpDate, W4C)"
+								+ " VALUES (?,?,?,?,?);");
+				postPrivateAccount.setInt(1, privateAccount.getUserID());
+				postPrivateAccount.setString(2, privateAccount.getCreditCardNumber());
+				postPrivateAccount.setString(3, privateAccount.getCreditCardCVV());
+				postPrivateAccount.setString(4, privateAccount.getCreditCardExpDate());
+				postPrivateAccount.setString(5, privateAccount.getW4c_card());
+				postPrivateAccount.execute();
 			} catch (SQLException e) {
 				if (e.getErrorCode() == 1062) {
 					response.setCode(404);
-					response.setDescription("User id already exist");
+					response.setDescription("Private User id already exist");
 				} else {
 					response.setCode(400);
 					response.setDescription("Fields are missing");
@@ -87,7 +84,29 @@ public class AccountApiService {
 			}
 			break;
 		case "business":
-			
+			BusinessAccount businessAccount = account.getBusinessAccount();
+			if (businessAccount == null)														//need to add response
+				break;
+			try {
+				PreparedStatement postBusinessAccount = EchoServer.con.prepareStatement(
+						"INSERT INTO biteme.private_account (AccountID, MonthBillingCeiling, isApproved, BusinessName, CurrentSpent, W4C)"
+								+ " VALUES (?,?,?,?,?,?);");
+				postBusinessAccount.setInt(1, businessAccount.getUserID());
+				postBusinessAccount.setFloat(2, businessAccount.getMonthBillingCeiling());
+				postBusinessAccount.setBoolean(3, businessAccount.getIsApproved());
+				postBusinessAccount.setString(4, businessAccount.getBusinessName());
+				postBusinessAccount.setString(5, businessAccount.getW4c_card());
+				postBusinessAccount.execute();
+			} catch (SQLException e) {
+				if (e.getErrorCode() == 1062) {
+					response.setCode(404);
+					response.setDescription("Private User id already exist");
+				} else {
+					response.setCode(400);
+					response.setDescription("Fields are missing");
+				}
+				return;
+			}
 			break;
 
 		default:
@@ -151,12 +170,12 @@ public class AccountApiService {
 			loginAccount.setInt(1, branch_manager_id);
 			rs = loginAccount.getResultSet();
 			while (rs.next()) {
-				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME), rs.getString(finals.ACCOUNT_PASSWORD),
-						rs.getString(finals.ACCOUNT_FIRST_NAME), rs.getString(finals.ACCOUNT_LAST_NAME),
-						rs.getString(finals.ACCOUNT_EMAIL), rs.getString(finals.ACCOUNT_TYPE),
-						rs.getString(finals.ACCOUNT_PHONE), rs.getString(finals.ACCOUNT_STATUS),
-						rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
-						rs.getInt(finals.ACCOUNT_DEBT));
+				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
+						rs.getString(finals.ACCOUNT_PASSWORD), rs.getString(finals.ACCOUNT_FIRST_NAME),
+						rs.getString(finals.ACCOUNT_LAST_NAME), rs.getString(finals.ACCOUNT_EMAIL),
+						rs.getString(finals.ACCOUNT_TYPE), rs.getString(finals.ACCOUNT_PHONE),
+						rs.getString(finals.ACCOUNT_STATUS), rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID),
+						rs.getString(finals.ACCOUNT_AREA), rs.getInt(finals.ACCOUNT_DEBT));
 				acccounts.add(account);
 			}
 		} catch (SQLException e1) {
@@ -184,12 +203,12 @@ public class AccountApiService {
 			getAccount.execute();
 			rs = getAccount.getResultSet();
 			if (rs.next())
-				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME), rs.getString(finals.ACCOUNT_PASSWORD),
-						rs.getString(finals.ACCOUNT_FIRST_NAME), rs.getString(finals.ACCOUNT_LAST_NAME),
-						rs.getString(finals.ACCOUNT_EMAIL), rs.getString(finals.ACCOUNT_TYPE),
-						rs.getString(finals.ACCOUNT_PHONE), rs.getString(finals.ACCOUNT_STATUS),
-						rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
-						rs.getInt(finals.ACCOUNT_DEBT));
+				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
+						rs.getString(finals.ACCOUNT_PASSWORD), rs.getString(finals.ACCOUNT_FIRST_NAME),
+						rs.getString(finals.ACCOUNT_LAST_NAME), rs.getString(finals.ACCOUNT_EMAIL),
+						rs.getString(finals.ACCOUNT_TYPE), rs.getString(finals.ACCOUNT_PHONE),
+						rs.getString(finals.ACCOUNT_STATUS), rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID),
+						rs.getString(finals.ACCOUNT_AREA), rs.getInt(finals.ACCOUNT_DEBT));
 		} catch (SQLException e) {
 		}
 		response.setCode(200);
@@ -205,8 +224,8 @@ public class AccountApiService {
 		ResultSet rs;
 		Account account = null;
 		try {
-			PreparedStatement loginAccount = EchoServer.con.prepareStatement(
-					"SELECT * FROM biteme.account WHERE UserName = ? AND Password = ?;"
+			PreparedStatement loginAccount = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ? AND Password = ?;"
 							+ "UPDATE biteme.account SET isLoggedIn = 1 WHERE UserName = ? and Password = ?;");
 			loginAccount.setString(1, userName);
 			// Its the first userName that he had so the test is in users table on login
@@ -219,24 +238,25 @@ public class AccountApiService {
 				throw new SQLException("User isn't exist");
 			}
 
-			account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME), rs.getString(finals.ACCOUNT_PASSWORD),
-					rs.getString(finals.ACCOUNT_FIRST_NAME), rs.getString(finals.ACCOUNT_LAST_NAME),
-					rs.getString(finals.ACCOUNT_EMAIL), rs.getString(finals.ACCOUNT_TYPE),
-					rs.getString(finals.ACCOUNT_PHONE), rs.getString(finals.ACCOUNT_STATUS),
-					rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(finals.ACCOUNT_AREA),
-					rs.getInt(finals.ACCOUNT_DEBT));
+			account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
+					rs.getString(finals.ACCOUNT_PASSWORD), rs.getString(finals.ACCOUNT_FIRST_NAME),
+					rs.getString(finals.ACCOUNT_LAST_NAME), rs.getString(finals.ACCOUNT_EMAIL),
+					rs.getString(finals.ACCOUNT_TYPE), rs.getString(finals.ACCOUNT_PHONE),
+					rs.getString(finals.ACCOUNT_STATUS), rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID),
+					rs.getString(finals.ACCOUNT_AREA), rs.getInt(finals.ACCOUNT_DEBT));
 			if (account.getStatus().equals("blocked")) {
 				throw new SQLException("Account" + account.getUserID() + "is blocked", "400", 400);
-			
-		}} catch (SQLException e) {
+
+			}
+		} catch (SQLException e) {
 			if (e.getErrorCode() == 400) {
 				response.setCode(400);
 				response.setDescription(e.getMessage());
 			} else if (e.getErrorCode() == 401) {
 				response.setCode(401);
 				response.setDescription(e.getMessage());
-				response.setBody(null);}
-				else{
+				response.setBody(null);
+			} else {
 				response.setCode(404);
 				response.setDescription(e.getMessage());
 			}

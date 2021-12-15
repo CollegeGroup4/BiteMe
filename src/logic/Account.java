@@ -13,9 +13,15 @@ public class Account {
 	private int branch_manager_ID;
 	private String area;
 	private int debt;
+	private BusinessAccount businessAccount;
+	private PrivateAccount privateAccount;
+	
+	
 	
 	public Account(int userID, String userName, String password, String firstName, String lastName, String email,
-			String role, String phone, String status, int branch_manager_ID, String area, int debt) {
+			String role, String phone, String status, int branch_manager_ID, String area, int debt,
+			BusinessAccount businessAccount, PrivateAccount privateAccount) {
+		super();
 		this.userID = userID;
 		this.userName = userName;
 		this.password = password;
@@ -28,7 +34,11 @@ public class Account {
 		this.branch_manager_ID = branch_manager_ID;
 		this.area = area;
 		this.debt = debt;
+		this.businessAccount = businessAccount;
+		this.privateAccount = privateAccount;
 	}
+	
+	
 	
 	public int getUserID() {
 		return userID;
@@ -101,6 +111,30 @@ public class Account {
 	}
 	public void setDebt(int debt) {
 		this.debt = debt;
+	}
+
+
+
+	public BusinessAccount getBusinessAccount() {
+		return businessAccount;
+	}
+
+
+
+	public void setBusinessAccount(BusinessAccount businessAccount) {
+		this.businessAccount = businessAccount;
+	}
+
+
+
+	public PrivateAccount getPrivateAccount() {
+		return privateAccount;
+	}
+
+
+
+	public void setPrivateAccount(PrivateAccount privateAccount) {
+		this.privateAccount = privateAccount;
 	}
 
 	
