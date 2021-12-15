@@ -12,6 +12,7 @@ public class Item {
 	private Options[] options;
 	private byte[] photo;
 	private int amount;
+	
 	public Item(String category, String subcategory, int itemID, int restaurantID, String name, float price,
 			String description, String ingrediants, Options[] options, byte[] photo, int amount) {
 		super();
@@ -27,6 +28,7 @@ public class Item {
 		this.photo = photo;
 		this.amount = amount;
 	}
+	
 	public String getCategory() {
 		return category;
 	}

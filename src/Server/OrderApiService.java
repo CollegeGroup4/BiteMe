@@ -3,11 +3,11 @@ package Server;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
-import logic.*;
+import logic.Item;
+import logic.Options;
+import logic.Order;
 
 /**
  * BiteMe
@@ -153,16 +153,13 @@ public class OrderApiService {
 								updatePriceOrderInShipment.setInt(2, shipmentID);
 								updatePriceOrderInShipment.execute();
 							}
-
 						}
-
 					} catch (SQLException e) {
 						// TODO: handle exception
 					}
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -260,25 +257,6 @@ public class OrderApiService {
 	public static void getResturants(String area, Response response) {
 		// TODO: Implement...
 
-	}
-
-	/**
-	 * Updates a order in the DB with form data
-	 *
-	 */
-	public static void updateOrderWithForm(Order body, Response response) {
-		try {
-			PreparedStatement updateOrder = EchoServer.con.prepareStatement("UPDATE biteme.order "
-					+ "SET Amount = ? WHERE OrderNum = ?" + "ItemID = ? OptionalType = ? OptionalSpecify = ?");
-			updateOrder.setInt(1, rs.getInt(1) + 1);
-			updateOrder.setInt(2, orderID);
-			updateOrder.setInt(3, options.getItemID());
-			updateOrder.setString(4, options.getOption_category());
-			updateOrder.setString(4, options.getSpecify_option());
-			updateOrder.execute();
-		} catch (SQLException ex) {
-			System.out.println(ex.toString());
-		}
 	}
 
 	/**

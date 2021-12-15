@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.graalvm.compiler.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
+
 import logic.Account;
 
 /**
@@ -51,6 +53,45 @@ public class AccountApiService {
 				response.setDescription("Fields are missing");
 			}
 			return;
+		}
+		
+		switch (account.getType()) {
+		case "private":
+			try {
+				PreparedStatement postPrivateAccount = EchoServer.con.prepareStatement(
+						"INSERT INTO biteme.account (AccountID, UserName, Password, FirstName, LastName, PhoneNumber, Email,"
+								+ " Type, status, BranchManagerID, Area)"
+								+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
+				postAccount.setInt(1, account.getUserID());
+				// Its the first userName that he had so the test is in users table on login
+				postAccount.setString(2, account.getUserName());
+				postAccount.setString(3, account.getPassword());
+				postAccount.setString(4, account.getFirstName());
+				postAccount.setString(5, account.getLastName());
+				postAccount.setString(6, account.getPhone());
+				postAccount.setString(7, account.getEmail());
+				postAccount.setString(8, account.getType());
+				postAccount.setString(9, account.getStatus());
+				postAccount.setInt(10, account.getBranch_manager_ID());
+				postAccount.setString(11, account.getArea());
+				postAccount.execute();
+			} catch (SQLException e) {
+				if (e.getErrorCode() == 1062) {
+					response.setCode(404);
+					response.setDescription("User id already exist");
+				} else {
+					response.setCode(400);
+					response.setDescription("Fields are missing");
+				}
+				return;
+			}
+			break;
+		case "business":
+			
+			break;
+
+		default:
+			break;
 		}
 		response.setCode(200);
 		response.setDescription("Success in registering" + account.getUserID());

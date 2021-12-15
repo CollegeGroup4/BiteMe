@@ -9,6 +9,7 @@ public class Resturant {
 	private String type;
 	private int accountID;
 	public byte[] photo;
+	
 	public Resturant(int iD, boolean isApproved, int branchManagerID, String name, String area, String type,
 			int accountID, byte[] photo) {
 		super();
@@ -21,6 +22,7 @@ public class Resturant {
 		this.accountID = accountID;
 		this.photo = photo;
 	}
+	
 	public int getID() {
 		return ID;
 	}

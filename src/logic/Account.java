@@ -1,7 +1,7 @@
 package logic;
 
 public class Account {
-	private int accountID;
+	private int userID;
 	private String userName;
 	private String password;
 	private String firstName;
@@ -13,10 +13,11 @@ public class Account {
 	private int branch_manager_ID;
 	private String area;
 	private int debt;
-	public Account(int accountID, String userName, String password, String firstName, String lastName, String email,
+	
+	public Account(int userID, String userName, String password, String firstName, String lastName, String email,
 			String role, String phone, String status, int branch_manager_ID, String area, int debt) {
 		super();
-		this.accountID = accountID;
+		this.userID = userID;
 		this.userName = userName;
 		this.password = password;
 		this.firstName = firstName;
@@ -29,11 +30,12 @@ public class Account {
 		this.area = area;
 		this.debt = debt;
 	}
+	
 	public int getUserID() {
-		return accountID;
+		return userID;
 	}
 	public void setUserID(int userID) {
-		this.accountID = userID;
+		this.userID = userID;
 	}
 	public String getUserName() {
 		return userName;
