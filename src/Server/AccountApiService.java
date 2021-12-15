@@ -56,7 +56,6 @@ public class AccountApiService {
 			}
 			return;
 		}
-
 		switch (account.getRole()) {
 		case "private":
 			PrivateAccount privateAccount = account.getPrivateAccount();
@@ -71,6 +70,7 @@ public class AccountApiService {
 				postPrivateAccount.setString(3, privateAccount.getCreditCardCVV());
 				postPrivateAccount.setString(4, privateAccount.getCreditCardExpDate());
 				postPrivateAccount.setString(5, privateAccount.getW4c_card());
+				
 				postPrivateAccount.execute();
 			} catch (SQLException e) {
 				if (e.getErrorCode() == 1062) {
@@ -100,7 +100,7 @@ public class AccountApiService {
 			} catch (SQLException e) {
 				if (e.getErrorCode() == 1062) {
 					response.setCode(404);
-					response.setDescription("Private User id already exist");
+					response.setDescription("Business User id already exist");
 				} else {
 					response.setCode(400);
 					response.setDescription("Fields are missing");
@@ -312,7 +312,7 @@ public class AccountApiService {
 			postAccount.setString(5, account.getLastName());
 			postAccount.setString(6, account.getPhone());
 			postAccount.setString(7, account.getEmail());
-			postAccount.setString(8, account.getType());
+			postAccount.setString(8, account.getRole());
 			postAccount.setString(9, account.getStatus());
 			postAccount.setInt(10, account.getBranch_manager_ID());
 			postAccount.setString(11, account.getArea());
