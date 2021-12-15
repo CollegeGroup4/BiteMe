@@ -14,7 +14,7 @@ public class QueryConsts {
     public static final int ORDER_TYPE_OF_ORDER = 7;
     public static final int ORDER_DISCOUNT_FOR_EARLY_ORDER = 8;
     public static final int ORDER_CHECK_OUT_PRICE = 9;
-    public static final int ORDER_IS_BUISNESS = 10;
+    public static final int ORDER_IS_APPROVED = 10;
     public static final int ORDER_REQUIRED_TIME = 11;
     
     //for items
@@ -42,13 +42,14 @@ public class QueryConsts {
     public static final int ACCOUNT_LAST_NAME = 5;
     public static final int ACCOUNT_PHONE = 6;
     public static final int ACCOUNT_EMAIL = 7;
-    public static final int ACCOUNT_TYPE = 8;
+    public static final int ACCOUNT_ROLE = 8;
     public static final int ACCOUNT_STATUS = 9;
     public static final int ACCOUNT_BRANCH_MANAGER_ID = 10;
     public static final int ACCOUNT_AREA = 11;
     public static final int ACCOUNT_IS_LOGGED_IN = 12;
     public static final int ACCOUNT_DEBT = 13;
     public static final int ACCOUNT_W4C = 14;
+    public static final int ACCOUNT_IS_BUSINESS = 15;
 
     
     //for restaurant
