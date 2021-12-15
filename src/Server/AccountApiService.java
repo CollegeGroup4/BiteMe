@@ -39,7 +39,7 @@ public class AccountApiService {
 			postAccount.setString(5, account.getLastName());
 			postAccount.setString(6, account.getPhone());
 			postAccount.setString(7, account.getEmail());
-			postAccount.setString(8, account.getType());
+			postAccount.setString(8, account.getRole());
 			postAccount.setString(9, account.getStatus());
 			postAccount.setInt(10, account.getBranch_manager_ID());
 			postAccount.setString(11, account.getArea());
@@ -55,26 +55,26 @@ public class AccountApiService {
 			return;
 		}
 		
-		switch (account.getType()) {
+		switch (account.getRole()) {
 		case "private":
 			try {
 				PreparedStatement postPrivateAccount = EchoServer.con.prepareStatement(
 						"INSERT INTO biteme.account (AccountID, UserName, Password, FirstName, LastName, PhoneNumber, Email,"
 								+ " Type, status, BranchManagerID, Area)"
 								+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
-				postAccount.setInt(1, account.getUserID());
+				postPrivateAccount.setInt(1, account.getUserID());
 				// Its the first userName that he had so the test is in users table on login
-				postAccount.setString(2, account.getUserName());
-				postAccount.setString(3, account.getPassword());
-				postAccount.setString(4, account.getFirstName());
-				postAccount.setString(5, account.getLastName());
-				postAccount.setString(6, account.getPhone());
-				postAccount.setString(7, account.getEmail());
-				postAccount.setString(8, account.getType());
-				postAccount.setString(9, account.getStatus());
-				postAccount.setInt(10, account.getBranch_manager_ID());
-				postAccount.setString(11, account.getArea());
-				postAccount.execute();
+				postPrivateAccount.setString(2, account.getUserName());
+				postPrivateAccount.setString(3, account.getPassword());
+				postPrivateAccount.setString(4, account.getFirstName());
+				postPrivateAccount.setString(5, account.getLastName());
+				postPrivateAccount.setString(6, account.getPhone());
+				postPrivateAccount.setString(7, account.getEmail());
+				postPrivateAccount.setString(8, account.getRole());
+				postPrivateAccount.setString(9, account.getStatus());
+				postPrivateAccount.setInt(10, account.getBranch_manager_ID());
+				postPrivateAccount.setString(11, account.getArea());
+				postPrivateAccount.execute();
 			} catch (SQLException e) {
 				if (e.getErrorCode() == 1062) {
 					response.setCode(404);
@@ -292,7 +292,7 @@ public class AccountApiService {
 			postAccount.setString(5, account.getLastName());
 			postAccount.setString(6, account.getPhone());
 			postAccount.setString(7, account.getEmail());
-			postAccount.setString(8, account.getType());
+			postAccount.setString(8, account.getRole());
 			postAccount.setString(9, account.getStatus());
 			postAccount.setInt(10, account.getBranch_manager_ID());
 			postAccount.setString(11, account.getArea());
