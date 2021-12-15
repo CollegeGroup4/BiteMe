@@ -1,6 +1,8 @@
 package gui;
 
 import java.net.InetAddress;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import client.ChatClient;
 
@@ -9,7 +11,7 @@ import client.ClientUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -21,7 +23,7 @@ import mywork.CustomerPageController;
 import temporaryDatabase.UserTemp;
 import temporaryDatabase.myOwnDatabase;
 
-public class MainScreenController {
+public class MainScreenController implements Initializable {
 
 	@FXML
 	private Button btnExit;
@@ -147,6 +149,12 @@ public class MainScreenController {
 	public void display(String message) {
 		System.out.println("message");
 
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) { // ***for developments only***
+		idUser.setText("0");
+		
 	}
 
 }

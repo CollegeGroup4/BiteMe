@@ -39,7 +39,7 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 			if (myOwnDatabase.MenusArrayList.get(i).getName().equals(PrepareADishController.menuSelected.getName()))
 				indexOfMenu = i;
 		}
-		//System.out.println(indexOfMenu); // ******** for test only ********
+		// System.out.println(indexOfMenu); // ******** for test only ********
 		// Finds all the dishes for a particular menu and add button for each of them
 		if (indexOfMenu >= 0)
 			for (int i = 0; i < myOwnDatabase.MenusArrayList.get(indexOfMenu).getItems().size(); i++) {
@@ -47,7 +47,7 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 				temp.setOnAction(this);
 				b.add(temp);
 
-			}  
+			}
 		Items.getChildren().addAll(b);
 	}
 
@@ -59,11 +59,11 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 	@Override
 	public void handle(ActionEvent event) {
 		String stringFromEvent = event.getSource().toString();
-		stringFromEvent=stringFromEvent.split("'",2)[1];
+		stringFromEvent = stringFromEvent.split("'", 2)[1];
 		stringFromEvent = stringFromEvent.substring(0, stringFromEvent.length() - 1);
-		for(int i=0;i<PrepareADishController.menuSelected.getItems().size();i++) {
-			if(PrepareADishController.menuSelected.getItems().get(i).getCourse().equals(stringFromEvent)) {
-				itemtSelected=PrepareADishController.menuSelected.getItems().get(i);
+		for (int i = 0; i < PrepareADishController.menuSelected.getItems().size(); i++) {
+			if (PrepareADishController.menuSelected.getItems().get(i).getCourse().equals(stringFromEvent)) {
+				itemtSelected = PrepareADishController.menuSelected.getItems().get(i);
 				break;
 			}
 		}
@@ -74,7 +74,7 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		 PrepareADishController.prepareADishController.getPaneForSelections().setCenter(root);
+		PrepareADishController.prepareADishController.getPaneForSelections().setCenter(root);
 	}
 
 }

@@ -39,6 +39,8 @@ public class PrepareADishController implements Initializable, EventHandler<Actio
 	//public static String menuName;
 	
 	public static Menu menuSelected;
+	
+	public static ArrayList<item_in_menu> itemsSelectedArr;
 
 	@FXML
 	private HBox Nav;
@@ -120,6 +122,7 @@ public class PrepareADishController implements Initializable, EventHandler<Actio
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		ArrayList<Button> b = new ArrayList<Button>();
+		itemsSelectedArr = new ArrayList<item_in_menu>();
 		setTempDatabase();
 		for (int i = 0; i < myOwnDatabase.MenusArrayList.size(); i++) {
 			Button temp = new Button(myOwnDatabase.MenusArrayList.get(i).getName());
