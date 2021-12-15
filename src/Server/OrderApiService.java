@@ -299,8 +299,7 @@ public class OrderApiService {
 		ResultSet rs;
 		
 		try {
-			
-			getOrder = 
+			 
 			
 			
 			

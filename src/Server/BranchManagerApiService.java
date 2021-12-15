@@ -1,6 +1,8 @@
 package Server;
 import java.util.List;
 
+import logic.Restaurant;
+
 
 /**
  * BiteMe
@@ -15,10 +17,9 @@ public class BranchManagerApiService{
      * This can only be done by the logged in branch manager.
      *
      */
-    public static List<InlineResponse200> getBranchOrders() {
+    public static void getBranchOrders() {
         // TODO: Implement...
-        
-        return null;
+
     }
     
     /**
@@ -39,23 +40,10 @@ public class BranchManagerApiService{
      * This can only be done by the logged in branch manager.
      *
      */
-    public static void registerSupplier(BranchManagerBody body) {
+    public static void registerSupplier(Restaurant body) {
         // TODO: Implement...
         
         
-    }
-    
-    /**
-     * Register a resturant - mind that the supplier shcema isn&#x27;t finish
-     *
-     * This can only be done by the logged in branch manager.
-     *
-     */
-    public static void registerSupplier(String supplierDetails) {
-        // TODO: Implement...
-        
-        
-    }
-    
+    } 
 }
 

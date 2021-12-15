@@ -1,16 +1,26 @@
 package Server;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 
+import logic.Category;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
+import common.MyPhoto;
 import logic.Item;
 import logic.Menu;
+import logic.MyFile;
 import logic.Options;
-import logic.Order;
-import logic.item_in_menu;
+import logic.Restaurant;
 
 /**
  * BiteMe
@@ -23,23 +33,64 @@ import logic.item_in_menu;
 public class RestaurantApiService {
     
     /**
-     * Get resturants for the specific location
+     * Get approved restaurants for the specific location
      *
      */
-    public static void getResturants(String area) {
-        // TODO: Implement...
-        
-
+    @SuppressWarnings("resource")
+	public static void getRestaurants(String area, Response response, String type) {
+    		PreparedStatement stmt;
+    		ArrayList<Restaurant> restaurants = new ArrayList<>();
+    		ArrayList<MyPhoto> photos = new ArrayList<>();
+    		Restaurant restaurant = null;
+    		try {
+    			stmt = EchoServer.con.prepareStatement("SELECT * FROM restaurant biteme.restaurant WHERE restaurant.IsApproved = 1" +area
+    					+ type + ";");
+    			ResultSet rs = stmt.executeQuery();
+    			while (rs.next()) {
+    				restaurant = new Restaurant(rs.getInt(finals.RESTAURANT_ID), rs.getBoolean(finals.RESTAURANT_IS_APPROVED),
+    						rs.getInt(finals.RESTAURANT_BRANCH_MANAGER_ID), rs.getString(finals.RESTAURANT_NAME),
+    						rs.getString(finals.RESTAURANT_AREA), rs.getString(finals.RESTAURANT_TYPE),
+    						rs.getInt(finals.RESTAURANT_USER_ID), rs.getString(finals.RESTAURANT_PHOTO));
+    				restaurants.add(restaurant);
+    				MyPhoto msg= new MyPhoto(Integer.toString(restaurant.getID())); //"diagnosisE.jpg"
+    				String path = finals.LocalfilePath + Integer.toString(restaurant.getID());
+    				  try{
+    					      File newFile = new File (path);		      		      
+    					      byte [] mybytearray  = new byte [(int)newFile.length()];
+    					      FileInputStream fis = new FileInputStream(newFile);
+    					      BufferedInputStream bis = new BufferedInputStream(fis);			    					      
+    					      msg.initArray(mybytearray.length);
+    					      msg.setSize(mybytearray.length);  					      
+    					      bis.read(msg.getMybytearray(),0,mybytearray.length);		      
+    					    }
+    					catch (Exception e) {
+    						System.out.println("Error send (Files)msg) to Server");
+    					}
+    			}
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		}
+    		response.setCode(200);
+    		response.setDescription("Success in fetching orders");
+    		Gson gson = new Gson();
+    		JsonElement v = gson.toJsonTree(restaurants);
+    		JsonElement pics = gson.toJsonTree(photos);
+    		JsonElement j = gson.toJsonTree(new Object());
+    		j.getAsJsonObject().add("restaurants", v);
+    		j.getAsJsonObject().add("image",pics);
+    		response.setBody(gson.toJson(j));
+    }
+    
+    public static void getAllRestaurants(String area, Response response, String type) {
+    	getRestaurants("and restaurant.Area = " +area, response, "");
     }
     
     /**
-     * Get resturants for the specific location
+     * Get restaurants for the specific location
      *
      */
-    public static void getResturantsByType(String area, String type) {
-        // TODO: Implement...
-        
-
+    public static void getRestaurantsByType(String area, String type, Response response) {
+    	getRestaurants("and restaurant.Area = " +area, response, "and restaurant.Type = " +type);
     }
     /**
      * Get all categories
@@ -47,8 +98,30 @@ public class RestaurantApiService {
      * This can only be done by the logged in supplier.
      *
      */
-    public static void getAllCategories(String menuName) {
-        // TODO: Implement...
+    public static void getAllCategories(int restaurantID, Response response) {
+    	PreparedStatement stmt;
+		ArrayList<Category> categories = new ArrayList<>();
+		HashMap<String, String> cat = new HashMap<>();
+		Category category = null;
+		try {
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM categories biteme.item_category WHERE categories.restaurantNum = ?;");
+			stmt.setInt(1, restaurantID);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				cat.put(rs.getString(1), rs.getString(2));
+			}
+			for (String category2 : cat.keySet()) {
+				
+				for (Category category3 : cat.g) {
+					
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		response.setCode(200);
+		response.setDescription("Success in fetching orders");
+		
         
     }
 	/**

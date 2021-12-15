@@ -84,8 +84,8 @@ public class EchoServer extends AbstractServer {
 			case "/orders":
 				switch (method) {
 					case GET:
-							String resturantID = gson.fromJson(m.get("resturantID"), String.class);
-							OrderApiService.allOrders(resturantID, response);
+							String restaurantID = gson.fromJson(m.get("restaurantID"), String.class);
+							OrderApiService.allOrders(restaurantID, response);
 						break;
 					case POST:
 							Order addOrder = gson.fromJson(m.get("order"), Order.class);
@@ -101,11 +101,11 @@ public class EchoServer extends AbstractServer {
 						break;
 					}
 				break;
-			case "/orders/resturants":
+			case "/orders/restaurants":
 				switch (method) {
 					case GET:
 							String area  = gson.fromJson(m.get("area"), String.class);
-							OrderApiService.getResturants(area,response);
+							OrderApiService.getrestaurants(area,response);
 						break;	
 				}
 				break;
