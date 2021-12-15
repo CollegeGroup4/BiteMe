@@ -23,22 +23,23 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `account` (
-  `AccountID` int NOT NULL,
+  `UserID` int NOT NULL,
   `UserName` varchar(10) NOT NULL,
   `Password` varchar(50) NOT NULL,
   `FirstName` varchar(10) NOT NULL,
   `LastName` varchar(10) NOT NULL,
   `PhoneNumber` varchar(11) NOT NULL,
   `Email` varchar(30) NOT NULL,
-  `Type` varchar(10) NOT NULL,
+  `Role` varchar(10) NOT NULL,
   `Status` varchar(10) NOT NULL,
   `BranchManagerID` int DEFAULT NULL,
   `Area` varchar(10) DEFAULT NULL,
   `isLoggedIn` tinyint DEFAULT '0',
   `Debt` float NOT NULL DEFAULT '0',
-  PRIMARY KEY (`AccountID`,`UserName`),
+  `W4C` varchar(50) NOT NULL,
+  PRIMARY KEY (`UserID`,`UserName`,`W4C`,`Role`),
   KEY `fk_from_BM_account_idx` (`BranchManagerID`),
-  CONSTRAINT `fk_from_BM_account` FOREIGN KEY (`BranchManagerID`) REFERENCES `branch_manager` (`AccountID`)
+  CONSTRAINT `fk_from_BM_account` FOREIGN KEY (`BranchManagerID`) REFERENCES `branch_manager` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -59,10 +60,10 @@ DROP TABLE IF EXISTS `branch_manager`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `branch_manager` (
-  `AccountID` int NOT NULL,
+  `UserID` int NOT NULL,
   `Area` varchar(10) NOT NULL,
-  PRIMARY KEY (`AccountID`,`Area`),
-  CONSTRAINT `fk_from_account_BM` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`)
+  PRIMARY KEY (`UserID`,`Area`),
+  CONSTRAINT `fk_from_account_BM` FOREIGN KEY (`UserID`) REFERENCES `account` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -83,15 +84,14 @@ DROP TABLE IF EXISTS `business_account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `business_account` (
-  `AccountID` int NOT NULL,
+  `UserID` int NOT NULL,
   `MonthBillingCeiling` float NOT NULL,
   `isApproved` tinyint NOT NULL,
   `BusinessName` varchar(10) NOT NULL,
   `CurrentSpent` float DEFAULT NULL,
-  `W4C` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`AccountID`),
+  PRIMARY KEY (`UserID`),
   KEY `fk_from_employees_business_account_idx` (`BusinessName`),
-  CONSTRAINT `fk_from_account_business_account` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`),
+  CONSTRAINT `fk_from_account_business_account` FOREIGN KEY (`UserID`) REFERENCES `account` (`UserID`),
   CONSTRAINT `fk_from_employees_business_account` FOREIGN KEY (`BusinessName`) REFERENCES `employees` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -113,12 +113,12 @@ DROP TABLE IF EXISTS `credit`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `credit` (
-  `Account ID` int NOT NULL,
+  `UserID` int NOT NULL,
   `AmountInCredit` int NOT NULL,
   `RestaurantID` int NOT NULL,
-  PRIMARY KEY (`Account ID`,`RestaurantID`),
+  PRIMARY KEY (`UserID`,`RestaurantID`),
   KEY `fk_from_restaurants_credit_idx` (`RestaurantID`),
-  CONSTRAINT `fk_from_account_credit` FOREIGN KEY (`Account ID`) REFERENCES `account` (`AccountID`),
+  CONSTRAINT `fk_from_account_credit` FOREIGN KEY (`UserID`) REFERENCES `account` (`UserID`),
   CONSTRAINT `fk_from_restaurants_credit` FOREIGN KEY (`RestaurantID`) REFERENCES `restaurant` (`RestaurantNum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -358,7 +358,7 @@ CREATE TABLE `order` (
   `OrderNum` int NOT NULL AUTO_INCREMENT,
   `RestaurantID` int NOT NULL,
   `ResturantName` varchar(10) DEFAULT NULL,
-  `AccountID` int NOT NULL,
+  `UserID` int NOT NULL,
   `OrderTime` varchar(50) NOT NULL,
   `PhoneNumber` varchar(11) NOT NULL,
   `TypeOfOrder` varchar(10) NOT NULL,
@@ -367,9 +367,9 @@ CREATE TABLE `order` (
   `isBusiness` tinyint NOT NULL,
   `required_time` varchar(10) NOT NULL,
   PRIMARY KEY (`OrderNum`),
-  KEY `fk_account_idx` (`AccountID`),
+  KEY `fk_account_idx` (`UserID`),
   KEY `fk_restaurantID_idx` (`RestaurantID`),
-  CONSTRAINT `fk_from_account_order` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`),
+  CONSTRAINT `fk_from_account_order` FOREIGN KEY (`UserID`) REFERENCES `account` (`UserID`),
   CONSTRAINT `fk_from_restaurantID_order` FOREIGN KEY (`RestaurantID`) REFERENCES `restaurant` (`RestaurantNum`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -393,12 +393,12 @@ DROP TABLE IF EXISTS `orders_in_shipment`;
 CREATE TABLE `orders_in_shipment` (
   `ShipmentID` int NOT NULL,
   `orderID` int NOT NULL,
-  `AccountID` int NOT NULL,
+  `UserID` int NOT NULL,
   `Price` float NOT NULL,
   KEY `fk_from_order_idx` (`orderID`),
-  KEY `fk_from_account_idx` (`AccountID`),
+  KEY `fk_from_account_idx` (`UserID`),
   KEY `fk_from_ship_OIS_idx` (`ShipmentID`),
-  CONSTRAINT `fk_from_account_OIS` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`),
+  CONSTRAINT `fk_from_account_OIS` FOREIGN KEY (`UserID`) REFERENCES `account` (`UserID`),
   CONSTRAINT `fk_from_order_OIS` FOREIGN KEY (`orderID`) REFERENCES `order` (`OrderNum`),
   CONSTRAINT `fk_from_ship_OIS` FOREIGN KEY (`ShipmentID`) REFERENCES `shipment` (`ShipmentID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -421,13 +421,12 @@ DROP TABLE IF EXISTS `private_account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `private_account` (
-  `AccountID` int NOT NULL,
+  `UserID` int NOT NULL,
   `CreditCardNumber` varchar(16) NOT NULL,
   `CreditCardCVV` varchar(4) NOT NULL,
   `CreditCardExpDate` varchar(5) NOT NULL,
-  `W4C` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`AccountID`),
-  CONSTRAINT `fk_from_account_private_account` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`)
+  PRIMARY KEY (`UserID`),
+  CONSTRAINT `fk_from_account_private_account` FOREIGN KEY (`UserID`) REFERENCES `account` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -505,14 +504,14 @@ CREATE TABLE `restaurant` (
   `BranchManagerID` int NOT NULL,
   `Area` varchar(10) NOT NULL,
   `Image` varbinary(10000) DEFAULT NULL,
-  `AccountID` int NOT NULL,
+  `UserID` int NOT NULL,
   `Type` varchar(10) NOT NULL,
   PRIMARY KEY (`RestaurantNum`,`RestaurantName`),
   KEY `fk_from_branchmanager_restaurant_idx` (`BranchManagerID`),
-  KEY `fk_from_account_supplier_idx` (`AccountID`),
-  CONSTRAINT `fk_from_account_restaurant` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`),
-  CONSTRAINT `fk_from_account_supplier` FOREIGN KEY (`AccountID`) REFERENCES `account` (`AccountID`),
-  CONSTRAINT `fk_from_branchmanager_restaurant` FOREIGN KEY (`BranchManagerID`) REFERENCES `branch_manager` (`AccountID`)
+  KEY `fk_from_account_supplier_idx` (`UserID`),
+  CONSTRAINT `fk_from_account_restaurant` FOREIGN KEY (`UserID`) REFERENCES `account` (`UserID`),
+  CONSTRAINT `fk_from_account_supplier` FOREIGN KEY (`UserID`) REFERENCES `account` (`UserID`),
+  CONSTRAINT `fk_from_branchmanager_restaurant` FOREIGN KEY (`BranchManagerID`) REFERENCES `branch_manager` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -586,4 +585,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-15 11:37:23
+-- Dump completed on 2021-12-15 17:13:47
