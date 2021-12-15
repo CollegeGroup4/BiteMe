@@ -15,7 +15,6 @@ public class Item {
 	
 	public Item(String category, String subcategory, int itemID, int restaurantID, String name, float price,
 			String description, String ingrediants, Options[] options, byte[] photo, int amount) {
-		super();
 		this.category = category;
 		this.subcategory = subcategory;
 		this.itemID = itemID;

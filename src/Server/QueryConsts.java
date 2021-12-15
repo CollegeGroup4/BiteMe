@@ -1,6 +1,6 @@
 package Server;
 
-public class finals {
+public class QueryConsts {
 	//photos path
 	public static final String LocalfilePath = "d:\\projectImages\\";
 	

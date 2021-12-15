@@ -101,28 +101,37 @@ public class RestaurantApiService {
     public static void getAllCategories(int restaurantID, Response response) {
     	PreparedStatement stmt;
 		ArrayList<Category> categories = new ArrayList<>();
-		HashMap<String, String> cat = new HashMap<>();
+		HashMap<String, ArrayList<String>> cat = new HashMap<>();
 		Category category = null;
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT * FROM categories biteme.item_category WHERE categories.restaurantNum = ?;");
+			stmt = EchoServer.con.prepareStatement("SELECT DISTINCT (items.category, items.subCategory) FROM items biteme.item"
+					+ " WHERE items.restaurantNID = ?;");
 			stmt.setInt(1, restaurantID);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				cat.put(rs.getString(1), rs.getString(2));
+				if(cat.containsKey(rs.getString(1))) {
+					cat.get(rs.getString(1)).add(rs.getString(2));
+				}
+				else {
+					ArrayList<String> newCategory = new ArrayList<>();
+					newCategory.add(rs.getString(2));
+					cat.put(rs.getString(1), newCategory);
+				}
 			}
 			for (String category2 : cat.keySet()) {
+				category = new Category(category2);
 				
-				for (Category category3 : cat.g) {
-					
+				for (String category3 : cat.get(category2)) {
+					category.getSubCategory().add(category3);
 				}
+				categories.add(category);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		response.setCode(200);
-		response.setDescription("Success in fetching orders");
-		
-        
+		response.setDescription("Success in fetching categories for restaurantID" + Integer.toString(restaurantID));
+		response.setBody(categories.toArray());        
     }
 	/**
      * Getting list of all related items
@@ -150,8 +159,38 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void allItems(String menuName, Long resturantID, Response response) {
-		// TODO: Implement...
+	public static void allItems(String menuName, int restaurantID, Response response) {
+		PreparedStatement stmt;
+		ArrayList<Item> items = new ArrayList<>();
+		Item item = null;
+		try {
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM items biteme.item, itemInMenu biteme.item_in_menu"
+					+ " WHERE items.RestaurantID = ? and itemInMenu.ItemID = items.ItemID and"
+					+ "itemInMenu.RestaurantID = ? and itemInMenu.MenuName = ?;");
+			stmt.setInt(1, restaurantID);
+			stmt.setInt(2, restaurantID);
+			stmt.setString(3, menuName);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				String category, String subcategory, int itemID, int restaurantID, String name, 
+				float price, String description, String ingrediants, Options[] options, byte[] photo, int amount)‬
+				item = new Item(rs.getString(finals.It), menuName, restaurantID, restaurantID, menuName,
+						restaurantID, menuName, menuName, null, null, restaurantID)
+			}
+			for (String category2 : cat.keySet()) {
+				category = new Category(category2);
+				
+				for (String category3 : cat.get(category2)) {
+					category.getSubCategory().add(category3);
+				}
+				categories.add(category);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		response.setCode(200);
+		response.setDescription("Success in fetching categories for restaurantID" + Integer.toString(restaurantID));
+		response.setBody(categories.toArray()); 
 
 	}
 

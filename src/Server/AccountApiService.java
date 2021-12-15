@@ -175,12 +175,12 @@ public class AccountApiService {
 			getAllAccounts.execute();
 			rs = getAllAccounts.getResultSet();
 			while (rs.next()) {
-				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
-						rs.getString(finals.ACCOUNT_PASSWORD), rs.getString(finals.ACCOUNT_FIRST_NAME),
-						rs.getString(finals.ACCOUNT_LAST_NAME), rs.getString(finals.ACCOUNT_EMAIL),
-						rs.getString(finals.ACCOUNT_TYPE), rs.getString(finals.ACCOUNT_PHONE),
-						rs.getString(finals.ACCOUNT_STATUS), rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID),
-						rs.getString(finals.ACCOUNT_AREA), rs.getInt(finals.ACCOUNT_DEBT), null, null);
+				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID), rs.getString(QueryConsts.ACCOUNT_USER_NAME),
+						rs.getString(QueryConsts.ACCOUNT_PASSWORD), rs.getString(QueryConsts.ACCOUNT_FIRST_NAME),
+						rs.getString(QueryConsts.ACCOUNT_LAST_NAME), rs.getString(QueryConsts.ACCOUNT_EMAIL),
+						rs.getString(QueryConsts.ACCOUNT_TYPE), rs.getString(QueryConsts.ACCOUNT_PHONE),
+						rs.getString(QueryConsts.ACCOUNT_STATUS), rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID),
+						rs.getString(QueryConsts.ACCOUNT_AREA), rs.getInt(QueryConsts.ACCOUNT_DEBT), null, null);
 
 				if (account.getRole().equals("private")) {
 					PreparedStatement getPrivateAccount = EchoServer.con
@@ -251,12 +251,12 @@ public class AccountApiService {
 			getAccount.execute();
 			rs = getAccount.getResultSet();
 			if (rs.next()) {
-				account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
-						rs.getString(finals.ACCOUNT_PASSWORD), rs.getString(finals.ACCOUNT_FIRST_NAME),
-						rs.getString(finals.ACCOUNT_LAST_NAME), rs.getString(finals.ACCOUNT_EMAIL),
-						rs.getString(finals.ACCOUNT_TYPE), rs.getString(finals.ACCOUNT_PHONE),
-						rs.getString(finals.ACCOUNT_STATUS), rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID),
-						rs.getString(finals.ACCOUNT_AREA), rs.getInt(finals.ACCOUNT_DEBT), null, null);
+				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID), rs.getString(QueryConsts.ACCOUNT_USER_NAME),
+						rs.getString(QueryConsts.ACCOUNT_PASSWORD), rs.getString(QueryConsts.ACCOUNT_FIRST_NAME),
+						rs.getString(QueryConsts.ACCOUNT_LAST_NAME), rs.getString(QueryConsts.ACCOUNT_EMAIL),
+						rs.getString(QueryConsts.ACCOUNT_TYPE), rs.getString(QueryConsts.ACCOUNT_PHONE),
+						rs.getString(QueryConsts.ACCOUNT_STATUS), rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID),
+						rs.getString(QueryConsts.ACCOUNT_AREA), rs.getInt(QueryConsts.ACCOUNT_DEBT), null, null);
 			} else
 				throw new SQLException("Account" + account.getUserID() + "is not found in table", "400", 400);
 			rs.close();
@@ -321,18 +321,18 @@ public class AccountApiService {
 			loginAccount.setString(2, password);
 			loginAccount.execute();
 			rs = loginAccount.getResultSet();
-			if (rs.getBoolean(finals.ACCOUNT_IS_LOGGED_IN)) {
+			if (rs.getBoolean(QueryConsts.ACCOUNT_IS_LOGGED_IN)) {
 				throw new SQLException("User is already logged in", "400", 400);
 			} else if (rs.getFetchSize() == 0) {
 				throw new SQLException("User isn't exist");
 			}
 
-			account = new Account(rs.getInt(finals.ACCOUNT_USER_ID), rs.getString(finals.ACCOUNT_USER_NAME),
-					rs.getString(finals.ACCOUNT_PASSWORD), rs.getString(finals.ACCOUNT_FIRST_NAME),
-					rs.getString(finals.ACCOUNT_LAST_NAME), rs.getString(finals.ACCOUNT_EMAIL),
-					rs.getString(finals.ACCOUNT_TYPE), rs.getString(finals.ACCOUNT_PHONE),
-					rs.getString(finals.ACCOUNT_STATUS), rs.getInt(finals.ACCOUNT_BRANCH_MANAGER_ID),
-					rs.getString(finals.ACCOUNT_AREA), rs.getInt(finals.ACCOUNT_DEBT), null, null);
+			account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID), rs.getString(QueryConsts.ACCOUNT_USER_NAME),
+					rs.getString(QueryConsts.ACCOUNT_PASSWORD), rs.getString(QueryConsts.ACCOUNT_FIRST_NAME),
+					rs.getString(QueryConsts.ACCOUNT_LAST_NAME), rs.getString(QueryConsts.ACCOUNT_EMAIL),
+					rs.getString(QueryConsts.ACCOUNT_TYPE), rs.getString(QueryConsts.ACCOUNT_PHONE),
+					rs.getString(QueryConsts.ACCOUNT_STATUS), rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID),
+					rs.getString(QueryConsts.ACCOUNT_AREA), rs.getInt(QueryConsts.ACCOUNT_DEBT), null, null);
 			if (account.getStatus().equals("blocked")) {
 				throw new SQLException("Account" + account.getUserID() + "is blocked", "401", 401);
 

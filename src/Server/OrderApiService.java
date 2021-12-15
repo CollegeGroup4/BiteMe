@@ -175,12 +175,12 @@ public class OrderApiService {
 			stmt.setString(1, restaurantID);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				order = new Order(rs.getInt(finals.ORDER_NUM), rs.getInt(finals.RESTAURANT_ID),
-						rs.getString(finals.RESTAURANT_NAME), rs.getString(finals.ORDER_TIME),
-						rs.getFloat(finals.CHECK_OUT_PRICE), rs.getString(finals.REQUIRED_TIME),
-						rs.getString(finals.TYPE_OF_ORDER), rs.getInt(finals.ACCOUNT_ID),
-						rs.getString(finals.PHONE_NUM), rs.getInt(finals.DISCOUNT_FOR_EARLY_ORDER),
-						rs.getBoolean(finals.IS_BUISNESS), null, null);
+				order = new Order(rs.getInt(QueryConsts.ORDER_NUM), rs.getInt(QueryConsts.RESTAURANT_ID),
+						rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_TIME),
+						rs.getFloat(QueryConsts.CHECK_OUT_PRICE), rs.getString(QueryConsts.REQUIRED_TIME),
+						rs.getString(QueryConsts.TYPE_OF_ORDER), rs.getInt(QueryConsts.ACCOUNT_ID),
+						rs.getString(QueryConsts.PHONE_NUM), rs.getInt(QueryConsts.DISCOUNT_FOR_EARLY_ORDER),
+						rs.getBoolean(QueryConsts.IS_BUISNESS), null, null);
 				orders.add(order);
 			}
 		} catch (SQLException e) {
@@ -224,12 +224,12 @@ public class OrderApiService {
 			stmt.setInt(1, orderId);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
-				order = new Order(rs.getInt(finals.ORDER_NUM), rs.getInt(finals.RESTAURANT_ID),
-						rs.getString(finals.RESTAURANT_NAME), rs.getString(finals.ORDER_TIME),
-						rs.getFloat(finals.CHECK_OUT_PRICE), rs.getString(finals.REQUIRED_TIME),
-						rs.getString(finals.TYPE_OF_ORDER), rs.getInt(finals.ACCOUNT_ID),
-						rs.getString(finals.PHONE_NUM), rs.getInt(finals.DISCOUNT_FOR_EARLY_ORDER),
-						rs.getBoolean(finals.IS_BUISNESS), null, null);
+				order = new Order(rs.getInt(QueryConsts.ORDER_NUM), rs.getInt(QueryConsts.RESTAURANT_ID),
+						rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_TIME),
+						rs.getFloat(QueryConsts.CHECK_OUT_PRICE), rs.getString(QueryConsts.REQUIRED_TIME),
+						rs.getString(QueryConsts.TYPE_OF_ORDER), rs.getInt(QueryConsts.ACCOUNT_ID),
+						rs.getString(QueryConsts.PHONE_NUM), rs.getInt(QueryConsts.DISCOUNT_FOR_EARLY_ORDER),
+						rs.getBoolean(QueryConsts.IS_BUISNESS), null, null);
 			}
 		} catch (SQLException e) {
 			response.setCode(404);
