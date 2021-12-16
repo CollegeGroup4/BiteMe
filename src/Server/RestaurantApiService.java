@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import logic.Account;
 import logic.Category;
 
 import com.google.gson.Gson;
@@ -22,6 +23,8 @@ import logic.Menu;
 import logic.MyFile;
 import logic.Options;
 import logic.Restaurant;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime; 
 
 /**
  * BiteMe
@@ -41,7 +44,6 @@ public class RestaurantApiService {
 	public static void getRestaurants(String area, Response response, String type) {
     		PreparedStatement stmt;
     		ArrayList<Restaurant> restaurants = new ArrayList<>();
-    		ArrayList<MyPhoto> photos = new ArrayList<>();
     		Restaurant restaurant = null;
     		try {
     			stmt = EchoServer.con.prepareStatement("SELECT * FROM restaurant biteme.restaurant WHERE restaurant.IsApproved = 1" +area
@@ -53,37 +55,16 @@ public class RestaurantApiService {
     						rs.getString(QueryConsts.RESTAURANT_AREA), rs.getString(QueryConsts.RESTAURANT_TYPE),
     						rs.getInt(QueryConsts.RESTAURANT_USER_ID), rs.getString(QueryConsts.RESTAURANT_PHOTO));
     				restaurants.add(restaurant);
-    				MyPhoto msg= new MyPhoto(Integer.toString(restaurant.getID())); //"diagnosisE.jpg"
-    				String path = QueryConsts.LocalfilePath + Integer.toString(restaurant.getID());
-    				  try{
-    					      File newFile = new File (path);		      		      
-    					      byte [] mybytearray  = new byte [(int)newFile.length()];
-    					      FileInputStream fis = new FileInputStream(newFile);
-    					      BufferedInputStream bis = new BufferedInputStream(fis);			    					      
-    					      msg.initArray(mybytearray.length);
-    					      msg.setSize(mybytearray.length);  					      
-    					      bis.read(msg.getMybytearray(),0,mybytearray.length);
-    					    }
-    					catch (Exception e) {
-    						System.out.println("Error send (Files)msg) to Server");
-    					}
-    				  photos.add(msg);
     			}
     		} catch (SQLException e) {
     			e.printStackTrace();
     		}
     		response.setCode(200);
-    		response.setDescription("Success in fetching orders");
-    		Gson gson = new Gson();
-    		JsonElement v = gson.toJsonTree(restaurants);
-    		JsonElement pics = gson.toJsonTree(photos);
-    		JsonElement j = gson.toJsonTree(new Object());
-    		j.getAsJsonObject().add("restaurants", v);
-    		j.getAsJsonObject().add("image",pics);
-    		response.setBody(gson.toJson(j));
+    		response.setDescription("Success in fetching restaurants");
+    		response.setBody(restaurants);
     }
     
-    public static void getAllRestaurants(String area, Response response, String type) {
+    public static void getAllRestaurants(String area, Response response) {
     	getRestaurants("and restaurant.Area = " +area, response, "");
     }
     
@@ -136,32 +117,12 @@ public class RestaurantApiService {
 		response.setBody(categories.toArray());        
     }
 	/**
-     * Getting list of all related items
-     *
-     * This can only be done by the logged in supplier.
-     *
-     */
-	public static void allCategoryItems(String menuName, String itemCategory, Long resturantID, Response response) {
-        // TODO: Implement...
-        
-    }
-	/**
-     * Getting list of all related items
-     *
-     * This can only be done by the logged in supplier.
-     *
-     */
-    public static void allSubCategoryItems(String menuName, String itemCategory, String itemSubCategory, Long resturantID) {
-        // TODO: Implement...
-        
-    }
-	/**
 	 * Getting list of all related items
 	 *
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void allItems(String menuName, int restaurantID, Response response) {
+	public static void allItems(int restaurantID, Response response) {
 		PreparedStatement stmt;
 		ArrayList<Item> items = new ArrayList<>();
 		ArrayList<Options> options = new ArrayList<>();
@@ -169,10 +130,9 @@ public class RestaurantApiService {
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM items biteme.item, itemInMenu biteme.item_in_menu"
 					+ " WHERE items.RestaurantID = ? and itemInMenu.ItemID = items.ItemID and"
-					+ "itemInMenu.RestaurantID = ? and itemInMenu.MenuName = ?;");
+					+ "itemInMenu.RestaurantID = ?;");
 			stmt.setInt(1, restaurantID);
 			stmt.setInt(2, restaurantID);
-			stmt.setString(3, menuName);
 			stmt.executeQuery();
 			ResultSet rs = stmt.getResultSet();
 			while (rs.next()) {
@@ -195,8 +155,8 @@ public class RestaurantApiService {
 			e.printStackTrace();
 		}
 		response.setCode(200);
-		response.setDescription("Success in fetching categories for restaurantID" + Integer.toString(restaurantID));
-		response.setBody(categories.toArray()); 
+		response.setDescription("Success in fetching all restaurant itesm" + Integer.toString(restaurantID));
+		response.setBody(items.toArray()); 
 	}
 
 	/**
@@ -336,9 +296,38 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void approveOrder(Long orderId) {
-		// TODO: Implement...
-
+	public static void approveOrder(int orderId, Response response) {
+		ResultSet rs;
+		try {
+			PreparedStatement approveOrder = EchoServer.con
+					.prepareStatement("UPDATE biteme.order AS orders SET isApproved = 1 WHERE order.OrderNum = ?;");
+			approveOrder.setInt(1, orderId);
+			approveOrder.execute();
+			rs = approveOrder.getResultSet();
+			if (rs.rowUpdated() == false) {
+				throw new SQLException("couldn't approve order " + Integer.toString(orderId));
+			}
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+			LocalDateTime now = LocalDateTime.now();
+			PreparedStatement updateApprovalTime = EchoServer.con
+					.prepareStatement("UPDATE biteme.order AS orders SET approved_time = ? WHERE order.OrderNum = ?;");
+			updateApprovalTime.setString(1, dtf.format(now));
+			updateApprovalTime.setInt(2, orderId);
+			updateApprovalTime.execute();
+			rs = updateApprovalTime.getResultSet();
+			if (rs.rowUpdated() == false) {
+				throw new SQLException("couldn't update the time in menu" + Integer.toString(orderId));
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription(e.getMessage());
+			response.setBody(null);
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in approve order " + Integer.toString(orderId));
+		response.setBody(null);
+		
 	}
 
 	/**
@@ -347,8 +336,31 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void createItem(Item body) {
-		// TODO: Implement...
+	public static void createItem(Item item, Response response) {
+		ResultSet rs;
+		int orderID = 0, shipmentID, price;
+		Options options = null;
+		try {
+			PreparedStatement postOrder = EchoServer.con.prepareStatement(
+					"INSERT INTO items biteme.item (Category, SubCategory, Name, Price, ItemID, Ingredients,"
+							+ "RestaurantID, Image, Description)"
+							+ " VALUES (?,?,?,?,?,?,?,?,?);");
+			postOrder.setString(1, item.getCategory());
+			postOrder.setString(2, item.getSubcategory());
+			postOrder.setString(3, item.getName());
+			postOrder.setFloat(4, item.getPrice());
+			postOrder.setInt(5, item.getItemID());
+			postOrder.setString(6, item.getIngrediants());
+			postOrder.setInt(7, item.getRestaurantID());
+			postOrder.setString(8, item.getPhoto());
+			postOrder.setString(9, item.getDescription());
+			postOrder.execute();
+			rs = postOrder.getResultSet();
+		} catch (SQLException e) {
+			response.setCode(405);
+			response.setDescription("Invalid input");
+			return;
+		}
 
 	}
 
@@ -358,7 +370,7 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void createMenu(NewMenu body) {
+	public static void createMenu(Menu body) {
 		// TODO: Implement...
 
 	}
@@ -369,7 +381,7 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void editMenu(NewMenu body) {
+	public static void editMenu(Menu body) {
 		// TODO: Implement...
 
 	}
@@ -380,8 +392,23 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void suppliersItemsDelete(String itemName) {
-		// TODO: Implement...
+	public static void itemsDelete(int itemID, Response response) {
+		try {
+			PreparedStatement deleteItem = EchoServer.con.prepareStatement(
+					"DELETE FROM items biteme.item WHERE items.ItemID = ?;");
+			deleteItem.setInt(1, itemID);
+			// Its the first userName that he had so the test is in users table on login
+			deleteItem.execute();
+			deleteItem.getResultSet();
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Fields are missing");
+			response.setBody(null);
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in deleting item " + itemID);
+		response.setBody(null);
 
 	}
 

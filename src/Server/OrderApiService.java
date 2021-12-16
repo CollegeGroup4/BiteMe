@@ -166,7 +166,6 @@ public class OrderApiService {
 			}
 		}
 	}
-
 	/**
 	 * Return all the orders
 	 *
@@ -186,8 +185,9 @@ public class OrderApiService {
 						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getInt(QueryConsts.ORDER_ACCOUNT_ID),
 						rs.getString(QueryConsts.ORDER_PHONE_NUM),
 						rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER), null, null,
-						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRAIVED),
+						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRIVED),
 						rs.getBoolean(QueryConsts.ORDER_IS_APPROVED));
+
 				orders.add(order);
 			}
 		} catch (SQLException e) {

@@ -16,6 +16,8 @@ public class Order {
 	private boolean isApproved;
 	private Item[] items;
 	private Shippment shippment;
+	private String approved_time;
+	private boolean hasArrived;
 
 	@Override
 	public String toString() {
@@ -26,7 +28,8 @@ public class Order {
 				+ Arrays.toString(items) + ", shippment=" + shippment + "]";
 	}
 
-	public Order(int orderID, int restaurantID, String restaurantName, String time_taken, float check_out_price, String required_time, String type_of_order, int accountID, String phone, int discount_for_early_order, boolean isBuisness, Item[] items, Shippment shippment) {
+	public Order(int orderID, int restaurantID, String restaurantName, String time_taken, float check_out_price, String required_time, String type_of_order, int accountID, String phone,
+			int discount_for_early_order, Item[] items, Shippment shippment, String approved_time, boolean hasArrived, boolean isApproved) {
 		this.orderID = orderID;
 		this.restaurantID = restaurantID;
 		this.restaurantName = restaurantName;
@@ -37,9 +40,11 @@ public class Order {
 		this.accountID = accountID;
 		this.phone = phone;
 		this.discount_for_early_order = discount_for_early_order;
-		this.isApproved = isBuisness;
+		this.isApproved = isApproved;
 		this.items = items;
 		this.shippment = shippment;
+		this.approved_time = approved_time;
+		this.hasArrived = hasArrived;
 	}
 
 	public int getOrderID() {
@@ -125,5 +130,26 @@ public class Order {
 	public void setShippment(Shippment shippment) {
 		this.shippment = shippment;
 	}
+
+	public String getApproved_time() {
+		return approved_time;
+	}
+
+	public void setApproved_time(String approved_time) {
+		this.approved_time = approved_time;
+	}
+
+	public void setApproved(boolean isApproved) {
+		this.isApproved = isApproved;
+	}
+
+	public boolean isHasArrived() {
+		return hasArrived;
+	}
+
+	public void setHasArrived(boolean hasArrived) {
+		this.hasArrived = hasArrived;
+	}
+	
 
 }

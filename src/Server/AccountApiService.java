@@ -320,7 +320,7 @@ public class AccountApiService {
 		ResultSet rs;
 		try {
 			PreparedStatement logOutAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.account SET isLoggedIn = 0 WHERE account.UserName = ?;");
+					.prepareStatement("UPDATE biteme.account AS account SET isLoggedIn = 0 WHERE account.UserName = ?;");
 			logOutAccount.setString(1, userName);
 			logOutAccount.execute();
 			rs = logOutAccount.getResultSet();

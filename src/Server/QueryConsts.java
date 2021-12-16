@@ -14,8 +14,10 @@ public class QueryConsts {
     public static final int ORDER_TYPE_OF_ORDER = 7;
     public static final int ORDER_DISCOUNT_FOR_EARLY_ORDER = 8;
     public static final int ORDER_CHECK_OUT_PRICE = 9;
-    public static final int ORDER_IS_APPROVED = 10;
-    public static final int ORDER_REQUIRED_TIME = 11;
+    public static final int ORDER_REQUIRED_TIME = 10;
+    public static final int ORDER_APPROVED_TIME = 11;
+    public static final int ORDER_HAS_ARRIVED = 12;
+    public static final int ORDER_IS_APPROVED = 13;
     
     //for items
     public static final int ITEM_CATEGORY = 1;
