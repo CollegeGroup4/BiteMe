@@ -28,18 +28,22 @@ public class OrderApiService {
 		Options options = null;
 		try {
 			PreparedStatement postOrder = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.order (ResturantID, ResturantName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
-							+ "Check_out_price, isBusiness, required_time)"
-							+ " VALUES (?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
-			postOrder.setInt(1, order.getRestaurantID());
-			postOrder.setString(2, order.getRestaurantName());
-			postOrder.setString(3, order.getTime_taken());
-			postOrder.setString(4, order.getPhone());
-			postOrder.setString(5, order.getType_of_order());
-			postOrder.setInt(6, order.getDiscount_for_early_order());
-			postOrder.setFloat(7, order.getCheck_out_price());
-			postOrder.setBoolean(8, order.isBuisness());
-			postOrder.setString(9, order.getRequired_time());
+					"INSERT INTO biteme.order (OrderNum, ResturantID, ResturantName, UserID, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
+							+ "Check_out_price, isApproved, required_time, approved_time, hasArraived)"
+							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
+			postOrder.setInt(1, order.getOrderID());
+			postOrder.setInt(2, order.getRestaurantID());
+			postOrder.setString(3, order.getRestaurantName());
+			postOrder.setInt(4, order.getAccountID());
+			postOrder.setString(5, order.getTime_taken());
+			postOrder.setString(6, order.getPhone());
+			postOrder.setString(7, order.getType_of_order());
+			postOrder.setInt(8, order.getDiscount_for_early_order());
+			postOrder.setFloat(9, order.getCheck_out_price());
+			postOrder.setBoolean(10, order.isApproved());
+			postOrder.setString(11, order.getRequired_time());
+			postOrder.setString(12, order.getApproved_time());
+			postOrder.setBoolean(13, order.getHasArraived());
 			postOrder.execute();
 			rs = postOrder.getResultSet();
 		} catch (SQLException e) {
@@ -87,6 +91,7 @@ public class OrderApiService {
 					updateOrder.setString(4, options.getSpecify_option());
 					updateOrder.execute();
 				} catch (SQLException ex) {
+					////////////////////////////////////////////////////////////////////////
 					System.out.println(ex.toString());
 				}
 			}
@@ -131,8 +136,8 @@ public class OrderApiService {
 							setInShipment.setFloat(4, 25);
 
 							// calculate shipping price
-							PreparedStatement getAmountOfOrdersInShipment = EchoServer.con.prepareStatement(
-									"SELECT orderID, UserID, COUNT(*) FROM biteme.orders_in_shipment"
+							PreparedStatement getAmountOfOrdersInShipment = EchoServer.con
+									.prepareStatement("SELECT orderID, UserID, COUNT(*) FROM biteme.orders_in_shipment"
 											+ " WHERE ShipmentID = ? GROUP BY orderID, UserID;");
 
 							getAmountOfOrdersInShipment.setInt(1, shipmentID);
@@ -179,8 +184,10 @@ public class OrderApiService {
 						rs.getString(QueryConsts.ORDER_RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_ORDER_TIME),
 						rs.getFloat(QueryConsts.ORDER_CHECK_OUT_PRICE), rs.getString(QueryConsts.ORDER_REQUIRED_TIME),
 						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getInt(QueryConsts.ORDER_ACCOUNT_ID),
-						rs.getString(QueryConsts.ORDER_PHONE_NUM), rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER),
-						rs.getBoolean(QueryConsts.ORDER_IS_BUISNESS), null, null);
+						rs.getString(QueryConsts.ORDER_PHONE_NUM),
+						rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER), null, null,
+						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRAIVED),
+						rs.getBoolean(QueryConsts.ORDER_IS_APPROVED));
 				orders.add(order);
 			}
 		} catch (SQLException e) {
@@ -228,8 +235,10 @@ public class OrderApiService {
 						rs.getString(QueryConsts.ORDER_RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_ORDER_TIME),
 						rs.getFloat(QueryConsts.ORDER_CHECK_OUT_PRICE), rs.getString(QueryConsts.ORDER_REQUIRED_TIME),
 						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getInt(QueryConsts.ORDER_ACCOUNT_ID),
-						rs.getString(QueryConsts.ORDER_PHONE_NUM), rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER),
-						rs.getBoolean(QueryConsts.ORDER_IS_BUISNESS), null, null);
+						rs.getString(QueryConsts.ORDER_PHONE_NUM),
+						rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER), null, null,
+						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRAIVED),
+						rs.getBoolean(QueryConsts.ORDER_IS_APPROVED));
 			}
 		} catch (SQLException e) {
 			response.setCode(404);
@@ -266,8 +275,7 @@ public class OrderApiService {
 					monthBillingCelling = rs.getFloat(2);
 					currentSpent = rs.getFloat(5);
 					if (monthBillingCelling < currentSpent + amount) {
-						throw new SQLException("Account" + UserID + "will exceed monthlry billing celling", "400",
-								400);
+						throw new SQLException("Account" + UserID + "will exceed monthlry billing celling", "400", 400);
 					} else {
 						updateCurrentSpend = EchoServer.con.prepareStatement(
 								"UPDATE biteme.business_account SET CurrentSpend = ? WHERE UserID = ?;");
@@ -298,9 +306,21 @@ public class OrderApiService {
 		PreparedStatement getOrder;
 		ResultSet rs;
 
-		
-		
+	}
 
+	/**
+	 * Updates a order as delivered
+	 *
+	 */
+	public static void deliveredOrder(Order order, Response response) {
+		PreparedStatement deliveredOrder;
+		ResultSet rs;
+		try {
+			deliveredOrder = EchoServer.con
+					.prepareStatement("INSERT INTO biteme.delivered (OrderNum, DateNTime) VALUES (?,?);");
+		} catch (SQLException e) {
+
+		}
 	}
 
 }
