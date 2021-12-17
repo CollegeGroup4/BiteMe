@@ -30,15 +30,15 @@ public class ask {
 //		j.getAsJsonObject().addProperty("method", "POST");
 //		j.getAsJsonObject().add("body",v);
 //		String p = gson.toJson(a);
-		JsonElement res = gson.toJsonTree(b);
-		JsonElement sup = gson.toJsonTree(c);
-		JsonElement mode = gson.toJsonTree(c);
-		JsonElement a = gson.toJsonTree(new Object());
-		a.getAsJsonObject().add("restaurant", res);
-		a.getAsJsonObject().add("supplier", sup);
-		a.getAsJsonObject().add("moderator", mode);
-		req.setBody(a);
-		System.out.println(gson.toJson(req));
+//		JsonElement res = gson.toJsonTree(b);
+//		JsonElement sup = gson.toJsonTree(c);
+//		JsonElement mode = gson.toJsonTree(c);
+//		JsonElement a = gson.toJsonTree(new Object());
+//		a.getAsJsonObject().add("restaurant", res);
+//		a.getAsJsonObject().add("supplier", sup);
+//		a.getAsJsonObject().add("moderator", mode);
+//		req.setBody(a);
+//		System.out.println(gson.toJson(req));
 		//		
 //		Response k = gson.fromJson(p, Response.class);
 //		JsonElement h = gson.toJsonTree(k.getBody());

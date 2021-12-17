@@ -27,11 +27,12 @@ public class AccountApiService {
 	 */
 	public static void createPrivateAccount(PrivateAccount account, Response response) {
 		try {
-			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.account (UserID, UserName, Password, FirstName, LastName, PhoneNumber, Email,"
-							+ " Type, status, BranchManagerID, Area, W4C)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?);"
-							+ "INSERT INTO biteme.private_account (UserID, CreditCardNumber, CreditCardCVV, CreditCardExpDate)"
-							+ "VALUES (?,?,?,?)");
+			//#PreparedStatement postAccount = EchoServer.con.prepareStatement(
+			//#"INSERT INTO biteme.account (UserID, UserName, Password, FirstName, LastName, PhoneNumber, Email,"
+			//#+ " Type, status, BranchManagerID, Area, W4C)" + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?);"
+			//#+ "INSERT INTO biteme.private_account (UserID, CreditCardNumber, CreditCardCVV, CreditCardExpDate)"
+			//#+ "VALUES (?,?,?,?);#//
+			PreparedStatement postAccount = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ";")
 			postAccount.setInt(1, account.getUserID());
 			// Its the first userName that he had so the test is in users table on login
 			postAccount.setString(2, account.getUserName());

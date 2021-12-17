@@ -4,12 +4,13 @@ public class Options {
 	private String option_category;
 	private String specify_option;
 	private int itemID;
+	
 	public Options(String option_category, String specify_option, int itemID) {
-		super();
 		this.option_category = option_category;
 		this.specify_option = specify_option;
 		this.itemID = itemID;
 	}
+	
 	public String getOption_category() {
 		return option_category;
 	}
