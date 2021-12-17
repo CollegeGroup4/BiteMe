@@ -200,8 +200,8 @@ public class AccountApiService {
 								account.getPassword(), account.getFirstName(), account.getLastName(),
 								account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(),
 								account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-								account.getDebt(), account.getW4c_card(), rs.getFloat(2), rs.getBoolean(3),
-								rs.getString(4), rs.getFloat(5));
+								account.getDebt(), account.getW4c_card(), rs.getInt(2), rs.getBoolean(3),
+								rs.getString(4), rs.getFloat(5)));
 						response.setCode(200);
 						response.setDescription("Success fetching business account");
 					} else {
@@ -421,14 +421,14 @@ public class AccountApiService {
 	public static void updateAccount(Account account, Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"UPDATE biteme.account AS account SET (UserID = ?, UserName = ?, Password = ?,FirstName = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
-							+ " Role = ?, Status = ?)"
+					"UPDATE biteme.account AS account SET (UserID = ?, UserName = ?, FirstName = ?, Password = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
+							+ " Role = ?, Status = ?, BranchManagerID = ?, Area = ?)"
 							+ "WHERE UserName = ?;");
 			postAccount.setInt(1, account.getUserID());
 			// Its the first userName that he had so the test is in users table on login
 			postAccount.setString(2, account.getUserName());
-			postAccount.setString(3, account.getPassword());
-			postAccount.setString(4, account.getFirstName());
+			postAccount.setString(3, account.getFirstName());
+			postAccount.setString(4, account.getPassword());
 			postAccount.setString(5, account.getLastName());
 			postAccount.setString(6, account.getPhone());
 			postAccount.setString(7, account.getEmail());
@@ -436,6 +436,7 @@ public class AccountApiService {
 			postAccount.setString(9, account.getStatus());
 			postAccount.setInt(10, account.getBranch_manager_ID());
 			postAccount.setString(11, account.getArea());
+			postAccount.setString(12, account.getUserName());
 			postAccount.execute();
 
 		} catch (SQLException e) {
@@ -454,21 +455,37 @@ public class AccountApiService {
 		updateAccount(account1, response);
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"UPDATE biteme.privateAccount AS account SET (UserID = ?, UserName = ?, Password = ?,FirstName = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
-							+ " Type = ?, status = ?, BranchManagerID = ?, Area = ?, isLoggedIn = ?)"
-							+ "WHERE UserID = ? AND UserName = ?;");
-			postAccount.setInt(1, account.getUserID());
+					"UPDATE biteme.private_account SET (UserName = ?, CreditCardNumber = ?, CreditCardCVV = ?, CreditCardExp = ?)"
+							+ "WHERE UserName = ?;");
 			// Its the first userName that he had so the test is in users table on login
-			postAccount.setString(2, account.getUserName());
-			postAccount.setString(3, account.getPassword());
-			postAccount.setString(4, account.getFirstName());
-			postAccount.setString(5, account.getLastName());
-			postAccount.setString(6, account.getPhone());
-			postAccount.setString(7, account.getEmail());
-			postAccount.setString(8, account.getRole());
-			postAccount.setString(9, account.getStatus());
-			postAccount.setInt(10, account.getBranch_manager_ID());
-			postAccount.setString(11, account.getArea());
+			postAccount.setString(1, account.getUserName());
+			postAccount.setString(2, account.getCreditCardNumber());
+			postAccount.setString(3, account.getCreditCardCVV());
+			postAccount.setString(4, account.getCreditCardExpDate());
+
+			postAccount.execute();
+
+		} catch (SQLException e) {
+			response.setCode(e.getErrorCode());
+			response.setDescription(e.getMessage());
+			response.setBody(null);
+			return;
+		}
+	}
+	
+	public static void updateBusinessAccount(BusinessAccount account, Response response) {
+		Account account1 = account;
+		updateAccount(account1, response);
+		try {
+			PreparedStatement postAccount = EchoServer.con.prepareStatement(
+					"UPDATE biteme.business_account SET (UserName = ?, MonthlyBillingCeling = ?, isApproved = ?, BusinessName = ?, CurrentSpent = ?)"
+							+ "WHERE UserName = ?;");
+			postAccount.setString(1, account.getUserName());
+			postAccount.setFloat(2, account.getMonthlyBillingCeiling());
+			postAccount.setBoolean(3, account.getIsApproved());
+			postAccount.setString(4, account.getBusinessName());
+			postAccount.setFloat(5, account.getCurrentSpent());
+
 			postAccount.execute();
 
 		} catch (SQLException e) {
