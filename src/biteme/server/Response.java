@@ -1,4 +1,4 @@
-package Server;
+package biteme.server;
 
 public class Response {
 	private Integer code;

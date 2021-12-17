@@ -1,4 +1,4 @@
-package Server;
+package biteme.server;
 import java.util.List;
 
 import logic.Account;

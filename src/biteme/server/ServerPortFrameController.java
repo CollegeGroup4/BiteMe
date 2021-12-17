@@ -1,4 +1,4 @@
-package Server;
+package biteme.server;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -156,10 +156,10 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	public void start(Stage primaryStage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/Server/ServerPort.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/biteme/server/ServerPort.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/Server/ServerPort.css").toExternalForm());
-		primaryStage.setTitle("Server");
+		scene.getStylesheets().add(getClass().getResource("/biteme/server/ServerPort.css").toExternalForm());
+		primaryStage.setTitle("biteme/server");
 		primaryStage.setScene(scene);
 
 		primaryStage.show();

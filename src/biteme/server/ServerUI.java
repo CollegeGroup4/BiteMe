@@ -1,4 +1,4 @@
-package Server;
+package biteme.server;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

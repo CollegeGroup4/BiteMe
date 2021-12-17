@@ -1,8 +1,9 @@
-package Server;
+package biteme.server;
 
 public class QueryConsts {
+    private QueryConsts(){}
 	//photos path
-	public static final String LocalfilePath = "d:\\projectImages\\";
+	public static final String LOCAL_FILE_PATH = "d:\\projectImages\\";
 	
 	//for orders
     public static final int ORDER_ORDER_NUM = 1;
@@ -53,6 +54,13 @@ public class QueryConsts {
     public static final int PRIVATE_ACCOUNT_CREDIT_CARD_NUMBER = 2;
     public static final int PRIVATE_ACCOUNT_CREDIT_CARD_CVV = 3;
     public static final int PRIVATE_ACCOUNT_CREDIT_CARD_EXP = 4;
+
+    //for business_account
+    public static final int BUSINESS_ACCOUNT_USER_NAME = 1;
+    public static final int BUSINESS_ACCOUNT_MONTHLY_BILLING_CEILING = 2;
+    public static final int BUSINESS_ACCOUNT_IS_APPROVED = 3;
+    public static final int BUSINESS_ACCOUNT_BUSINESS_NAME = 4;
+    public static final int BUSINESS_ACCOUNT_CURRENT_SPENT = 4;
 
     //for accounts
     public static final int ACCOUNT_USER_ID = 1;

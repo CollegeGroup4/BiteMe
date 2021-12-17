@@ -1,4 +1,4 @@
-package Server;
+package biteme.server;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,10 +37,10 @@ public class RestaurantApiService {
     					+ type + ";");
     			ResultSet rs = stmt.executeQuery();
     			while (rs.next()) {
-    				restaurant = new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID), rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
-    						rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.RESTAURANT_NAME),
-    						rs.getString(QueryConsts.RESTAURANT_AREA), rs.getString(QueryConsts.RESTAURANT_TYPE),
-    						rs.getInt(QueryConsts.RESTAURANT_USER_ID), rs.getString(QueryConsts.RESTAURANT_PHOTO));
+    				restaurant = new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED), rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),
+							rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.RESTAURANT_AREA),rs.getString(QueryConsts.RESTAURANT_TYPE),
+							rs.getString(QueryConsts.RESTAURANT_USER_NAME),rs.getString(QueryConsts.RESTAURANT_PHOTO), rs.getString(QueryConsts.RESTAURANT_ADDRESS),
+							rs.getString(QueryConsts.RESTAURANT_DESCRIPTION));
     				restaurants.add(restaurant);
     			}
     		} catch (SQLException e) {
@@ -89,7 +89,7 @@ public class RestaurantApiService {
 				}
 			}
 			for (String category2 : cat.keySet()) {
-				category = new Category(category2);
+				category = new Category(category2, new ArrayList<String>);
 				
 				for (String category3 : cat.get(category2)) {
 					category.getSubCategory().add(category3);
@@ -125,8 +125,8 @@ public class RestaurantApiService {
 			while (rs.next()) {
 				item = new Item(rs.getString(QueryConsts.ITEM_CATEGORY), rs.getString(QueryConsts.ITEM_SUB_CATEGORY), rs.getInt(QueryConsts.ITEM_ID), 
 						rs.getInt(QueryConsts.ITEM_RES_ID),rs.getString(QueryConsts.ITEM_NAME), rs.getFloat(QueryConsts.ITEM_PRICE), 
-						rs.getString(QueryConsts.ITEM_DESCRIPTION),rs.getString(QueryConsts.ITEM_INGRIDIENTS), null, rs.getString(QueryConsts.ITEM_IMAGE),
-						rs.getInt(QueryConsts.ITEM_AMOUNT));
+						rs.getString(QueryConsts.ITEM_DESCRIPTION),rs.getString(QueryConsts.ITEM_INGREDIENTS), null, rs.getString(QueryConsts.ITEM_IMAGE),
+						0);
 				stmt = EchoServer.con.prepareStatement("SELECT * FROM options biteme.optional_category WHERE options.itemID = ?;");
 				stmt.setInt(1, item.getItemID());
 				stmt.executeQuery();
@@ -184,8 +184,8 @@ public class RestaurantApiService {
 	
 					itemp = new Item(rs2.getString(QueryConsts.ITEM_CATEGORY), rs2.getString(QueryConsts.ITEM_SUB_CATEGORY),rs2.getInt(QueryConsts.ITEM_ID),
 							rs2.getInt(QueryConsts.ITEM_RES_ID),rs2.getString(QueryConsts.ITEM_NAME), rs2.getFloat(QueryConsts.ITEM_PRICE),
-							rs2.getString(QueryConsts.ITEM_DESCRIPTION), rs2.getString(QueryConsts.ITEM_INGRIDIENTS), null,
-							rs2.getString(QueryConsts.ITEM_IMAGE), rs2.getInt(QueryConsts.ITEM_AMOUNT));
+							rs2.getString(QueryConsts.ITEM_DESCRIPTION), rs2.getString(QueryConsts.ITEM_INGREDIENTS), null,
+							rs2.getString(QueryConsts.ITEM_IMAGE), 0);
 
 					// get optional for each item
 

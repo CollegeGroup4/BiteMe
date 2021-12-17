@@ -1,16 +1,14 @@
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
-package Server;
+package biteme.server;
 
 import java.sql.Connection;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import common.DBController;
@@ -49,7 +47,7 @@ public class EchoServer extends AbstractServer {
 	 */
 	public static ArrayList<String> orders = new ArrayList<String>();
 	public static Connection con;
-	public Gson gson;
+	public static Gson gson;
 	private final String GET = "GET";
 	private final String POST = "POST";
 	private final String PUT = "PUT";

@@ -1,14 +1,8 @@
 package client;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import Server.Response;
-import logic.Order;
 
 public class ask {
 	public static void main(String[] args) {

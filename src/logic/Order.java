@@ -92,12 +92,8 @@ public class Order {
 	public void setType_of_order(String type_of_order) {
 		this.type_of_order = type_of_order;
 	}
-	public int getUserName() {
-		return userName;
-	}
-	public void setUserName(int userName) {
-		this.userName = userName;
-	}
+	public String getUserName() { return userName; }
+	public void setUserName(String userName) { this.userName = userName; }
 	public String getPhone() {
 		return phone;
 	}

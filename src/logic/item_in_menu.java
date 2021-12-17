@@ -37,6 +37,4 @@ public class item_in_menu {
 	public void setCourse(String course) {
 		this.course = course;
 	}
-	
-	
 }

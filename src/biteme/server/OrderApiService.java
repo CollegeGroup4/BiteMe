@@ -1,4 +1,4 @@
-package Server;
+package biteme.server;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,13 +28,13 @@ public class OrderApiService {
 		Options options = null;
 		try {
 			PreparedStatement postOrder = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.order (OrderNum, ResturantID, ResturantName, UserID, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
+					"INSERT INTO biteme.order (OrderNum, ResturantID, ResturantName, UserName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
 							+ "Check_out_price, isApproved, required_time, approved_time, hasArraived)"
 							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
 			postOrder.setInt(1, order.getOrderID());
 			postOrder.setInt(2, order.getRestaurantID());
 			postOrder.setString(3, order.getRestaurantName());
-			postOrder.setInt(4, order.getAccountID());
+			postOrder.setString(4, order.getUserName());
 			postOrder.setString(5, order.getTime_taken());
 			postOrder.setString(6, order.getPhone());
 			postOrder.setString(7, order.getType_of_order());
@@ -126,13 +126,13 @@ public class OrderApiService {
 
 						if (rs.next()) {
 							shipmentID = rs.getInt(1);
-
+			//TODO what that insert means, more fields are missing
 							PreparedStatement setInShipment = EchoServer.con.prepareStatement(
-									"INSERT INTO biteme.orders_in_shipment (ShipmentID, orderID, UserID, Price)"
+									"INSERT INTO biteme.orders_in_shipment (ShipmentID, orderID, UserName, Price)"
 											+ "VALUES (?,?,?,?);");
 							setInShipment.setInt(1, rs.getInt(1));
 							setInShipment.setInt(2, orderID);
-							setInShipment.setInt(3, order.getAccountID());
+							setInShipment.setString(3, order.getUserName());
 							setInShipment.setFloat(4, 25);
 
 							// calculate shipping price
@@ -182,7 +182,7 @@ public class OrderApiService {
 				order = new Order(rs.getInt(QueryConsts.ORDER_ORDER_NUM), rs.getInt(QueryConsts.ORDER_RESTAURANT_ID),
 						rs.getString(QueryConsts.ORDER_RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_ORDER_TIME),
 						rs.getFloat(QueryConsts.ORDER_CHECK_OUT_PRICE), rs.getString(QueryConsts.ORDER_REQUIRED_TIME),
-						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getInt(QueryConsts.ORDER_ACCOUNT_ID),
+						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getString(QueryConsts.ORDER_USER_NAME),
 						rs.getString(QueryConsts.ORDER_PHONE_NUM),
 						rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER), null, null,
 						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRIVED),
@@ -234,10 +234,10 @@ public class OrderApiService {
 				order = new Order(rs.getInt(QueryConsts.ORDER_ORDER_NUM), rs.getInt(QueryConsts.ORDER_RESTAURANT_ID),
 						rs.getString(QueryConsts.ORDER_RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_ORDER_TIME),
 						rs.getFloat(QueryConsts.ORDER_CHECK_OUT_PRICE), rs.getString(QueryConsts.ORDER_REQUIRED_TIME),
-						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getInt(QueryConsts.ORDER_ACCOUNT_ID),
+						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getString(QueryConsts.ORDER_USER_NAME),
 						rs.getString(QueryConsts.ORDER_PHONE_NUM),
 						rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER), null, null,
-						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRAIVED),
+						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRIVED),
 						rs.getBoolean(QueryConsts.ORDER_IS_APPROVED));
 			}
 		} catch (SQLException e) {
