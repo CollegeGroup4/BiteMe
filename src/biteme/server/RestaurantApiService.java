@@ -223,60 +223,6 @@ public class RestaurantApiService {
 			response.setDescription("Invalid input");
 			return;
 		}
-
-//		// if we don't have menus
-//
-//		if (menus.size() == 0)
-//			return;
-//
-//		// get for each menu the items
-//
-//		for (Menu menu : menus) {
-//			try {
-//				PreparedStatement getItems = EchoServer.con
-//						.prepareStatement("SELECT I.* FROM biteme.item_in_menu IIM, biteme.item I WHERE "
-//								+ "IIM.RestaurantID = ? AND IIM.MenuName = ? AND IIM.ItemID = I.ItemID"
-//								+ "AND IIM.RestaurantID = I.RestaurantID");
-//				getItems.setInt(1, restaurantID);
-//				getItems.setString(2, menu.getName());
-//				getItems.execute();
-//				rs1 = getItems.getResultSet();
-//
-//				while (rs1.next()) {
-//					itemp = new Item(rs1.getInt(QueryConsts.ITEM_ID), restaurantID, rs1.getString(QueryConsts.ITEM_TYPE),
-//							rs1.getString(QueryConsts.ITEM_NAME), rs1.getFloat(QueryConsts.ITEM_PRICE),
-//							rs1.getString(QueryConsts.ITEM_DESCRIPTION), rs1.getString(QueryConsts.ITEM_INGRIDIENTS), null,
-//							rs1.getBytes(QueryConsts.ITEM_IMAGE));
-//
-//					// get optional for each item
-//
-//					PreparedStatement getOptions = EchoServer.con
-//							.prepareStatement("SELECT * FROM biteme.optional_category WHERE itemID = ?");
-//					getOptions.setInt(1, itemp.getItemID());
-//					getOptions.execute();
-//					rs2 = getOptions.getResultSet();
-//
-//					while (rs2.next()) {
-//						otemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE), rs2.getString(QueryConsts.OPTIONAL_SPECIFY),
-//								itemp.getItemID());
-//
-//						options.add(otemp);
-//					}
-//
-//					// from ArrayList<T> to T[]
-//
-//					itemp.setOptions(options.toArray(new Options[0]));
-//
-//					items.add(itemp);
-//				}
-//
-//			} catch (SQLException e) {
-////			response.setCode(405);
-////			response.setDescription("Invalid input");
-//				return;
-//			}
-//		}
-
 	}
 
 	/**
@@ -325,24 +271,27 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
+	//TODO need to add options
 	public static void createItem(Item item, Response response) {
 		ResultSet rs = null;
-		int orderID = 0, shipmentID, price;
 		Options options = null;
+		int itemID;
 		try {
-			PreparedStatement postOrder = EchoServer.con.prepareStatement(
+			PreparedStatement postItem = EchoServer.con.prepareStatement(
 					"INSERT INTO items biteme.item (Category, SubCategory, Name, Price, Ingredients,"
 							+ "RestaurantID, Image, Description)"
 							+ " VALUES (?,?,?,?,?,?,?,?);SELECT last_insert_id();");
-			postOrder.setString(1, item.getCategory());
-			postOrder.setString(2, item.getSubcategory());
-			postOrder.setString(3, item.getName());
-			postOrder.setFloat(4, item.getPrice());
-			postOrder.setString(5, item.getIngrediants());
-			postOrder.setInt(6, item.getRestaurantID());
-			postOrder.setString(7, item.getPhoto());
-			postOrder.setString(8, item.getDescription());
-			postOrder.execute();
+			postItem.setString(1, item.getCategory());
+			postItem.setString(2, item.getSubcategory());
+			postItem.setString(3, item.getName());
+			postItem.setFloat(4, item.getPrice());
+			postItem.setString(5, item.getIngrediants());
+			postItem.setInt(6, item.getRestaurantID());
+			postItem.setString(7, item.getPhoto());
+			postItem.setString(8, item.getDescription());
+			postItem.execute();
+			rs = postItem.getResultSet();
+			itemID = rs.getInt(1);
 		} catch (SQLException e) {
 			if(e.getErrorCode() == 1062){
 				response.setCode(405);
@@ -353,7 +302,7 @@ public class RestaurantApiService {
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in creating a new item -> itemName:" + Integer.toString(rs.getInt(1)));
+		response.setDescription("Success in creating a new item -> itemID:" + Integer.toString(itemID));
 	}
 
 	/**
