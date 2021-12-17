@@ -10,7 +10,7 @@ public class Order {
 	private float check_out_price;
 	private String required_time;
 	private String type_of_order;
-	private int accountID;
+	private String userName;
 	private String phone;
 	private int discount_for_early_order;
 	private boolean isApproved;
@@ -23,12 +23,12 @@ public class Order {
 	public String toString() {
 		return "Order [orderID=" + orderID + ", restaurantID=" + restaurantID + ", restaurantName=" + restaurantName
 				+ ", time_taken=" + time_taken + ", check_out_price=" + check_out_price + ", required_time="
-				+ required_time + ", type_of_order=" + type_of_order + ", accountID=" + accountID + ", phone=" + phone
+				+ required_time + ", type_of_order=" + type_of_order + ", userName=" + userName + ", phone=" + phone
 				+ ", discount_for_early_order=" + discount_for_early_order + ", isBuisness=" + isApproved + ", items="
 				+ Arrays.toString(items) + ", shippment=" + shippment + "]";
 	}
 
-	public Order(int orderID, int restaurantID, String restaurantName, String time_taken, float check_out_price, String required_time, String type_of_order, int accountID, String phone,
+	public Order(int orderID, int restaurantID, String restaurantName, String time_taken, float check_out_price, String required_time, String type_of_order, String userName, String phone,
 			int discount_for_early_order, Item[] items, Shippment shippment, String approved_time, boolean hasArrived, boolean isApproved) {
 		this.orderID = orderID;
 		this.restaurantID = restaurantID;
@@ -37,7 +37,7 @@ public class Order {
 		this.check_out_price = check_out_price;
 		this.required_time = required_time;
 		this.type_of_order = type_of_order;
-		this.accountID = accountID;
+		this.userName = userName;
 		this.phone = phone;
 		this.discount_for_early_order = discount_for_early_order;
 		this.isApproved = isApproved;
@@ -92,11 +92,11 @@ public class Order {
 	public void setType_of_order(String type_of_order) {
 		this.type_of_order = type_of_order;
 	}
-	public int getAccountID() {
-		return accountID;
+	public int getUserName() {
+		return userName;
 	}
-	public void setAccountID(int accountID) {
-		this.accountID = accountID;
+	public void setUserName(int userName) {
+		this.userName = userName;
 	}
 	public String getPhone() {
 		return phone;
