@@ -1,4 +1,6 @@
 /Server/
-/logic/
 /client/
+/common/
 /gui/
+/logic/
+/supplier/

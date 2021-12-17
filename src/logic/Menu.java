@@ -1,8 +1,18 @@
+
+
 package logic;
 
 public class Menu {
 	private String name;
 	private int restaurantID;
+	private Item[] items;
+	
+	public Item[] getItems() {
+		return items;
+	}
+	public void setItems(Item[] items) {
+		this.items = items;
+	}
 	public Menu(String name, int restaurantID) {
 		this.name = name;
 		this.restaurantID = restaurantID;
@@ -18,6 +28,6 @@ public class Menu {
 	}
 	public void setRestaurantID(int restaurantID) {
 		this.restaurantID = restaurantID;
-	}
-	
+	}	
 }
+

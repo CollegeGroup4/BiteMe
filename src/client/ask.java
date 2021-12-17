@@ -17,8 +17,8 @@ public class ask {
 		OrderC c = new OrderC(5, 7, "steak", "19:50", 5, null, "takeAway", 1, null, 0, false, "Second");
 		Gson gson = new Gson();
 		menuInRes y = new menuInRes();
-		y[0] = o;
-		y[1] = r;
+		//y = o;
+		//y[1] = r;
 		JsonElement v = gson.toJsonTree(c);
 		JsonElement j = gson.toJsonTree(new Object());
 		j.getAsJsonObject().addProperty("path", "/returants/menus");

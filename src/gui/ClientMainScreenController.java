@@ -1,10 +1,15 @@
 package gui;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
+import client.UserClient;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +21,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import supplier.SupplierController;
 
-public class ClientMainScreenController {
+public class ClientMainScreenController extends Application {
 
 	private String port;
 
@@ -52,16 +58,20 @@ public class ClientMainScreenController {
 	}
 
 	public void start(Stage primaryStage) throws Exception {
-		Parent root;
-		root = FXMLLoader.load(getClass().getResource("/gui/ClientMainScreen.fxml"));
-		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/ClientMainScreen.css").toExternalForm());
-		primaryStage.setTitle("Client Confirmation");
-		primaryStage.setScene(scene);
-
-		primaryStage.show();
+//		FXMLLoader loader = new FXMLLoader();
+//		Parent root = FXMLLoader .load(getClass().getResource("/supplier/SupplierPage.fxml"));
+//		SupplierController sup=FXMLLoader.getController();
+//		sup.setName();
+//		Scene scene = new Scene(root);
+//	
+//		primaryStage.setTitle("Supplier");
+//		primaryStage.setScene(scene);
+//
+//		primaryStage.show();
+	
 
 	}
+	
 
 	@FXML
 	void confirmClient(ActionEvent event) throws Exception {
@@ -77,8 +87,8 @@ public class ClientMainScreenController {
 		} catch (NullPointerException e) {
 			System.out.println("new ClientController didn't work");
 		}
-		if (ChatClient.serverAns.get(0).equals("PORT"))
-			getportFromServer(ChatClient.serverAns.get(1));
+		if (UserClient.serverAns.get(0).equals("PORT"))
+			getportFromServer(UserClient.serverAns.get(1));
 		String p = getportText();
 		if (p.trim().isEmpty()) {
 			labelIncorect.setText("incorect");
@@ -105,6 +115,11 @@ public class ClientMainScreenController {
 
 	public void getportFromServer(String serverPort) {
 		port = serverPort;
+	}
+	public void initialize(URL arg0, ResourceBundle arg1) { // **** for development only *****
+		serverId.setText("127.0.0.1");
+		portText.setText("5555");
+		
 	}
 
 }
