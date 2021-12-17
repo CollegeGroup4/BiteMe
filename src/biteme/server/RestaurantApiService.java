@@ -49,7 +49,7 @@ public class RestaurantApiService {
     			e.printStackTrace();
     		}
     		response.setCode(200);
-    		response.setDescription("Success in fetching restaurants");
+    		response.setDescription("Success in fetching restaurants -> Arad:" + area + ", type: "+ (type.equals("") ? "All" : type));
     		response.setBody(restaurants);
     }
     
