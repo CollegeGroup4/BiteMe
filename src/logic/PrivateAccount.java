@@ -1,28 +1,18 @@
 package logic;
 
 public class PrivateAccount extends Account {
-	private int userID;
 	private String creditCardNumber;
 	private String creditCardCVV;
 	private String creditCardExpDate;
-
+	
 	public PrivateAccount(int userID, String userName, String password, String firstName, String lastName, String email,
-			String role, String phone, String status, boolean isBusiness,int branch_manager_ID, String area, int debt, String w4c_card,
-			String creditCardNumber, String creditCardCVV, String creditCardExpDate) {
-		super(userID, userName, password, firstName, lastName, email, role, phone, status, isBusiness,branch_manager_ID, area,
-				debt, w4c_card);
-		this.userID = userID;
+			String role, String phone, String status, boolean isBusiness, int branch_manager_ID, String area, int debt,
+			String w4c_card, String creditCardNumber, String creditCardCVV, String creditCardExpDate) {
+		super(userID, userName, password, firstName, lastName, email, role, phone, status, isBusiness,
+				branch_manager_ID, area, debt, w4c_card);
 		this.creditCardNumber = creditCardNumber;
 		this.creditCardCVV = creditCardCVV;
 		this.creditCardExpDate = creditCardExpDate;
-	}
-
-	public int getUserID() {
-		return userID;
-	}
-
-	public void setUserID(int userID) {
-		this.userID = userID;
 	}
 
 	public String getCreditCardNumber() {
@@ -47,6 +37,5 @@ public class PrivateAccount extends Account {
 
 	public void setCreditCardExpDate(String creditCardExpDate) {
 		this.creditCardExpDate = creditCardExpDate;
-	}
-
+	}		
 }

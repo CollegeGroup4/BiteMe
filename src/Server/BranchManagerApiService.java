@@ -1,6 +1,7 @@
 package Server;
 import java.util.List;
 
+import logic.Account;
 import logic.Restaurant;
 
 
@@ -45,5 +46,27 @@ public class BranchManagerApiService{
         
         
     } 
+    /**
+     * Register a resturant - mind that the supplier shcema isn&#x27;t finish
+     *
+     * This can only be done by the logged in branch manager.
+     *
+     */
+    public static void registerPrivateAccount(Account body) {
+        // TODO: Implement...
+        
+        
+    } 
+    /**
+     * Register a resturant - mind that the supplier shcema isn&#x27;t finish
+     *
+     * This can only be done by the logged in branch manager.
+     *
+     */
+    public static void registerBusinessAccount(Account body) {
+        // TODO: Implement...
+        
+        
+    }
 }
 

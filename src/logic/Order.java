@@ -143,7 +143,7 @@ public class Order {
 		this.isApproved = isApproved;
 	}
 
-	public boolean isHasArrived() {
+	public boolean getHasArrived() {
 		return hasArrived;
 	}
 

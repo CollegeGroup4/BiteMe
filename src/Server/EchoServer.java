@@ -149,6 +149,8 @@ public class EchoServer extends AbstractServer {
 				break;
 	
 			default:
+				response.setCode(500);
+				response.setDescription("Bad request");
 				break;
 		}
 		client.sendToClient(gson.toJson(response));		
@@ -161,9 +163,8 @@ public class EchoServer extends AbstractServer {
 	protected void serverStarted() {
 		System.out.println("Server listening for connections on port " + getPort());
 		con = DBController.getMySQLConnection(EchoServer.url, EchoServer.username, EchoServer.password);
-		Gson gson = new Gson();
 	}
-
+	
 	/**
 	 * This method overrides the one in the superclass. Called when the server stops
 	 * listening for connections.

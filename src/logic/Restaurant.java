@@ -7,12 +7,13 @@ public class Restaurant {
 	private String name;
 	private String area;
 	private String type;
-	private int userID;
-	///////////////////Use fileStream sending and saving pngs
-	public String photo;
+	private String userName; /// Supplier or Moderator
+	private String photo;
+	private String address;
+	private String description;
 	
 	public Restaurant(int iD, boolean isApproved, int branchManagerID, String name, String area, String type,
-			int userID, String photo) {
+			String userName, String photo, String address, String description) {
 		super();
 		ID = iD;
 		this.isApproved = isApproved;
@@ -20,57 +21,94 @@ public class Restaurant {
 		this.name = name;
 		this.area = area;
 		this.type = type;
-		this.userID = userID;
+		this.userName = userName;
 		this.photo = photo;
+		this.address = address;
+		this.description = description;
 	}
-	
+
 	public int getID() {
 		return ID;
 	}
+
 	public void setID(int iD) {
 		ID = iD;
 	}
+
 	public boolean isApproved() {
 		return isApproved;
 	}
+
 	public void setApproved(boolean isApproved) {
 		this.isApproved = isApproved;
 	}
+
 	public int getBranchManagerID() {
 		return BranchManagerID;
 	}
+
 	public void setBranchManagerID(int branchManagerID) {
 		BranchManagerID = branchManagerID;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getArea() {
 		return area;
 	}
+
 	public void setArea(String area) {
 		this.area = area;
 	}
+
 	public String getType() {
 		return type;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
-	public int getUserID() {
-		return userID;
+
+	public String getUserName() {
+		return userName;
 	}
-	public void setUserID(int userID) {
-		this.userID = userID;
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
+
 	public String getPhoto() {
 		return photo;
 	}
+
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	
+	
+
 		
 }

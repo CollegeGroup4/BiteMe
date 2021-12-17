@@ -43,7 +43,7 @@ public class OrderApiService {
 			postOrder.setBoolean(10, order.isApproved());
 			postOrder.setString(11, order.getRequired_time());
 			postOrder.setString(12, order.getApproved_time());
-			postOrder.setBoolean(13, order.getHasArraived());
+			postOrder.setBoolean(13, order.getHasArrived());
 			postOrder.execute();
 			rs = postOrder.getResultSet();
 		} catch (SQLException e) {
@@ -322,5 +322,4 @@ public class OrderApiService {
 
 		}
 	}
-
 }

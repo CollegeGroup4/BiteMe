@@ -1,13 +1,13 @@
 package logic;
 
-import java.util.ArrayList;
-
 public class Category {
 	private String category;
-	private ArrayList<String> subCategory;
+	private String[] subCategory;
 	
-	public Category(String category) {
+	public Category(String category, String[] subCategory) {
+		super();
 		this.category = category;
+		this.subCategory = subCategory;
 	}
 	
 	public String getCategory() {
@@ -16,10 +16,12 @@ public class Category {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public ArrayList<String> getSubCategory() {
+	public String[] getSubCategory() {
 		return subCategory;
 	}
-	public void setSubCategory(ArrayList<String> subCategory) {
+	public void setSubCategory(String[] subCategory) {
 		this.subCategory = subCategory;
 	}
+	
+	
 }

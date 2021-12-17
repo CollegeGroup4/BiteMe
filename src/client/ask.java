@@ -14,19 +14,32 @@ public class ask {
 	public static void main(String[] args) {
 //		Order o = new Order(2, 0, null, null, 0, null, null, 0, null, 0, false, null, null);
 //		Order r = new Order(2, 0, "steak", null, 0, null, null, 0, null, 0, false, null, null);
-//		OrderB b = new OrderB("steak", "19:50", 7.5,"first");
-//		OrderC c = new OrderC(5, 7, "steak", "19:50", 5, null, "takeAway", 1, null, 0, false, "Second");
-//		Gson gson = new Gson();
+		OrderB b = new OrderB("steak", "19:50", 7.5,"first");
+		OrderC c = new OrderC(5, 7, "steak", "19:50", 5, null, "takeAway", 1, null, 0, false, "Second");
+		Gson gson = new Gson();
 //		menuInRes y = new menuInRes();
 //		y[0] = o;
 //		y[1] = r;
+		Request req = new Request();
+		req.setPath("/register");
+		req.setMethod("POST");
+		
 //		JsonElement v = gson.toJsonTree(c);
 //		JsonElement j = gson.toJsonTree(new Object());
 //		j.getAsJsonObject().addProperty("path", "/returants/menus");
 //		j.getAsJsonObject().addProperty("method", "POST");
 //		j.getAsJsonObject().add("body",v);
-//		String p = gson.toJson(j);
-//		
+//		String p = gson.toJson(a);
+		JsonElement res = gson.toJsonTree(b);
+		JsonElement sup = gson.toJsonTree(c);
+		JsonElement mode = gson.toJsonTree(c);
+		JsonElement a = gson.toJsonTree(new Object());
+		a.getAsJsonObject().add("restaurant", res);
+		a.getAsJsonObject().add("supplier", sup);
+		a.getAsJsonObject().add("moderator", mode);
+		req.setBody(a);
+		System.out.println(gson.toJson(req));
+		//		
 //		Response k = gson.fromJson(p, Response.class);
 //		JsonElement h = gson.toJsonTree(k.getBody());
 //		System.out.println("restu name is " +gson.fromJson(h.getAsJsonObject().get("restaurantName"), String.class));
