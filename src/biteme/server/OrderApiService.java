@@ -3,6 +3,10 @@ package biteme.server;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import logic.Item;
@@ -39,7 +43,7 @@ public class OrderApiService {
 			postOrder.setString(6, order.getPhone());
 			postOrder.setString(7, order.getType_of_order());
 			postOrder.setInt(8, order.getDiscount_for_early_order());
-			postOrder.setFloat(9, order.getCheck_out_price());
+			postOrder.setDouble(9, order.getCheck_out_price());
 			postOrder.setBoolean(10, order.isApproved());
 			postOrder.setString(11, order.getRequired_time());
 			postOrder.setString(12, order.getApproved_time());
@@ -302,10 +306,40 @@ public class OrderApiService {
 	 * Updates a order in the DB with form data
 	 *
 	 */
-	public static void updateOrderWithForm(int orderId, String address, String delivery, Response response) {
-		PreparedStatement getOrder;
+	//TODO Is there anything to update in order as client??
+	public static void updateOrder(Order order, Response response) {
 		ResultSet rs;
-
+		int orderID = 0, shipmentID, price;
+		Options options = null;
+		try {
+			PreparedStatement updateOrder = EchoServer.con.prepareStatement(
+					"UPDATE biteme.order AS orders SET OrderNum = ?, RestaurantID = ?, RestaurantName = ?, PhoneNumber = ?, required_time = ?, approved_time, hasArraived)"
+							+ " WHERE OrderNum = ? AND UserName = ?;");
+			updateOrder.setInt(1, order.getOrderID());
+			updateOrder.setInt(2, order.getRestaurantID());
+			updateOrder.setString(3, order.getRestaurantName());
+			updateOrder.setString(4, order.getUserName());
+			updateOrder.setString(5, order.getTime_taken());
+			updateOrder.setString(6, order.getPhone());
+			updateOrder.setString(7, order.getType_of_order());
+			updateOrder.setInt(8, order.getDiscount_for_early_order());
+			updateOrder.setDouble(9, order.getCheck_out_price());
+			updateOrder.setBoolean(10, order.isApproved());
+			updateOrder.setString(11, order.getRequired_time());
+			updateOrder.setString(12, order.getApproved_time());
+			updateOrder.setBoolean(13, order.getHasArrived());
+			updateOrder.execute();
+			rs = updateOrder.getResultSet();
+			if (rs.rowUpdated() == false) {
+				throw new SQLException("couldn't update the order -> orderID: " + Integer.toString(order.getOrderID()));
+			}
+		} catch (SQLException e) {
+			response.setCode(405);
+			response.setDescription("Invalid input");
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success updating order -> orderID: " + Integer.toString(order.getOrderID()));
 	}
 
 	/**
@@ -314,12 +348,57 @@ public class OrderApiService {
 	 */
 	public static void deliveredOrder(Order order, Response response) {
 		PreparedStatement deliveredOrder;
+		Duration timeElapsed;
 		ResultSet rs;
 		try {
-			deliveredOrder = EchoServer.con
-					.prepareStatement("INSERT INTO biteme.delivered (OrderNum, DateNTime) VALUES (?,?);");
+			deliveredOrder = EchoServer.con.prepareStatement(
+					"UPDATE biteme.order AS orders SET hasArrived = 1"
+							+ " WHERE orders.OrderNum = ? AND orders.UserName = ?;");
+			deliveredOrder.setInt(1, order.getOrderID());
+			deliveredOrder.setString(2, order.getUserName());
+			deliveredOrder.setInt(3, order.getOrderID());
+			deliveredOrder.setString(4, order.getUserName());
+			deliveredOrder.execute();
+			rs = deliveredOrder.getResultSet();
+			LocalTime t = LocalTime.parse(rs.getString(1));
+			LocalTime now = LocalTime.now();
+			timeElapsed = Duration.between(LocalTime.parse(order.getRequired_time()), LocalTime.parse(order.getTime_taken()));
+			if (timeElapsed.toMinutes() < 120){
+				;
+				if (Duration.between(now, LocalTime.parse(order.getApproved_time())).toMinutes() > 60){
+					updateCredit(order,response);
+					return;
+				}
+			}
+			else if (Duration.between(now, LocalTime.parse(order.getApproved_time())).toMinutes() > 20){
+					updateCredit(order,response);
+					return;
+			}
 		} catch (SQLException e) {
-
+			response.setCode(405);
+			response.setDescription("Couldn't approve order as delivered -> orderID: " + Integer.toString(order.getOrderID()));
+			return;
 		}
+		response.setCode(200);
+		response.setDescription("Success in approving order as delivered -> orderID: " + Integer.toString(order.getOrderID()));
+	}
+
+	private static void updateCredit(Order order, Response response){
+		PreparedStatement insertCredit;
+		try {
+			insertCredit = EchoServer.con.prepareStatement(
+					"INSERT INTO biteme.credit (UserName , AmountInCredit, RestaurantID) VALUES (?,?,?);");
+			insertCredit.setString(1, order.getUserName());
+			insertCredit.setDouble(2, (order.getCheck_out_price() * 0.5));
+			insertCredit.setInt(3, order.getRestaurantID());
+			insertCredit.execute();
+		} catch (SQLException e) {
+			response.setCode(405);
+			response.setDescription("Couldn't insert credit to a late delivered order -> orderID: " + Integer.toString(order.getOrderID()));
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in inserting credit to a late delivered order -> orderID: " + Integer.toString(order.getOrderID()));
+		return;
 	}
 }

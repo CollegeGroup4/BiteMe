@@ -10,6 +10,7 @@ public class Category {
 	
 	public Category(String category) {
 		this.category = category;
+		subCategory = new ArrayList<>();
 	}
 	
 	public String getCategory() {

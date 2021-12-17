@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.google.gson.JsonElement;
 import logic.Category;
 import logic.Item;
 import logic.Menu;
@@ -89,7 +91,7 @@ public class RestaurantApiService {
 				}
 			}
 			for (String category2 : cat.keySet()) {
-				category = new Category(category2, new ArrayList<String>);
+				category = new Category(category2);
 				
 				for (String category3 : cat.get(category2)) {
 					category.getSubCategory().add(category3);
@@ -297,7 +299,7 @@ public class RestaurantApiService {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
 			PreparedStatement updateApprovalTime = EchoServer.con
-					.prepareStatement("UPDATE biteme.order AS orders SET approved_time = ? WHERE order.OrderNum = ?;");
+					.prepareStatement("UPDATE biteme.order AS orders SET approve_time = ? WHERE order.OrderNum = ?;");
 			updateApprovalTime.setString(1, dtf.format(now));
 			updateApprovalTime.setInt(2, orderId);
 			updateApprovalTime.execute();
@@ -324,31 +326,34 @@ public class RestaurantApiService {
 	 *
 	 */
 	public static void createItem(Item item, Response response) {
-		ResultSet rs;
+		ResultSet rs = null;
 		int orderID = 0, shipmentID, price;
 		Options options = null;
 		try {
 			PreparedStatement postOrder = EchoServer.con.prepareStatement(
-					"INSERT INTO items biteme.item (Category, SubCategory, Name, Price, ItemID, Ingredients,"
+					"INSERT INTO items biteme.item (Category, SubCategory, Name, Price, Ingredients,"
 							+ "RestaurantID, Image, Description)"
-							+ " VALUES (?,?,?,?,?,?,?,?,?);");
+							+ " VALUES (?,?,?,?,?,?,?,?);SELECT last_insert_id();");
 			postOrder.setString(1, item.getCategory());
 			postOrder.setString(2, item.getSubcategory());
 			postOrder.setString(3, item.getName());
 			postOrder.setFloat(4, item.getPrice());
-			postOrder.setInt(5, item.getItemID());
-			postOrder.setString(6, item.getIngrediants());
-			postOrder.setInt(7, item.getRestaurantID());
-			postOrder.setString(8, item.getPhoto());
-			postOrder.setString(9, item.getDescription());
+			postOrder.setString(5, item.getIngrediants());
+			postOrder.setInt(6, item.getRestaurantID());
+			postOrder.setString(7, item.getPhoto());
+			postOrder.setString(8, item.getDescription());
 			postOrder.execute();
-			rs = postOrder.getResultSet();
 		} catch (SQLException e) {
-			response.setCode(405);
+			if(e.getErrorCode() == 1062){
+				response.setCode(405);
+				response.setDescription("Item already exist in the restaurant");
+			}
+			response.setCode(401);
 			response.setDescription("Invalid input");
 			return;
 		}
-
+		response.setCode(200);
+		response.setDescription("Success in creating a new item -> itemName:" + Integer.toString(rs.getInt(1)));
 	}
 
 	/**
@@ -394,9 +399,39 @@ public class RestaurantApiService {
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in deleting item " + itemID);
+		response.setDescription("Success in deleting an item -> itemID: " + itemID);
 		response.setBody(null);
-
 	}
 
+	/**
+	 * Get credit for the user
+	 *
+	 * This can only be done by the logged in supplier.
+	 *
+	 */
+	public static void getCredit(String userName, int restaurantID, Response response){
+		ResultSet rs;
+		PreparedStatement getCredit;
+		Double sendCredit;
+		try {
+			getCredit = EchoServer.con.prepareStatement(
+					"SELECT  credit.AmountInCredit FROM credit biteme.credit WHERE credit.UserName = ? and " +
+							"credit.RestaurantID = ?;");
+			getCredit.setString(1, userName);
+			getCredit.setInt(2, restaurantID);
+			getCredit.execute();
+			rs = getCredit.getResultSet();
+			sendCredit = rs.getDouble(1);
+		} catch (SQLException e) {
+			response.setCode(405);
+			response.setDescription("Couldn't get credit for the user -> UserName: " + userName + ", RestaurantID: " +Integer.toString(restaurantID));
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in getting credit for the user -> UserName: " + userName + ", RestaurantID: " +Integer.toString(restaurantID));
+		JsonElement setCredit = EchoServer.gson.toJsonTree(new Object());
+		setCredit.getAsJsonObject().addProperty("credit", sendCredit);
+		response.setBody(EchoServer.gson.toJson(setCredit));
+		return;
+	}
 }
