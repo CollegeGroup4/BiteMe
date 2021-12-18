@@ -100,8 +100,7 @@ public class AccountApiService {
 
 	/**
 	 * Generate a random hex string at size of 50
-	 * 
-	 * @param numchars
+	 *
 	 * @return
 	 */
 	public static String getRandomHexString() {

@@ -1,7 +1,7 @@
 package logic;
 
 public class Restaurant {
-	private int ID;
+	private int id;
 	private boolean isApproved;
 	private int BranchManagerID;
 	private String name;
@@ -11,11 +11,10 @@ public class Restaurant {
 	private String photo;
 	private String address;
 	private String description;
-	
-	public Restaurant(int iD, boolean isApproved, int branchManagerID, String name, String area, String type,
-			String userName, String photo, String address, String description) {
-		super();
-		ID = iD;
+
+	public Restaurant(int id, boolean isApproved, int branchManagerID, String name,
+					  String area, String type, String userName, String photo, String address, String description) {
+		this.id = id;
 		this.isApproved = isApproved;
 		BranchManagerID = branchManagerID;
 		this.name = name;
@@ -27,20 +26,20 @@ public class Restaurant {
 		this.description = description;
 	}
 
-	public int getID() {
-		return ID;
+	public int getId() {
+		return id;
 	}
 
-	public void setID(int iD) {
-		ID = iD;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public boolean isApproved() {
 		return isApproved;
 	}
 
-	public void setApproved(boolean isApproved) {
-		this.isApproved = isApproved;
+	public void setApproved(boolean approved) {
+		isApproved = approved;
 	}
 
 	public int getBranchManagerID() {
@@ -106,9 +105,4 @@ public class Restaurant {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
-	
-
-		
 }

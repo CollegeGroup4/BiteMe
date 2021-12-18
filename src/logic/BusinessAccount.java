@@ -2,14 +2,14 @@ package logic;
 
 public class BusinessAccount extends Account {
 
-	private float monthlyBillingCeiling;
+	private int monthlyBillingCeiling;
 	private Boolean isApproved;
 	private String businessName;
 	private float currentSpent;
 	
 	public BusinessAccount(int userID, String userName, String password, String firstName, String lastName,
 			String email, String role, String phone, String status, boolean isBusiness, int branch_manager_ID,
-			String area, int debt, String w4c_card, float monthlyBillingCeiling, Boolean isApproved, String businessName,
+			String area, int debt, String w4c_card, int monthlyBillingCeiling, Boolean isApproved, String businessName,
 			float currentSpent) {
 		super(userID, userName, password, firstName, lastName, email, role, phone, status, isBusiness,
 				branch_manager_ID, area, debt, w4c_card);
@@ -19,7 +19,7 @@ public class BusinessAccount extends Account {
 		this.currentSpent = currentSpent;
 	}
 	
-	public float getMonthlyBillingCeiling() {
+	public int getMonthlyBillingCeiling() {
 		return monthlyBillingCeiling;
 	}
 	public void setMonthlyBillingCeiling(int monthlyBillingCeiling) {

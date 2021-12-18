@@ -1,23 +1,45 @@
 package client;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 public class ask {
 	public static void main(String[] args) {
 //		Order o = new Order(2, 0, null, null, 0, null, null, 0, null, 0, false, null, null);
 //		Order r = new Order(2, 0, "steak", null, 0, null, null, 0, null, 0, false, null, null);
-		OrderB b = new OrderB("steak", "19:50", 7.5,"first");
-		OrderC c = new OrderC(5, 7, "steak", "19:50", 5, null, "takeAway", 1, null, 0, false, "Second");
-		Gson gson = new Gson();
-//		menuInRes y = new menuInRes();
-//		y[0] = o;
-//		y[1] = r;
-		Request req = new Request();
-		req.setPath("/register");
-		req.setMethod("POST");
-		
+		        Map<String,String> map = new HashMap<>();
+		        //You can convert any Object.
+		        OrderC c = new OrderC(5, 7, "steak", "19:50", 5,
+		                null, "takeAway", 1, null, 0,
+		                false, "Second");
+		        OrderC a = new OrderC(7, 7, "steak", "19:50", 5,
+		                null, "delivery", 1, null, 0,
+		                false, "Second");
+		        OrderC h = new OrderC(5, 5, "steak", "19:50", 5,
+		                null, "takeAway", 1, null, 0,
+		                false, "Second");
+		        OrderC i = new OrderC(7, 5, "steak", "19:50", 5,
+		                null, "delivery", 1, null, 0,
+		                false, "Second");
+		        Gson gson = new Gson();
+				OrderC[] y = new OrderC[2];
+		        y[0] = c;
+				y[1] = a;
+		        OrderC[] p = new OrderC[2];
+		        p[0] = h;
+		        p[1] = i;
+		        JsonElement o = gson.toJsonTree(y);
+		        JsonElement k = gson.toJsonTree(p);
+		        map.put("5", gson.toJson(o));
+		        map.put("7", gson.toJson(k));
+		        System.out.println(gson.toJson(map));
+		        
+		        Map<String,String> testi = gson.fromJson(gson.toJson(map), HashMap.class);
+		        System.out.println(testi);
 //		JsonElement v = gson.toJsonTree(c);
 //		JsonElement j = gson.toJsonTree(new Object());
 //		j.getAsJsonObject().addProperty("path", "/returants/menus");

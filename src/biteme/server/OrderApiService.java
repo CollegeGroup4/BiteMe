@@ -174,13 +174,13 @@ public class OrderApiService {
 	 * Return all the orders
 	 *
 	 */
-	public static void allOrders(String restaurantID, Response response) {
+	public static void allOrders(int restaurantID, Response response) {
 		PreparedStatement stmt;
 		ArrayList<Order> orders = new ArrayList<>();
 		Order order = null;
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE RestaurantID = ?");
-			stmt.setString(1, restaurantID);
+			stmt.setInt(1, restaurantID);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				order = new Order(rs.getInt(QueryConsts.ORDER_ORDER_NUM), rs.getInt(QueryConsts.ORDER_RESTAURANT_ID),
