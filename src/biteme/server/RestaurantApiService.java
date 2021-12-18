@@ -14,6 +14,7 @@ import logic.Item;
 import logic.Menu;
 import logic.Options;
 import logic.Restaurant;
+import logic.item_in_menu;
 
 /**
  * BiteMe
@@ -29,7 +30,7 @@ public class RestaurantApiService {
 	 * Get approved restaurants for the specific location
 	 *
 	 */
-	@SuppressWarnings("resource")
+	// @SuppressWarnings("resource")
 	public static void getRestaurants(String area, Response response, String type) {
 		PreparedStatement stmt;
 		ArrayList<Restaurant> restaurants = new ArrayList<>();
@@ -52,7 +53,7 @@ public class RestaurantApiService {
 		}
 		response.setCode(200);
 		response.setDescription(
-				"Success in fetching restaurants -> Arad:" + area + ", type: " + (type.equals("") ? "All" : type));
+				"Success in fetching restaurants -> Area:" + area + ", type: " + (type.equals("") ? "All" : type));
 		response.setBody(restaurants);
 	}
 
@@ -166,12 +167,44 @@ public class RestaurantApiService {
 		ResultSet rs1, rs2, rs3;
 		ArrayList<Menu> menus = new ArrayList<>();
 		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<item_in_menu> item_in_menu = new ArrayList<>();
 		ArrayList<Options> options = new ArrayList<>();
 		Menu mtemp;
 		Item itemp;
+		item_in_menu iimtemp;
 		Options otemp;
 
 		try {
+
+			PreparedStatement getItems = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ?");
+			getItems.setInt(1, restaurantID);
+			rs1 = getItems.getResultSet();
+			while (rs1.next()) {
+				itemp = new Item(rs1.getString(QueryConsts.ITEM_CATEGORY), rs1.getString(QueryConsts.ITEM_SUB_CATEGORY),
+						rs1.getInt(QueryConsts.ITEM_ID), rs1.getInt(QueryConsts.ITEM_RES_ID),
+						rs1.getString(QueryConsts.ITEM_NAME), rs1.getFloat(QueryConsts.ITEM_PRICE),
+						rs1.getString(QueryConsts.ITEM_DESCRIPTION), rs1.getString(QueryConsts.ITEM_INGREDIENTS), null,
+						rs1.getString(QueryConsts.ITEM_IMAGE), 0);
+				items.add(itemp);
+
+				PreparedStatement getOptions = EchoServer.con
+						.prepareStatement("SELECT * FROM biteme.optional_category WHERE itemID = ?");
+				getOptions.setInt(1, itemp.getItemID());
+				getOptions.execute();
+				rs2 = getOptions.getResultSet();
+				while (rs2.next()) {
+					otemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
+							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), itemp.getItemID());
+
+					options.add(otemp);
+				}
+				itemp.setOptions(options.toArray(new Options[0]));
+				options.clear();
+				rs2.close();
+			}
+			rs1.close();
+
 			PreparedStatement getMenus = EchoServer.con
 					.prepareStatement("SELECT * FROM biteme.menu WHERE RestaurantID = ?");
 			getMenus.setInt(1, restaurantID);
@@ -179,53 +212,27 @@ public class RestaurantApiService {
 			rs1 = getMenus.getResultSet();
 
 			while (rs1.next()) {
-				mtemp = new Menu(rs1.getString(2), restaurantID);
+				// mtemp = new Menu(rs1.getString(2), restaurantID);
 
-				PreparedStatement getItems = EchoServer.con
-						.prepareStatement("SELECT I.* FROM biteme.item_in_menu IIM, biteme.item I WHERE "
-								+ "IIM.RestaurantID = ? AND IIM.MenuName = ? AND IIM.ItemID = I.ItemID"
-								+ "AND IIM.RestaurantID = I.RestaurantID");
+				PreparedStatement getItemInMenu = EchoServer.con.prepareStatement(
+						"SELECT * FROM biteme.item_in_menu WHERE " + "IIM.RestaurantID = ? AND IIM.MenuName = ?;");
 				getItems.setInt(1, restaurantID);
-				getItems.setString(2, mtemp.getName());
+				getItems.setString(2, rs1.getString(2));
 				getItems.execute();
 				rs2 = getItems.getResultSet();
 
 				while (rs2.next()) {
 
-					itemp = new Item(rs2.getString(QueryConsts.ITEM_CATEGORY),
-							rs2.getString(QueryConsts.ITEM_SUB_CATEGORY), rs2.getInt(QueryConsts.ITEM_ID),
-							rs2.getInt(QueryConsts.ITEM_RES_ID), rs2.getString(QueryConsts.ITEM_NAME),
-							rs2.getFloat(QueryConsts.ITEM_PRICE), rs2.getString(QueryConsts.ITEM_DESCRIPTION),
-							rs2.getString(QueryConsts.ITEM_INGREDIENTS), null, rs2.getString(QueryConsts.ITEM_IMAGE),
-							0);
+					iimtemp = new item_in_menu(rs2.getInt(QueryConsts.ITEM_IN_MENU_ITEM_ID),
+							rs2.getInt(QueryConsts.ITEM_IN_MENU_RES_ID),
+							rs2.getString(QueryConsts.ITEM_IN_MENU_MENU_NAME),
+							rs2.getString(QueryConsts.ITEM_IN_MENU_COURSE));
 
-					// get optional for each item
+					item_in_menu.add(iimtemp);
 
-					PreparedStatement getOptions = EchoServer.con
-							.prepareStatement("SELECT * FROM biteme.optional_category WHERE itemID = ?");
-					getOptions.setInt(1, itemp.getItemID());
-					getOptions.execute();
-					rs3 = getOptions.getResultSet();
-
-					while (rs3.next()) {
-						otemp = new Options(rs3.getString(QueryConsts.OPTIONAL_TYPE),
-								rs3.getString(QueryConsts.OPTIONAL_SPECIFY), itemp.getItemID());
-
-						options.add(otemp);
-					}
-
-					// from ArrayList<T> to T[]
-
-					itemp.setOptions(options.toArray(new Options[0]));
-
-					items.add(itemp);
-
-					options.clear();
 				}
-				mtemp.setItems(items.toArray(new Item[0]));
-
+				mtemp = new Menu(rs1.getString(2), rs1.getInt(1), item_in_menu.toArray(new item_in_menu[0]));
 				menus.add(mtemp);
-
 			}
 
 		} catch (SQLException e) {
@@ -233,6 +240,14 @@ public class RestaurantApiService {
 			response.setDescription("Invalid input");
 			return;
 		}
+		JsonElement itemim = EchoServer.gson.toJsonTree(new Object());
+		JsonElement itemi = EchoServer.gson.toJsonTree(items.toArray());
+		JsonElement menui = EchoServer.gson.toJsonTree(menus.toArray());
+		itemim.getAsJsonObject().add("items", itemi);
+		itemim.getAsJsonObject().add("menus", menui);
+		response.setBody(EchoServer.gson.toJson(itemim));
+		response.setCode(200);
+		response.setDescription("Success in fetching items and menus for restaurant " + restaurantID);
 	}
 
 	/**
@@ -305,13 +320,14 @@ public class RestaurantApiService {
 			PreparedStatement postOptions = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.optional_category (OptionalType, Specify, ItemID)" + " VALUES (?,?,?);");
 			postOptions.setInt(3, itemID);
-			
+
 			for (Options temp : item.getOptions()) {
-				try {	//just in case
+				try { // just in case
 					postOptions.setString(1, temp.getOption_category());
 					postOptions.setString(2, temp.getSpecify_option());
 					postOptions.execute();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 
 		} catch (SQLException e) {
@@ -333,11 +349,41 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	///////////////////////////////////////////////////////////// Create menu should get menu(with list of items in the menu) and item_in_menu[] object
-	public static void createMenu(Menu body) {
-		// TODO: Implement...
-		
+	public static void createMenu(Menu menu, item_in_menu[] iim, Response response) {
+		try {
+			PreparedStatement postMenu = EchoServer.con
+					.prepareStatement("INSERT INTO biteme.menu SET (RestaurantID, " + "MenuName) VALUES(?,?);");
+			postMenu.setInt(1, menu.getRestaurantID());
+			postMenu.setString(2, menu.getName());
+			postMenu.execute();
+			PreparedStatement postIIM = EchoServer.con.prepareStatement("INSERT INTO biteme.item_in_menu SET (ItemID, "
+					+ "RestaurantID, MenuName, Course) VALUES(?,?,?,?);");
+			postIIM.setInt(2, menu.getRestaurantID());
+			postIIM.setString(3, menu.getName());
+			for (item_in_menu temp : iim) {
+				try {
+					postIIM.setInt(1, temp.getItemID());
+					postIIM.setString(4, temp.getCourse());
+					postIIM.execute();
+				} catch (SQLException e) {}
+			}
+		} catch (SQLException e) {
+			if(e.getErrorCode() == 1062) {
+				response.setBody(null);
+				response.setCode(400);
+				response.setDescription("Menu name already exist for restaurant "+ menu.getName());
+			}else {
+				response.setBody(null);
+				response.setCode(e.getErrorCode());
+				response.setDescription(e.getMessage());
+			}
+			return;
+		}
+		response.setBody(null);
+		response.setCode(200);
+		response.setDescription("Success in creating menu " + menu.getName());
 	}
+	
 
 	/**
 	 * Edit menu
@@ -345,10 +391,27 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier/moderator
 	 *
 	 */
-	public static void editMenu(Menu body) {
-		// TODO: Implement...
-
+	public static void editMenu(Menu oldMenu, Menu newMenu, item_in_menu[] iim, Response response) {
+		try {
+			PreparedStatement deleteOldMenu = EchoServer.con.prepareStatement("DELETE FROM biteme.item_in_menu WHERE RestaurantID = ? AND MenuName = ?;");
+			deleteOldMenu.setInt(1, oldMenu.getRestaurantID());
+			deleteOldMenu.setString(2, oldMenu.getName());
+			deleteOldMenu.execute();
+		}catch(SQLException e) {}
+		try {
+			PreparedStatement deleteOldMenu = EchoServer.con.prepareStatement("DELETE FROM biteme.menu WHERE RestaurantID = ? AND MenuName = ?;");
+			deleteOldMenu.setInt(1, oldMenu.getRestaurantID());
+			deleteOldMenu.setString(2, oldMenu.getName());
+			deleteOldMenu.execute();
+		}catch(SQLException e) {
+			response.setBody(null);
+			response.setCode(400);
+			response.setDescription("Old menu dosn't exist!");
+			return;
+		}
+		createMenu(newMenu, iim, response);
 	}
+	
 
 	/**
 	 * Delete item

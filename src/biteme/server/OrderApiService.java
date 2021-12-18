@@ -313,7 +313,7 @@ public class OrderApiService {
 		Options options = null;
 		try {
 			PreparedStatement updateOrder = EchoServer.con.prepareStatement(
-					"UPDATE biteme.order AS orders SET OrderNum = ?, RestaurantID = ?, RestaurantName = ?, PhoneNumber = ?, required_time = ?, approved_time, hasArraived)"
+					"UPDATE biteme.order AS orders SET OrderNum = ?, RestaurantID = ?, RestaurantName = ?, PhoneNumber = ?, required_time = ?, approved_time=?, hasArraived=?"
 							+ " WHERE OrderNum = ? AND UserName = ?;");
 			updateOrder.setInt(1, order.getOrderID());
 			updateOrder.setInt(2, order.getRestaurantID());

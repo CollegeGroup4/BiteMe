@@ -3,17 +3,12 @@ package logic;
 public class Menu {
 	private String name;
 	private int restaurantID;
-	private Item[] items;
-	
-	public Item[] getItems() {
-		return items;
-	}
-	public void setItems(Item[] items) {
-		this.items = items;
-	}
-	public Menu(String name, int restaurantID) {
+	private item_in_menu[] items;
+	public Menu(String name, int restaurantID, item_in_menu[] items) {
+		super();
 		this.name = name;
 		this.restaurantID = restaurantID;
+		this.items = items;
 	}
 	public String getName() {
 		return name;
@@ -26,5 +21,13 @@ public class Menu {
 	}
 	public void setRestaurantID(int restaurantID) {
 		this.restaurantID = restaurantID;
-	}	
+	}
+	public item_in_menu[] getItems() {
+		return items;
+	}
+	public void setItems(item_in_menu[] items) {
+		this.items = items;
+	}
+	
+	
 }

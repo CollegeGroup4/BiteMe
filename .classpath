@@ -9,8 +9,12 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/jdbc/lib/mysql-connector-java-8.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.8.9.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/javax.mail.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.5.3.jar"/>
+	<classpathentry kind="lib" path="lib/json-20211205.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/twilio-8.23.0-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="lib/twilio-8.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
