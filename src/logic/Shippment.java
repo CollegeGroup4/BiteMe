@@ -1,17 +1,28 @@
-package donotenterdrinksorfood;
+package logic;
 
 public class Shippment {
+	private int shippmentID;
 	private String work_place;
 	private String address;
 	private String receiver_name;
 	private String delivery;
 	private String phone;
-	public Shippment(String work_place, String address, String receiver_name, String delivery, String phone) {
+	
+	public Shippment(int shippmentID, String work_place, String address, String receiver_name, String delivery,
+			String phone) {
+		this.shippmentID = shippmentID;
 		this.work_place = work_place;
 		this.address = address;
 		this.receiver_name = receiver_name;
 		this.delivery = delivery;
 		this.phone = phone;
+	}
+
+	public int getShippmentID() {
+		return shippmentID;
+	}
+	public void setShippmentID(int shippmentID) {
+		this.shippmentID = shippmentID;
 	}
 	public String getWork_place() {
 		return work_place;
@@ -42,5 +53,5 @@ public class Shippment {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
-	}
+	}	
 }

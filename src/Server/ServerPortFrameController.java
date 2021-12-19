@@ -183,7 +183,7 @@ public class ServerPortFrameController implements Initializable {
 	
 	private void setIP() {
 		try {
-			lblIP.setText(Inet4Address.getLocalHost().getHostAddress());
+			lblIP.setText(InetAddress.getLocalHost().getHostAddress());
 			System.out.println("host name: " + InetAddress.getLocalHost().getHostName());
 			System.out.println("ip: " + InetAddress.getLocalHost().getHostAddress());
 		} catch (UnknownHostException e) {

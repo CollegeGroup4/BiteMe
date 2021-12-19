@@ -118,7 +118,7 @@
                   <Insets right="30.0" />
                </padding>
             </AnchorPane>
-            <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orage; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="back" textFill="WHITE">
+            <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="72.0" style="-fx-border-color: #FFF3B0; -fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
@@ -127,7 +127,7 @@
       </HBox>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="9.0" prefHeight="102.0" prefWidth="779.0" spacing="50.0" style="-fx-background-radius: 50px;">
          <children>
-            <Label prefHeight="88.0" prefWidth="183.0" styleClass="f" text="Hello, ">
+            <Label fx:id="lableHello" prefHeight="88.0" prefWidth="183.0" styleClass="f">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>

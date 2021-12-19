@@ -7,6 +7,7 @@ package client;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Server.Response;
 import common.ChatIF;
 import ocsf.client.AbstractClient;
 
@@ -27,7 +28,7 @@ public class ChatClient extends AbstractClient {
 	 * method in the client.
 	 */
 	ChatIF clientUI;
-	public static ArrayList<String> serverAns = new ArrayList<String>();
+	public static String serverAns;// = new ArrayList<String>();
 	public static boolean awaitResponse = false;
 
 	// Constructors ****************************************************
@@ -58,7 +59,7 @@ public class ChatClient extends AbstractClient {
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("--> handleMessageFromServer");
 		awaitResponse = false;
-		serverAns = (ArrayList<String>) msg;
+		serverAns = (String) msg;
 	}
 
 	/**

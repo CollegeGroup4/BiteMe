@@ -1,7 +1,10 @@
 package guiNew;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
+import client.ClientUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,4 +70,18 @@ public class HomeController {
 
     }
 
+    @FXML
+    void Exit(ActionEvent event) throws UnknownHostException {
+    	System.out.println("exit client Tool");
+		String[] ipHostName = new String[3];
+		ipHostName[0] = "EXIT";
+		ipHostName[1] = InetAddress.getLocalHost().getHostName();
+		ipHostName[2] = InetAddress.getLocalHost().getHostAddress();
+		try {
+			ClientUI.chat.accept(ipHostName);
+		} catch (NullPointerException e) {
+			System.out.println("new ClientController didn't work");
+		}
+		System.exit(0);
+    }
 }

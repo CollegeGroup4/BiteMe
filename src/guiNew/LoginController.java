@@ -2,7 +2,15 @@ package guiNew;
 
 import java.io.IOException;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
+import Server.Response;
 import branchManager.BranchManagerController;
+import client.ChatClient;
+import client.ClientController;
+import client.ClientUI;
+import client.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +23,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import myDB.DB;
+import logic.Account;
+import logic.BranchManager;
+
 
 public class LoginController {
-	private DB db = new DB(5555);
+	// private DB db = new DB(5555);
+//	private ClientController client;
 	@FXML
 	private TextField textFieldUsername;
 
@@ -44,32 +55,32 @@ public class LoginController {
 		flag = true;
 		checkTextFiled(textFieldUsername, lableErrorMag);
 		checkTextFiled(textFieldPassword, lableErrorMag);
+		String username = textFieldUsername.getText();
+		String password = textFieldPassword.getText();
+		sentToJson(username, password);
+		Account account=null;// = response();
+		// need to get response from the server hear!
 		if (flag) {
 			try {
-				String username = textFieldUsername.getText();
-				String password = textFieldPassword.getText();
-				int role = db.isin(username, password);
-				if (role != -1) {
+				String role ="branch manager"; //account.getRole();
+				if (role != "") {
 					FXMLLoader loader = new FXMLLoader();
 					((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 					Stage primaryStage = new Stage();
 					AnchorPane root = null;
-					// root =
-					// loader.load(getClass().getResource("/gui/HomePage.fxml").openStream());
 					switch (role) {
-					case 0:
+					case "branch manager":
 						System.out.println("go to barnch manager");
+						BranchManagerController.branchManager = account;
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
-						BranchManagerController branchManagerController = loader.getController();
-						branchManagerController.initUser(db.getUser(password));
 						break;
-					case 1:
+					case "supplier":
 						System.out.println("go to supplier");
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
-					case 2:
+					case "user":
 						System.out.println("go to ordinary user");
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
@@ -88,6 +99,39 @@ public class LoginController {
 			}
 		}
 	}
+
+	private void sentToJson(String username, String password) {
+		Gson gson = new Gson();
+		JsonElement jsonElem = gson.toJsonTree(new Object());
+		jsonElem.getAsJsonObject().addProperty("userName", username);
+		jsonElem.getAsJsonObject().addProperty("password", password);
+
+		Request request = new Request();
+		request.setPath("/users/login");
+		request.setMethod("GET");
+		request.setBody(gson.toJson(jsonElem));
+		JsonElement jsonUser = gson.toJsonTree(request);
+
+		String jsonFile = gson.toJson(jsonUser);
+//    	System.out.println("jsonFile : "+jsonFile);
+		try {
+			ClientUI.chat.accept(jsonFile); // in here will be DB ask for restaurant id
+		} catch (NullPointerException e) {
+			System.out.println("new ClientController didn't work");
+		}
+	}
+
+//	private Account response() {
+//		Gson gson = new Gson();
+//		Response response = gson.fromJson(ChatClient.serverAns, Response.class);
+//		if (response.getCode() != 200 && response.getCode() != 201) 
+//			lableErrorMag.setText(response.getDescription());// error massage
+//		
+//		System.out.println("-->>"+response.getDescription()); // Description from server
+//		JsonElement jsonFile = gson.toJsonTree(response.getBody());
+//		Account account = gson.fromJson(jsonFile, Account.class);
+//		return account;
+//	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {
 		if (textField.getText().equals("")) {

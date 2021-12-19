@@ -1,88 +1,77 @@
 package branchManager;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
+
+import client.Request;
 import donotenterdrinksorfood.Supplier;
+import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import logic.Account;
+import logic.BusinessAccount;
+import logic.CardDetails;
+import logic.PrivateAccount;
 
-public class OpenBusinessAccountController {
-
+public class OpenBusinessAccountController implements Initializable {
+	public static Boolean isEdit = false;
 	@FXML
 	private Button btnCreateAccount;
 
 	@FXML
-	private Hyperlink linkApprovals;
+	private Label labelTitle;
 
 	@FXML
-	private TextField textFieldFirstNamePersonal;
+	private TextField textFieldUsernamePersonal;
 
 	@FXML
-	private Label lblrequiredFname;
+	private Label lblrequiredUsername;
 
 	@FXML
-	private Label lblrequiredLname;
-
-	@FXML
-	private TextField textFieldLastNamePersonal;
-
-	@FXML
-	private Label lblrequiredID;
+	private Label lblrequiredIDPersonal;
 
 	@FXML
 	private TextField textFieldIDPersonal;
 
 	@FXML
-	private Label lblrequiredPhonNum;
+	private Label lblrequiredDebt;
 
 	@FXML
-	private TextField textFieldPhoneNumPersonal;
+	private TextField textFieldDebt;
 
 	@FXML
-	private Label lblrequiredEmail;
+	private TextField textFieldBusinessName;
 
 	@FXML
-	private TextField textFieldEmailPersonal;
+	private Label lblrequiredBusinessName;
 
 	@FXML
-	private TextField textFieldFirstNameEmployee;
+	private Label lblrequiredIDBusiness;
 
 	@FXML
-	private Label lblrequiredFnameE;
-
-	@FXML
-	private Label lblrequiredLnameE;
-
-	@FXML
-	private TextField textFieldLastNameEmployee;
-
-	@FXML
-	private Label lblrequiredIDE;
-
-	@FXML
-	private TextField textFieldIDEmployee;
-
-	@FXML
-	private Label lblrequiredPhonNumE;
-
-	@FXML
-	private TextField textFieldPhoneNumEmployee;
-
-	@FXML
-	private Label lblrequiredEmailE;
-
-	@FXML
-	private TextField textFieldEmailEmployee;
+	private TextField textFieldIDBusiness;
 
 	@FXML
 	private Label lblrequiredMonthBlling;
@@ -91,21 +80,84 @@ public class OpenBusinessAccountController {
 	private TextField textFieldMonthBlling;
 
 	@FXML
-	private HBox Nav;
-
-	@FXML
-	private HBox Nav1;
+	private JFXComboBox<String> comboBoxStatus;
 
 	@FXML
 	private Button btnbackOpenBusinessAccount;
 
 	@FXML
-	void Approvals(ActionEvent event) {
+	private HBox Nav;
 
+	@FXML
+	private Label lableHello;
+
+	@FXML
+	private Hyperlink btnHome;
+
+	@FXML
+	private Button btnLogout;
+
+	@FXML
+	private JFXHamburger myHamburger;
+
+	@FXML
+	private JFXDrawer drawer;
+    @FXML
+    private AnchorPane componnentDebt;
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {		
+		lableHello.setText("Hello, " + BranchManagerController.branchManager.getUserName());
+		comboBoxStatus.getItems().setAll("Active", "Frozen", "Blocked");
+		componnentDebt.setVisible(isEdit);
+
+		try {
+			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
+			drawer.setSidePane(anchorPane);
+		} catch (IOException e) {
+			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
+		}
+
+		// transition animation of hamburger icon
+		HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(myHamburger);
+		drawer.setVisible(false);
+		transition.setRate(-1);
+
+		// click event - mouse click
+		myHamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
+
+			transition.setRate(transition.getRate() * -1);
+			transition.play();
+
+			if (drawer.isOpened()) {
+				drawer.setVisible(false);
+				drawer.close(); // this will close slide pane
+			} else {
+				drawer.open(); // this will open slide pane
+				drawer.setVisible(true);
+			}
+		});
 	}
 
 	@FXML
-	void backOpenBusinessAccount(ActionEvent event) {
+	void homelogout(ActionEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			AnchorPane root;
+			root = loader.load(getClass().getResource("/guiNew/HomePage.fxml").openStream());
+			Scene scene = new Scene(root);
+			primaryStage.setTitle("Home");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	void backOpenAccount(ActionEvent event) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -117,51 +169,67 @@ public class OpenBusinessAccountController {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private boolean flag,validField;
+	private boolean flag, validField;
 
 	@FXML
 	void createAccount(ActionEvent event) {
 		flag = true;
-		checkTextFiled(textFieldFirstNamePersonal, lblrequiredFname);
-		checkTextFiled(textFieldLastNamePersonal, lblrequiredLname);
-		checkTextFiled(textFieldIDPersonal, lblrequiredID);
-		checkTextFiled(textFieldPhoneNumPersonal, lblrequiredPhonNum);
-		checkTextFiled(textFieldEmailPersonal, lblrequiredEmail);
+		checkTextFiled(textFieldUsernamePersonal, lblrequiredUsername);
+		checkTextFiled(textFieldIDPersonal, lblrequiredIDPersonal);
 
-		checkTextFiled(textFieldFirstNameEmployee, lblrequiredFnameE);
-		checkTextFiled(textFieldLastNameEmployee, lblrequiredLnameE);
-		checkTextFiled(textFieldIDEmployee, lblrequiredIDE);
-		checkTextFiled(textFieldPhoneNumEmployee, lblrequiredPhonNumE);
-		checkTextFiled(textFieldEmailEmployee, lblrequiredEmailE);
+		// checkTextFiled(textFieldDebt, lblrequiredDebt);
+
+		checkTextFiled(textFieldBusinessName, lblrequiredBusinessName);
+		checkTextFiled(textFieldIDBusiness, lblrequiredIDBusiness);
 		checkTextFiled(textFieldMonthBlling, lblrequiredMonthBlling);
 
 		if (flag) {
 			validField = true;
-			checkValidFields(textFieldIDPersonal,lblrequiredID);
-			checkValidFields(textFieldPhoneNumPersonal,lblrequiredPhonNum);
-			checkValidFields(textFieldIDEmployee,lblrequiredIDE);
-			checkValidFields(textFieldPhoneNumEmployee,lblrequiredPhonNumE);
-			checkValidFields(textFieldMonthBlling,lblrequiredMonthBlling);
-			if(validField) {
-			
-			String personalName = textFieldFirstNamePersonal.getText() + " " + textFieldLastNamePersonal.getText();
-			int personalID = Integer.parseInt(textFieldIDPersonal.getText()); 
-			int personalPhoneNum = Integer.parseInt(textFieldPhoneNumPersonal.getText());
-			String personalEmail = textFieldEmailPersonal.getText();
-			
-			String employeeName = textFieldFirstNameEmployee.getText() + " " + textFieldLastNameEmployee.getText();
-			int EmployeeID= Integer.parseInt(textFieldIDEmployee.getText()); 
-			int EmployeePhoneNum = Integer.parseInt(textFieldPhoneNumEmployee.getText());
-			String EmployeeEmail= textFieldEmailEmployee.getText();
-			int monthBillingCeiling = Integer.parseInt(textFieldMonthBlling.getText()); 
-			
+			checkValidFields(textFieldIDPersonal, lblrequiredIDPersonal);
+			checkValidFields(textFieldIDBusiness, lblrequiredIDBusiness);
+			checkValidFields(textFieldMonthBlling, lblrequiredMonthBlling);
+			if (validField) {
+
+				String personalUsename = textFieldUsernamePersonal.getText();
+				int personalID = Integer.parseInt(textFieldIDPersonal.getText());
+				String status = comboBoxStatus.getValue() == null ? "Active" : comboBoxStatus.getValue();
+				String businessName = textFieldBusinessName.getText();
+				int EmployeeID = Integer.parseInt(textFieldIDBusiness.getText());
+				int monthBillingCeiling = Integer.parseInt(textFieldMonthBlling.getText());
+				BusinessAccount businessAccount = new BusinessAccount(personalID, personalUsename, null, null, null, null, null,
+						null, status, true, BranchManagerController.branchManager.getUserID(),
+						BranchManagerController.branchManager.getArea(), 0, null, monthBillingCeiling, false,
+						businessName, 0);
+				sentToJson(businessAccount);
+				response();
 			}
 		}
+	}
+
+	void sentToJson(BusinessAccount businessAccount) {
+		Request request = new Request();
+		request.setPath("/accounts/BusinessAccount");
+		request.setMethod("Post");
+		request.setBody(businessAccount);
+		Gson gson = new Gson();
+		JsonElement jsonUser = gson.toJsonTree(request);
+
+		String jsonFile = gson.toJson(jsonUser);
+//    	System.out.println("jsonFile : "+jsonFile);
+		// client.accept(jsonFile); // in here will be DB ask for restaurant id
+	}
+
+	void response() {
+//		Gson gson = new Gson();
+//		Response response = gson.fromJson(ChatClient.serverAns, Response.class);
+//		if (response.getCode() != 200 && response.getCode() != 201) 
+//			lableErrorMag.setText(response.getDescription());// error massage
+//		
+//		System.out.println("-->>"+response.getDescription()); // Description from server
 	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {
@@ -181,4 +249,5 @@ public class OpenBusinessAccountController {
 			validField = false;
 		}
 	}
+
 }

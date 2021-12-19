@@ -69,25 +69,26 @@ public class AllOrdersController implements Initializable {
 		OrderType.setCellValueFactory(new PropertyValueFactory<Order, String>("orderType"));
 		OrderAddress.setCellValueFactory(new PropertyValueFactory<Order, String>("orderAddress"));
 		tblID.setItems(orderList);
+		
 	}
 
 	public void insertOrdersToTbl(ArrayList<String> serverAns) {
-		String[] id = new String[2];
-		id[0] = new String("GETALL");
-		id[1] = new String("ORDER");
-		ClientUI.chat.accept(id);
-
-		if (ChatClient.serverAns.get(2).equals("Error")) {
-			System.out.println("Can't find any orders");
-
-		} else {
-			ArrayList<String> orders = ChatClient.serverAns;
-			for (int i = 2; i < orders.size(); i++) {
- 				String[] result = orders.get(i).split(",");
-				Order temp = new Order(result[0], result[1], result[2], Time.valueOf(result[3]), result[4]);
-				temp.setOrderNum(Integer.valueOf(result[5]));
-				orderList.add(temp);
-			}
-		}
+//		String[] id = new String[2];
+//		id[0] = new String("GETALL");
+//		id[1] = new String("ORDER");
+//		ClientUI.chat.accept(id);
+//
+//		if (ChatClient.serverAns.get(2).equals("Error")) {
+//			System.out.println("Can't find any orders");
+//
+//		} else {
+//			ArrayList<String> orders = ChatClient.serverAns;
+//			for (int i = 2; i < orders.size(); i++) {
+// 				String[] result = orders.get(i).split(",");
+//				Order temp = new Order(result[0], result[1], result[2], Time.valueOf(result[3]), result[4]);
+//				temp.setOrderNum(Integer.valueOf(result[5]));
+//				orderList.add(temp);
+//			}
+//		}
 	}
 }

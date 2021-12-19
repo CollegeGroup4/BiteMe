@@ -31,7 +31,7 @@ public class ClientController implements ChatIF
   /**
    * The instance of the client that created this ConsoleChat.
    */
-  ChatClient client;
+   ChatClient client;
 
   //Constructors ****************************************************
 
@@ -63,6 +63,7 @@ public class ClientController implements ChatIF
    */
   public void accept(Object message) 
   {
+	  System.out.println("maswggg" + (String)message);
 	  client.handleMessageFromClientUI(message);
   }
   

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -15,55 +17,75 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="800.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="branchManager.OpenPrivateAccountController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="branchManager.OpenPrivateAccountController">
    <children>
-      <AnchorPane layoutX="14.0" layoutY="93.0" prefHeight="534.0" prefWidth="772.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+      <AnchorPane layoutX="10.0" layoutY="91.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <VBox layoutX="451.0" layoutY="159.0" prefHeight="180.0" prefWidth="298.0" spacing="10.0">
+            <VBox layoutX="491.0" layoutY="210.0" prefHeight="224.0" prefWidth="324.0" spacing="10.0">
                <children>
+                  <HBox prefHeight="16.0" prefWidth="304.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="174.0" style="-fx-underline: true;" text="User card information" textAlignment="CENTER">
+                           <font>
+                              <Font name="Berlin Sans FB Demi Bold" size="17.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="95.0" text="(optionale)" textAlignment="CENTER">
+                           <font>
+                              <Font name="Berlin Sans FB Demi Bold" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                   <AnchorPane prefHeight="43.0" prefWidth="278.0">
                      <children>
-                        <Label contentDisplay="CENTER" layoutY="20.0" prefHeight="35.0" prefWidth="96.0" text="Card number:" textAlignment="CENTER">
+                        <Label contentDisplay="CENTER" layoutX="36.0" layoutY="13.0" prefHeight="35.0" prefWidth="96.0" text="Card number:" textAlignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblrequiredCardNum" alignment="CENTER" layoutX="100.0" layoutY="7.0" prefHeight="18.0" prefWidth="168.0" textFill="RED">
+                        <Label fx:id="lblrequiredCardNum" alignment="CENTER" layoutX="136.0" prefHeight="18.0" prefWidth="168.0" textFill="RED">
                            <font>
                               <Font name="System Bold Italic" size="12.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textFieldCardNum" layoutX="100.0" layoutY="25.0" prefHeight="25.0" prefWidth="168.0" />
+                        <TextField fx:id="textFieldCardNum" layoutX="136.0" layoutY="18.0" prefHeight="25.0" prefWidth="168.0" promptText="card number" />
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="44.0" prefWidth="304.0">
                      <children>
-                        <Label fx:id="lblrequiredExpDate" alignment="CENTER" layoutX="101.0" layoutY="-5.0" prefHeight="18.0" prefWidth="174.0" textFill="RED">
+                        <Label fx:id="lblrequiredExpDate" alignment="CENTER" layoutX="130.0" prefHeight="18.0" prefWidth="174.0" textFill="RED">
                            <font>
                               <Font name="System Bold Italic" size="12.0" />
                            </font>
                         </Label>
-                        <Text layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exp. Date:" wrappingWidth="93.228515625">
+                        <Text layoutX="39.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exp. Date:" wrappingWidth="93.228515625">
                            <font>
                               <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Text>
-                        <DatePicker fx:id="datePickerExpD" layoutX="102.0" layoutY="12.0" />
+                        <JFXComboBox fx:id="comboBoxMonth" layoutX="150.0" layoutY="11.0" prefHeight="25.0" prefWidth="36.0" promptText="01" />
+                        <JFXComboBox fx:id="comboBoxYear" layoutX="247.0" layoutY="12.0" prefHeight="25.0" prefWidth="56.0" promptText="2021" />
+                        <Label layoutX="222.0" layoutY="14.0" text="/">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="44.0" prefWidth="304.0">
                      <children>
-                        <Label contentDisplay="CENTER" layoutX="3.0" layoutY="13.0" prefHeight="25.0" prefWidth="110.0" text="CVV:" textAlignment="CENTER">
+                        <Label contentDisplay="CENTER" layoutX="48.0" layoutY="16.0" prefHeight="25.0" prefWidth="72.0" text="CVV:" textAlignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblrequiredCVV" alignment="CENTER" layoutX="104.0" layoutY="-5.0" prefHeight="18.0" prefWidth="174.0" textFill="RED">
+                        <Label fx:id="lblrequiredCVV" alignment="CENTER" layoutX="127.0" prefHeight="18.0" prefWidth="174.0" textFill="RED">
                            <font>
                               <Font name="System Bold Italic" size="12.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textFieldCVV" layoutX="99.0" layoutY="12.0" prefHeight="25.0" prefWidth="174.0" />
+                        <TextField fx:id="textFieldCVV" layoutX="127.0" layoutY="16.0" prefHeight="25.0" prefWidth="174.0" promptText="CVV" />
                      </children>
                   </AnchorPane>
                </children>
@@ -71,58 +93,38 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="175.0" layoutY="35.0" prefHeight="43.0" prefWidth="378.0" text="Open Private Account" textAlignment="CENTER">
+            <Label fx:id="labelTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="216.0" layoutY="55.0" prefHeight="46.0" prefWidth="470.0" text="Open Private Account" textAlignment="CENTER">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="36.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="513.0" layoutY="121.0" prefHeight="35.0" prefWidth="186.0" text="Credit card information" textAlignment="CENTER">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
-               </font>
-            </Label>
-            <Button fx:id="btnCreateAccount" layoutX="309.0" layoutY="465.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="38.0" prefWidth="153.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Create account" textFill="WHITE">
+            <Button fx:id="btnCreateAccount" layoutX="364.0" layoutY="516.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="38.0" prefWidth="153.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Create account" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
             </Button>
-            <VBox alignment="TOP_CENTER" layoutX="30.0" layoutY="120.0" prefHeight="298.0" prefWidth="324.0">
+            <VBox alignment="TOP_CENTER" layoutX="79.0" layoutY="210.0" prefHeight="271.0" prefWidth="324.0">
                <children>
                   <HBox alignment="CENTER" prefHeight="41.0" prefWidth="100.0">
                      <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="186.0" text="Client information" textAlignment="CENTER">
+                        <Label contentDisplay="CENTER" prefHeight="35.0" prefWidth="283.0" style="-fx-underline: true;" text="User information" textAlignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                            </font>
                         </Label>
                      </children>
                   </HBox>
-                  <AnchorPane prefHeight="44.0" prefWidth="304.0">
+                  <AnchorPane prefHeight="45.0" prefWidth="304.0">
                      <children>
-                        <Label contentDisplay="CENTER" layoutY="20.0" prefHeight="35.0" prefWidth="110.0" text="First name:" textAlignment="CENTER">
+                        <Label contentDisplay="CENTER" layoutX="39.0" layoutY="20.0" prefHeight="35.0" prefWidth="110.0" text="Username:" textAlignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textFieldFirstNamePersonal" layoutX="153.0" layoutY="25.0" promptText="first name" />
-                        <Label fx:id="lblrequiredFname" alignment="CENTER" layoutX="156.0" layoutY="7.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
+                        <TextField fx:id="textFieldUserNameUser" layoutX="153.0" layoutY="25.0" promptText="first name" />
+                        <Label fx:id="lblrequiredUsername" alignment="CENTER" layoutX="156.0" layoutY="7.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
                            <font>
                               <Font name="System Bold Italic" size="12.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="42.0" prefWidth="304.0">
-                     <children>
-                        <Label fx:id="lblrequiredLname" alignment="CENTER" layoutX="156.0" layoutY="7.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
-                           <font>
-                              <Font name="System Bold Italic" size="12.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="textFieldLastNamePersonal" layoutX="152.0" layoutY="26.0" promptText="last name" />
-                        <Label contentDisplay="CENTER" layoutY="21.0" prefHeight="35.0" prefWidth="111.0" text="Last name:" textAlignment="CENTER">
-                           <font>
-                              <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Label>
                      </children>
@@ -134,42 +136,27 @@
                               <Font name="System Bold Italic" size="12.0" />
                            </font>
                         </Label>
-                        <Label contentDisplay="CENTER" layoutY="16.0" prefHeight="35.0" prefWidth="110.0" text="ID:" textAlignment="CENTER">
+                        <Label contentDisplay="CENTER" layoutX="42.0" layoutY="16.0" prefHeight="35.0" prefWidth="110.0" text="ID:" textAlignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textFieldIDPersonal" layoutX="152.0" layoutY="21.0" promptText="id" />
+                        <TextField fx:id="textFieldID" layoutX="152.0" layoutY="21.0" promptText="id" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="35.0" prefWidth="304.0">
+                  <AnchorPane fx:id="componnentDebt" prefHeight="38.0" prefWidth="304.0">
                      <children>
-                        <Label fx:id="lblrequiredPhonNum" alignment="CENTER" layoutX="156.0" layoutY="7.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
+                        <Label fx:id="lblrequiredDebt" alignment="CENTER" layoutX="156.0" layoutY="6.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
                            <font>
                               <Font name="System Bold Italic" size="12.0" />
                            </font>
                         </Label>
-                        <Label contentDisplay="CENTER" layoutY="20.0" prefHeight="35.0" prefWidth="110.0" text="Phone number:" textAlignment="CENTER">
+                        <Label contentDisplay="CENTER" layoutX="41.0" layoutY="19.0" prefHeight="35.0" prefWidth="110.0" text="Debt:" textAlignment="CENTER">
                            <font>
                               <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textFieldPhoneNumPersonal" layoutX="152.0" layoutY="25.0" promptText="phone number" />
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="38.0" prefWidth="304.0">
-                     <children>
-                        <Label fx:id="lblrequiredEmail" alignment="CENTER" layoutX="156.0" layoutY="6.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
-                           <font>
-                              <Font name="System Bold Italic" size="12.0" />
-                           </font>
-                        </Label>
-                        <Label contentDisplay="CENTER" layoutY="19.0" prefHeight="35.0" prefWidth="110.0" text="Email:" textAlignment="CENTER">
-                           <font>
-                              <Font name="Berlin Sans FB Demi Bold" size="15.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="textFieldEmailPersonal" layoutX="152.0" layoutY="24.0" promptText="email" />
+                        <TextField fx:id="textFieldDebt" layoutX="152.0" layoutY="24.0" promptText="debt" />
                      </children>
                   </AnchorPane>
                </children>
@@ -177,80 +164,42 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="513.0" layoutY="142.0" prefHeight="35.0" prefWidth="186.0" text="(optionale)" textAlignment="CENTER">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="13.0" />
-               </font>
-            </Label>
-         </children>
-      </AnchorPane>
-      <HBox fx:id="Nav1" alignment="CENTER" layoutX="-3.0" layoutY="627.0" prefHeight="102.0" prefWidth="806.0" spacing="35.0" style="-fx-background-radius: 50px;">
-         <children>
-            <ImageView fitHeight="64.0" fitWidth="200.0">
-               <image>
-                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
-               </image>
-            </ImageView>
-            <AnchorPane prefHeight="107.0" prefWidth="91.0">
+            <AnchorPane layoutX="353.0" layoutY="131.0" prefHeight="51.0" prefWidth="174.0">
                <children>
-                  <Hyperlink layoutX="-3.0" layoutY="23.0" text="Contect us:" textFill="WHITE">
+                  <Label contentDisplay="CENTER" layoutY="19.0" prefHeight="35.0" prefWidth="72.0" text="Status: " textAlignment="CENTER">
                      <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                      </font>
-                  </Hyperlink>
-                  <Line endX="-20.0" layoutX="101.0" layoutY="47.0" startX="-100.0" stroke="WHITE" />
-                  <ImageView fitHeight="23.0" fitWidth="27.0" layoutX="21.0" layoutY="53.0">
-                     <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/facebook-icon-preview-1.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="18.0" fitWidth="19.0" layoutX="49.0" layoutY="56.0">
-                     <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/instagram.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="21.0" fitWidth="23.0" layoutX="73.0" layoutY="55.0">
-                     <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/WhatsApp.svg.png" />
-                     </image>
-                  </ImageView>
+                  </Label>
+                  <JFXComboBox fx:id="comboBoxStatus" layoutX="60.0" layoutY="16.0" prefHeight="28.0" prefWidth="94.0" promptText=" Active" />
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="107.0" prefWidth="91.0">
-               <children>
-                  <Hyperlink layoutX="-3.0" layoutY="52.0" text="contect@BiteMe.co.il" textFill="WHITE">
-                     <font>
-                        <Font name="Bell MT Bold" size="15.0" />
-                     </font>
-                  </Hyperlink>
-                  <Hyperlink layoutX="2.0" layoutY="74.0" text="Israel Karmiel, Gan Ha'ir 100" textFill="WHITE">
-                     <font>
-                        <Font name="Bell MT Bold" size="15.0" />
-                     </font>
-                     <padding>
-                        <Insets right="20.0" />
-                     </padding>
-                  </Hyperlink>
-                  <Hyperlink layoutX="-4.0" layoutY="33.0" text="04-9999090" textFill="WHITE">
-                     <font>
-                        <Font name="Bell MT Bold" size="15.0" />
-                     </font>
-                  </Hyperlink>
-               </children>
-               <padding>
-                  <Insets right="30.0" />
-               </padding>
-            </AnchorPane>
-            <Button fx:id="btnBackBM" mnemonicParsing="false" onAction="#backBM" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orage; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="back" textFill="WHITE">
+            <Button fx:id="btnBackBM" layoutX="71.0" layoutY="603.0" mnemonicParsing="false" onAction="#backOpenAccount" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Button>
+            <Label fx:id="lableErrorMag" alignment="CENTER" layoutX="9.0" layoutY="551.0" prefHeight="18.0" prefWidth="862.0" textFill="RED">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnHelp" layoutX="814.0" layoutY="379.0" mnemonicParsing="false" onAction="#onClickHelp" prefHeight="18.0" prefWidth="14.0" style="-fx-background-radius: 100;" text="?" />
+            <AnchorPane fx:id="componentExplain" layoutX="599.0" layoutY="392.0" prefHeight="77.0" prefWidth="255.0">
+               <children>
+                  <Label alignment="CENTER" layoutX="1.0" layoutY="42.0" prefHeight="25.0" prefWidth="253.0" style="-fx-border-color: black; -fx-background-color: F1F1F1;" text="the three numbers behind the credit card">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Line endX="-70.0" endY="-29.0" layoutX="293.0" layoutY="41.0" startX="-86.0" startY="1.0" />
+               </children>
+            </AnchorPane>
          </children>
-      </HBox>
+      </AnchorPane>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="8.0" prefHeight="102.0" prefWidth="784.0" spacing="50.0" style="-fx-background-radius: 50px;">
          <children>
-            <Label prefHeight="88.0" prefWidth="202.0" styleClass="f" text="Hello, BManager">
+            <Label fx:id="lableHello" prefHeight="88.0" prefWidth="202.0" styleClass="f" text="Hello, BManager">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -258,12 +207,12 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
+            <Hyperlink fx:id="btnHome" onAction="#homelogout" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
-            <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orage; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#homelogout" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
@@ -275,5 +224,7 @@
             </ImageView>
          </children>
       </HBox>
+      <JFXHamburger fx:id="myHamburger" layoutX="856.0" layoutY="40.0" />
+      <JFXDrawer fx:id="drawer" layoutX="1.0" prefHeight="770.0" prefWidth="300.0" />
    </children>
 </AnchorPane>

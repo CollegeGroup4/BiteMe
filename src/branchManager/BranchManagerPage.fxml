@@ -11,9 +11,9 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="730.0" prefWidth="800.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="branchManager.BranchManagerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="branchManager.BranchManagerController">
    <children>
-      <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="102.0" prefWidth="784.0" spacing="50.0" style="-fx-background-radius: 50px;">
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="92.0" prefWidth="884.0" spacing="50.0" style="-fx-background-radius: 50px;">
          <children>
             <Label fx:id="lableHello" prefHeight="88.0" prefWidth="202.0" styleClass="f" text="Hello, BManager">
                <font>
@@ -28,7 +28,7 @@
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
-            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#homelogout" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orage; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#homelogout" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
@@ -40,110 +40,51 @@
             </ImageView>
          </children>
       </HBox>
-      <AnchorPane layoutX="14.0" layoutY="98.0" prefHeight="534.0" prefWidth="772.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+      <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="197.0" layoutY="34.0" prefHeight="43.0" prefWidth="378.0" text="Branch Manager Page" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="213.0" layoutY="79.0" prefHeight="46.0" prefWidth="447.0" text="Branch Manager Page" textAlignment="CENTER">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="36.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <Button fx:id="btnOrderFood" layoutX="22.0" layoutY="167.0" mnemonicParsing="false" onAction="#orderFood" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Order food" textFill="WHITE">
+            <Button fx:id="btnOrderFood" layoutX="81.0" layoutY="219.0" mnemonicParsing="false" onAction="#orderFood" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Order food" textFill="WHITE">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnViewReports" layoutX="269.0" layoutY="167.0" mnemonicParsing="false" onAction="#viewReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="View reports" textFill="WHITE">
+            <Button fx:id="btnViewReports" layoutX="328.0" layoutY="219.0" mnemonicParsing="false" onAction="#viewReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="View reports" textFill="WHITE">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnOpenAccount" layoutX="518.0" layoutY="167.0" mnemonicParsing="false" onAction="#openAccount" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Open an account" textFill="WHITE">
+            <Button fx:id="btnOpenAccount" layoutX="577.0" layoutY="219.0" mnemonicParsing="false" onAction="#openAccount" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Open an account" textFill="WHITE">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button layoutX="21.0" layoutY="337.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Edit personal info" textFill="WHITE">
+            <Button fx:id="btnEditPersonalInfo" layoutX="81.0" layoutY="398.0" mnemonicParsing="false" onAction="#editPersonalInfo" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Edit personal info" textFill="WHITE">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnCreateReports" layoutX="268.0" layoutY="337.0" mnemonicParsing="false" onAction="#createReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Create new report" textFill="WHITE">
+            <Button fx:id="btnCreateReports" layoutX="328.0" layoutY="398.0" mnemonicParsing="false" onAction="#createReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Create new report" textFill="WHITE">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnRegisterationApprovalSupplier" layoutX="517.0" layoutY="337.0" mnemonicParsing="false" onAction="#registerationApprovalSupplier" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Registeration &amp; Approval a Supplier" textFill="WHITE">
+            <Button fx:id="btnRegisterationApprovalSupplier" layoutX="577.0" layoutY="398.0" mnemonicParsing="false" onAction="#RegisterationRestaurant" prefHeight="78.0" prefWidth="225.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Registeration Restaurant" textFill="WHITE">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="18.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Line endX="-100.0" endY="274.4000244140625" layoutX="352.0" layoutY="154.0" startX="-100.0" stroke="#968b8bbd" />
-            <Line endX="-100.0" endY="274.4000244140625" layoutX="604.0" layoutY="154.0" startX="-100.0" stroke="#968b8bbd" />
-            <Hyperlink fx:id="linkApprovals" layoutX="640.0" layoutY="26.0" onAction="#Approvals" text="Approvals">
+            <Line endX="-100.0" endY="274.4000244140625" layoutX="411.0" layoutY="237.0" startX="-100.0" startY="-44.0" stroke="#968b8bbd" />
+            <Hyperlink fx:id="linkApprovals" layoutX="717.0" layoutY="35.0" onAction="#Approvals" text="Approvals (0)">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="18.0" />
                </font>
             </Hyperlink>
+            <Line endX="-100.0" endY="274.4000244140625" layoutX="665.0" layoutY="237.0" startX="-100.0" startY="-44.0" stroke="#968b8bbd" />
          </children>
       </AnchorPane>
-      <HBox fx:id="Nav1" alignment="CENTER" layoutX="-2.0" layoutY="630.0" prefHeight="102.0" prefWidth="806.0" spacing="35.0" style="-fx-background-radius: 50px;">
-         <children>
-            <ImageView fitHeight="64.0" fitWidth="200.0">
-               <image>
-                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
-               </image>
-            </ImageView>
-            <AnchorPane prefHeight="107.0" prefWidth="91.0">
-               <children>
-                  <Hyperlink layoutX="-3.0" layoutY="23.0" text="Contect us:" textFill="WHITE">
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="16.0" />
-                     </font>
-                  </Hyperlink>
-                  <Line endX="-20.0" layoutX="101.0" layoutY="47.0" startX="-100.0" stroke="WHITE" />
-                  <ImageView fitHeight="23.0" fitWidth="27.0" layoutX="21.0" layoutY="53.0">
-                     <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/facebook-icon-preview-1.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="18.0" fitWidth="19.0" layoutX="49.0" layoutY="56.0">
-                     <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/instagram.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="21.0" fitWidth="23.0" layoutX="73.0" layoutY="55.0">
-                     <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/WhatsApp.svg.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="107.0" prefWidth="91.0">
-               <children>
-                  <Hyperlink layoutX="-3.0" layoutY="52.0" text="contect@BiteMe.co.il" textFill="WHITE">
-                     <font>
-                        <Font name="Bell MT Bold" size="15.0" />
-                     </font>
-                  </Hyperlink>
-                  <Hyperlink layoutX="2.0" layoutY="74.0" text="Israel Karmiel, Gan Ha'ir 100" textFill="WHITE">
-                     <font>
-                        <Font name="Bell MT Bold" size="15.0" />
-                     </font>
-                     <padding>
-                        <Insets right="20.0" />
-                     </padding>
-                  </Hyperlink>
-                  <Hyperlink layoutX="-4.0" layoutY="33.0" text="04-9999090" textFill="WHITE">
-                     <font>
-                        <Font name="Bell MT Bold" size="15.0" />
-                     </font>
-                  </Hyperlink>
-               </children>
-               <padding>
-                  <Insets right="30.0" />
-               </padding>
-            </AnchorPane>
-         </children>
-      </HBox>
    </children>
 </AnchorPane>
