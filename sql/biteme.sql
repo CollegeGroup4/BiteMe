@@ -166,7 +166,7 @@ DROP TABLE IF EXISTS `employees`;
 CREATE TABLE `employees` (
   `Name` varchar(50) NOT NULL,
   `isApproved` tinyint NOT NULL,
-  `W4C` varchar(45) NOT NULL,
+  `Hr_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -446,10 +446,13 @@ DROP TABLE IF EXISTS `reports_per_branch`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reports_per_branch` (
   `RestaurantID` int NOT NULL,
-  `Type_of_report` varchar(45) DEFAULT NULL,
-  `Month_of_the_report` int DEFAULT NULL,
+  `Type_of_report` varchar(45) NOT NULL,
+  `Month_of_the_report` int NOT NULL,
   `report_data` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`RestaurantID`),
+  `BranchManagerID` int DEFAULT NULL,
+  PRIMARY KEY (`RestaurantID`,`Month_of_the_report`,`Type_of_report`),
+  KEY `fk_from_branch_manager_RPB_idx` (`BranchManagerID`),
+  CONSTRAINT `fk_from_branch_manager_RPB` FOREIGN KEY (`BranchManagerID`) REFERENCES `branch_manager` (`BranchManagerID`),
   CONSTRAINT `fk_from_restaurant_RPB` FOREIGN KEY (`RestaurantID`) REFERENCES `restaurant` (`RestaurantNum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -557,4 +560,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-17 22:05:19
+-- Dump completed on 2021-12-19 19:20:36
