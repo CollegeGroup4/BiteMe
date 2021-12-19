@@ -341,6 +341,57 @@ public class OrderApiService {
 		response.setCode(200);
 		response.setDescription("Success updating order -> orderID: " + Integer.toString(order.getOrderID()));
 	}
+	
+	/**
+	 * Get item for a specific orderID
+	 *
+	 */
+	//TODO Is there anything to update in order as client??
+	public static void getItemsByOrderID(int orderID, Response response) {
+		ResultSet rs1, rs2;
+		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<Options> options = new ArrayList<>();
+		Item itemTemp;
+		Options optionsTemp;
+		try {
+			PreparedStatement getItems = EchoServer.con.prepareStatement(
+					"SELECT items.*, itemsOrder.amount FROM items biteme.items, itemsOrder biteme.item_int_menu_in_order "
+					+ "WHERE items.ItemID = itemsOrder.ItemID AND itemsOrder.OrderNum = ?;");
+			getItems.setInt(1, orderID);
+			getItems.execute();
+			rs1 = getItems.getResultSet();
+			while (rs1.next()) {
+				 itemTemp = new Item(rs1.getString(QueryConsts.ITEM_CATEGORY), rs1.getString(QueryConsts.ITEM_SUB_CATEGORY),
+						rs1.getInt(QueryConsts.ITEM_ID),rs1.getInt(QueryConsts.ITEM_RES_ID),rs1.getString(QueryConsts.ITEM_NAME),
+						rs1.getFloat(QueryConsts.ITEM_PRICE), rs1.getString(QueryConsts.ITEM_DESCRIPTION),
+						rs1.getString(QueryConsts.ITEM_INGREDIENTS), null,
+						rs1.getString(QueryConsts.ITEM_IMAGE), rs1.getInt(10));
+				items.add(itemTemp);
+
+				PreparedStatement getOptions = EchoServer.con
+						.prepareStatement("SELECT * FROM biteme.optional_category WHERE itemID = ?");
+				getOptions.setInt(1, itemTemp.getItemID());
+				getOptions.execute();
+				rs2 = getOptions.getResultSet();
+				while (rs2.next()) {
+					optionsTemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
+							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getDouble(QueryConsts.OPTIONAL_PRICE),itemTemp.getItemID());
+
+					options.add(optionsTemp);
+				}
+				itemTemp.setOptions((Options[]) options.toArray());
+				options.clear();
+				rs2.close();
+			}
+		} catch (SQLException e) {
+			response.setCode(405);
+			response.setDescription("Invalid input");
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success fetchin items for order -> orderID: " + Integer.toString(orderID));
+		response.setBody(items.toArray());
+	}
 
 	/**
 	 * Updates a order as delivered

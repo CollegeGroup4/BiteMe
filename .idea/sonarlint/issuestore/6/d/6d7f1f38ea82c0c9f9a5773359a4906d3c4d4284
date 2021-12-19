@@ -1,0 +1,18 @@
+
+|
+java:S1149P"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰8¡ªïôÜ/
+]	java:S125"<This block of commented-out lines of code should be removed.(ÈÚ®ïúÿÿÿÿ8—ÔçúÜ/
+Z	java:S106'"9Replace this use of System.out or System.err by a logger.(æôÉ°ÿÿÿÿÿ8­ž§õÜ/
+U	java:S106*"9Replace this use of System.out or System.err by a logger.(ü¤æ›8¡ÔçúÜ/
+Z	java:S106K"9Replace this use of System.out or System.err by a logger.(å¨º‹üÿÿÿÿ8¡ÔçúÜ/
+]	java:S125+"<This block of commented-out lines of code should be removed.(ñŒôÿÿÿÿÿ8ÔªïôÜ/
+;
+java:S2119O"Save and re-use this "Random".(¡Å”¦8áªïôÜ/
+c
+java:S1192"FDefine a constant instead of duplicating this literal "steak" 4 times.(‚¡í£8¥ÔçúÜ/
+c
+java:S1192"FDefine a constant instead of duplicating this literal "19:50" 4 times.(‚¡í£8¦ÔçúÜ/
+i
+java:S1192"GDefine a constant instead of duplicating this literal "Second" 4 times.(àŽ¿Ñýÿÿÿÿ8¦ÔçúÜ/
+n	java:S101
+"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(ñ‘äÔüÿÿÿÿ8¦ÔçúÜ/
