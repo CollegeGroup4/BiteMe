@@ -1,53 +1,29 @@
 package logic;
 
-import java.util.ArrayList;
-
 public class item_in_menu {
 	private int itemID;
-	private int restaurantID;
+	private int restaurantNum;
 	private String menu_name;
 	private String course;
-	private int price;
-	private String description;
-	private ArrayList<String> ingrediants;
-	public item_in_menu(int itemID, int restaurantID, String menu_name, String course, int price, String description, ArrayList<String> ingrediants) {
+	
+	public item_in_menu(int itemID, int restaurantNum, String menu_name, String course) {
 		this.itemID = itemID;
-		this.restaurantID = restaurantID;
+		this.restaurantNum = restaurantNum;
 		this.menu_name = menu_name;
 		this.course = course;
-		this.price=price;
-		this.description=description;
-		this.ingrediants=ingrediants;
 	}
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public ArrayList<String> getIngrediants() {
-		return ingrediants;
-	}
-	public void setIngrediants(ArrayList<String> ingrediants) {
-		this.ingrediants = ingrediants;
-	}
+	
 	public int getItemID() {
 		return itemID;
 	}
 	public void setItemID(int itemID) {
 		this.itemID = itemID;
 	}
-	public int getRestaurantID() {
-		return restaurantID;
+	public int getRestaurantNum() {
+		return restaurantNum;
 	}
-	public void setRestaurantID(int restaurantID) {
-		this.restaurantID = restaurantID;
+	public void setRestaurantNum(int restaurantNum) {
+		this.restaurantNum = restaurantNum;
 	}
 	public String getMenu_name() {
 		return menu_name;

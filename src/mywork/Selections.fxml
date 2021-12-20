@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="319.0" prefWidth="218.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.IngredientsAndQuantityController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="319.0" prefWidth="218.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.SelectionsController">
    <children>
       <HBox alignment="TOP_CENTER" prefHeight="42.0" prefWidth="180.0">
          <children>
-            <Label fx:id="itemName" alignment="CENTER" prefHeight="33.0" prefWidth="63.0" text="Label" />
+            <Label fx:id="itemName" alignment="CENTER" prefHeight="33.0" prefWidth="188.0" text="Label" />
          </children>
       </HBox>
       <VBox prefHeight="273.0" prefWidth="218.0">
@@ -30,24 +30,24 @@
             </HBox>
             <HBox prefHeight="27.0" prefWidth="180.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="22.0" prefWidth="118.0" text="Select Ingrediants:" />
+                  <Label alignment="CENTER" prefHeight="22.0" prefWidth="161.0" text="Select optional:" />
                </children>
             </HBox>
-            <ScrollPane prefHeight="44.0" prefWidth="218.0">
+            <ScrollPane prefHeight="63.0" prefWidth="218.0">
                <content>
-                  <HBox fx:id="allIngredients" />
+                  <HBox fx:id="allOptionals" />
                </content></ScrollPane>
             <HBox prefHeight="24.0" prefWidth="287.0">
                <children>
-                  <Label alignment="CENTER" text="ingredients selected :" />
+                  <Label alignment="CENTER" prefHeight="17.0" prefWidth="181.0" text="Optional  selected :" />
                </children>
             </HBox>
-            <ScrollPane prefHeight="49.0" prefWidth="218.0">
+            <ScrollPane prefHeight="66.0" prefWidth="218.0">
                <content>
-                  <HBox fx:id="ingredientsSelected" />
+                  <HBox fx:id="optionalsSelected" />
                </content>
             </ScrollPane>
-            <HBox prefHeight="79.0" prefWidth="287.0">
+            <HBox prefHeight="29.0" prefWidth="218.0">
                <children>
                   <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clear" text="Clear" />
                   <Button fx:id="submitBtn" mnemonicParsing="false" onAction="#submit" text="Submit" />

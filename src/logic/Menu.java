@@ -1,22 +1,16 @@
 package logic;
 
-import java.util.ArrayList;
-
 public class Menu {
 	private String name;
 	private int restaurantID;
-	private ArrayList<item_in_menu> items;
-	public Menu(String name, int restaurantID, ArrayList<item_in_menu> items) {
+	private item_in_menu[] items;
+	
+	public Menu(String name, int restaurantID, item_in_menu[] items) {
 		this.name = name;
 		this.restaurantID = restaurantID;
-		this.items=items;
-	}
-	public ArrayList<item_in_menu>getItems() {
-		return items;
-	}
-	public void setItems(ArrayList<item_in_menu> items) {
 		this.items = items;
 	}
+	
 	public String getName() {
 		return name;
 	}
@@ -29,5 +23,12 @@ public class Menu {
 	public void setRestaurantID(int restaurantID) {
 		this.restaurantID = restaurantID;
 	}
+	public item_in_menu[] getItems() {
+		return items;
+	}
+	public void setItems(item_in_menu[] items) {
+		this.items = items;
+	}
+	
 	
 }

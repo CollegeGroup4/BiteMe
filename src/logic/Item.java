@@ -1,26 +1,44 @@
 package logic;
 
 public class Item {
+	private String category;
+	private String subcategory;
 	private int itemID;
 	private int restaurantID;
-	private String Type;
 	private String name;
 	private float price;
 	private String description;
 	private String ingrediants;
 	private Options[] options;
-	public byte[] photo;
-	public Item(int itemID, int restaurantID, String type, String name, float price, String description,
-                String ingrediants, Options[] options, byte[] photo) {
+	private String photo;
+	private int amount;
+	
+	public Item(String category, String subcategory, int itemID, int restaurantID, String name, float price,
+			String description, String ingrediants, Options[] options, String photo, int amount) {
+		this.category = category;
+		this.subcategory = subcategory;
 		this.itemID = itemID;
 		this.restaurantID = restaurantID;
-		Type = type;
 		this.name = name;
 		this.price = price;
 		this.description = description;
 		this.ingrediants = ingrediants;
 		this.options = options;
 		this.photo = photo;
+		this.amount = amount;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getSubcategory() {
+		return subcategory;
+	}
+	public void setSubcategory(String subcategory) {
+		this.subcategory = subcategory;
 	}
 	public int getItemID() {
 		return itemID;
@@ -33,12 +51,6 @@ public class Item {
 	}
 	public void setRestaurantID(int restaurantID) {
 		this.restaurantID = restaurantID;
-	}
-	public String getType() {
-		return Type;
-	}
-	public void setType(String type) {
-		Type = type;
 	}
 	public String getName() {
 		return name;
@@ -70,12 +82,16 @@ public class Item {
 	public void setOptions(Options[] options) {
 		this.options = options;
 	}
-	public byte[] getPhoto() {
+	public String getPhoto() {
 		return photo;
 	}
-	public void setPhoto(byte[] photo) {
+	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
-	
-	
+	public int getAmount() {
+		return amount;
+	}
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
 }

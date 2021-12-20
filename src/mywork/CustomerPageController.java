@@ -32,7 +32,7 @@ public class CustomerPageController /* implements Initializable */ {
 	private Button btnLogout;
 
 	@FXML
-	private Hyperlink BtnHome;
+	private Hyperlink btnHome;
 
     @FXML
     private Label welcomeLabel;
@@ -104,21 +104,6 @@ public class CustomerPageController /* implements Initializable */ {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-/*
-	@Override
-	public void initialize(URL url, ResourceBundle db) {
-		Image imageB1 = new Image(getClass().getResourceAsStream("/images/biteMe.png"));
-		Image imageB2 = new Image(getClass().getResourceAsStream("/images/biteMe.png"));
-		Image imageFB = new Image(getClass().getResourceAsStream("/images/facebook-icon-preview-1.png"));
-		Image imageIG = new Image(getClass().getResourceAsStream("/images/instagram.png"));
-		Image imageWU = new Image(getClass().getResourceAsStream("/images/WhatsApp.svg.png"));
-		imageBiteme1.setImage(imageB1);
-		imageBiteme2.setImage(imageB2);
-		imageFacebook.setImage(imageFB);
-		imageInstergram.setImage(imageIG);
-		imageWhatsapp.setImage(imageWU);
-	}
-*/
 	public void setUser(UserTemp user) {
 		CustomerPageController.user = user;
 		welcomeLabel.setText("Welcome, " + CustomerPageController.user.getName());
