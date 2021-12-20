@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import common.DBController;
+import common.Request;
 import logic.Account;
 import logic.BusinessAccount;
 import logic.Item;
@@ -73,10 +74,10 @@ public class EchoServer extends AbstractServer {
 	 * @param
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-		JsonObject m = gson.fromJson((String)msg, JsonObject.class);
-		String method = gson.fromJson(m.get("method"), String.class);
-		String path = gson.fromJson(m.get("path"), String.class);
-		JsonObject body = gson.toJsonTree(m.get("body")).getAsJsonObject();
+		Request m = gson.fromJson((String)msg, Request.class);
+		String method = m.getMethod();
+		String path = m.getPath();
+		JsonObject body = (JsonObject) gson.toJsonTree(m.getBody());
 		Response response = new Response();
 		System.out.println("Message received: " + path + " "+ method + " from " + client);
 		switch (path) {
@@ -95,7 +96,7 @@ public class EchoServer extends AbstractServer {
 							OrderApiService.allOrders(restaurantID, response);
 						break;
 					case POST:
-							Order addOrder = gson.fromJson(m.get("order"), Order.class);
+							Order addOrder = gson.fromJson(body.get("order"), Order.class);
 							OrderApiService.addOrder(addOrder,response);
 						break;
 					}

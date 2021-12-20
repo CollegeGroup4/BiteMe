@@ -192,7 +192,6 @@ public class ServerPortFrameController implements Initializable {
 		}
 	}
 
-
 	public String getIP() {
 		return lblIP.getText();
 	}

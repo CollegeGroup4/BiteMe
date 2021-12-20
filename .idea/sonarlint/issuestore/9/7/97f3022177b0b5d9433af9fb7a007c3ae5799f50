@@ -1,0 +1,7 @@
+
+m	java:S116"XRename this field "items_in_menu" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ô‰À‰
+>
+java:S1068"(Remove this unused "menu" private field.(î·öÁ
+G
+java:S1068"1Remove this unused "items_in_menu" private field.(Ô‰À‰
+b	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(”áäþ

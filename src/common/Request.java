@@ -1,4 +1,4 @@
-package client;
+package common;
 
 public class Request {
 	private String path;

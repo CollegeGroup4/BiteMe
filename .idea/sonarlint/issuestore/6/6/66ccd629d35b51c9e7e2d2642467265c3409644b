@@ -1,0 +1,105 @@
+
+P
+java:S1118":Add a private constructor to hide the implicit public one.(’º¡
+h
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 37 to the 15 allowed.(ÎÓ•É
+b
+java:S1659"GDeclare "shipmentID" and all following declarations on a separate line.(¾†œ×ÿÿÿÿÿ
+F
+java:S26951"0This "PreparedStatement" only has 11 parameters.(ùÏ¥
+K
+java:S26952"0This "PreparedStatement" only has 11 parameters.(ƒä·½üÿÿÿÿ
+S	java:S106c"9Replace this use of System.out or System.err by a logger.(Ä°õ¯üÿÿÿÿ
+N
+java:S1135…"2Complete the task associated to this TODO comment.(Ì³ïœùÿÿÿÿ
+I
+java:S1135§"2Complete the task associated to this TODO comment.(‡ñÅ¼
+k
+java:S1659‡"ODeclare "getBusinessAccount" and all following declarations on a separate line.(úÇ°ßûÿÿÿÿ
+F
+java:S1659‰"*Declare "currentSpent" on a separate line.(¼òÑöûÿÿÿÿ
+H
+java:S1135µ"2Complete the task associated to this TODO comment.(„²¨
+c
+java:S1659¸"GDeclare "shipmentID" and all following declarations on a separate line.(¾†œ×ÿÿÿÿÿ
+H
+java:S1481¸",Remove this unused "orderID" local variable.(¾†œ×ÿÿÿÿÿ
+K
+java:S1481¸"/Remove this unused "shipmentID" local variable.(¾†œ×ÿÿÿÿÿ
+F
+java:S1481¸"*Remove this unused "price" local variable.(¾†œ×ÿÿÿÿÿ
+C
+java:S1481¹",Remove this unused "options" local variable.(Æ´ÔÉ
+F
+java:S2695Ç"/This "PreparedStatement" only has 9 parameters.(ÔëÜé
+K
+java:S2695È"/This "PreparedStatement" only has 9 parameters.(§¹É¬ûÿÿÿÿ
+F
+java:S2695É"/This "PreparedStatement" only has 9 parameters.(Öæò°
+F
+java:S2695Ê"/This "PreparedStatement" only has 9 parameters.(şÅ€å
+C
+java:S1125Í"'Remove the unnecessary boolean literal.(úÑŞšşÿÿÿÿ
+H
+java:S1135İ"2Complete the task associated to this TODO comment.(„²¨
+8
+java:S1659ß"!Declare "rs2" on a separate line.(·«¸´
+K
+java:S3020ş"/Pass "new Options[0]" as argument to "toArray".(ÎŠíßûÿÿÿÿ
+L
+java:S1854"5Remove this useless assignment to local variable "t".(Å‹Èò
+K
+java:S2695š"/This "PreparedStatement" only has 2 parameters.(€íö€üÿÿÿÿ
+F
+java:S2695›"/This "PreparedStatement" only has 2 parameters.(¢†èÂ
+=
+java:S1481"&Remove this unused "t" local variable.(Å‹Èò
+8
+java:S1116¢"Remove this empty statement.(Åñ­õşÿÿÿÿ
+2
+java:S3626Å"Remove this redundant jump.(ûÁİ…
+V
+java:S1128"4Remove this unused import 'java.time.LocalDateTime'.(æÃ§ƒüÿÿÿÿ8üÁŞ¢İ/
+\
+java:S1128	"?Remove this unused import 'java.time.format.DateTimeFormatter'.(‰÷÷ª8ıÁŞ¢İ/
+d
+java:S11927"NDefine a constant instead of duplicating this literal "Invalid input" 3 times.(¹ÚÂÚ
+g	java:S117†"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÕÏ÷…
+f
+java:S2095ó"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Ü¤Û
+e
+java:S2095i"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(‡ü€ 
+k
+java:S2095¸"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(™ÜÈœşÿÿÿÿ
+k
+java:S2095å"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(‘ÃÉ°øÿÿÿÿ
+k
+java:S2095Ó"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(çüÁ–ûÿÿÿÿ
+f
+java:S2095Ÿ"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(µ×ªî
+f
+java:S2095‹"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(„¾Ã
+k
+java:S2095"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(˜şè‘úÿÿÿÿ
+e
+java:S2095""OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Õ•ú«
+e
+java:S2095;"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(÷Ûûû
+j
+java:S2095w"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Òªçøÿÿÿÿ
+e
+java:S2095•"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Óõ–%
+k
+java:S2095œ"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(§æ¶“ıÿÿÿÿ
+f
+java:S2095ê"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(üÚÎ
+e
+java:S2095X"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ï¼÷×
+f
+java:S2095»"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ï¼÷×
+k
+java:S2095†"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÈÄ‘ûüÿÿÿÿ
+k
+java:S2095¶"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(¢ Şñüÿÿÿÿ
+f
+java:S2095"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Ø”Ô¼
