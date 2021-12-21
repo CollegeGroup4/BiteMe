@@ -1,0 +1,21 @@
+Index: .idea/sonarlint/issuestore/index.pb
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/sonarlint/issuestore/index.pb b/.idea/sonarlint/issuestore/index.pb
+--- a/.idea/sonarlint/issuestore/index.pb	
++++ b/.idea/sonarlint/issuestore/index.pb	
+@@ -1,0 +1,11 @@
++
++9
++	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
++`
++0src/biteme/server/ServerPortFrameController.java,6\1\61debf1fb285bdbbb647186d51723cda5b11d5c6
++F
++src/logic/Options.java,b\6\b664aa4ca6e62f38b60574ed466fdccf2b5ef4fc
++O
++src/biteme/server/Response.java,a\8\a852c6f38f161818970956ef98a27f93d3518339
++C
++src/logic/Menu.java,0\d\0d1322b6a7967eeadb76d48b73785f312fc5da6e
+\ No newline at end of file

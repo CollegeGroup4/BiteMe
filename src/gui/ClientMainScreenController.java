@@ -38,10 +38,9 @@ public class ClientMainScreenController {
 
 	@FXML
 	private Button btnEXE;
-	
-    @FXML
-    private TextField serverId;
 
+	@FXML
+	private TextField serverId;
 
 	@FXML
 	void Exit(ActionEvent event) throws Exception {
@@ -75,42 +74,31 @@ public class ClientMainScreenController {
 //		ClientUI.chat = new ClientController("192.168.56.1", 5555);
 
 		FXMLLoader loader = new FXMLLoader();
-		//Here the client send ping to server to check if it's alive
+		// Here the client send ping to server to check if it's alive
 		sentToJson();
-		
-//		if (ChatClient.serverAns.get(0).equals("PORT"))
-//			getportFromServer(ChatClient.serverAns.get(1));
-//		
-		
-//		String p = getportText();
-//		if (p.trim().isEmpty()) {
-//			labelIncorect.setText("incorect");
-//
-//		} else {
-//			if (p.equals(port)) {
-//				((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-//				Stage primaryStage = new Stage();
-//				AnchorPane root = loader.load(getClass().getResource("/guiNew/Login.fxml").openStream());
-//				Scene scene = new Scene(root);
-//				primaryStage.setTitle("Login");
-//				primaryStage.setScene(scene);
-//				primaryStage.show();
-//			} else
-//				labelIncorect.setText("incorect");
-//		}
+		if (ChatClient.serverAns.getCode() == 200) {
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			AnchorPane root = loader.load(getClass().getResource("/guiNew/Login.fxml").openStream());
+			Scene scene = new Scene(root);
+			primaryStage.setTitle("Login");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} else
+			labelIncorect.setText("incorect host port / ip");
 	}
+
 	private void sentToJson() {
 		Gson gson = new Gson();
 		Request request = new Request();
 		request.setPath("/ping");
-//		JsonElement jsonUser = gson.toJsonTree(request);
-//		String jsonFile = gson.toJson(jsonUser);
 		try {
 			ClientUI.chat.accept(gson.toJson(request)); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
 			System.out.println("new ClientController didn't work");
 		}
 	}
+
 	public String getportText() {
 		return portText.getText();
 	}

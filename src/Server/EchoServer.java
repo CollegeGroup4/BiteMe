@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import client.Request;
@@ -54,7 +55,7 @@ public class EchoServer extends AbstractServer {
 	 */
 	public static ArrayList<String> orders = new ArrayList<String>();
 	public static Connection con;
-	public static Gson gson;
+	public static Gson gson = new Gson();
 	private final String GET = "GET";
 	private final String POST = "POST";
 	private final String PUT = "PUT";
@@ -74,15 +75,13 @@ public class EchoServer extends AbstractServer {
 	 * @param
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
-//		JsonObject m = gson.fromJson((String)msg, JsonObject.class);
-//		String method = gson.fromJson(m.get("method"), String.class);
-//		String path = gson.fromJson(m.get("path"), String.class);
-//		JsonObject body = gson.toJsonTree(m.get("body")).getAsJsonObject();
+		JsonObject body = null;
 		Request m = gson.fromJson((String)msg, Request.class);
 		String method = m.getMethod();
 		String path = m.getPath();
-		JsonObject body = (JsonObject) gson.toJsonTree(m.getBody());
-
+		if(m.getBody() != null) {
+			body = (JsonObject) gson.toJsonTree(m.getBody());
+		}
 		Response response = new Response();
 		System.out.println("Message received: " + path + " "+ method + " from " + client);
 		switch (path) {
@@ -91,7 +90,6 @@ public class EchoServer extends AbstractServer {
 			case "/ping":
 				clients.put(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
 				ServerPortFrameController.isAdded = true;
-				System.out.println("lalal========");
 				response.setCode(200);
 				response.setDescription("A connaction with the server has been established at port " + DEFAULT_PORT);
 				break;
@@ -303,7 +301,12 @@ public class EchoServer extends AbstractServer {
 				response.setDescription("Bad request");
 				break;
 		}
-			sendToAllClients(gson.toJson(response));
+			try {
+				client.sendToClient(gson.toJson(response));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	/**

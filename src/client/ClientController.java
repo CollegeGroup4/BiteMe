@@ -63,7 +63,6 @@ public class ClientController implements ChatIF
    */
   public void accept(Object message) 
   {
-	  System.out.println("maswggg" + (String)message);
 	  client.handleMessageFromClientUI(message);
   }
   
