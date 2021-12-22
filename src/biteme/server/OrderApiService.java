@@ -8,11 +8,22 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import logic.Account;
 import logic.Item;
 import logic.Options;
 import logic.Order;
+import test.tes.fg;
 
 /**
  * BiteMe
@@ -62,9 +73,7 @@ public class OrderApiService {
 			PreparedStatement postItem = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.item_in_menu_in_order (OrderNum, ItemID, Item_name, OptionalType, OptionalSpecify,"
 							+ "Amount)" + " VALUES (?,?,?,?,?,?);");
-
 			postItem.setInt(1, orderID);
-
 			for (Item temp : order.getItems()) {
 				postItem.setInt(2, temp.getItemID());
 				postItem.setInt(6, temp.getAmount());
@@ -133,6 +142,9 @@ public class OrderApiService {
 				return;
 			}
 		}
+		response.setCode(200);
+		response.setDescription("A new order has been successfuly added -> orderID:"+Integer.toString(orderID));
+		invoiceSender(order, orderID);
 	}
 
 	/**
@@ -478,7 +490,7 @@ public class OrderApiService {
 		return;
 	}
 	
-	private static String invoiceParser(Order order, int orderID) {
+	private static void invoiceSender(Order order, int orderID) {
 		PreparedStatement getAccount;
 		ResultSet rs;
 		StringBuilder invoice = new StringBuilder();
@@ -524,6 +536,45 @@ public class OrderApiService {
 			invoice.append("\nreceiver name: " + order.getShippment().getReceiver_name());
 			invoice.append("\nreceiver phone number: " + order.getShippment().getPhone());
 		}
-		return invoice.toString();
+		try {
+			sendMail(account.getEmail(),"BiteMe Order ID:"+Integer.toString(orderID),invoice.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+    public static void sendMail(String recepient, String subject, String message) throws Exception{
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+
+        final String myAccountEmail = System.getenv("MyEmail");
+        final String password =  System.getenv("MyPassEmail");
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(myAccountEmail, password);
+            }
+        });
+        Message msg = prepareMessage(session, myAccountEmail, recepient, subject, message);
+        javax.mail.Transport.send(msg);
+        System.out.println("Invoice was Sent successfully to "+ recepient);
+    }
+
+    private static Message prepareMessage(Session session, String myEmail, String recepient, String subject, String message) {
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress("BITEME_SERVER"));
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient));
+            msg.setSubject(subject);
+            msg.setText(message);
+            return msg;
+        } catch (Exception e) {
+            Logger.getLogger(OrderApiService.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
 }
