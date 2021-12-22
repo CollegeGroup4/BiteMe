@@ -13,6 +13,17 @@ public class Item {
 	private String photo;
 	private int amount;
 	
+	@Override
+	public String toString() {
+		String temp = "";
+		StringBuilder invoice = new StringBuilder();
+		for (Options option : options) {
+			temp += option.getOption_category() +":"+option.getSpecify_option()+"\n\t\t    ";
+		}
+		invoice.append(name +price+"\t\t"+Integer.toString(amount)+"\t\t"+temp);
+		return invoice.toString();
+	}
+	
 	public Item(String category, String subcategory, int itemID, int restaurantID, String name, float price,
 			String description, String ingrediants, Options[] options, String photo, int amount) {
 		this.category = category;

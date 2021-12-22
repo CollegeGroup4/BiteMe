@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import logic.Account;
 import logic.Item;
 import logic.Options;
 import logic.Order;
@@ -475,5 +476,54 @@ public class OrderApiService {
 		response.setCode(200);
 		response.setDescription("Success in updating credit for: " + UserName);
 		return;
+	}
+	
+	private static String invoiceParser(Order order, int orderID) {
+		PreparedStatement getAccount;
+		ResultSet rs;
+		StringBuilder invoice = new StringBuilder();
+		String temp;
+		Account account = null;
+		try {
+			getAccount = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ?;");
+			getAccount.setString(1, order.getUserName());
+			getAccount.execute();
+			rs = getAccount.getResultSet();
+			if (rs.next()) {
+				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID),
+						rs.getString(QueryConsts.ACCOUNT_USER_NAME), rs.getString(QueryConsts.ACCOUNT_PASSWORD),
+						rs.getString(QueryConsts.ACCOUNT_FIRST_NAME), rs.getString(QueryConsts.ACCOUNT_LAST_NAME),
+						rs.getString(QueryConsts.ACCOUNT_EMAIL), rs.getString(QueryConsts.ACCOUNT_ROLE),
+						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
+						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
+						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
+						rs.getInt(QueryConsts.ACCOUNT_DEBT), rs.getString(QueryConsts.ACCOUNT_W4C));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		//TODO Use the item toString for it
+		temp = "Hi!" + account.getFirstName() + "\n\n\n Thank you for your purchase from BiteMe\n INVOICE ID: " + Integer.toString(orderID);
+		invoice.append(temp);
+		invoice.append("\n\nYour Order inforamation:\n\n");
+		invoice.append("Bill To: " + account.getEmail() + "\nOrder ID: " + Integer.toString(orderID));
+		invoice.append("\n\nRestaurant Name: " + order.getRestaurantName() +"\nOrder Date: " + order.getTime_taken()
+						+"\nType of Order: " + order.getType_of_order());
+		invoice.append("Here is what you ordered: \n\n");
+		invoice.append("Name\t\tprice\t\tQuantity\t\tOptions");
+		for (Item item : order.getItems()) {
+			invoice.append(item.toString());
+		}
+		invoice.append("Total ->: "+ Double.toString(order.getCheck_out_price()));
+		if(order.getShippment() != null) {
+			invoice.append("\nShipment information: \n\n");
+			invoice.append("\nwork place / address: " + order.getShippment().getWork_place() + order.getShippment().getAddress());
+			invoice.append("\ndelivery type: " + order.getShippment().getDelivery());
+			invoice.append("\nreceiver name: " + order.getShippment().getReceiver_name());
+			invoice.append("\nreceiver phone number: " + order.getShippment().getPhone());
+		}
+		return invoice.toString();
 	}
 }
