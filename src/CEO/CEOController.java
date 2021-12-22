@@ -1,4 +1,4 @@
-package branchManager;
+package CEO;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,8 +24,8 @@ import javafx.stage.Stage;
 import logic.Account;
 
 
-public class BranchManagerController implements Initializable {
-	public static Account branchManager;
+public class CEOController implements Initializable {
+	public static Account CEO;
 
 	@FXML
 	private HBox Nav;
@@ -79,7 +79,6 @@ public class BranchManagerController implements Initializable {
 		}
 	}
 
-
 	@FXML
 	void logout(ActionEvent event) {
 		try {
@@ -96,8 +95,7 @@ public class BranchManagerController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-
-
+	
     @FXML
     void editPersonalInfo(ActionEvent event) {
     	try {
@@ -114,7 +112,23 @@ public class BranchManagerController implements Initializable {
 			e.printStackTrace();
 		}
     }
-
+    @FXML
+	void viewReports(ActionEvent event) {
+    	try {
+			FXMLLoader loader = new FXMLLoader();
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			AnchorPane root;
+			root = loader.load(getClass().getResource("/CEO/ViewReportsPage.fxml").openStream());
+			Scene scene = new Scene(root);
+			primaryStage.setTitle("CEO - View Report");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+    
 	@FXML
 	void createReports(ActionEvent event) {
 
@@ -174,34 +188,10 @@ public class BranchManagerController implements Initializable {
 		}
 	}
 
-	@FXML
-	void viewReports(ActionEvent event) {
-
-	}
+	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		lableHello.setText("Hello, "  + BranchManagerController.branchManager.getUserName());
-		
-//		String[] listButtons;
-//		 VBox vBoxManu;
-//		Navigation_SidePanelController sidePanelController;
-//
-//		System.out.println("lala1");
-//		listButtons = new String[7];
-//		listButtons[0] = "Orde Food";
-//		listButtons[1] = "View reports";
-//		listButtons[2] = "Creat new report";
-//		listButtons[3] = "Open new account";
-//		listButtons[4] = "Register & Approval  supplier";
-//		listButtons[5] = "Edit personal info";
-//		listButtons[6] = "Exit";
-//		JFXButton button;
-//		for (int i = 0; i < listButtons.length; i++) {
-//			button = new JFXButton(listButtons[i]);
-//			vBoxManu.getChildren().add(button);
-//		}
-//		sidePanelController.setvBoxManu(vBoxManu);
-//		System.out.println("lala2");
+		lableHello.setText("Hello, "  + CEOController.CEO.getUserName());
 	}
 }

@@ -29,7 +29,7 @@
                   <TableColumn fx:id="tableColStatus" minWidth="0.0" prefWidth="110.0" text="status" />
                </columns>
             </TableView>
-            <Button fx:id="btnBackBM" layoutX="26.0" layoutY="603.0" mnemonicParsing="false" onAction="#backBM" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
+            <Button layoutX="26.0" layoutY="603.0" mnemonicParsing="false" onAction="#backBM" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
@@ -90,13 +90,19 @@
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <Label fx:id="labelEmployerName" layoutX="183.0" layoutY="68.0" prefHeight="27.0" prefWidth="100.0" text="employer's name:" />
+                        <Label fx:id="labelEmployerName" layoutX="183.0" layoutY="68.0" prefHeight="27.0" prefWidth="157.0" text="employer's name:">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Label>
                         <Label layoutX="47.0" layoutY="95.0" prefHeight="27.0" prefWidth="27.0" text="ID:">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <Label fx:id="labelEmployerID" layoutX="83.0" layoutY="96.0" prefHeight="27.0" prefWidth="100.0" text="ID:" />
+                        <Label fx:id="labelEmployerID" layoutX="83.0" layoutY="96.0" prefHeight="27.0" prefWidth="220.0" text="ID:">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Label>
                         <Label layoutX="48.0" layoutY="123.0" prefHeight="27.0" prefWidth="114.0" text="business name:">
                            <font>
                               <Font name="System Bold" size="16.0" />
@@ -107,7 +113,10 @@
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <Label fx:id="labelBusinessName" layoutX="166.0" layoutY="123.0" prefHeight="27.0" prefWidth="100.0" text="business name:" />
+                        <Label fx:id="labelBusinessName" layoutX="166.0" layoutY="123.0" prefHeight="27.0" prefWidth="178.0" text="business name:">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Label>
                         <Button fx:id="btnDecline" layoutX="201.0" layoutY="189.0" mnemonicParsing="false" onAction="#decline" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="Decline">
                            <font>
                               <Font name="Berlin Sans FB Demi Bold" size="13.0" />
@@ -139,12 +148,12 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
+            <Hyperlink onAction="#home" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
-            <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+            <Button mnemonicParsing="false" onAction="#logout" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>

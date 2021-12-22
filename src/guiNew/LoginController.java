@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import CEO.CEOController;
 import Server.Response;
 import branchManager.BranchManagerController;
 import client.ChatClient;
@@ -25,7 +26,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import logic.Account;
 import logic.BranchManager;
-
 
 public class LoginController {
 	// private DB db = new DB(5555);
@@ -57,21 +57,33 @@ public class LoginController {
 		checkTextFiled(textFieldPassword, lableErrorMag);
 		String username = textFieldUsername.getText();
 		String password = textFieldPassword.getText();
-		sentToJson(username, password);
-		Account account=null;// = response();
+//		sentToJson(username, password);
+		Account account = null;// = response();
 		// need to get response from the server hear!
 		if (flag) {
 			try {
-				String role ="branch manager"; //account.getRole();
+				String role = "branch manager"; // account.getRole();
 				if (role != "") {
 					FXMLLoader loader = new FXMLLoader();
 					((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 					Stage primaryStage = new Stage();
 					AnchorPane root = null;
 					switch (role) {
+					case "CEO":
+						System.out.println("go to CEO");
+//						BranchManagerController.branchManager = account;
+						CEOController.CEO = new Account(0, "TalChen", "123", "Tal-Chen",
+								"Ben-eliyahu", "email@email", "CEO", "055555555", "Active", true, 0, "north",
+								0, "w4c-a");
+						root = loader
+								.load(getClass().getResource("/CEO/CEOPage.fxml").openStream());
+						break;
 					case "branch manager":
 						System.out.println("go to barnch manager");
-						BranchManagerController.branchManager = account;
+//						BranchManagerController.branchManager = account;
+						BranchManagerController.branchManager = new Account(0, "TalChen", "123", "Tal-Chen",
+								"Ben-eliyahu", "email@email", "branch manager", "055555555", "Active", true, 0, "north",
+								0, "w4c-a");
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;

@@ -207,12 +207,12 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink fx:id="btnHome" onAction="#homelogout" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
+            <Hyperlink fx:id="btnHome" onAction="#home" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
-            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#homelogout" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>

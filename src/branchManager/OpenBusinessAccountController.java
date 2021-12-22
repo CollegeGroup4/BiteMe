@@ -135,8 +135,9 @@ public class OpenBusinessAccountController implements Initializable {
 		});
 	}
 
+
 	@FXML
-	void homelogout(ActionEvent event) {
+	void logout(ActionEvent event) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -151,6 +152,24 @@ public class OpenBusinessAccountController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+
+	@FXML
+	void home(ActionEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			AnchorPane root;
+			root = loader.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+			Scene scene = new Scene(root);
+			primaryStage.setTitle("Branch manager");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	@FXML
 	void backOpenAccount(ActionEvent event) {
