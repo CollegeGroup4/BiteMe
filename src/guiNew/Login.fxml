@@ -118,11 +118,6 @@
                   <Insets right="30.0" />
                </padding>
             </AnchorPane>
-            <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="72.0" style="-fx-border-color: #FFF3B0; -fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="back" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
-               </font>
-            </Button>
          </children>
       </HBox>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="9.0" prefHeight="102.0" prefWidth="779.0" spacing="50.0" style="-fx-background-radius: 50px;">
@@ -135,7 +130,12 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink prefHeight="27.0" prefWidth="74.0" text="Home" textFill="WHITE">
+            <Hyperlink onAction="#Exit" prefHeight="27.0" prefWidth="74.0" text="Exit" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink onAction="#home" prefHeight="27.0" prefWidth="74.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>

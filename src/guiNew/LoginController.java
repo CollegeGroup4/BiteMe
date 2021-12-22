@@ -1,6 +1,8 @@
 package guiNew;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -57,12 +59,12 @@ public class LoginController {
 		checkTextFiled(textFieldPassword, lableErrorMag);
 		String username = textFieldUsername.getText();
 		String password = textFieldPassword.getText();
-//		sentToJson(username, password);
-		Account account = null;// = response();
+		sentToJson(username, password);
+		Account account = response();
 		// need to get response from the server hear!
 		if (flag) {
 			try {
-				String role = "branch manager"; // account.getRole();
+				String role = account.getRole(); //= "CEO";
 				if (role != "") {
 					FXMLLoader loader = new FXMLLoader();
 					((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -72,11 +74,9 @@ public class LoginController {
 					case "CEO":
 						System.out.println("go to CEO");
 //						BranchManagerController.branchManager = account;
-						CEOController.CEO = new Account(0, "TalChen", "123", "Tal-Chen",
-								"Ben-eliyahu", "email@email", "CEO", "055555555", "Active", true, 0, "north",
-								0, "w4c-a");
-						root = loader
-								.load(getClass().getResource("/CEO/CEOPage.fxml").openStream());
+						CEOController.CEO = new Account(0, "TalChen", "123", "Tal-Chen", "Ben-eliyahu", "email@email",
+								"CEO", "055555555", "Active", true, 0, "north", 0, "w4c-a");
+						root = loader.load(getClass().getResource("/CEO/CEOPage.fxml").openStream());
 						break;
 					case "branch manager":
 						System.out.println("go to barnch manager");
@@ -122,28 +122,28 @@ public class LoginController {
 		request.setPath("/users/login");
 		request.setMethod("GET");
 		request.setBody(gson.toJson(jsonElem));
-		JsonElement jsonUser = gson.toJsonTree(request);
+//		JsonElement jsonUser = gson.toJsonTree(request);
 
-		String jsonFile = gson.toJson(jsonUser);
+		String jsonUser = gson.toJson(request);
 //    	System.out.println("jsonFile : "+jsonFile);
 		try {
-			ClientUI.chat.accept(jsonFile); // in here will be DB ask for restaurant id
+			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
 			System.out.println("new ClientController didn't work");
 		}
 	}
 
-//	private Account response() {
-//		Gson gson = new Gson();
-//		Response response = gson.fromJson(ChatClient.serverAns, Response.class);
-//		if (response.getCode() != 200 && response.getCode() != 201) 
-//			lableErrorMag.setText(response.getDescription());// error massage
-//		
-//		System.out.println("-->>"+response.getDescription()); // Description from server
-//		JsonElement jsonFile = gson.toJsonTree(response.getBody());
-//		Account account = gson.fromJson(jsonFile, Account.class);
-//		return account;
-//	}
+	private Account response() {
+		Gson gson = new Gson();
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) 
+			lableErrorMag.setText(response.getDescription());// error massage
+		
+		System.out.println("-->>"+response.getDescription()); // Description from server
+		JsonElement jsonFile = gson.toJsonTree(response.getBody());
+		Account account = gson.fromJson(jsonFile, Account.class);
+		return account;
+	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {
 		if (textField.getText().equals("")) {
@@ -154,4 +154,35 @@ public class LoginController {
 		}
 	}
 
+	@FXML
+	void Exit(ActionEvent event) throws UnknownHostException {
+		System.out.println("exit client Tool");
+		String[] ipHostName = new String[3];
+		ipHostName[0] = "EXIT";
+		ipHostName[1] = InetAddress.getLocalHost().getHostName();
+		ipHostName[2] = InetAddress.getLocalHost().getHostAddress();
+		try {
+			ClientUI.chat.accept(ipHostName);
+		} catch (NullPointerException e) {
+			System.out.println("new ClientController didn't work");
+		}
+		System.exit(0);
+	}
+
+	@FXML
+	void home(ActionEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			AnchorPane root;
+			root = loader.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+			Scene scene = new Scene(root);
+			primaryStage.setTitle("Branch manager");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

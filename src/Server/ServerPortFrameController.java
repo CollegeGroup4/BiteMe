@@ -46,7 +46,7 @@ public class ServerPortFrameController implements Initializable {
 	private Button btnDone = null;
 
 	@FXML
-	private TextField lblIP = new TextField();// 192.168.56.1
+	private TextField lblIP = new TextField();// 192.168.14.27
 
 	@FXML
 	private TextField lblPort = new TextField();// 5555

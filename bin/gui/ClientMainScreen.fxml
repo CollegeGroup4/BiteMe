@@ -31,6 +31,6 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="serverId" layoutX="177.0" layoutY="84.0" prefHeight="25.0" prefWidth="121.0" promptText="192.168.56.1" text="192.168.56.1" />
+      <TextField fx:id="serverId" layoutX="177.0" layoutY="84.0" prefHeight="25.0" prefWidth="121.0" promptText="192.168.56.1" text="192.168.14.27" />
    </children>
 </AnchorPane>
