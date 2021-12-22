@@ -14,7 +14,6 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import client.Request;
-import donotenterdrinksorfood.Supplier;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,7 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -34,7 +32,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.Account;
-import logic.BusinessAccount;
 import logic.Restaurant;
 
 public class RegisterationApprovalSupplierController implements Initializable {
@@ -161,21 +158,22 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+
 	@FXML
 	void home(ActionEvent event) {
-	try {
-		FXMLLoader loader = new FXMLLoader();
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		Stage primaryStage = new Stage();
-		AnchorPane root;
-		root = loader.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Branch manager");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			AnchorPane root;
+			root = loader.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+			Scene scene = new Scene(root);
+			primaryStage.setTitle("Branch manager");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
@@ -220,8 +218,9 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			String restaurantType = textFieldRestaurantType.getText();
 			String restaurantAddress = textFieldRestaurantAddress.getText();
 
-			Restaurant restaurant = new Restaurant(supplierUserame, false, BranchManagerController.branchManager.getUserID(),
-					restaurantName, BranchManagerController.branchManager.getArea(), restaurantType, restaurantAddress, photo);
+			Restaurant restaurant = new Restaurant(0, false, BranchManagerController.branchManager.getUserID(),
+					restaurantName, BranchManagerController.branchManager.getArea(), restaurantType, supplierUserame,
+					photo, restaurantAddress, "");
 			Account supplier = new Account(0, supplierUserame, null, null, null, null, "Supplier", null, "status",
 					false, BranchManagerController.branchManager.getUserID(),
 					BranchManagerController.branchManager.getArea(), 0, null);

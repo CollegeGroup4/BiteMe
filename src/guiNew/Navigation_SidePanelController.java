@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 
 import com.jfoenix.controls.JFXButton;
 
+import client.ClientUI;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

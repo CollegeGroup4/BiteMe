@@ -34,9 +34,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import logic.Account;
-import logic.CardDetails;
 import logic.PrivateAccount;
-import logic.User;
 
 public class OpenPrivateAccountController implements Initializable {
 	public static Boolean isEdit = false;
@@ -221,7 +219,6 @@ public class OpenPrivateAccountController implements Initializable {
 				int id = Integer.parseInt(textFieldID.getText());
 				String status = comboBoxStatus.getValue() == null ? "Active" : comboBoxStatus.getValue();
 
-				CardDetails cardDetails = null;
 				String cardNum = null, cvv = null, expDate = null;
 				if (!textFieldCardNum.getText().equals("")) {
 					validField = true;

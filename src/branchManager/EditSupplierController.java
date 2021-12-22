@@ -14,7 +14,6 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import client.Request;
-import donotenterdrinksorfood.Supplier;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -193,9 +192,9 @@ public class EditSupplierController implements Initializable {
 			String restaurantType = textFieldRestaurantType.getText();
 			String restaurantAddress = textFieldRestaurantAddress.getText();
 
-			Restaurant restaurant = new Restaurant(supplierUserame, false,
-					BranchManagerController.branchManager.getUserID(), restaurantName,
-					BranchManagerController.branchManager.getArea(), restaurantType, restaurantAddress, photo);
+			Restaurant restaurant = new Restaurant(0, false, BranchManagerController.branchManager.getUserID(),
+					restaurantName, BranchManagerController.branchManager.getArea(), restaurantType, supplierUserame,
+					photo, restaurantAddress, "");
 			Account supplier = new Account(0, supplierUserame, null, null, null, null, "Supplier", null, "status",
 					false, BranchManagerController.branchManager.getUserID(),
 					BranchManagerController.branchManager.getArea(), 0, null);

@@ -14,7 +14,6 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import client.Request;
-import donotenterdrinksorfood.Supplier;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,10 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import logic.Account;
 import logic.BusinessAccount;
-import logic.CardDetails;
-import logic.PrivateAccount;
 
 public class OpenBusinessAccountController implements Initializable {
 	public static Boolean isEdit = false;
