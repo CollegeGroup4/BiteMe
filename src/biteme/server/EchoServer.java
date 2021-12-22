@@ -74,10 +74,13 @@ public class EchoServer extends AbstractServer {
 	 * @param
 	 */
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
+		JsonObject body = null;
 		Request m = gson.fromJson((String)msg, Request.class);
 		String method = m.getMethod();
 		String path = m.getPath();
-		JsonObject body = (JsonObject) gson.toJsonTree(m.getBody());
+		if(m.getBody() != null) {
+			body = (JsonObject) gson.toJsonTree(m.getBody());
+		}
 		Response response = new Response();
 		System.out.println("Message received: " + path + " "+ method + " from " + client);
 		switch (path) {
