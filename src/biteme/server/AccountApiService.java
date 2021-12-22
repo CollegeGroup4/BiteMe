@@ -119,14 +119,13 @@ public class AccountApiService {
 	 * This can only be done by the logged in Account.
 	 *??????????????????????????????????????????????????????????????????????????????????????????????????????
 	 */
-	public static void deleteAccount(String userName, int UserID, Response response) {
+	public static void deleteAccount(String userName, Response response) {
 		Account account = null;
 		try {
 			PreparedStatement deleteAccount = EchoServer.con.prepareStatement(
-					"DELETE FROM accounts biteme.account WHERE accounts.UserName = ? AND accounts.UserID = ?;");
+					"DELETE FROM accounts biteme.account WHERE accounts.UserName = ?;");
 			deleteAccount.setString(1, userName);
 			// Its the first userName that he had so the test is in users table on login
-			deleteAccount.setInt(2, UserID);
 			deleteAccount.execute();
 			deleteAccount.getResultSet();
 		} catch (SQLException e) {
@@ -136,7 +135,7 @@ public class AccountApiService {
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in deleting account " + UserID);
+		response.setDescription("Success in deleting account " + userName);
 		response.setBody(null);
 	}
 

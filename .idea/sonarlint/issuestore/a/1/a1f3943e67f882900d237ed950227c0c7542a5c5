@@ -1,0 +1,36 @@
+
+\
+java:S1118":Add a private constructor to hide the implicit public one.(ÛÑ‹üÿÿÿÿ8óÔçúÜ/
+L
+java:S1481"*Remove this unused "order" local variable.(¾¯˜¥üÿÿÿÿ8ıÔçúÜ/
+N
+java:S1135Z"2Complete the task associated to this TODO comment.(ÂÃÉ8‚ÕçúÜ/
+\
+java:S1854h"?Remove this useless assignment to local variable "restaurants".(É•ÓÊ8ƒÕçúÜ/
+M
+java:S1481h"0Remove this unused "restaurants" local variable.(É•ÓÊ8„ÕçúÜ/
+J	java:S108")Either remove or fill this block of code.(Ú¼›ßşÿÿÿÿ8•ÕçúÜ/
+U
+java:S1135É"2Complete the task associated to this TODO comment.(µ¹ïÓùÿÿÿÿ8¤ÕçúÜ/
+‘
+java:S1192z"oDefine a constant instead of duplicating this literal "accounts.UserName = ? and accounts.UserID = ?;" 3 times.(µÛóÄÿÿÿÿÿ8§ÕçúÜ/
+“
+java:S1192y"vDefine a constant instead of duplicating this literal "UPDATE biteme.account AS accounts SET Role = ? WHERE " 3 times.(ÅÂ½8¨ÕçúÜ/
+q
+java:S2095j"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(½ÊòĞúÿÿÿÿ8’ÖçúÜ/
+m
+java:S2095¯"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(¯ôÕ8’ÖçúÜ/
+l
+java:S2095y"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÅÂ½8’ÖçúÜ/
+m
+java:S2095Û"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(¯ôÕ8’ÖçúÜ/
+m
+java:S2095Ÿ"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÅÂ½8’ÖçúÜ/
+m
+java:S2095Ë"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÅÂ½8‚ÖçúÜ/
+q
+java:S2095="OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(àõ¶ùÿÿÿÿ8òÕçúÜ/
+q
+java:S2095"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(àõ¶ùÿÿÿÿ8’ÖçúÜ/
+m
+java:S2095"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(¯ôÕ8’ÖçúÜ/

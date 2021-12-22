@@ -1,0 +1,71 @@
+
+P
+java:S1118":Add a private constructor to hide the implicit public one.(ú¬‰
+O
+java:S2864b"4Iterate over the "entrySet" instead of the "keySet".(¨Ó‚•şÿÿÿÿ
+K
+java:S3020”"/Pass "new Options[0]" as argument to "toArray".(ÿ©æºûÿÿÿÿ
+?	java:S108Ã")Either remove or fill this block of code.(É®£
+8
+java:S1659Ö"!Declare "rs2" on a separate line.(·«¸´
+W	java:S125„"<This block of commented-out lines of code should be removed.(¯’¥…ıÿÿÿÿ
+K
+java:S3020’"4Pass "new item_in_menu[0]" as argument to "toArray".(îİ¬›
+C
+java:S1125²"'Remove the unnecessary boolean literal.(úÑŞšşÿÿÿÿ
+C
+java:S1125½"'Remove the unnecessary boolean literal.(úÑŞšşÿÿÿÿ
+?	java:S108ñ")Either remove or fill this block of code.(É®£
+D	java:S108˜")Either remove or fill this block of code.(Ú¼›ßşÿÿÿÿ
+D	java:S108¸")Either remove or fill this block of code.(Ú¼›ßşÿÿÿÿ
+2
+java:S3626"Remove this redundant jump.(ûÁİ…
+Q
+java:S1141¾"5Extract this nested try block into a separate method.(÷©°‹şÿÿÿÿ
+Q
+java:S1141ì"5Extract this nested try block into a separate method.(÷©°‹şÿÿÿÿ
+Q
+java:S1141”"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+g	java:S117Ù"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ë°Û“
+k
+java:S2095¶"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ŒëœŠüÿÿÿÿ
+f
+java:S2095º"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(£ÁŠ 
+f
+java:S2095ç"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Å“Ä³
+f
+java:S2095‹"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Şæ€¤
+j
+java:S2095~"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ô––¥üÿÿÿÿ
+f
+java:S2095×"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(æÉæœ
+k
+java:S2095·"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Øü¢åÿÿÿÿÿ
+k
+java:S2095"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(è€óÒıÿÿÿÿ
+e
+java:S2095'"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(¯ôÕ
+f
+java:S2095ı"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(»ıšŠ
+k
+java:S2095í"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(‰½ÿÿÿÿÿ
+f
+java:S2095ì"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Ü¤Û
+k
+java:S2095­"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ªÍ©õşÿÿÿÿ
+e
+java:S2095T"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Şæ€¤
+f
+java:S2095º"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(œ½¾½
+k
+java:S2095©"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(û¢Ÿıÿÿÿÿ
+k
+java:S2095…"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ûÊˆèüÿÿÿÿ
+f
+java:S2095Š"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(òÕì¾
+f
+java:S2095´"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(’®Ö
+k
+java:S2095Ñ"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(æéÓ˜ûÿÿÿÿ
+f
+java:S2095à"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(„†„Ø

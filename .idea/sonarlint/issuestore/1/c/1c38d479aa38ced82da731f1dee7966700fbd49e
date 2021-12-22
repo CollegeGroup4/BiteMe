@@ -1,0 +1,35 @@
+
+o	java:S116	"URename this field "time_taken" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Š¥˜¸ùÿÿÿÿ
+n	java:S116
+"ZRename this field "check_out_price" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ö®É3
+r	java:S116"XRename this field "required_time" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¬îæØüÿÿÿÿ
+r	java:S116"XRename this field "type_of_order" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(›ÉÎÛıÿÿÿÿ
+x	java:S116"cRename this field "discount_for_early_order" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ùü†
+r	java:S116"XRename this field "approved_time" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—¥£Şúÿÿÿÿ
+u
+java:S4144"^Update this method so that its implementation is not identical to "setIsApproved" on line 108.(Í¯‡ù
+c	java:S100?"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(÷øòå
+c	java:S100B"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(’¸©£
+h	java:S100E"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(íç‡úÿÿÿÿ
+c	java:S100F"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(³ÕìÒ
+h	java:S100I"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œ§•Ìùÿÿÿÿ
+h	java:S100R"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ï¸©Áÿÿÿÿÿ
+h	java:S100U"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‹ğÖ½øÿÿÿÿ
+c	java:S100X"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(è•¹õ
+h	java:S100c"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÄĞÈŞûÿÿÿÿ
+h	java:S100f"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ø‹Àûÿÿÿÿ
+c	java:S100{"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ã¨ŒŸ
+c	java:S100~"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ôÿùó
+W	java:S107 "BConstructor has 15 parameters, which is greater than 7 authorized.(©ñ†
+f	java:S117 "QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(©ñ†
+f	java:S117 "QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(©ñ†
+f	java:S117 "QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(©ñ†
+f	java:S117 "QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(©ñ†
+k	java:S117!"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ó…ıéÿÿÿÿÿ
+k	java:S117!"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ó…ıéÿÿÿÿÿ
+f	java:S117B"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(’¸©£
+f	java:S117F"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(³ÕìÒ
+k	java:S117R"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ï¸©Áÿÿÿÿÿ
+f	java:S117X"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(è•¹õ
+k	java:S117f"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ø‹Àûÿÿÿÿ
+f	java:S117~"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ôÿùó

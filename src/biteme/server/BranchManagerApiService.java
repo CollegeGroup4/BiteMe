@@ -18,8 +18,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import com.twilio.twiml.voice.Echo;
-
 import logic.*;
 
 /**
@@ -42,7 +40,6 @@ public class BranchManagerApiService {
 		ResultSet rs;
 		Map<String, String> ordersByRestaurantID = new HashMap<>();
 		int restaurantID;
-		Order order = null;
 		try {
 			stmt = EchoServer.con.prepareStatement(
 					"SELECT * FROM restaurants biteme.restaurant WHERE " + "restaurants.BranchManagerID = ?");
@@ -51,7 +48,7 @@ public class BranchManagerApiService {
 			rs = stmt.getResultSet();
 			while (rs.next()) {
 				restaurantID = rs.getInt(1);
-				OrderApiService.allOrders(restaurantID, response);
+				OrderApiService.AllOrdersByRestaurantID(restaurantID, response);
 				ordersByRestaurantID.put(Integer.toString(restaurantID), (String) response.getBody());
 			}
 		} catch (SQLException e) {
@@ -122,7 +119,6 @@ public class BranchManagerApiService {
 			Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
-		ArrayList<Restaurant> restaurants = new ArrayList<>();
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT restaurants.RestaurantName FROM "
 					+ "restaurants biteme.restaurant WHERE restaurants.UserName = ? and restaurants.RestaurantName = ?;");
@@ -222,8 +218,19 @@ public class BranchManagerApiService {
 	public static void registerBusinessAccount(BusinessAccount body, Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
-		// TODO check for approved business
 		try {
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.employees WHERE Name = ? AND isApproved = ?;");
+			stmt.setString(1, body.getBusinessName());
+			stmt.setBoolean(2, true);
+			stmt.execute();
+			rs = stmt.getResultSet();
+			if(rs.getFetchSize() == 0) {
+				response.setBody(null);
+				response.setCode(401);
+				response.setDescription("Employee didn't get approvel yet!");
+				return;
+			}
+			rs.close();
 			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account AS accounts SET Role = ? WHERE "
 					+ "accounts.UserName = ? and accounts.UserID = ?;");
 			stmt.setString(1, "client");
@@ -234,6 +241,7 @@ public class BranchManagerApiService {
 			if (rs.getFetchSize() == 0) {
 				throw new SQLException("Couldn't update " + body.getUserName() + " as " + body.getRole(), "400", 400);
 			}
+			rs.close();
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setBody(e.getMessage());
@@ -312,7 +320,7 @@ public class BranchManagerApiService {
 					}
 					header = "Revenue Report for restaurant id:" + j + " Total sales: " + total;
 					total = 0.0;
-					fromDataSetToReportImage(dataset, i, now.format(year) + now.format(month), j, "$",
+					fromDataSetToReportImage(dataset, "Sales", i, now.format(year) + now.format(month), j, "$",
 							"DayOfTheMonth: " + now.format(month), header);
 				}
 			}
@@ -322,7 +330,7 @@ public class BranchManagerApiService {
 		}
 
 	}
-	
+
 	public static void getReportForRestaurantByCategory() {
 		ResultSet rs, rs1;
 		ArrayList<Integer> b_m_id = new ArrayList<>();
@@ -332,7 +340,6 @@ public class BranchManagerApiService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyy");
 		DateTimeFormatter month = DateTimeFormatter.ofPattern("MM");
-		DateTimeFormatter day = DateTimeFormatter.ofPattern("dd");
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime orderTime;
 		DefaultCategoryDataset dataset;
@@ -364,29 +371,30 @@ public class BranchManagerApiService {
 					getOrders.setInt(1, j);
 					getOrders.execute();
 					rs = getOrders.getResultSet();
-					PreparedStatement getItems = EchoServer.con.prepareStatement("SELECT IIM.Course, I.Category FROM biteme.item_in_menu_in_order IIMIO, "
-							+ "biteme.item_in_menu IIM, biteme.item I WHERE IIMIO.OrderNum = ? AND IIMIO.ItemID = IIM.ItemID AND IIM.RestaurantID = ?"
-							+ "AND IIM.ItemID = I.ItemID AND I.RestaurantID = ?;");
+					PreparedStatement getItems = EchoServer.con
+							.prepareStatement("SELECT IIM.Course, I.Category FROM biteme.item_in_menu_in_order IIMIO, "
+									+ "biteme.item_in_menu IIM, biteme.item I WHERE IIMIO.OrderNum = ? AND IIMIO.ItemID = IIM.ItemID AND IIM.RestaurantID = ?"
+									+ "AND IIM.ItemID = I.ItemID AND I.RestaurantID = ?;");
 					getItems.setInt(2, j);
 					getItems.setInt(3, j);
 					while (rs.next()) {
 						orderTime = LocalDateTime.parse(rs.getString(1), formatter);
 						if (orderTime.format(year) == now.format(year))
 							if (orderTime.format(month) == now.format(month)) {
-								
+
 								getItems.setInt(1, rs.getInt(5));
 								getItems.execute();
 								rs1 = getItems.getResultSet();
-								while(rs1.next()) {
+								while (rs1.next()) {
 									dataset.addValue(1, rs1.getString(2), rs1.getString(1));
-									total+=1;
+									total += 1;
 								}
 								rs1.close();
 							}
 					}
 					header = "Items in orders Report for restaurant id:" + j + " Total sales: " + total;
 					total = 0;
-					fromDataSetToReportImage(dataset, i, now.format(year) + now.format(month), j, "Amount",
+					fromDataSetToReportImage(dataset, "Items", i, now.format(year) + now.format(month), j, "Amount",
 							"Course", header);
 				}
 			}
@@ -396,14 +404,76 @@ public class BranchManagerApiService {
 		}
 
 	}
-	
 
-	private static void fromDataSetToReportImage(DefaultCategoryDataset dataset, int BranchManagerID,
-			String monthAndYear, int restaurantID, String y, String x, String header) {
+	public static void getReportForRestaurantPerformence() {
+		ResultSet rs, rs1;
+		ArrayList<Integer> b_m_id = new ArrayList<>();
+		String header = new String(), column = new String(), ResName = new String();
+		int total = 0, ResID;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyy");
+		DateTimeFormatter month = DateTimeFormatter.ofPattern("MM");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime orderApproved;
+		DefaultCategoryDataset dataset;
+		try {
+
+			PreparedStatement getBMId = EchoServer.con
+					.prepareStatement("SELECT BranchManagerID FROM biteme.branch_manager;");
+			getBMId.execute();
+			rs = getBMId.getResultSet();
+			while (rs.next()) {
+				b_m_id.add(rs.getInt(1));
+			}
+			for (Integer i : b_m_id) {
+				rs.close();
+				PreparedStatement getRestaurants = EchoServer.con.prepareStatement(
+						"SELECT DISTINCT RestaurantID, RestaurantName FROM biteme.restaurant WHERE BranchManagerID = ?;");
+				getRestaurants.setInt(1, i);
+				getRestaurants.execute();
+				rs = getRestaurants.getResultSet();
+				dataset = new DefaultCategoryDataset();
+
+				while (rs.next()) {
+					ResID = rs.getInt(1);
+					ResName = rs.getString(2);
+					PreparedStatement getOrders = EchoServer.con
+							.prepareStatement("SELECT * FROM biteme.delivery WHERE RestaurantID = ?;");
+					getOrders.setInt(1, ResID);
+					getOrders.execute();
+					rs1 = getOrders.getResultSet();
+					while (rs1.next()) {
+						orderApproved = LocalDateTime.parse(rs.getString(3), formatter);
+						if (orderApproved.format(year) == now.format(year))
+							if (orderApproved.format(month) == now.format(month)) {
+								if (rs.getBoolean(4))
+									column = "Late";
+								else
+									column = "On time";
+								dataset.addValue(1, column, "ID:" + ResID + ";" + ResName);
+								total += 1;
+							}
+					}
+
+				}
+				header = "Performence report for branch id:" + i + " total orders: " + total;
+				total = 0;
+				fromDataSetToReportImage(dataset, "Performence", i, now.format(year) + now.format(month), 0,
+						"Amount of orders", "Restaurants", header);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void fromDataSetToReportImage(DefaultCategoryDataset dataset, String type, int BranchManagerID,
+			String monthAndYear, int RestaurantID, String y, String x, String header) {
 		String path = new String();
 		JFreeChart barChart = ChartFactory.createBarChart(header, x, y, dataset, PlotOrientation.VERTICAL, true, true,
 				false);
-		path = "C:\\Users\\talye\\git\\BiteMeFinal\\savedReports";
+		path = ".\\savedReports" + type + BranchManagerID + monthAndYear + RestaurantID;
 		try {
 			ChartUtils.saveChartAsPNG(new File(path), barChart, 600, 400);
 		} catch (IOException e) {

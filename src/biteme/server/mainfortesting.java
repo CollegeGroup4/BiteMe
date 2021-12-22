@@ -2,6 +2,8 @@ package biteme.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -40,15 +42,15 @@ public class mainfortesting {
       final DefaultCategoryDataset dataset = 
       new DefaultCategoryDataset( );  
 
-      dataset.addValue( 1000 , "McDonalds" , "Restaurants" );        
+      dataset.addValue( 1000 , "McDonalds" , "1" );        
          
 
-      dataset.addValue( 5430 , "Rimini" , "Restaurants" );        
+      dataset.addValue( 5430 , "Rimini" , "2" );        
 
 
-      dataset.addValue( 1305 , "Greg" , "Restaurants" ); 
+      dataset.addValue( 1305 , "Greg" , "3" ); 
       
-      dataset.addValue( 1020 , "McDo" , "Restaurants" );        
+      dataset.addValue( 1020 , "McDo" , "4" );        
       
 
       dataset.addValue( 7430 , "Rimi" , "Restaurants" );        
@@ -62,5 +64,8 @@ public class mainfortesting {
    
    public static void main( String[ ] args ) {
 	   mainfortesting a = new mainfortesting("t", "b");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM");
+		LocalDateTime now = LocalDateTime.now();
+	   System.out.println(now.format(dtf));
    }
 }

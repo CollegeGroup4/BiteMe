@@ -1,0 +1,68 @@
+
+u
+java:S1149m"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(í…Ò‰
+P
+java:S1118":Add a private constructor to hide the implicit public one.(½Ì‘˜
+J
+java:S2695T"/This "PreparedStatement" only has 5 parameters.(Ó×Šïşÿÿÿÿ
+J
+java:S2695U"/This "PreparedStatement" only has 5 parameters.(˜²¾øùÿÿÿÿ
+J
+java:S2695V"/This "PreparedStatement" only has 5 parameters.(†¬†©øÿÿÿÿ
+4
+java:S2119l"Save and re-use this "Random".(¡Å”¦
+G
+java:S1481{",Remove this unused "account" local variable.(ç¦·åøÿÿÿÿ
+C
+java:S1125Æ"'Remove the unnecessary boolean literal.(úÑŞšşÿÿÿÿ
+2
+java:S3626¼"Remove this redundant jump.(ûÁİ…
+2
+java:S3626Ö"Remove this redundant jump.(ûÁİ…
+2
+java:S3626í"Remove this redundant jump.(ûÁİ…
+u
+java:S2293•"YReplace the type specification in this constructor call with the diamond operator ("<>").(ÂÚ›Âıÿÿÿÿ
+d
+java:S1192Î"HDefine a constant instead of duplicating this literal "Account" 4 times.(ìõ’Ãúÿÿÿÿ
+p
+java:S1192¨"TDefine a constant instead of duplicating this literal "WHERE UserName = ?;" 3 times.(Ôåèşÿÿÿÿ
+l	java:S117’"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(–ŒËæüÿÿÿÿ
+a
+java:S2259°"EA "NullPointerException" could be thrown; "account" is nullable here.(€Òçğşÿÿÿÿ
+j
+java:S2095F"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(…à™Ïùÿÿÿÿ
+f
+java:S2095ë"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(›ç¾«
+f
+java:S2095¥"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÇÎàˆ
+k
+java:S2095—"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(è¸Áøÿÿÿÿ
+f
+java:S2095¾"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(”ş¥‚
+f
+java:S2095‚"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ëíĞç
+e
+java:S2095ø"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(•”Ü
+k
+java:S2095Ÿ"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÚÆáñüÿÿÿÿ
+j
+java:S2095 "OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(…à™Ïùÿÿÿÿ
+f
+java:S2095ˆ"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(†Á
+j
+java:S2095}"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Çé¸øÿÿÿÿ
+k
+java:S2095à"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(õ­‡¼øÿÿÿÿ
+f
+java:S2095Ş"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÇÎàˆ
+j
+java:S2095)"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(İ€¥ëÿÿÿÿÿ
+f
+java:S2095Ç"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÇÎàˆ
+f
+java:S2095Ò"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(”ş¥‚
+f
+java:S2095Á"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ğ¬Æá
+j
+java:S2095O"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(Şşáãûÿÿÿÿ

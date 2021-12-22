@@ -1,0 +1,15 @@
+
+R
+java:S1172"7Remove this unused method parameter "applicationTitle".(ÜŽ„²þÿÿÿÿ
+V	java:S125"<This block of commented-out lines of code should be removed.(ÓòÍÿÿÿÿÿÿ
+\
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(Š¢ä®þÿÿÿÿ
+M
+java:S1135"2Complete the task associated to this TODO comment.(ÕÌ®þÿÿÿÿ
+K
+java:S1854@"5Remove this useless assignment to local variable "a".(œ—É‰
+<
+java:S1481@"&Remove this unused "a" local variable.(œ—É‰
+g
+java:S1192+"LDefine a constant instead of duplicating this literal "Restaurants" 6 times.(íîÉþÿÿÿÿ
+b	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(‘½¿§

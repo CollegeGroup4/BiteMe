@@ -1,0 +1,36 @@
+
+]	java:S125"<This block of commented-out lines of code should be removed.(é¤å øÿÿÿÿ8ŸéïúÜ/
+m
+java:S1206H"PThis class overrides "equals()" and should therefore also override "hashCode()".(ÜÑã8¯éïúÜ/
+<
+java:S2097H"Add a type test to this method.(ÜÑã8²éïúÜ/
+T
+java:S1117I"8Rename "temp" which hides the field declared at line 31.(ï‘ş68³éïúÜ/
+^
+java:S1126J"AReplace this if-then-else statement by a single return statement.(ß¤éÌ8³éïúÜ/
+X
+java:S2696p"6Make the enclosing method "static" or remove this set.(¤ç øÿÿÿÿ8·éïúÜ/
+Z	java:S106z"9Replace this use of System.out or System.err by a logger.(‚é€Şûÿÿÿÿ8¸éïúÜ/
+[	java:S106…"9Replace this use of System.out or System.err by a logger.(“ôËÑşÿÿÿÿ8¿éïúÜ/
+^	java:S125‰"<This block of commented-out lines of code should be removed.(ú›×³ıÿÿÿÿ8¿éïúÜ/
+Y
+java:S2696"6Make the enclosing method "static" or remove this set.(«ìçÂÿÿÿÿÿ8¿éïúÜ/
+Y
+java:S2696"6Make the enclosing method "static" or remove this set.(Æ¦®“üÿÿÿÿ8¿éïúÜ/
+R
+java:S2696"6Make the enclosing method "static" or remove this set.(Ê‘)8ÀéïúÜ/
+T
+java:S2696"6Make the enclosing method "static" or remove this set.(¬Ô¹¿8ÀéïúÜ/
+V	java:S106«"9Replace this use of System.out or System.err by a logger.(—¢íğ8ÏéïúÜ/
+j
+java:S3252º"GUse static access with "java.net.InetAddress" for "getLoopbackAddress".(´ñÒúÿÿÿÿ8ÑéïúÜ/
+[	java:S106»"9Replace this use of System.out or System.err by a logger.(¿¼àûÿÿÿÿ8ÑéïúÜ/
+[	java:S106¼"9Replace this use of System.out or System.err by a logger.(É›ºÿÿÿÿÿ8ÒéïúÜ/
+U
+java:S1135¾"2Complete the task associated to this TODO comment.(ÕÌ®şÿÿÿÿ8ÒéïúÜ/
+p
+java:S1104b"SMake isAdded a static final constant or non-public and provide accessors if needed.(…Ñë·8ßéïúÜ/
+J
+java:S1444b"-Make this "public static isAdded" field final(…Ñë·8îéïúÜ/
+_
+java:S2259J"BA "NullPointerException" could be thrown; "temp" is nullable here.(ß¤éÌ8êïúÜ/

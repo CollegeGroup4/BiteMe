@@ -30,26 +30,28 @@ public class OrderApiService {
 		ResultSet rs;
 		int orderID = 0, shipmentID, price;
 		Options options = null;
+
 		try {
 			PreparedStatement postOrder = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.order (OrderNum, ResturantID, ResturantName, UserName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
+					"INSERT INTO biteme.order (ResturantID, ResturantName, UserName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
 							+ "Check_out_price, isApproved, required_time, approved_time, hasArraived)"
-							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);SELECT last_insert_id();");
-			postOrder.setInt(1, order.getOrderID());
-			postOrder.setInt(2, order.getRestaurantID());
-			postOrder.setString(3, order.getRestaurantName());
-			postOrder.setString(4, order.getUserName());
-			postOrder.setString(5, order.getTime_taken());
-			postOrder.setString(6, order.getPhone());
-			postOrder.setString(7, order.getType_of_order());
-			postOrder.setInt(8, order.getDiscount_for_early_order());
-			postOrder.setDouble(9, order.getCheck_out_price());
-			postOrder.setBoolean(10, order.isApproved());
-			postOrder.setString(11, order.getRequired_time());
-			postOrder.setString(12, order.getApproved_time());
-			postOrder.setBoolean(13, order.getHasArrived());
+							+ " VALUES (?,?,?,?,?,?,?,?,?,?); SELECT last_insert_id();");
+			postOrder.setInt(1, order.getRestaurantID());
+			postOrder.setString(2, order.getRestaurantName());
+			postOrder.setString(3, order.getUserName());
+			postOrder.setString(4, order.getTime_taken());
+			postOrder.setString(5, order.getPhone());
+			postOrder.setString(6, order.getType_of_order());
+			postOrder.setInt(7, order.getDiscount_for_early_order());
+			postOrder.setDouble(8, order.getCheck_out_price());
+			postOrder.setBoolean(9, order.isApproved());
+			postOrder.setString(10, order.getRequired_time());
+			postOrder.setString(11, order.getApproved_time());
+			postOrder.setBoolean(12, order.getHasArrived());
 			postOrder.execute();
 			rs = postOrder.getResultSet();
+			orderID = rs.getInt(1);
+
 		} catch (SQLException e) {
 			response.setCode(405);
 			response.setDescription("Invalid input");
@@ -58,47 +60,57 @@ public class OrderApiService {
 		try {
 			PreparedStatement postItem = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.item_in_menu_in_order (OrderNum, ItemID, Item_name, OptionalType, OptionalSpecify,"
-							+ "Amount)"
-							+ " VALUES (?,?,?,?,?,?);Select amount from biteme.item_in_menu_in_order WHRER OrderNum =?"
-							+ "AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?");
-			postItem.setInt(1, rs.getInt(1));
-			postItem.setInt(7, rs.getInt(1));
-			orderID = rs.getInt(1);
+							+ "Amount)" + " VALUES (?,?,?,?,?,?);");
+
+			postItem.setInt(1, orderID);
+
 			for (Item temp : order.getItems()) {
 				postItem.setInt(2, temp.getItemID());
 				postItem.setInt(6, temp.getAmount());
-				postItem.setInt(8, temp.getItemID());
 				postItem.setString(3, temp.getName());
 
 				for (Options opt : temp.getOptions()) {
 					postItem.setString(4, opt.getOption_category());
-					postItem.setString(9, opt.getOption_category());
 					postItem.setString(5, opt.getSpecify_option());
-					postItem.setString(10, opt.getSpecify_option());
 					options = opt;
-					postItem.execute();
-					rs = postItem.getResultSet();
+					try {
+						postItem.execute();
+					} catch (SQLException e) {
+
+						PreparedStatement getAmount = EchoServer.con.prepareStatement(
+								"SELECT amount from biteme.item_in_menu_in_order WHRER OrderNum =? AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?;");
+						getAmount.setInt(1, orderID);
+						getAmount.setInt(2, temp.getItemID());
+						getAmount.setString(3, options.getOption_category());
+						getAmount.setString(4, options.getSpecify_option());
+						getAmount.execute();
+						rs = getAmount.getResultSet();
+
+						PreparedStatement updateOrder = EchoServer.con.prepareStatement(
+								"UPDATE biteme.item_in_menu_in_order " + "SET Amount = ? WHERE OrderNum = ?"
+										+ "ItemID = ? OptionalType = ? OptionalSpecify = ?");
+
+						updateOrder.setInt(1, rs.getInt(1) + temp.getAmount());
+						updateOrder.setInt(2, orderID);
+						updateOrder.setInt(3, options.getItemID());
+						updateOrder.setString(4, options.getOption_category());
+						updateOrder.setString(4, options.getSpecify_option());
+						updateOrder.execute();
+					}
 				}
 			}
 		} catch (SQLException e) {
-
-			// item already exist, +1 to amount
-			if (e.getErrorCode() == 1062) {
-				try {
-					PreparedStatement updateOrder = EchoServer.con.prepareStatement(
-							"UPDATE biteme.item_in_menu_in_order " + "SET Amount = ? WHERE OrderNum = ?"
-									+ "ItemID = ? OptionalType = ? OptionalSpecify = ?");
-					updateOrder.setInt(1, rs.getInt(1) + 1);
-					updateOrder.setInt(2, orderID);
-					updateOrder.setInt(3, options.getItemID());
-					updateOrder.setString(4, options.getOption_category());
-					updateOrder.setString(4, options.getSpecify_option());
-					updateOrder.execute();
-				} catch (SQLException ex) {
-					////////////////////////////////////////////////////////////////////////
-					System.out.println(ex.toString());
-				}
+			response.setBody(null);
+			response.setCode(400);
+			response.setDescription("Could not add item's to the order");
+			try {
+				PreparedStatement deleteOrder = EchoServer.con
+						.prepareStatement("DELETE biteme.order WHERE OrderNum = ?;");
+				deleteOrder.setInt(1, orderID);
+			} catch (SQLException ex) {
+				e.printStackTrace();
 			}
+			return;
 		}
 		if (order.getShippment() != null) {
 			try {
@@ -113,74 +125,25 @@ public class OrderApiService {
 				setShipment.setString(5, order.getShippment().getDelivery());
 				setShipment.execute();
 
-			} catch (SQLException ex) {
-				if (ex.getErrorCode() == 1062) {
-					try {
-						PreparedStatement getShipID = EchoServer.con
-								.prepareStatement("SELECT ShipmentID FROM biteme.shipment WHERE "
-										+ "workPlace = ? AND Address = ? AND receiver_name = ? AND receiver_phone_number = ? "
-										+ "AND deliveryType = ?;");
-						getShipID.setString(1, order.getShippment().getWork_place());
-						getShipID.setString(2, order.getShippment().getAddress());
-						getShipID.setString(3, order.getShippment().getReceiver_name());
-						getShipID.setString(4, order.getShippment().getPhone());
-						getShipID.setString(5, order.getShippment().getDelivery());
-						getShipID.execute();
-						rs = getShipID.getResultSet();
-
-						if (rs.next()) {
-							shipmentID = rs.getInt(1);
-			//TODO what that insert means, more fields are missing
-							PreparedStatement setInShipment = EchoServer.con.prepareStatement(
-									"INSERT INTO biteme.orders_in_shipment (ShipmentID, orderID, UserName, Price)"
-											+ "VALUES (?,?,?,?);");
-							setInShipment.setInt(1, rs.getInt(1));
-							setInShipment.setInt(2, orderID);
-							setInShipment.setString(3, order.getUserName());
-							setInShipment.setFloat(4, 25);
-
-							// calculate shipping price
-							PreparedStatement getAmountOfOrdersInShipment = EchoServer.con
-									.prepareStatement("SELECT orderID, UserID, COUNT(*) FROM biteme.orders_in_shipment"
-											+ " WHERE ShipmentID = ? GROUP BY orderID, UserID;");
-
-							getAmountOfOrdersInShipment.setInt(1, shipmentID);
-							getAmountOfOrdersInShipment.execute();
-							rs = getAmountOfOrdersInShipment.getResultSet();
-
-							if (rs.next()) {
-								if (rs.getInt(1) >= 3)
-									price = 15;
-								else if (rs.getInt(1) == 2)
-									price = 20;
-								else
-									price = 25;
-
-								PreparedStatement updatePriceOrderInShipment = EchoServer.con.prepareStatement(
-										"UPDATE biteme.order_in_shipment " + "SET Price = ? WHERE ShipmentID = ?;");
-								updatePriceOrderInShipment.setInt(1, price);
-								updatePriceOrderInShipment.setInt(2, shipmentID);
-								updatePriceOrderInShipment.execute();
-							}
-						}
-					} catch (SQLException e) {
-						// TODO: handle exception
-					}
-				}
+			} catch (SQLException e) {
+				response.setBody(null);
+				response.setCode(400);
+				response.setDescription(e.getMessage());
+				return;
 			}
 		}
 	}
+
 	/**
 	 * Return all the orders
 	 *
 	 */
-	public static void allOrders(int restaurantID, Response response) {
+	public static void allOrders(String condition, Response response) {
 		PreparedStatement stmt;
 		ArrayList<Order> orders = new ArrayList<>();
 		Order order = null;
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE RestaurantID = ?");
-			stmt.setInt(1, restaurantID);
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE " + condition + ";");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				order = new Order(rs.getInt(QueryConsts.ORDER_ORDER_NUM), rs.getInt(QueryConsts.ORDER_RESTAURANT_ID),
@@ -200,6 +163,14 @@ public class OrderApiService {
 		response.setCode(200);
 		response.setDescription("Success in fetching orders");
 		response.setBody(orders.toArray());
+	}
+
+	public static void AllOrdersByRestaurantID(int restaurantID, Response response) {
+		allOrders("RestaurantID = " + restaurantID, response);
+	}
+
+	public static void AllOrdersByUserName(String UserName, Response response) {
+		allOrders("UserName = " + UserName, response);
 	}
 
 	/**
@@ -306,7 +277,7 @@ public class OrderApiService {
 	 * Updates a order in the DB with form data
 	 *
 	 */
-	//TODO Is there anything to update in order as client??
+	// TODO Is there anything to update in order as client??
 	public static void updateOrder(Order order, Response response) {
 		ResultSet rs;
 		int orderID = 0, shipmentID, price;
@@ -343,6 +314,59 @@ public class OrderApiService {
 	}
 
 	/**
+	 * Get item for a specific orderID
+	 *
+	 */
+	// TODO Is there anything to update in order as client??
+	public static void getItemsByOrderID(int orderID, Response response) {
+		ResultSet rs1, rs2;
+		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<Options> options = new ArrayList<>();
+		Item itemTemp;
+		Options optionsTemp;
+		try {
+			PreparedStatement getItems = EchoServer.con.prepareStatement(
+					"SELECT items.*, itemsOrder.amount FROM items biteme.items, itemsOrder biteme.item_int_menu_in_order "
+							+ "WHERE items.ItemID = itemsOrder.ItemID AND itemsOrder.OrderNum = ?;");
+			getItems.setInt(1, orderID);
+			getItems.execute();
+			rs1 = getItems.getResultSet();
+			while (rs1.next()) {
+				itemTemp = new Item(rs1.getString(QueryConsts.ITEM_CATEGORY),
+						rs1.getString(QueryConsts.ITEM_SUB_CATEGORY), rs1.getInt(QueryConsts.ITEM_ID),
+						rs1.getInt(QueryConsts.ITEM_RES_ID), rs1.getString(QueryConsts.ITEM_NAME),
+						rs1.getFloat(QueryConsts.ITEM_PRICE), rs1.getString(QueryConsts.ITEM_DESCRIPTION),
+						rs1.getString(QueryConsts.ITEM_INGREDIENTS), null, rs1.getString(QueryConsts.ITEM_IMAGE),
+						rs1.getInt(10));
+				items.add(itemTemp);
+
+				PreparedStatement getOptions = EchoServer.con
+						.prepareStatement("SELECT * FROM biteme.optional_category WHERE itemID = ?");
+				getOptions.setInt(1, itemTemp.getItemID());
+				getOptions.execute();
+				rs2 = getOptions.getResultSet();
+				while (rs2.next()) {
+					optionsTemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
+							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getDouble(QueryConsts.OPTIONAL_PRICE),
+							itemTemp.getItemID());
+
+					options.add(optionsTemp);
+				}
+				itemTemp.setOptions((Options[]) options.toArray());
+				options.clear();
+				rs2.close();
+			}
+		} catch (SQLException e) {
+			response.setCode(405);
+			response.setDescription("Invalid input");
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success fetchin items for order -> orderID: " + Integer.toString(orderID));
+		response.setBody(items.toArray());
+	}
+
+	/**
 	 * Updates a order as delivered
 	 *
 	 */
@@ -351,40 +375,54 @@ public class OrderApiService {
 		Duration timeElapsed;
 		ResultSet rs;
 		try {
-			deliveredOrder = EchoServer.con.prepareStatement(
-					"UPDATE biteme.order AS orders SET hasArrived = 1"
-							+ " WHERE orders.OrderNum = ? AND orders.UserName = ?;");
+			deliveredOrder = EchoServer.con.prepareStatement("UPDATE biteme.order AS orders SET hasArrived = 1"
+					+ " WHERE orders.OrderNum = ? AND orders.UserName = ?;");
 			deliveredOrder.setInt(1, order.getOrderID());
 			deliveredOrder.setString(2, order.getUserName());
 			deliveredOrder.setInt(3, order.getOrderID());
 			deliveredOrder.setString(4, order.getUserName());
 			deliveredOrder.execute();
 			rs = deliveredOrder.getResultSet();
-			LocalTime t = LocalTime.parse(rs.getString(1));
-			LocalTime now = LocalTime.now();
-			timeElapsed = Duration.between(LocalTime.parse(order.getRequired_time()), LocalTime.parse(order.getTime_taken()));
-			if (timeElapsed.toMinutes() < 120){
-				;
-				if (Duration.between(now, LocalTime.parse(order.getApproved_time())).toMinutes() > 60){
-					updateCredit(order,response);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			LocalDateTime now = LocalDateTime.now();
+			PreparedStatement insertToDelivery = EchoServer.con.prepareStatement(
+					"INSERT INTO biteme.delivery (OrderNum, RestaurantID, Date, isLate) VALUES(?,?,?,?);");
+			insertToDelivery.setInt(1, order.getOrderID());
+			insertToDelivery.setInt(2, order.getRestaurantID());
+			insertToDelivery.setString(3, now.format(formatter));
+			timeElapsed = Duration.between(LocalTime.parse(order.getRequired_time()),
+					LocalTime.parse(order.getTime_taken()));
+			if (timeElapsed.toMinutes() < 120) {
+
+				if (Duration.between(now, LocalDateTime.parse(order.getApproved_time())).toMinutes() > 60) {
+					insertCredit(order, response);
+					insertToDelivery.setBoolean(4, true);
+					insertToDelivery.execute();
 					return;
 				}
+			} else if (Duration.between(now, LocalDateTime.parse(order.getApproved_time())).toMinutes() > 20) {
+				insertCredit(order, response);
+				insertToDelivery.setBoolean(4, true);
+				insertToDelivery.execute();
+				return;
 			}
-			else if (Duration.between(now, LocalTime.parse(order.getApproved_time())).toMinutes() > 20){
-					updateCredit(order,response);
-					return;
-			}
+			insertToDelivery.setBoolean(4, false);
+			insertToDelivery.execute();
 		} catch (SQLException e) {
 			response.setCode(405);
-			response.setDescription("Couldn't approve order as delivered -> orderID: " + Integer.toString(order.getOrderID()));
+			response.setDescription(
+					"Couldn't approve order as delivered -> orderID: " + Integer.toString(order.getOrderID()));
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in approving order as delivered -> orderID: " + Integer.toString(order.getOrderID()));
+		response.setDescription(
+				"Success in approving order as delivered -> orderID: " + Integer.toString(order.getOrderID()));
 	}
 
-	private static void updateCredit(Order order, Response response){
-		PreparedStatement insertCredit;
+	private static void insertCredit(Order order, Response response) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime now = LocalDateTime.now();
+		PreparedStatement insertCredit, insertToLateDelivery;
 		try {
 			insertCredit = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.credit (UserName , AmountInCredit, RestaurantID) VALUES (?,?,?);");
@@ -392,13 +430,50 @@ public class OrderApiService {
 			insertCredit.setDouble(2, (order.getCheck_out_price() * 0.5));
 			insertCredit.setInt(3, order.getRestaurantID());
 			insertCredit.execute();
+
+			insertToLateDelivery = EchoServer.con.prepareStatement(
+					"INSERT INTO biteme.late_delivery (OrderNum, UserName, RestaurantID, Date) VALUES(?,?,?,?)");
+			insertToLateDelivery.setInt(1, order.getOrderID());
+			insertToLateDelivery.setString(2, order.getUserName());
+			insertToLateDelivery.setInt(3, order.getRestaurantID());
+			insertToLateDelivery.setString(4, now.format(formatter));
+			insertToLateDelivery.execute();
 		} catch (SQLException e) {
 			response.setCode(405);
-			response.setDescription("Couldn't insert credit to a late delivered order -> orderID: " + Integer.toString(order.getOrderID()));
+			response.setDescription("Couldn't insert credit to a late delivered order -> orderID: "
+					+ Integer.toString(order.getOrderID()));
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in inserting credit to a late delivered order -> orderID: " + Integer.toString(order.getOrderID()));
+		response.setDescription("Success in inserting credit to a late delivered order -> orderID: "
+				+ Integer.toString(order.getOrderID()));
+		return;
+	}
+
+	public static void updateCredit(Float AmountInCredit, int restaurantID, String UserName, Response response) {
+		PreparedStatement updateCredit;
+		try {
+			if (AmountInCredit <= 0.1) {
+				updateCredit = EchoServer.con
+						.prepareStatement("DELETE FROM biteme.credit WHERE UserName = ? AND RestaurantID = ?;");
+				updateCredit.setString(1, UserName);
+				updateCredit.setInt(2, restaurantID);
+				updateCredit.execute();
+			} else {
+				updateCredit = EchoServer.con.prepareStatement(
+						"UPDATE biteme.credit SET AmountInCredit = ? WHERE UserName = ? AND RestaurantID = ?;");
+				updateCredit.setDouble(1, AmountInCredit);
+				updateCredit.setString(2, UserName);
+				updateCredit.setInt(3, restaurantID);
+				updateCredit.execute();
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Couldn't update credit for: " + UserName);
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in updating credit for: " + UserName);
 		return;
 	}
 }

@@ -331,6 +331,7 @@ CREATE TABLE `optional_category` (
   `OptionalType` varchar(45) NOT NULL DEFAULT 'None',
   `Specify` varchar(45) DEFAULT 'None',
   `ItemID` int NOT NULL,
+  `Price` double DEFAULT NULL,
   PRIMARY KEY (`OptionalType`,`ItemID`),
   KEY `fk_from_item_OC_idx` (`ItemID`),
   CONSTRAINT `fk_from_item_OC` FOREIGN KEY (`ItemID`) REFERENCES `item` (`ItemID`)
@@ -560,4 +561,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-19 19:20:36
+-- Dump completed on 2021-12-19 22:52:57

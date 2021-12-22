@@ -21,11 +21,11 @@ public class QueryConsts {
     public static final int ORDER_HAS_ARRIVED = 13;
     
     //for items
-    public static final int ITEM_ID = 5;
-    public static final int ITEM_CATEGORY = 1;
-    public static final int	ITEM_SUB_CATEGORY = 2;
-    public static final int ITEM_NAME = 3;
-    public static final int ITEM_PRICE = 4;
+    public static final int ITEM_ID = 1;
+    public static final int ITEM_CATEGORY = 2;
+    public static final int	ITEM_SUB_CATEGORY = 3;
+    public static final int ITEM_NAME = 4;
+    public static final int ITEM_PRICE = 5;
     public static final int ITEM_INGREDIENTS = 6;
     public static final int ITEM_RES_ID = 7;
     public static final int ITEM_IMAGE = 8;
@@ -35,6 +35,7 @@ public class QueryConsts {
     public static final int OPTIONAL_TYPE = 1;
     public static final int OPTIONAL_SPECIFY = 2;
     public static final int OPTIONAL_ITEM_ID = 3;
+    public static final int OPTIONAL_PRICE = 4;
 
     //for item_in_menu_in_order
     public static final int ITEM_IN_ORDER_ORDER_NUM = 1;

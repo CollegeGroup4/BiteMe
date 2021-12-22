@@ -4,12 +4,13 @@ public class Menu {
 	private String name;
 	private int restaurantID;
 	private item_in_menu[] items;
+	
 	public Menu(String name, int restaurantID, item_in_menu[] items) {
-		super();
 		this.name = name;
 		this.restaurantID = restaurantID;
 		this.items = items;
 	}
+	
 	public String getName() {
 		return name;
 	}
@@ -28,6 +29,4 @@ public class Menu {
 	public void setItems(item_in_menu[] items) {
 		this.items = items;
 	}
-	
-	
 }
