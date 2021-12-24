@@ -39,7 +39,6 @@ public class AccountApiService {
 			postAccount.setString(3, getRandomHexString());
 			postAccount.setString(4, account.getUserName());
 			postAccount.executeUpdate();
-
 			postAccount = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.private_account (UserName, CreditCardNumber, CreditCardCVV, CreditCardExp) "
 							+ "VALUES(?,?,?,?)");
@@ -55,7 +54,6 @@ public class AccountApiService {
 			response.setCode(400);
 			return;
 		}
-
 		response.setCode(200);
 		response.setDescription("Success in registering private account -> UserID: " + account.getUserID());
 	}

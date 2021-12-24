@@ -19,6 +19,8 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.google.gson.JsonElement;
+
 import logic.Account;
 import logic.Item;
 import logic.Options;
@@ -144,6 +146,9 @@ public class OrderApiService {
 		}
 		response.setCode(200);
 		response.setDescription("A new order has been successfuly added -> orderID:"+Integer.toString(orderID));
+		JsonElement body = EchoServer.gson.toJsonTree(new Object());
+		body.getAsJsonObject().addProperty("orderID", orderID);
+		response.setBody(EchoServer.gson.toJson(body));
 		invoiceSender(order, orderID);
 	}
 
