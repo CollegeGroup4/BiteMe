@@ -147,4 +147,12 @@ public class Account {
 		this.isBusiness = isBusiness;
 	}
 
+	@Override
+	public String toString() {
+		return "Account [userID=" + userID + ", userName=" + userName + ", password=" + password + ", firstName="
+				+ firstName + ", lastName=" + lastName + ", email=" + email + ", role=" + role + ", phone=" + phone
+				+ ", status=" + status + ", isBusiness=" + isBusiness + ", branch_manager_ID=" + branch_manager_ID
+				+ ", area=" + area + ", debt=" + debt + ", w4c_card=" + w4c_card + "]";
+	}
+
 }

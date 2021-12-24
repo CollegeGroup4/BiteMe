@@ -1,9 +1,9 @@
 
 S	java:S106!"9Replace this use of System.out or System.err by a logger.(æôÉ°ÿÿÿÿÿ
 \
-java:S1192"FDefine a constant instead of duplicating this literal "steak" 4 times.(‚¡í£
-\
 java:S1192"FDefine a constant instead of duplicating this literal "19:50" 4 times.(‚¡í£
 b
 java:S1192"GDefine a constant instead of duplicating this literal "Second" 4 times.(àŽ¿Ñýÿÿÿÿ
+\
+java:S1192"FDefine a constant instead of duplicating this literal "steak" 4 times.(‚¡í£
 g	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(óÎ °ùÿÿÿÿ

@@ -3,6 +3,8 @@
 // license found at www.lloseng.com 
 package biteme.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;

@@ -224,7 +224,7 @@ public class BranchManagerApiService {
 			stmt.setBoolean(2, true);
 			stmt.execute();
 			rs = stmt.getResultSet();
-			if(rs.getFetchSize() == 0) {
+			if (rs.getFetchSize() == 0) {
 				response.setBody(null);
 				response.setCode(401);
 				response.setDescription("Employee didn't get approvel yet!");

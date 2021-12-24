@@ -1,0 +1,24 @@
+
+N
+java:S1854"8Remove this useless assignment to local variable "path".(“Ä£¸
+P
+java:S1854":Remove this useless assignment to local variable "method".(Ý«Êß
+W
+java:S1854"<Remove this useless assignment to local variable "userName".(øÔªèÿÿÿÿÿ
+H
+java:S1481"-Remove this unused "userName" local variable.(øÔªèÿÿÿÿÿ
+S	java:S106"9Replace this use of System.out or System.err by a logger.(Ëñ¡·ùÿÿÿÿ
+?
+java:S1905")Remove this unnecessary cast to "String".(ÏîÐ³
+A
+java:S1481"+Remove this unused "method" local variable.(Ý«Êß
+?
+java:S1481")Remove this unused "path" local variable.(“Ä£¸
+S	java:S106"9Replace this use of System.out or System.err by a logger.(¥šÒæûÿÿÿÿ
+N	java:S106#"9Replace this use of System.out or System.err by a logger.(­·å®
+V	java:S125"<This block of commented-out lines of code should be removed.(òÃÒ¿ÿÿÿÿÿ
+V	java:S125%"<This block of commented-out lines of code should be removed.(²ðÊÆþÿÿÿÿ
+Q	java:S125("<This block of commented-out lines of code should be removed.(¾õçß
+T
+java:S1128"7Remove this unused import 'com.google.gson.JsonObject'.(µÊ´½8ÃÝ×ÛÞ/
+g	java:S101"MRename this class name to match the regular expression '^[A-Z][a-zA-Z0-9]*$'.(óÎ °ùÿÿÿÿ
