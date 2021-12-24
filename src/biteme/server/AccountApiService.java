@@ -57,7 +57,7 @@ public class AccountApiService {
 		}
 
 		response.setCode(200);
-		response.setDescription("Success in registering private account: " + account.getUserID());
+		response.setDescription("Success in registering private account -> UserID: " + account.getUserID());
 	}
 
 	/**
@@ -85,9 +85,9 @@ public class AccountApiService {
 
 			postAccount.setInt(1, account.getUserID());
 			postAccount.setFloat(2, account.getMonthlyBillingCeiling());
-			postAccount.setBoolean(13, account.getIsApproved());
-			postAccount.setString(14, account.getBusinessName());
-			postAccount.setFloat(15, account.getCurrentSpent());
+			postAccount.setBoolean(3, account.getIsApproved());
+			postAccount.setString(4, account.getBusinessName());
+			postAccount.setFloat(5, account.getCurrentSpent());
 			postAccount.executeUpdate();
 
 		} catch (SQLException e) {
@@ -98,7 +98,7 @@ public class AccountApiService {
 		}
 
 		response.setCode(200);
-		response.setDescription("Success in registering business account:" + account.getUserID());
+		response.setDescription("Success in registering business account -> UserID: " + account.getUserID());
 		response.setBody(null);
 	}
 
@@ -121,7 +121,6 @@ public class AccountApiService {
 	 * Delete Account
 	 *
 	 * This can only be done by the logged in Account.
-	 * ??????????????????????????????????????????????????????????????????????????????????????????????????????
 	 * @throws SQLException 
 	 */
 	private static void deleteQuery(String from, String userName) throws SQLException {		
@@ -202,7 +201,6 @@ public class AccountApiService {
 		} catch (SQLException e) {
 			response.setCode(400);
 			response.setDescription(e.getMessage());
-			response.setBody(null);
 			return;
 		}
 		response.setCode(200);
@@ -216,7 +214,6 @@ public class AccountApiService {
 	 */
 	public static void getAccount(Account account, Response response) {
 		ResultSet rs;
-
 		try {
 			if (account.getRole().equals("client")) {
 				if (account.isBusiness()) {
@@ -444,7 +441,8 @@ public class AccountApiService {
 	 * This can only be done by the master / branch manager / CEO
 	 *
 	 */
-	public static void updateAccount(Account account, Response response) {
+	private static void updateAccount(Account account, Response response) {
+		int updatedRows;
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
 					"UPDATE biteme.account SET (UserID = ?, UserName = ?, FirstName = ?, Password = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
@@ -462,7 +460,10 @@ public class AccountApiService {
 			postAccount.setInt(10, account.getBranch_manager_ID());
 			postAccount.setString(11, account.getArea());
 			postAccount.setString(12, account.getUserName());
-			postAccount.executeUpdate();
+			updatedRows = postAccount.executeUpdate();
+			if(updatedRows == 0) {
+				throw new SQLException("Couldn't update account: -> UserName: " +account.getUserName(), "401", 401);
+			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
@@ -471,9 +472,15 @@ public class AccountApiService {
 		response.setCode(200);
 		response.setDescription("Success in updating account: accountID -> " + account.getUserID());
 	}
-
+	/**
+	 * Updated Private Account
+	 *
+	 * This can only be done by the master / branch manager / CEO
+	 *
+	 */
 	public static void updatePrivateAccount(PrivateAccount account, Response response) {
 		Account account1 = account;
+		int updatedRows;
 		updateAccount(account1, response);
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
@@ -484,7 +491,10 @@ public class AccountApiService {
 			postAccount.setString(2, account.getCreditCardNumber());
 			postAccount.setString(3, account.getCreditCardCVV());
 			postAccount.setString(4, account.getCreditCardExpDate());
-			postAccount.execute();
+			updatedRows = postAccount.executeUpdate();
+			if(updatedRows == 0) {
+				throw new SQLException("Couldn't update private account: -> UserName: " +account.getUserName(), "401", 401);
+			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
@@ -494,9 +504,15 @@ public class AccountApiService {
 		response.setCode(200);
 		response.setDescription("Success in updating private account: accountID -> " + account.getUserID());
 	}
-
+	/**
+	 * Updated Business Account
+	 *
+	 * This can only be done by the master / branch manager / CEO
+	 *
+	 */
 	public static void updateBusinessAccount(BusinessAccount account, Response response) {
 		Account account1 = account;
+		int updatedRows;
 		updateAccount(account1, response);
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
@@ -507,9 +523,10 @@ public class AccountApiService {
 			postAccount.setBoolean(3, account.getIsApproved());
 			postAccount.setString(4, account.getBusinessName());
 			postAccount.setFloat(5, account.getCurrentSpent());
-
-			postAccount.execute();
-
+			updatedRows = postAccount.executeUpdate();
+			if(updatedRows == 0) {
+				throw new SQLException("Couldn't update business account: -> UserName: " +account.getUserName(), "401", 401);
+			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
@@ -519,7 +536,12 @@ public class AccountApiService {
 		response.setCode(200);
 		response.setDescription("Success in updating business account: accountID -> " + account.getUserID());
 	}
-
+	/**
+	 * Get Account By UserName and UserID
+	 *
+	 * This can only be done by the master / branch manager / CEO
+	 *
+	 */
 	public static void getAccountByUserNameAndID(String userName, int userID, Response response) {
 		ResultSet rs;
 		Account account = null;
