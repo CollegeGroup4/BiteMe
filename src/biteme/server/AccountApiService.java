@@ -32,7 +32,7 @@ public class AccountApiService {
 	public static void createPrivateAccount(PrivateAccount account, Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.account SET Role = 'client', Status = 'active', "
+					.prepareStatement("UPDATE biteme.account SET Role = 'Client', Status = 'active', "
 							+ "BranchManagerID = ?, Area = ?, W4C = ? WHERE UserName = ?;");
 			postAccount.setInt(1, account.getBranch_manager_ID());
 			postAccount.setString(2, account.getArea());
@@ -70,33 +70,28 @@ public class AccountApiService {
 		try {
 
 			PreparedStatement postAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.account SET Role = 'client', Status = 'active',"
+					.prepareStatement("UPDATE biteme.account SET Role = 'Client', Status = 'active',"
 							+ "BranchManagerID = ? , Area = ? ,W4C = ? WHERE UserName = ?;");
-
 			postAccount.setInt(1, account.getBranch_manager_ID());
 			postAccount.setString(2, account.getArea());
 			postAccount.setString(3, getRandomHexString());
 			postAccount.setString(4, account.getUserName());
 			postAccount.executeUpdate();
-
 			postAccount = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.business_account (UserName, MonthlyBillingCeling, isApproved, BusinessName, CurrentSpent) "
 							+ "VALUES(?,?,?,?,?)");
-
 			postAccount.setInt(1, account.getUserID());
 			postAccount.setFloat(2, account.getMonthlyBillingCeiling());
 			postAccount.setBoolean(3, account.getIsApproved());
 			postAccount.setString(4, account.getBusinessName());
 			postAccount.setFloat(5, account.getCurrentSpent());
 			postAccount.executeUpdate();
-
 		} catch (SQLException e) {
 			response.setBody(null);
 			response.setDescription(e.getMessage());
 			response.setCode(400);
 			return;
 		}
-
 		response.setCode(200);
 		response.setDescription("Success in registering business account -> UserID: " + account.getUserID());
 		response.setBody(null);
@@ -215,7 +210,7 @@ public class AccountApiService {
 	public static void getAccount(Account account, Response response) {
 		ResultSet rs;
 		try {
-			if (account.getRole().equals("client")) {
+			if (account.getRole().equals("Client")) {
 				if (account.isBusiness()) {
 					PreparedStatement getAccount = EchoServer.con
 							.prepareStatement("SELECT * FROM biteme.business_account WHERE UserName = ?;");
@@ -446,7 +441,7 @@ public class AccountApiService {
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
 					"UPDATE biteme.account SET (UserID = ?, UserName = ?, FirstName = ?, Password = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
-							+ " Role = ?, Status = ?, BranchManagerID = ?, Area = ?) WHERE UserName = ?;");
+							+ "Role = ?, Status = ?, BranchManagerID = ?, Area = ?) WHERE UserName = ?;");
 			postAccount.setInt(1, account.getUserID());
 			// Its the first userName that he had so the test is in users table on login
 			postAccount.setString(2, account.getUserName());
@@ -521,7 +516,7 @@ public class AccountApiService {
 			postAccount.setString(1, account.getUserName());
 			postAccount.setFloat(2, account.getMonthlyBillingCeiling());
 			postAccount.setBoolean(3, account.getIsApproved());
-			postAccount.setString(4, account.getBusinessName());
+			postAccount.setString(4, account.getBusinessName()); 
 			postAccount.setFloat(5, account.getCurrentSpent());
 			updatedRows = postAccount.executeUpdate();
 			if(updatedRows == 0) {
