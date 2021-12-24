@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.google.gson.JsonElement;
+import com.twilio.rest.chat.v1.service.User;
+
 import logic.Account;
 import logic.BusinessAccount;
 import logic.PrivateAccount;
@@ -30,14 +32,13 @@ public class AccountApiService {
 	public static void createPrivateAccount(PrivateAccount account, Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.account SET Role = client AND Status = AND "
-							+ "BranchManagerID = ? AND Area = ? AND W4C ? WHERE UserName = ?;");
-
+					.prepareStatement("UPDATE biteme.account SET Role = 'client', Status = 'active', "
+							+ "BranchManagerID = ?, Area = ?, W4C = ? WHERE UserName = ?;");
 			postAccount.setInt(1, account.getBranch_manager_ID());
 			postAccount.setString(2, account.getArea());
 			postAccount.setString(3, getRandomHexString());
 			postAccount.setString(4, account.getUserName());
-			postAccount.executeQuery();
+			postAccount.executeUpdate();
 
 			postAccount = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.private_account (UserName, CreditCardNumber, CreditCardCVV, CreditCardExp) "
@@ -46,7 +47,7 @@ public class AccountApiService {
 			postAccount.setString(2, account.getCreditCardNumber());
 			postAccount.setString(3, account.getCreditCardCVV());
 			postAccount.setString(4, account.getCreditCardExpDate());
-			postAccount.executeQuery();
+			postAccount.executeUpdate();
 
 		} catch (SQLException e) {
 			response.setBody(null);
@@ -56,8 +57,7 @@ public class AccountApiService {
 		}
 
 		response.setCode(200);
-		response.setDescription("Success in registering private account:" + account.getUserID());
-		response.setBody(null);
+		response.setDescription("Success in registering private account: " + account.getUserID());
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class AccountApiService {
 		try {
 
 			PreparedStatement postAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.account SET Role = client AND Status = AND "
-							+ "BranchManagerID = ? AND Area = ? AND W4C ? WHERE UserName = ?;");
+					.prepareStatement("UPDATE biteme.account SET Role = 'client', Status = 'active',"
+							+ "BranchManagerID = ? , Area = ? ,W4C = ? WHERE UserName = ?;");
 
 			postAccount.setInt(1, account.getBranch_manager_ID());
 			postAccount.setString(2, account.getArea());
@@ -88,7 +88,7 @@ public class AccountApiService {
 			postAccount.setBoolean(13, account.getIsApproved());
 			postAccount.setString(14, account.getBusinessName());
 			postAccount.setFloat(15, account.getCurrentSpent());
-			postAccount.executeQuery();
+			postAccount.executeUpdate();
 
 		} catch (SQLException e) {
 			response.setBody(null);
@@ -122,23 +122,56 @@ public class AccountApiService {
 	 *
 	 * This can only be done by the logged in Account.
 	 * ??????????????????????????????????????????????????????????????????????????????????????????????????????
+	 * @throws SQLException 
 	 */
+	private static void deleteQuery(String from, String userName) throws SQLException {		
+		PreparedStatement temp = EchoServer.con.prepareStatement("DELETE FROM " + from + " WHERE UserName = ?;");
+		temp.setString(1, userName);
+		temp.executeUpdate();
+	}
+
 	public static void deleteAccount(String userName, Response response) {
+		PreparedStatement deleteAccount, deleteItemInMenu, getRestaurantID;
+		int restaurantID;
+		ResultSet rs;
 		try {
-			PreparedStatement deleteAccount = EchoServer.con
-					.prepareStatement("DELETE FROM accounts biteme.account WHERE accounts.UserName = ?;");
+			deleteAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ?;");
 			deleteAccount.setString(1, userName);
-			// Its the first userName that he had so the test is in users table on login
-			deleteAccount.executeQuery();
+			rs = deleteAccount.executeQuery();
+			if (rs.next()) {
+				if (rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS)) {
+					deleteQuery("biteme.business_account", userName);
+
+				} else {
+					if (rs.getString(QueryConsts.ACCOUNT_ROLE).equals("Supplier")) {
+						//get the supplier restaurant ID
+						getRestaurantID = EchoServer.con
+								.prepareStatement("SELECT RestaurantID FROM biteme.restaurant WHERE UserName = ?;");
+						getRestaurantID.setString(1, userName);
+						rs = getRestaurantID.executeQuery();
+						restaurantID = rs.getInt(QueryConsts.RESTAURANT_ID);
+						// delete all the items in menu that connects to the restaurant ID
+						deleteItemInMenu = EchoServer.con
+								.prepareStatement("DELETE FROM biteme.item_in_menu WHERE RestaurantID = ?;");
+						deleteItemInMenu.setInt(1, restaurantID);
+						deleteItemInMenu.executeUpdate();
+						// delete the supplier account
+						deleteQuery("biteme.restaurant", userName);
+					} else if (rs.getString(QueryConsts.ACCOUNT_ROLE).equals("Moderator")) {
+						deleteQuery("biteme.restaurant", userName);
+					} else {
+						deleteQuery("biteme.private_account", userName);
+					}
+				}
+				deleteQuery("biteme.account", userName);
+			}
 		} catch (SQLException e) {
 			response.setCode(400);
 			response.setDescription("Fields are missing");
-			response.setBody(null);
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in deleting account " + userName);
-		response.setBody(null);
+		response.setDescription("Success in deleting account -> userName: " + userName);
 	}
 
 	/**
@@ -246,7 +279,6 @@ public class AccountApiService {
 			loginAccount.setString(1, userName);
 			loginAccount.setString(2, password);
 			rs = loginAccount.executeQuery();
-
 			if (rs.next()) {
 				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID),
 						rs.getString(QueryConsts.ACCOUNT_USER_NAME), rs.getString(QueryConsts.ACCOUNT_PASSWORD),
@@ -262,7 +294,6 @@ public class AccountApiService {
 			} else {
 				throw new SQLException("Account " + userName + " not found", "402", 402);
 			}
-
 			if (account.getRole().equals("Supplier") || account.getRole().equals("Moderator")) {
 				Restaurant res;
 				PreparedStatement getRestaurant = EchoServer.con
@@ -346,30 +377,31 @@ public class AccountApiService {
 					.prepareStatement("SELECT * FROM biteme.account WHERE W4C = ?;");
 			loginAccount.setString(1, w4cCode);
 			rs = loginAccount.executeQuery();
-			if (!rs.first()) {
-				throw new SQLException("Account with w4c: " + w4cCode + " not found", "404", 404);
-			}
+			if (rs.next()) {
+				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID),
+						rs.getString(QueryConsts.ACCOUNT_USER_NAME), rs.getString(QueryConsts.ACCOUNT_PASSWORD),
+						rs.getString(QueryConsts.ACCOUNT_FIRST_NAME), rs.getString(QueryConsts.ACCOUNT_LAST_NAME),
+						rs.getString(QueryConsts.ACCOUNT_EMAIL), rs.getString(QueryConsts.ACCOUNT_ROLE),
+						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
+						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
+						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
+						rs.getInt(QueryConsts.ACCOUNT_DEBT), rs.getString(QueryConsts.ACCOUNT_W4C));
 
+			} else {
+				throw new SQLException("Account " + w4cCode + " not found", "402", 402);
+			}
 			if (rs.getString(QueryConsts.ACCOUNT_ROLE).equals("Not Assigned")) {
 				throw new SQLException("Account didn't activated yet.", "400", 400);
 			}
 			if (rs.getBoolean(QueryConsts.ACCOUNT_IS_LOGGED_IN)) {
 				throw new SQLException("User is already logged in", "401", 401);
 			}
-
 			loginAccount = EchoServer.con.prepareStatement("UPDATE biteme.account SET isLoggedIn = 1 WHERE W4C = ?;");
 			loginAccount.setString(1, w4cCode);
 			isUpdated = loginAccount.executeUpdate();
 			if (isUpdated == 0) {
 				throw new SQLException("Couldn't update user isLoggedStatus", "401", 401);
 			}
-			account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID), rs.getString(QueryConsts.ACCOUNT_USER_NAME),
-					rs.getString(QueryConsts.ACCOUNT_PASSWORD), rs.getString(QueryConsts.ACCOUNT_FIRST_NAME),
-					rs.getString(QueryConsts.ACCOUNT_LAST_NAME), rs.getString(QueryConsts.ACCOUNT_EMAIL),
-					rs.getString(QueryConsts.ACCOUNT_ROLE), rs.getString(QueryConsts.ACCOUNT_PHONE),
-					rs.getString(QueryConsts.ACCOUNT_STATUS), rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
-					rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
-					rs.getInt(QueryConsts.ACCOUNT_DEBT), rs.getString(QueryConsts.ACCOUNT_W4C));
 
 			JsonElement accountField = EchoServer.gson.toJsonTree(account);
 			body.getAsJsonObject().add("account", accountField);
@@ -415,8 +447,8 @@ public class AccountApiService {
 	public static void updateAccount(Account account, Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"UPDATE biteme.account AS account SET (UserID = ?, UserName = ?, FirstName = ?, Password = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
-							+ " Role = ?, Status = ?, BranchManagerID = ?, Area = ?)" + "WHERE UserName = ?;");
+					"UPDATE biteme.account SET (UserID = ?, UserName = ?, FirstName = ?, Password = ?, LastName = ?, PhoneNumber = ?, Email = ?,"
+							+ " Role = ?, Status = ?, BranchManagerID = ?, Area = ?) WHERE UserName = ?;");
 			postAccount.setInt(1, account.getUserID());
 			// Its the first userName that he had so the test is in users table on login
 			postAccount.setString(2, account.getUserName());
@@ -436,7 +468,6 @@ public class AccountApiService {
 			response.setDescription(e.getMessage());
 			return;
 		}
-
 		response.setCode(200);
 		response.setDescription("Success in updating account: accountID -> " + account.getUserID());
 	}
@@ -446,22 +477,22 @@ public class AccountApiService {
 		updateAccount(account1, response);
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"UPDATE biteme.private_account SET (UserName = ?, CreditCardNumber = ?, CreditCardCVV = ?, CreditCardExp = ?)"
-							+ "WHERE UserName = ?;");
+					"UPDATE biteme.private_account SET (CreditCardNumber = ?, CreditCardCVV = ?, CreditCardExp = ?)"
+							+ " WHERE UserName = ?;");
 			// Its the first userName that he had so the test is in users table on login
 			postAccount.setString(1, account.getUserName());
 			postAccount.setString(2, account.getCreditCardNumber());
 			postAccount.setString(3, account.getCreditCardCVV());
 			postAccount.setString(4, account.getCreditCardExpDate());
-
 			postAccount.execute();
-
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
 			response.setBody(null);
 			return;
 		}
+		response.setCode(200);
+		response.setDescription("Success in updating private account: accountID -> " + account.getUserID());
 	}
 
 	public static void updateBusinessAccount(BusinessAccount account, Response response) {
@@ -485,6 +516,8 @@ public class AccountApiService {
 			response.setBody(null);
 			return;
 		}
+		response.setCode(200);
+		response.setDescription("Success in updating business account: accountID -> " + account.getUserID());
 	}
 
 	public static void getAccountByUserNameAndID(String userName, int userID, Response response) {
