@@ -15,6 +15,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.Response;
 import client.ChatClient;
+import client.ClientUI;
 import client.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
@@ -38,6 +39,8 @@ import logic.PrivateAccount;
 
 public class OpenPrivateAccountController implements Initializable {
 	public static Boolean isEdit = false;
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+
 	@FXML
 	private Label lblrequiredCardNum;
 
@@ -164,36 +167,12 @@ public class OpenPrivateAccountController implements Initializable {
 
 	@FXML
 	void logout(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/guiNew/HomePage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Home");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.logout(event);
 	}
 
 	@FXML
 	void home(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Branch manager");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.home(event);
 	}
 
 
@@ -253,7 +232,7 @@ public class OpenPrivateAccountController implements Initializable {
 					}
 
 				}
-				PrivateAccount privateAccount = new PrivateAccount(id, null, null, null, null, null, null, null, status,
+				PrivateAccount privateAccount = new PrivateAccount(id, username, null, null, null, null, null, null, status,
 						false, BranchManagerController.branchManager.getUserID(),
 						BranchManagerController.branchManager.getArea(), 0, null, cardNum, cvv, expDate);
 				sentToJson(privateAccount);
@@ -264,24 +243,24 @@ public class OpenPrivateAccountController implements Initializable {
 
 	void sentToJson(PrivateAccount privateAccount) {
 		Request request = new Request();
-		request.setPath("/accounts/PrivateAccount");
-		request.setMethod("Post");
+		request.setPath("/accounts/privateAccount");
+		request.setMethod("POST");
 		request.setBody(privateAccount);
 		Gson gson = new Gson();
-		JsonElement jsonUser = gson.toJsonTree(request);
-
-		String jsonFile = gson.toJson(jsonUser);
-//    	System.out.println("jsonFile : "+jsonFile);
-		// client.accept(jsonFile); // in here will be DB ask for restaurant id
+		String jsonUser = gson.toJson(request);
+		try {
+			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+		} catch (NullPointerException e) {
+			System.out.println("new ClientController didn't work");
+		}
 	}
 
 	void response() {
-//		Gson gson = new Gson();
-//		Response response = gson.fromJson(ChatClient.serverAns, Response.class);
-//		if (response.getCode() != 200 && response.getCode() != 201) 
-//			lableErrorMag.setText(response.getDescription());// error massage
-//		
-//		System.out.println("-->>"+response.getDescription()); // Description from server
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) 
+			lableErrorMag.setText(response.getDescription());// error massage
+		
+		System.out.println("-->>"+response.getDescription()); // Description from server
 	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {

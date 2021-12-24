@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import CEO.CEOController;
+import Server.EchoServer;
 import Server.Response;
 import branchManager.BranchManagerController;
 import client.ChatClient;
@@ -53,7 +54,7 @@ public class LoginController {
 
 	@FXML
 	void Login(ActionEvent event) {
-		System.out.println("Logged in");
+		System.out.println("Login page");
 		flag = true;
 		checkTextFiled(textFieldUsername, lableErrorMag);
 		checkTextFiled(textFieldPassword, lableErrorMag);
@@ -62,7 +63,7 @@ public class LoginController {
 		sentToJson(username, password);
 		Account account = response();
 		// need to get response from the server hear!
-		if (flag) {
+		if (flag && account != null ) {
 			try {
 				String role = account.getRole(); //= "CEO";
 				if (role != "") {
@@ -73,27 +74,32 @@ public class LoginController {
 					switch (role) {
 					case "CEO":
 						System.out.println("go to CEO");
-//						BranchManagerController.branchManager = account;
-						CEOController.CEO = new Account(0, "TalChen", "123", "Tal-Chen", "Ben-eliyahu", "email@email",
-								"CEO", "055555555", "Active", true, 0, "north", 0, "w4c-a");
+						CEOController.CEO = account;
 						root = loader.load(getClass().getResource("/CEO/CEOPage.fxml").openStream());
 						break;
-					case "branch manager":
+					case "Branch Manager":
 						System.out.println("go to barnch manager");
-//						BranchManagerController.branchManager = account;
-						BranchManagerController.branchManager = new Account(0, "TalChen", "123", "Tal-Chen",
-								"Ben-eliyahu", "email@email", "branch manager", "055555555", "Active", true, 0, "north",
-								0, "w4c-a");
+						BranchManagerController.branchManager = account;
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
-					case "supplier":
+					case "Supplier":
 						System.out.println("go to supplier");
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
-					case "user":
-						System.out.println("go to ordinary user");
+					case "Moderator":
+						System.out.println("go to supplier moderator");
+						root = loader
+								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+						break;
+					case "HR":
+						System.out.println("go to HR");
+						root = loader
+								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+						break;
+					case "Client":
+						System.out.println("go to ordinary client");
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
@@ -121,11 +127,8 @@ public class LoginController {
 		Request request = new Request();
 		request.setPath("/users/login");
 		request.setMethod("GET");
-		request.setBody(gson.toJson(jsonElem));
-//		JsonElement jsonUser = gson.toJsonTree(request);
-
+		request.setBody(jsonElem);
 		String jsonUser = gson.toJson(request);
-//    	System.out.println("jsonFile : "+jsonFile);
 		try {
 			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
@@ -134,14 +137,15 @@ public class LoginController {
 	}
 
 	private Account response() {
-		Gson gson = new Gson();
+		Account account = null;
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201) 
 			lableErrorMag.setText(response.getDescription());// error massage
-		
+		else {
 		System.out.println("-->>"+response.getDescription()); // Description from server
-		JsonElement jsonFile = gson.toJsonTree(response.getBody());
-		Account account = gson.fromJson(jsonFile, Account.class);
+		JsonElement j = EchoServer.gson.fromJson((String)response.getBody(), JsonElement.class);
+		 account =EchoServer.gson.fromJson(j.getAsJsonObject().get("account"), Account.class);
+		}
 		return account;
 	}
 

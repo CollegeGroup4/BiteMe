@@ -79,16 +79,11 @@ public class EchoServer extends AbstractServer {
 		Request m = gson.fromJson((String) msg, Request.class);
 		String method = m.getMethod();
 		String path = m.getPath();
-		System.out.println("m.getBody()" + m.getBody());
-//		String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
-//		String password = gson.fromJson(body.getAsJsonObject().get("password"), String.class);
-//		System.out.println();
 		if(m.getBody() != null) {
 			body = gson.toJsonTree(m.getBody());
 		}
 		Response response = new Response();
 		System.out.println("Message received: " + path + " " + method + " from " + client);
-		System.out.println("path" + path);
 		switch (path) {
 		// TODO start reports generator with a thread
 		case "/import":
@@ -241,11 +236,8 @@ public class EchoServer extends AbstractServer {
 			}
 			break;
 		case "/users/login":
-			System.out.println("lala");
 			String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 			String password = gson.fromJson(body.getAsJsonObject().get("password"), String.class);
-			System.out.println("userName" +userName);
-			System.out.println("password" +password);
 
 			AccountApiService.loginAccount(userName, password, response);
 			break;

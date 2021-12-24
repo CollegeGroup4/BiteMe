@@ -13,6 +13,9 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
+import Server.Response;
+import client.ChatClient;
+import client.ClientUI;
 import client.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
@@ -98,14 +101,14 @@ public class EditBusinessAccountController implements Initializable {
 
 	@FXML
 	private JFXDrawer drawer;
-    @FXML
-    private AnchorPane componnentDebt;
+	@FXML
+	private AnchorPane componnentDebt;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-	
+
 //		labelTitle.setText("Edit Business Account");
-		
+
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getUserName());
 		comboBoxStatus.getItems().setAll("Active", "Frozen", "Blocked");
 		componnentDebt.setVisible(isEdit);
@@ -137,7 +140,6 @@ public class EditBusinessAccountController implements Initializable {
 			}
 		});
 	}
-
 
 	@FXML
 	void logout(ActionEvent event) {
@@ -173,7 +175,6 @@ public class EditBusinessAccountController implements Initializable {
 		}
 	}
 
-
 	@FXML
 	void backEditInfo(ActionEvent event) {
 		try {
@@ -204,7 +205,7 @@ public class EditBusinessAccountController implements Initializable {
 			validField = true;
 			checkValidFields(textFieldDebt, lblrequiredDebt);
 			checkValidFields(textFieldMonthBlling, lblrequiredMonthBlling);
-			
+
 			if (validField) {
 
 				String personalUsename = textFieldUsernamePersonal.getText();
@@ -213,8 +214,8 @@ public class EditBusinessAccountController implements Initializable {
 				String businessName = textFieldBusinessName.getText();
 				int EmployeeID = Integer.parseInt(textFieldIDBusiness.getText());
 				int monthBillingCeiling = Integer.parseInt(textFieldMonthBlling.getText());
-				BusinessAccount businessAccount = new BusinessAccount(personalID, personalUsename, null, null, null, null, null,
-						null, status, true, BranchManagerController.branchManager.getUserID(),
+				BusinessAccount businessAccount = new BusinessAccount(personalID, personalUsename, null, null, null,
+						null, null, null, status, true, BranchManagerController.branchManager.getUserID(),
 						BranchManagerController.branchManager.getArea(), 0, null, monthBillingCeiling, false,
 						businessName, 0);
 				sentToJson(businessAccount);
@@ -233,16 +234,20 @@ public class EditBusinessAccountController implements Initializable {
 
 		String jsonFile = gson.toJson(jsonUser);
 //    	System.out.println("jsonFile : "+jsonFile);
-		// client.accept(jsonFile); // in here will be DB ask for restaurant id
+		try {
+			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+		} catch (NullPointerException e) {
+			System.out.println("new ClientController didn't work");
+		}
 	}
 
 	void response() {
 //		Gson gson = new Gson();
-//		Response response = gson.fromJson(ChatClient.serverAns, Response.class);
-//		if (response.getCode() != 200 && response.getCode() != 201) 
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) 
 //			lableErrorMag.setText(response.getDescription());// error massage
-//		
-//		System.out.println("-->>"+response.getDescription()); // Description from server
+		
+		System.out.println("-->>"+response.getDescription()); // Description from server
 	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {

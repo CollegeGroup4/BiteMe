@@ -4,8 +4,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXButton;
 
+import Server.EchoServer;
+import Server.Response;
+import client.ChatClient;
+import client.ClientUI;
+import client.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,9 +30,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import logic.Account;
 
-
 public class BranchManagerController implements Initializable {
 	public static Account branchManager;
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 
 	@FXML
 	private HBox Nav;
@@ -39,9 +46,9 @@ public class BranchManagerController implements Initializable {
 	@FXML
 	private Button btnOpenAccount;
 
-    @FXML
-    private Button btnEditPersonalInfo;
-    
+	@FXML
+	private Button btnEditPersonalInfo;
+
 	@FXML
 	private Button btnCreateReports;
 
@@ -58,7 +65,7 @@ public class BranchManagerController implements Initializable {
 
 	@FXML
 	private Button btnLogout;
-	
+
 	@FXML
 	private Label lableHello;
 
@@ -79,28 +86,15 @@ public class BranchManagerController implements Initializable {
 		}
 	}
 
-
 	@FXML
-	void logout(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/guiNew/HomePage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Home");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	void logout(ActionEvent event) { 
+		branchManagerFunctions.logout(event);
 	}
 
 
-    @FXML
-    void editPersonalInfo(ActionEvent event) {
-    	try {
+	@FXML
+	void editPersonalInfo(ActionEvent event) {
+		try {
 			FXMLLoader loader = new FXMLLoader();
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			Stage primaryStage = new Stage();
@@ -113,7 +107,7 @@ public class BranchManagerController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 
 	@FXML
 	void createReports(ActionEvent event) {
@@ -181,8 +175,8 @@ public class BranchManagerController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		lableHello.setText("Hello, "  + BranchManagerController.branchManager.getUserName());
-		
+		lableHello.setText("Hello, " + BranchManagerController.branchManager.getUserName());
+
 //		String[] listButtons;
 //		 VBox vBoxManu;
 //		Navigation_SidePanelController sidePanelController;

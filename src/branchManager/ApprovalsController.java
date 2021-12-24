@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import client.ClientUI;
 import client.Request;
 import guiNew.Messages;
 import javafx.collections.FXCollections;
@@ -180,8 +181,11 @@ public class ApprovalsController implements Initializable {
 
 		String jsonFile = gson.toJson(jsonUser);
 //    	System.out.println("jsonFile : "+jsonFile);
-		// client.accept(jsonFile); // in here will be DB ask for restaurant id
-
+		try {
+			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+		} catch (NullPointerException e) {
+			System.out.println("new ClientController didn't work");
+		}
 	}
 
 //	JsonElement response() {

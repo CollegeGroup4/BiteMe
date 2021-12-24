@@ -26,8 +26,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class OpenAccountController implements Initializable {
-//	private static BranchManager branchManager;
-//	private static User user;
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+
 
 	@FXML
 	private HBox Nav;
@@ -109,36 +109,12 @@ public class OpenAccountController implements Initializable {
 
 	@FXML
 	void logout(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/guiNew/HomePage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Home");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.logout(event);
 	}
 
 	@FXML
 	void home(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Branch manager");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.home(event);
 	}
 
 
