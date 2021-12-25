@@ -38,18 +38,16 @@ public class BranchManagerApiService {
 	public static void getBranchOrders(int branchManagerID, Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
-		Map<String, Order[]> ordersByRestaurantID = new HashMap<>();
+		Map<String, String> ordersByRestaurantID = new HashMap<>();
 		int restaurantID;
 		try {
-			stmt = EchoServer.con.prepareStatement(
-					"SELECT * FROM biteme.restaurant WHERE BranchManagerID = ?");
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE BranchManagerID = ?");
 			stmt.setInt(1, branchManagerID);
-			stmt.executeQuery();
-			rs = stmt.getResultSet();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				restaurantID = rs.getInt(1);
 				OrderApiService.AllOrdersByRestaurantID(restaurantID, response);
-				ordersByRestaurantID.put(Integer.toString(restaurantID), EchoServer.gson.fromJson(((Order[])response.getBody()).toString(), Order[].class));
+				ordersByRestaurantID.put(Integer.toString(restaurantID), (String) response.getBody());
 			}
 		} catch (SQLException e) {
 			response.setCode(400);
@@ -76,8 +74,7 @@ public class BranchManagerApiService {
 			stmt = EchoServer.con.prepareStatement(
 					"SELECT * FROM restaurants biteme.restaurant WHERE " + "restaurants.BranchManagerID = ?");
 			stmt.setInt(1, branchManagerID);
-			stmt.execute();
-			rs = stmt.getResultSet();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				restaurants.add(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
 						rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
@@ -95,7 +92,7 @@ public class BranchManagerApiService {
 		response.setCode(200);
 		response.setDescription("Success in fetching all branch restaurants -> branch manager id: "
 				+ Integer.toString(branchManagerID));
-		response.setBody(restaurants.toArray());
+		response.setBody(EchoServer.gson.toJson(restaurants.toArray()));
 	}
 
 	/**
@@ -121,12 +118,12 @@ public class BranchManagerApiService {
 		ResultSet rs;
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT restaurants.RestaurantName FROM "
-					+ "restaurants biteme.restaurant WHERE restaurants.UserName = ? and restaurants.RestaurantName = ?;");
+					+ "restaurants biteme.restaurant WHERE restaurants.UserName = ? AND restaurants.RestaurantName = ?;");
 			stmt.setString(1, userName);
 			stmt.setString(2, restaurant.getName());
-			stmt.execute();
+			rs = stmt.executeQuery();
 			rs = stmt.getResultSet();
-			if (rs.getFetchSize() == 0) {
+			if (!rs.next()) {
 				throw new SQLException("Restaurant" + restaurant.getName() + " is already exist", "400", 400);
 			}
 		} catch (SQLException e) {
@@ -140,7 +137,7 @@ public class BranchManagerApiService {
 			stmt.setString(1, role);
 			stmt.setString(2, userName);
 			stmt.setInt(3, id);
-			stmt.execute();
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 		}
 		try {
@@ -156,7 +153,7 @@ public class BranchManagerApiService {
 			stmt.setString(5, restaurant.getType());
 			stmt.setString(5, restaurant.getAddress());
 			stmt.setString(5, restaurant.getDescription());
-			stmt.execute();
+			stmt.executeUpdate();
 		} catch (SQLException ex) {
 			response.setCode(400);
 			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName" + userName);
@@ -180,7 +177,7 @@ public class BranchManagerApiService {
 			stmt.setString(1, "client");
 			stmt.setString(1, body.getUserName());
 			stmt.setInt(2, body.getUserID());
-			stmt.execute();
+			stmt.executeUpdate();
 			rs = stmt.getResultSet();
 			if (rs.getFetchSize() == 0) {
 				throw new SQLException("Couldn't update " + body.getUserName() + " as " + body.getRole(), "400", 400);
@@ -198,7 +195,7 @@ public class BranchManagerApiService {
 			stmt.setString(2, body.getCreditCardNumber());
 			stmt.setString(3, body.getCreditCardCVV());
 			stmt.setString(4, body.getCreditCardExpDate());
-			stmt.execute();
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
 				response.setCode(400);
@@ -222,7 +219,7 @@ public class BranchManagerApiService {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.employees WHERE Name = ? AND isApproved = ?;");
 			stmt.setString(1, body.getBusinessName());
 			stmt.setBoolean(2, true);
-			stmt.execute();
+			stmt.executeQuery();
 			rs = stmt.getResultSet();
 			if (rs.getFetchSize() == 0) {
 				response.setBody(null);
@@ -236,7 +233,7 @@ public class BranchManagerApiService {
 			stmt.setString(1, "client");
 			stmt.setString(1, body.getUserName());
 			stmt.setInt(2, body.getUserID());
-			stmt.execute();
+			stmt.executeUpdate();
 			rs = stmt.getResultSet();
 			if (rs.getFetchSize() == 0) {
 				throw new SQLException("Couldn't update " + body.getUserName() + " as " + body.getRole(), "400", 400);
@@ -256,7 +253,7 @@ public class BranchManagerApiService {
 			stmt.setBoolean(3, body.getIsApproved());
 			stmt.setString(4, body.getBusinessName());
 			stmt.setFloat(5, 0);
-			stmt.execute();
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
 				response.setCode(400);
@@ -284,7 +281,7 @@ public class BranchManagerApiService {
 
 			PreparedStatement getBMId = EchoServer.con
 					.prepareStatement("SELECT BranchManagerID FROM biteme.branch_manager;");
-			getBMId.execute();
+			getBMId.executeQuery();
 			rs = getBMId.getResultSet();
 			while (rs.next()) {
 				b_m_id.add(rs.getInt(1));
@@ -294,7 +291,7 @@ public class BranchManagerApiService {
 				PreparedStatement getRestaurants = EchoServer.con.prepareStatement(
 						"SELECT DISTINCT RestaurantID FROM biteme.restaurant WHERE BranchManagerID = ?;");
 				getRestaurants.setInt(1, i);
-				getRestaurants.execute();
+				getRestaurants.executeQuery();
 				rs = getRestaurants.getResultSet();
 				while (rs.next()) {
 					res_id.add(rs.getInt(1));
@@ -306,7 +303,7 @@ public class BranchManagerApiService {
 					PreparedStatement getOrders = EchoServer.con.prepareStatement(
 							"SELECT OrderTime, Check_out_price, RestaurantID, RestaurantName FROM biteme.order WHERE RestaurantID = ?;");
 					getOrders.setInt(1, j);
-					getOrders.execute();
+					getOrders.executeQuery();
 					rs = getOrders.getResultSet();
 
 					while (rs.next()) {
@@ -347,7 +344,7 @@ public class BranchManagerApiService {
 
 			PreparedStatement getBMId = EchoServer.con
 					.prepareStatement("SELECT BranchManagerID FROM biteme.branch_manager;");
-			getBMId.execute();
+			getBMId.executeQuery();
 			rs = getBMId.getResultSet();
 			while (rs.next()) {
 				b_m_id.add(rs.getInt(1));
@@ -357,7 +354,7 @@ public class BranchManagerApiService {
 				PreparedStatement getRestaurants = EchoServer.con.prepareStatement(
 						"SELECT DISTINCT RestaurantID FROM biteme.restaurant WHERE BranchManagerID = ?;");
 				getRestaurants.setInt(1, i);
-				getRestaurants.execute();
+				getRestaurants.executeQuery();
 				rs = getRestaurants.getResultSet();
 				while (rs.next()) {
 					res_id.add(rs.getInt(1));
@@ -383,7 +380,7 @@ public class BranchManagerApiService {
 							if (orderTime.format(month) == now.format(month)) {
 
 								getItems.setInt(1, rs.getInt(5));
-								getItems.execute();
+								getItems.executeQuery();
 								rs1 = getItems.getResultSet();
 								while (rs1.next()) {
 									dataset.addValue(1, rs1.getString(2), rs1.getString(1));
@@ -420,7 +417,7 @@ public class BranchManagerApiService {
 
 			PreparedStatement getBMId = EchoServer.con
 					.prepareStatement("SELECT BranchManagerID FROM biteme.branch_manager;");
-			getBMId.execute();
+			getBMId.executeQuery();
 			rs = getBMId.getResultSet();
 			while (rs.next()) {
 				b_m_id.add(rs.getInt(1));
@@ -430,7 +427,7 @@ public class BranchManagerApiService {
 				PreparedStatement getRestaurants = EchoServer.con.prepareStatement(
 						"SELECT DISTINCT RestaurantID, RestaurantName FROM biteme.restaurant WHERE BranchManagerID = ?;");
 				getRestaurants.setInt(1, i);
-				getRestaurants.execute();
+				getRestaurants.executeQuery();
 				rs = getRestaurants.getResultSet();
 				dataset = new DefaultCategoryDataset();
 
@@ -440,7 +437,7 @@ public class BranchManagerApiService {
 					PreparedStatement getOrders = EchoServer.con
 							.prepareStatement("SELECT * FROM biteme.delivery WHERE RestaurantID = ?;");
 					getOrders.setInt(1, ResID);
-					getOrders.execute();
+					getOrders.executeQuery();
 					rs1 = getOrders.getResultSet();
 					while (rs1.next()) {
 						orderApproved = LocalDateTime.parse(rs.getString(3), formatter);
