@@ -239,8 +239,8 @@ public class AccountApiService {
 								account.getPassword(), account.getFirstName(), account.getLastName(),
 								account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(),
 								account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-								account.getDebt(), rs.getInt(QueryConsts.BUSINESS_ACCOUNT_MONTHLY_BILLING_CEILING), rs.getBoolean(QueryConsts.BUSINESS_ACCOUNT_IS_APPROVED),
-								rs.getString(QueryConsts.BUSINESS_ACCOUNT_BUSINESS_NAME), rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT), rs.getString(QueryConsts.BUSINESS_ACCOUNT_W4C)));
+								account.getDebt(), rs.getString(QueryConsts.BUSINESS_ACCOUNT_W4C) ,rs.getInt(QueryConsts.BUSINESS_ACCOUNT_MONTHLY_BILLING_CEILING), rs.getBoolean(QueryConsts.BUSINESS_ACCOUNT_IS_APPROVED),
+								rs.getString(QueryConsts.BUSINESS_ACCOUNT_BUSINESS_NAME), rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT)));
 
 						response.setCode(200);
 						response.setDescription("Success fetching business account");
@@ -258,8 +258,8 @@ public class AccountApiService {
 								account.getPassword(), account.getFirstName(), account.getLastName(),
 								account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(),
 								account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-								account.getDebt(), rs.getString(2), rs.getString(3),
-								rs.getString(4), rs.getString(QueryConsts.PRIVATE_ACCOUNT_W4C)));
+								account.getDebt(), rs.getString(QueryConsts.PRIVATE_ACCOUNT_W4C), rs.getString(2), rs.getString(3),
+								rs.getString(4)));
 						response.setCode(200);
 						response.setDescription("Success fetching private account");
 					} else {

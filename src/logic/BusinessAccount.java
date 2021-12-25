@@ -10,8 +10,8 @@ public class BusinessAccount extends Account {
 	
 	public BusinessAccount(int userID, String userName, String password, String firstName, String lastName,
 			String email, String role, String phone, String status, boolean isBusiness, int branch_manager_ID,
-			String area, int debt, int monthlyBillingCeiling, Boolean isApproved, String businessName,
-			float currentSpent, String w4c) {
+			String area, int debt, String w4c,int monthlyBillingCeiling, Boolean isApproved, String businessName,
+			float currentSpent) {
 		super(userID, userName, password, firstName, lastName, email, role, phone, status, isBusiness,
 				branch_manager_ID, area, debt);
 		this.monthlyBillingCeiling = monthlyBillingCeiling;
