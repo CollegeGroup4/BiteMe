@@ -14,15 +14,7 @@ public class PrivateAccount extends Account {
 		this.creditCardNumber = creditCardNumber;
 		this.creditCardCVV = creditCardCVV;
 		this.creditCardExpDate = creditCardExpDate;
-		W4C = w4c;
-	}
-
-	public String getW4C() {
-		return W4C;
-	}
-
-	public void setW4C(String w4c) {
-		W4C = w4c;
+		this.W4C = w4c;
 	}
 
 	public String getCreditCardNumber() {
@@ -47,5 +39,14 @@ public class PrivateAccount extends Account {
 
 	public void setCreditCardExpDate(String creditCardExpDate) {
 		this.creditCardExpDate = creditCardExpDate;
-	}		
+	}
+
+	public String getW4C() {
+		return W4C;
+	}
+
+	public void setW4C(String w4c) {
+		W4C = w4c;
+	}	
+	
 }

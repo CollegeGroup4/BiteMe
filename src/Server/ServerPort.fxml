@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="544.0" prefWidth="723.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="biteme.server.ServerPortFrameController">
+<Pane prefHeight="544.0" prefWidth="723.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Server.ServerPortFrameController">
    <children>
       <ImageView fitHeight="555.0" fitWidth="732.0" layoutX="-4.0" layoutY="-8.0">
          <image>

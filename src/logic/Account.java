@@ -18,7 +18,6 @@ public class Account {
 	public Account(int userID, String userName, String password, String firstName, String lastName, String email,
 			String role, String phone, String status, boolean isBusiness, int branch_manager_ID, String area,
 			int debt) {
-		super();
 		this.userID = userID;
 		this.userName = userName;
 		this.password = password;

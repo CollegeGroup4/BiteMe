@@ -1,6 +1,5 @@
 package Server;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -156,9 +155,9 @@ public class ServerPortFrameController implements Initializable {
 	}
 
 	public void start(Stage primaryStage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/biteme/server/ServerPort.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/server/ServerPort.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/biteme/server/ServerPort.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/server/ServerPort.css").toExternalForm());
 		primaryStage.setTitle("biteme/server");
 		primaryStage.setScene(scene);
 
@@ -183,7 +182,7 @@ public class ServerPortFrameController implements Initializable {
 	
 	private void setIP() {
 		try {
-			lblIP.setText(Inet4Address.getLoopbackAddress().getHostAddress());
+			lblIP.setText(InetAddress.getLocalHost().getHostAddress());
 			System.out.println("host name: " + InetAddress.getLocalHost().getHostName());
 			System.out.println("ip: " + InetAddress.getLocalHost().getHostAddress());
 		} catch (UnknownHostException e) {

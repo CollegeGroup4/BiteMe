@@ -514,7 +514,7 @@ public class OrderApiService {
 						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
 						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
 						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
-						rs.getInt(QueryConsts.ACCOUNT_DEBT), rs.getString(QueryConsts.ACCOUNT_W4C));
+						rs.getInt(QueryConsts.ACCOUNT_DEBT));
 			}
 
 		} catch (SQLException e) {

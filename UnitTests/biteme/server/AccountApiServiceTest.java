@@ -12,6 +12,7 @@ import Server.Response;
 import common.DBController;
 import logic.Account;
 import logic.BusinessAccount;
+import logic.PrivateAccount;
 
 public class AccountApiServiceTest {
 	private Response response;
@@ -23,18 +24,18 @@ public class AccountApiServiceTest {
 		response = new Response();
 	}
 
-//	@Test
-//	public void testCreatePrivateAccount() {
-//		int userID = 2;
-//		String userName = "b";
-//		AccountApiService.getAccountByUserNameAndID(userName, userID, response);
-//		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
-//		PrivateAccount acc = new PrivateAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
-//				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-//				account.getDebt(), account.getW4c_card(), "1234567891234567", "123", "12-2026");
-//		AccountApiService.createPrivateAccount(acc, response);
-//		assertEquals("Success in registering private account: 2", response.getDescription());
-//	}
+	@Test
+	public void testCreatePrivateAccount() {
+		int userID = 2;
+		String userName = "b";
+		AccountApiService.getAccountByUserNameAndID(userName, userID, response);
+		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
+		PrivateAccount acc = new PrivateAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
+				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
+				account.getDebt(), "1234567891234567", "123", "12-2026", null);
+		AccountApiService.createPrivateAccount(acc, response);
+		assertEquals("Success in registering private account: 2", response.getDescription());
+	}
 
 	@Test
 	public void testCreateBusinessAccount() {
@@ -44,7 +45,7 @@ public class AccountApiServiceTest {
 		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
 		BusinessAccount acc = new BusinessAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
 				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), true, account.getBranch_manager_ID(), account.getArea(),
-				account.getDebt(), account.getW4c_card(), 1000, false, "intel",0);
+				account.getDebt(), 1000, false, "intel",0 , null);
 		AccountApiService.createBusinessAccount(acc, response);
 		assertEquals("Success in registering business account -> UserID: 2", response.getDescription());
 	}

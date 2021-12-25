@@ -81,7 +81,6 @@ public class QueryConsts {
     public static final int ACCOUNT_DEBT = 13;
     public static final int ACCOUNT_IS_BUSINESS = 14;
 
-    
     //for restaurant
     public static final int RESTAURANT_ID = 1;
     public static final int RESTAURANT_NAME = 2;
