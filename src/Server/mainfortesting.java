@@ -1,4 +1,4 @@
-package biteme.server;
+package Server;
 
 import java.io.File;
 import java.io.IOException;

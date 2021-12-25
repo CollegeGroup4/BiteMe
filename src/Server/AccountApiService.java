@@ -1,4 +1,4 @@
-package biteme.server;
+package Server;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,6 +66,18 @@ public class AccountApiService {
 		PreparedStatement postAccount, isBusinessApproved;
 		ResultSet rs;
 		try {
+			isBusinessApproved = EchoServer.con.prepareStatement("SELECT * FROM biteme.employees WHERE Name = ? AND isApproved = 1;");
+			isBusinessApproved.setString(1, account.getBusinessName());
+			rs = isBusinessApproved.executeQuery();
+			if(!rs.next())
+				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employees",
+						"400", 400);
+				
+		} catch (SQLException e) {
+			response.setDescription(e.getMessage());
+			response.setCode(400);
+		}
+		try {
 			postAccount = EchoServer.con
 					.prepareStatement("UPDATE biteme.account SET Role = 'Client', Status = 'active',"
 							+ "BranchManagerID = ? , Area = ? WHERE UserName = ?;");
@@ -79,18 +91,6 @@ public class AccountApiService {
 			response.setDescription(e.getMessage());
 			response.setCode(400);
 			return;
-		}
-		try {
-			isBusinessApproved = EchoServer.con.prepareStatement("SELECT * FROM biteme.employees WHERE Name = ? AND isApproved = 1;");
-			isBusinessApproved.setString(1, account.getBusinessName());
-			rs = isBusinessApproved.executeQuery();
-			if(!rs.next())
-				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employees",
-						"400", 400);
-				
-		} catch (SQLException e) {
-			response.setDescription(e.getMessage());
-			response.setCode(400);
 		}
 		try {
 			postAccount = EchoServer.con.prepareStatement(

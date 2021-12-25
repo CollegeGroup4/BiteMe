@@ -1,4 +1,4 @@
-package biteme.server;
+package Server;
 
 public class reportsGenerator {
 	

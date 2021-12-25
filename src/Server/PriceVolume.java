@@ -1,4 +1,4 @@
-package biteme.server;
+package Server;
 
 import java.awt.*;
 import java.awt.event.*;

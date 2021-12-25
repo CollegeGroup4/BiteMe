@@ -15,6 +15,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import Server.BranchManagerApiService;
+import Server.EchoServer;
+import Server.Response;
 import common.DBController;
 import logic.Account;
 import logic.Order;
@@ -38,7 +41,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#getBranchOrders(int, biteme.server.Response)}.
+	 * {@link Server.BranchManagerApiService#getBranchOrders(int, Server.Response)}.
 	 */
 	@Test
 	public void testGetBranchOrders() {
@@ -68,7 +71,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#getBranchRestaurants(int, biteme.server.Response)}.
+	 * {@link Server.BranchManagerApiService#getBranchRestaurants(int, Server.Response)}.
 	 */
 	@Test
 	public void testGetBranchRestaurants() {
@@ -77,7 +80,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#getBranchReports(java.util.List)}.
+	 * {@link Server.BranchManagerApiService#getBranchReports(java.util.List)}.
 	 */
 	@Test
 	public void testGetBranchReports() {
@@ -86,7 +89,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#registerSupplier(int, java.lang.String, java.lang.String, logic.Restaurant, biteme.server.Response)}.
+	 * {@link Server.BranchManagerApiService#registerSupplier(int, java.lang.String, java.lang.String, logic.Restaurant, Server.Response)}.
 	 */
 	@Test
 	public void testRegisterSupplier() {
@@ -95,7 +98,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#registerPrivateAccount(logic.PrivateAccount, biteme.server.Response)}.
+	 * {@link Server.BranchManagerApiService#registerPrivateAccount(logic.PrivateAccount, Server.Response)}.
 	 */
 	@Test
 	public void testRegisterPrivateAccount() {
@@ -104,7 +107,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#registerBusinessAccount(logic.BusinessAccount, biteme.server.Response)}.
+	 * {@link Server.BranchManagerApiService#registerBusinessAccount(logic.BusinessAccount, Server.Response)}.
 	 */
 	@Test
 	public void testRegisterBusinessAccount() {
@@ -113,7 +116,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#getReportForRestaurantSales()}.
+	 * {@link Server.BranchManagerApiService#getReportForRestaurantSales()}.
 	 */
 	@Test
 	public void testGetReportForRestaurantSales() {
@@ -122,7 +125,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#getReportForRestaurantByCategory()}.
+	 * {@link Server.BranchManagerApiService#getReportForRestaurantByCategory()}.
 	 */
 	@Test
 	public void testGetReportForRestaurantByCategory() {
@@ -131,7 +134,7 @@ public class BranchManagerApiServiceTest {
 
 	/**
 	 * Test method for
-	 * {@link biteme.server.BranchManagerApiService#getReportForRestaurantPerformence()}.
+	 * {@link Server.BranchManagerApiService#getReportForRestaurantPerformence()}.
 	 */
 	@Test
 	public void testGetReportForRestaurantPerformence() {
