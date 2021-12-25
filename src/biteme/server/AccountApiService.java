@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.google.gson.JsonElement;
-import com.twilio.rest.chat.v1.service.User;
 
 import logic.Account;
 import logic.BusinessAccount;
@@ -33,23 +32,22 @@ public class AccountApiService {
 		try {
 			PreparedStatement postAccount = EchoServer.con
 					.prepareStatement("UPDATE biteme.account SET Role = 'Client', Status = 'active', "
-							+ "BranchManagerID = ?, Area = ?, W4C = ? WHERE UserName = ?;");
+							+ "BranchManagerID = ?, Area = ? WHERE UserName = ?;");
 			postAccount.setInt(1, account.getBranch_manager_ID());
 			postAccount.setString(2, account.getArea());
 			postAccount.setString(3, getRandomHexString());
 			postAccount.setString(4, account.getUserName());
 			postAccount.executeUpdate();
 			postAccount = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.private_account (UserName, CreditCardNumber, CreditCardCVV, CreditCardExp) "
-							+ "VALUES(?,?,?,?)");
+					"INSERT INTO biteme.private_account (UserName, CreditCardNumber, CreditCardCVV, CreditCardExp, W4C) "
+							+ "VALUES(?,?,?,?,?)");
 			postAccount.setString(1, account.getUserName());
 			postAccount.setString(2, account.getCreditCardNumber());
 			postAccount.setString(3, account.getCreditCardCVV());
 			postAccount.setString(4, account.getCreditCardExpDate());
+			postAccount.setString(4, getRandomHexString());
 			postAccount.executeUpdate();
-
 		} catch (SQLException e) {
-			response.setBody(null);
 			response.setDescription(e.getMessage());
 			response.setCode(400);
 			return;
@@ -65,24 +63,16 @@ public class AccountApiService {
 	 *
 	 */
 	public static void createBusinessAccount(BusinessAccount account, Response response) {
+		PreparedStatement postAccount, isBusinessApproved;
+		ResultSet rs;
 		try {
-
-			PreparedStatement postAccount = EchoServer.con
+			postAccount = EchoServer.con
 					.prepareStatement("UPDATE biteme.account SET Role = 'Client', Status = 'active',"
-							+ "BranchManagerID = ? , Area = ? ,W4C = ? WHERE UserName = ?;");
+							+ "BranchManagerID = ? , Area = ? WHERE UserName = ?;");
 			postAccount.setInt(1, account.getBranch_manager_ID());
 			postAccount.setString(2, account.getArea());
 			postAccount.setString(3, getRandomHexString());
 			postAccount.setString(4, account.getUserName());
-			postAccount.executeUpdate();
-			postAccount = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.business_account (UserName, MonthlyBillingCeling, isApproved, BusinessName, CurrentSpent) "
-							+ "VALUES(?,?,?,?,?)");
-			postAccount.setInt(1, account.getUserID());
-			postAccount.setFloat(2, account.getMonthlyBillingCeiling());
-			postAccount.setBoolean(3, account.getIsApproved());
-			postAccount.setString(4, account.getBusinessName());
-			postAccount.setFloat(5, account.getCurrentSpent());
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
 			response.setBody(null);
@@ -90,6 +80,35 @@ public class AccountApiService {
 			response.setCode(400);
 			return;
 		}
+		try {
+			isBusinessApproved = EchoServer.con.prepareStatement("SELECT * FROM biteme.employees WHERE Name = ? AND isApproved = 1;");
+			isBusinessApproved.setString(1, account.getBusinessName());
+			rs = isBusinessApproved.executeQuery();
+			if(!rs.next())
+				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employees",
+						"400", 400);
+				
+		} catch (SQLException e) {
+			response.setDescription(e.getMessage());
+			response.setCode(400);
+		}
+		try {
+			postAccount = EchoServer.con.prepareStatement(
+					"INSERT INTO biteme.business_account (UserName, MonthlyBillingCeling, isApproved, BusinessName, CurrentSpent, W4C) "
+							+ "VALUES(?,?,?,?,?,?)");
+			postAccount.setString(1, account.getUserName());
+			postAccount.setFloat(2, account.getMonthlyBillingCeiling());
+			postAccount.setBoolean(3, account.getIsApproved());
+			postAccount.setString(4, account.getBusinessName());
+			postAccount.setFloat(5, account.getCurrentSpent());
+			postAccount.setString(5, getRandomHexString());
+			postAccount.executeUpdate();
+	} catch (SQLException e) {
+		response.setBody(null);
+		response.setDescription("Business "+account.getBusinessName()+" doesn't exist");
+		response.setCode(400);
+		return;
+	}
 		response.setCode(200);
 		response.setDescription("Success in registering business account -> UserID: " + account.getUserID());
 		response.setBody(null);
@@ -355,7 +374,7 @@ public class AccountApiService {
 	 *
 	 * 
 	 *
-	 */
+	 *///TODO
 	public static void loginAccountW4C(String w4cCode, Response response) {
 
 		ResultSet rs;
@@ -497,6 +516,7 @@ public class AccountApiService {
 		response.setCode(200);
 		response.setDescription("Success in updating private account: accountID -> " + account.getUserID());
 	}
+	
 	/**
 	 * Updated Business Account
 	 *
