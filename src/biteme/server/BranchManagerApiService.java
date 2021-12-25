@@ -38,7 +38,7 @@ public class BranchManagerApiService {
 	public static void getBranchOrders(int branchManagerID, Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
-		Map<String, Order[]> ordersByRestaurantID = new HashMap<>();
+		Map<String, String> ordersByRestaurantID = new HashMap<>();
 		int restaurantID;
 		try {
 			stmt = EchoServer.con.prepareStatement(
@@ -49,7 +49,7 @@ public class BranchManagerApiService {
 			while (rs.next()) {
 				restaurantID = rs.getInt(1);
 				OrderApiService.AllOrdersByRestaurantID(restaurantID, response);
-				ordersByRestaurantID.put(Integer.toString(restaurantID), EchoServer.gson.fromJson(((Order[])response.getBody()).toString(), Order[].class));
+				ordersByRestaurantID.put(Integer.toString(restaurantID), (String) response.getBody());
 			}
 		} catch (SQLException e) {
 			response.setCode(400);

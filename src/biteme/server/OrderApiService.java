@@ -25,7 +25,6 @@ import logic.Account;
 import logic.Item;
 import logic.Options;
 import logic.Order;
-import test.tes.fg;
 
 /**
  * BiteMe
@@ -180,7 +179,7 @@ public class OrderApiService {
 		}
 		response.setCode(200);
 		response.setDescription("Success in fetching orders");
-		response.setBody(orders.toArray());
+		response.setBody(EchoServer.gson.toJson(orders.toArray()));
 	}
 
 	public static void AllOrdersByRestaurantID(int restaurantID, Response response) {

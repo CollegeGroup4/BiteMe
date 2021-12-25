@@ -94,6 +94,12 @@ public class EchoServer extends AbstractServer {
 				response.setCode(200);
 				response.setDescription("A connaction with the server has been established at port " + DEFAULT_PORT);
 				break;
+			case "/exit":
+				clients.remove(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
+				ServerPortFrameController.isAdded = true;
+				response.setCode(200);
+				response.setDescription("A connaction with the server has been established at port " + DEFAULT_PORT);
+				break;
 			case "/orders":
 				switch (method) {
 					case GET:
