@@ -2,6 +2,7 @@ package biteme.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -31,6 +32,12 @@ public class mainfortesting {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+      String time = "2021-12-21 12:30:14", str;
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      LocalDateTime test = LocalDateTime.parse(time, formatter);
+     LocalDateTime test2 = LocalDateTime.parse(str, formatter2);
+      System.out.println(test2);
    }
 
 

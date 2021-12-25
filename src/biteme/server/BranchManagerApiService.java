@@ -38,18 +38,18 @@ public class BranchManagerApiService {
 	public static void getBranchOrders(int branchManagerID, Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
-		Map<String, String> ordersByRestaurantID = new HashMap<>();
+		Map<String, Order[]> ordersByRestaurantID = new HashMap<>();
 		int restaurantID;
 		try {
 			stmt = EchoServer.con.prepareStatement(
-					"SELECT * FROM restaurants biteme.restaurant WHERE " + "restaurants.BranchManagerID = ?");
+					"SELECT * FROM biteme.restaurant WHERE BranchManagerID = ?");
 			stmt.setInt(1, branchManagerID);
-			stmt.execute();
+			stmt.executeQuery();
 			rs = stmt.getResultSet();
 			while (rs.next()) {
 				restaurantID = rs.getInt(1);
 				OrderApiService.AllOrdersByRestaurantID(restaurantID, response);
-				ordersByRestaurantID.put(Integer.toString(restaurantID), (String) response.getBody());
+				ordersByRestaurantID.put(Integer.toString(restaurantID), EchoServer.gson.fromJson(((Order[])response.getBody()).toString(), Order[].class));
 			}
 		} catch (SQLException e) {
 			response.setCode(400);
@@ -369,7 +369,7 @@ public class BranchManagerApiService {
 					PreparedStatement getOrders = EchoServer.con.prepareStatement(
 							"SELECT OrderTime, Check_out_price, RestaurantID, RestaurantName, OrderNum FROM biteme.order WHERE RestaurantID = ?;");
 					getOrders.setInt(1, j);
-					getOrders.execute();
+					getOrders.executeQuery();
 					rs = getOrders.getResultSet();
 					PreparedStatement getItems = EchoServer.con
 							.prepareStatement("SELECT IIM.Course, I.Category FROM biteme.item_in_menu_in_order IIMIO, "
