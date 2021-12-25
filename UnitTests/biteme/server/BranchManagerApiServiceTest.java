@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.junit.After;
@@ -39,6 +40,16 @@ public class BranchManagerApiServiceTest {
 		response = new Response();
 	}
 
+
+	public void clearOrders() {
+		try {
+			PreparedStatement deleteOrders = EchoServer.con.prepareStatement("DELETE FROM biteme.order;");
+			deleteOrders.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Test method for
 	 * {@link Server.BranchManagerApiService#getBranchOrders(int, Server.Response)}.
@@ -62,11 +73,9 @@ public class BranchManagerApiServiceTest {
 		BranchManagerApiService.getBranchOrders(1, response);
 		Map<String, String> ordersByRestaurantID = EchoServer.gson.fromJson((String) response.getBody(), Map.class);
 		assertEquals(ordersByRestaurantID.size(), 1);
-
-		for(String temp : ordersByRestaurantID.keySet()) {
-			Order otemp =EchoServer.gson.fromJson(ordersByRestaurantID.get("temp"), Order.class);
-			System.out.println(otemp);
-		}
+		Order[] otemp =EchoServer.gson.fromJson(ordersByRestaurantID.get("1"), Order[].class);
+		assertEquals(otemp.length, 5);
+		clearOrders();
 	}
 
 	/**
@@ -75,7 +84,18 @@ public class BranchManagerApiServiceTest {
 	 */
 	@Test
 	public void testGetBranchRestaurants() {
-		fail("Not yet implemented");
+		try {
+			PreparedStatement addOrders = EchoServer.con.prepareStatement(
+					"INSERT INTO biteme.order (RestaurantID, UserName, OrderTime, PhoneNumber, TypeOfOrder, Check_out_price, isApproved, required_time, hasArrived) "
+							+ "VALUES (1,'a',?,'42534','orderin',100,true,?,false);");
+			for (int i = 0; i < 5; i++) {
+				addOrders.setString(1, now.format(formatter));
+				addOrders.setString(2, now.format(formatter));
+				addOrders.executeUpdate();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

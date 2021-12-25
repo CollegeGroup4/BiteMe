@@ -207,7 +207,7 @@ public class AccountApiService {
 						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
 						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
 						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
-						rs.getInt(QueryConsts.ACCOUNT_DEBT), rs.getString(QueryConsts.ACCOUNT_W4C));
+						rs.getInt(QueryConsts.ACCOUNT_DEBT));
 				accounts.add(account);
 			}
 		} catch (SQLException e) {
@@ -238,8 +238,8 @@ public class AccountApiService {
 								account.getPassword(), account.getFirstName(), account.getLastName(),
 								account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(),
 								account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-								account.getDebt(), account.getW4c_card(), rs.getInt(2), rs.getBoolean(3),
-								rs.getString(4), rs.getFloat(5)));
+								account.getDebt(), rs.getInt(QueryConsts.BUSINESS_ACCOUNT_MONTHLY_BILLING_CEILING), rs.getBoolean(QueryConsts.BUSINESS_ACCOUNT_IS_APPROVED),
+								rs.getString(QueryConsts.BUSINESS_ACCOUNT_BUSINESS_NAME), rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT), rs.getString(QueryConsts.BUSINESS_ACCOUNT_W4C)));
 						response.setCode(200);
 						response.setDescription("Success fetching business account");
 					} else {
@@ -256,8 +256,8 @@ public class AccountApiService {
 								account.getPassword(), account.getFirstName(), account.getLastName(),
 								account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(),
 								account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-								account.getDebt(), account.getW4c_card(), rs.getString(2), rs.getString(3),
-								rs.getString(4)));
+								account.getDebt(), rs.getString(2), rs.getString(3),
+								rs.getString(4), rs.getString(QueryConsts.PRIVATE_ACCOUNT_W4C)));
 						response.setCode(200);
 						response.setDescription("Success fetching private account");
 					} else {
@@ -296,7 +296,7 @@ public class AccountApiService {
 						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
 						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
 						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
-						rs.getInt(QueryConsts.ACCOUNT_DEBT), rs.getString(QueryConsts.ACCOUNT_W4C));
+						rs.getInt(QueryConsts.ACCOUNT_DEBT));
 				if (rs.getBoolean(QueryConsts.ACCOUNT_IS_LOGGED_IN)) {
 					throw new SQLException("User is already logged in", "401", 401);
 				}
@@ -394,7 +394,7 @@ public class AccountApiService {
 						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
 						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
 						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
-						rs.getInt(QueryConsts.ACCOUNT_DEBT), rs.getString(QueryConsts.ACCOUNT_W4C));
+						rs.getInt(QueryConsts.ACCOUNT_DEBT));
 
 			} else {
 				throw new SQLException("Account " + w4cCode + " not found", "402", 402);
@@ -572,7 +572,7 @@ public class AccountApiService {
 						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
 						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
 						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
-						rs.getInt(QueryConsts.ACCOUNT_DEBT), rs.getString(QueryConsts.ACCOUNT_W4C));
+						rs.getInt(QueryConsts.ACCOUNT_DEBT));
 			} else {
 				throw new SQLException("Account " + userName + " not found", "402", 402);
 			}
