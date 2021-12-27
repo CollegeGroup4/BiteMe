@@ -176,13 +176,13 @@ public class PaymentController implements Initializable {
 	}
 
 	private void setOrderDetailsLabels() {
-		lblDate.setText(lblDate.getText() + " " + DeliveryAndTimeController.orderToSend.required_time);
-		lblOrderType.setText(lblOrderType.getText() + " " + DeliveryAndTimeController.orderToSend.type_of_order);
-		lblAddress.setText(lblAddress.getText() + " " + DeliveryAndTimeController.shippment.getAddress());
-		lblWorkplace.setText(lblWorkplace.getText() + " " + DeliveryAndTimeController.shippment.getWork_place());
+		//lblDate.setText(lblDate.getText() + " " + DeliveryAndTimeController.orderToSend.required_time);
+		//lblOrderType.setText(lblOrderType.getText() + " " + DeliveryAndTimeController.orderToSend.type_of_order);
+		//lblAddress.setText(lblAddress.getText() + " " + DeliveryAndTimeController.shippment.getAddress());
+		//lblWorkplace.setText(lblWorkplace.getText() + " " + DeliveryAndTimeController.shippment.getWork_place());
 		//lblID.setText(lblID.getText() + " " + CustomerPageController.user.getId());         *** Implement when connect to the DB
 		//lblName.setText(lblName.getText() + " " + CustomerPageController.user.getName());   *** Implement when connect to the DB
-		lblPhone.setText(lblPhone.getText()+" "+DeliveryAndTimeController.shippment.getPhone());
+		//lblPhone.setText(lblPhone.getText()+" "+DeliveryAndTimeController.shippment.getPhone());
 	}
 
 	private void americanExpressSelected() {

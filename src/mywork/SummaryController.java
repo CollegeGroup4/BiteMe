@@ -23,14 +23,14 @@ public class SummaryController implements Initializable {
 	@FXML
 	private TableColumn<Item, String> colItemName;
 
-	@FXML
-	private TableColumn<Item, Integer> colItemID;
+	//@FXML
+	//private TableColumn<Item, Integer> colItemID;
 
 	@FXML
 	private TableColumn<Item, Integer> colAmount;
 
-	@FXML
-	private TableColumn<Item, String> colOptionals;
+	//@FXML
+	//private TableColumn<Item, String> colOptionals;
 
 	@FXML
 	private TableColumn<Item, Float> colPrice;
@@ -41,12 +41,11 @@ public class SummaryController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		insertitemsToTbl();
 		colItemName.setCellValueFactory(new PropertyValueFactory<Item, String>("name"));
-		colItemID.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemID"));
+		//colItemID.setCellValueFactory(new PropertyValueFactory<Item, Integer>("itemID"));
 		colAmount.setCellValueFactory(new PropertyValueFactory<Item, Integer>("amount"));
-		colOptionals.setCellValueFactory(new PropertyValueFactory<Item, String>("options"));
+		//colOptionals.setCellValueFactory(new PropertyValueFactory<Item, String>("options"));
 		colPrice.setCellValueFactory(new PropertyValueFactory<Item, Float>("price"));
 		table.setItems(itemsList);
-
 	}
 
 	public void insertitemsToTbl() {

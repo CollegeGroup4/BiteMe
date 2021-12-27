@@ -43,9 +43,8 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 			Button temp = new Button(itemsInCategory.get(i).getName());
 			temp.setOnAction(this);
 			b.add(temp);
-
 		}
-		Items.getChildren().addAll(b);//
+		Items.getChildren().addAll(b);
 	}
 
 	private void getInformation() {
@@ -90,7 +89,7 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 			e.printStackTrace();
 		}
 		ChooseADishController.chooseADishController.getPaneForCourses().setTop(null);
-		ChooseADishController.chooseADishController.getPaneForCourses().setCenter(root);
+		ChooseADishController.chooseADishController.getPaneForSelections().setCenter(root);
 	}
 
 }

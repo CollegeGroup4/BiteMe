@@ -172,7 +172,7 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 			root = loader.load(getClass().getResource("/mywork/ChooseADish.fxml").openStream());
 			ChooseADishController.chooseADishController = loader.getController();
 			//PrepareADishController.prepareADishController.setName();  //set when will be logged into a real user
-			ChooseADishController.chooseADishController.setRestName();
+			//ChooseADishController.chooseADishController.setRestName();
 			Scene scene = new Scene(root);
 			primaryStage.setTitle("Prepare A Dish Page");
 			primaryStage.setScene(scene);

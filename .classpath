@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="/jdbc/lib/mysql-connector-java-8.0.13.jar"/>
 	<classpathentry kind="lib" path="C:/Users/einan/git/BiteMe/lib/gson-2.8.9.jar"/>
 	<classpathentry kind="lib" path="C:/Users/einan/git/BiteMe/lib/json-20211205.jar"/>
+	<classpathentry kind="lib" path="C:/Users/einan/git/BiteMe/lib/jfoenix-9.0.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

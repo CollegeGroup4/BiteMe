@@ -4,15 +4,13 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="167.0" prefWidth="377.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.SummaryController">
+<Pane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.SummaryController">
    <children>
-      <TableView fx:id="table" layoutY="-2.0" prefHeight="171.0" prefWidth="377.0">
+      <TableView fx:id="table" layoutY="-2.0" prefHeight="337.0" prefWidth="229.0">
         <columns>
-          <TableColumn fx:id="colItemName" prefWidth="75.0" text="Item Name" />
-          <TableColumn fx:id="colItemID" prefWidth="75.0" text="Item ID" />
-            <TableColumn fx:id="colAmount" prefWidth="75.0" text="Amount" />
-            <TableColumn fx:id="colOptionals" prefWidth="75.0" text="Optionals" />
-            <TableColumn fx:id="colPrice" prefWidth="75.0" text="Price" />
+          <TableColumn fx:id="colItemName" prefWidth="118.0" text="Item Name" />
+            <TableColumn fx:id="colAmount" prefWidth="55.0" text="Amount" />
+            <TableColumn fx:id="colPrice" prefWidth="55.0" text="Price" />
         </columns>
       </TableView>
    </children>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -18,7 +19,7 @@
    <children>
       <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <HBox alignment="CENTER" layoutX="35.0" layoutY="26.0" prefHeight="50.0" prefWidth="810.0" spacing="20.0" style="-fx-border-color: black;">
+            <HBox alignment="CENTER" layoutX="36.0" layoutY="81.0" prefHeight="50.0" prefWidth="810.0" spacing="20.0" style="-fx-border-color: black;">
                <children>
                   <Label prefHeight="24.0" prefWidth="162.0" text="Choose Restaurant">
                      <font>
@@ -47,26 +48,21 @@
                   </Label>
                </children>
             </HBox>
-            <Label fx:id="displayRestName" layoutX="243.0" layoutY="512.0" prefHeight="29.0" prefWidth="418.0" text="Label">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
-               </font>
-            </Label>
-            <BorderPane fx:id="paneForCourses" layoutX="50.0" layoutY="115.0" prefHeight="342.0" prefWidth="162.0">
+            <BorderPane fx:id="paneForCourses" layoutX="14.0" layoutY="148.0" prefHeight="405.0" prefWidth="162.0">
+               <top>
+                  <Label fx:id="lblMenus" prefHeight="27.0" prefWidth="162.0" text="Menus:" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="20.0" />
+                     </font>
+                  </Label>
+               </top>
                <center>
                   <ScrollPane fx:id="spMenus" prefHeight="279.0" prefWidth="130.0" BorderPane.alignment="CENTER">
                      <content>
                         <VBox fx:id="Menus" />
                      </content>
                   </ScrollPane>
-               </center>
-               <top>
-                  <Label fx:id="lblMenus" prefHeight="42.0" prefWidth="193.0" text="Menus:" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="20.0" />
-                     </font>
-                  </Label>
-               </top></BorderPane>
+               </center></BorderPane>
             <Button fx:id="btnBack" layoutX="48.0" layoutY="586.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
@@ -75,7 +71,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <BorderPane fx:id="paneForSummary" layoutX="427.0" layoutY="115.0" prefHeight="314.0" prefWidth="418.0" />
+            <BorderPane fx:id="paneForSummary" layoutX="640.0" layoutY="176.0" prefHeight="385.0" prefWidth="226.0" />
             <Button fx:id="btnNext" layoutX="704.0" layoutY="586.0" mnemonicParsing="false" onAction="#next" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Next" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
@@ -84,6 +80,19 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+            <Label layoutX="340.0" layoutY="14.0" text="Order Food">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="40.0" />
+               </font>
+            </Label>
+            <BorderPane fx:id="paneForSelections" layoutX="204.0" layoutY="176.0" prefHeight="287.0" prefWidth="407.0" />
+            <AnchorPane layoutX="214.0" layoutY="499.0" prefHeight="138.0" prefWidth="388.0" style="-fx-border-color: black;">
+               <children>
+                  <Label layoutX="119.0" layoutY="6.0" prefHeight="17.0" prefWidth="39.0" text="Label" />
+                  <ImageView fx:id="imageItem" fitHeight="148.0" fitWidth="109.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                  <JFXTextArea layoutX="119.0" layoutY="39.0" prefHeight="100.0" prefWidth="233.0" />
+               </children>
+            </AnchorPane>
          </children></AnchorPane>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="92.0" prefWidth="884.0" spacing="50.0" style="-fx-background-radius: 50px;">
          <children>
