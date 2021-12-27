@@ -19,7 +19,7 @@
    <children>
       <AnchorPane layoutX="10.0" layoutY="96.0" prefHeight="664.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <Button fx:id="btnCreateAccount" layoutX="357.0" layoutY="490.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="41.0" prefWidth="167.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Create Account" textFill="WHITE">
+            <Button layoutX="357.0" layoutY="502.0" mnemonicParsing="false" onAction="#createAccount" prefHeight="41.0" prefWidth="167.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Create Account" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -116,21 +116,6 @@
                         </Label>
                      </children>
                   </AnchorPane>
-                  <AnchorPane disable="true" prefHeight="40.0" prefWidth="304.0">
-                     <children>
-                        <Label fx:id="lblrequiredIDBusiness" alignment="CENTER" layoutX="201.0" layoutY="1.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
-                           <font>
-                              <Font name="System Bold Italic" size="12.0" />
-                           </font>
-                        </Label>
-                        <Label contentDisplay="CENTER" layoutX="45.0" layoutY="15.0" prefHeight="35.0" prefWidth="110.0" text="ID:" textAlignment="CENTER">
-                           <font>
-                              <Font name="Berlin Sans FB Demi Bold" size="15.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="textFieldIDBusiness" layoutX="197.0" layoutY="20.0" promptText="dont need ?!!?!?!" />
-                     </children>
-                  </AnchorPane>
                   <AnchorPane prefHeight="38.0" prefWidth="304.0">
                      <children>
                         <Label fx:id="lblrequiredMonthBlling" alignment="CENTER" layoutX="201.0" layoutY="3.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
@@ -161,11 +146,16 @@
                   <JFXComboBox fx:id="comboBoxStatus" layoutX="73.0" layoutY="16.0" prefHeight="28.0" prefWidth="94.0" promptText="Active" />
                </children>
             </AnchorPane>
-            <Button fx:id="btnbackOpenBusinessAccount" layoutX="46.0" layoutY="602.0" mnemonicParsing="false" onAction="#backOpenAccount" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
+            <Button layoutX="46.0" layoutY="602.0" mnemonicParsing="false" onAction="#backOpenAccount" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Button>
+            <Label fx:id="lableErrorMag" alignment="CENTER" layoutX="9.0" layoutY="481.0" prefHeight="18.0" prefWidth="862.0" textFill="RED">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="9.0" prefHeight="102.0" prefWidth="784.0" spacing="50.0" style="-fx-background-radius: 50px;">
@@ -178,12 +168,12 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink fx:id="btnHome" onAction="#home" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
+            <Hyperlink onAction="#home" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
-            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+            <Button mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>

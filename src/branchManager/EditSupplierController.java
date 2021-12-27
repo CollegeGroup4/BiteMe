@@ -13,7 +13,7 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
-import client.Request;
+import common.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -115,33 +115,7 @@ public class EditSupplierController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getUserName());
-
-		try {
-			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-			drawer.setSidePane(anchorPane);
-		} catch (IOException e) {
-			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
-		}
-
-		// transition animation of hamburger icon
-		HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(myHamburger);
-		drawer.setVisible(false);
-		transition.setRate(-1);
-
-		// click event - mouse click
-		myHamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
-
-			transition.setRate(transition.getRate() * -1);
-			transition.play();
-
-			if (drawer.isOpened()) {
-				drawer.setVisible(false);
-				drawer.close(); // this will close slide pane
-			} else {
-				drawer.open(); // this will open slide pane
-				drawer.setVisible(true);
-			}
-		});
+		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
 
@@ -192,10 +166,10 @@ public class EditSupplierController implements Initializable {
 					photo, restaurantAddress, "");
 			Account supplier = new Account(0, supplierUserame, null, null, null, null, "Supplier", null, "status",
 					false, BranchManagerController.branchManager.getUserID(),
-					BranchManagerController.branchManager.getArea(), 0, null);
+					BranchManagerController.branchManager.getArea(), 0);
 			Account supplierModorator = new Account(0, moderatorUsername, null, null, null, null, "SupplierModorator",
 					null, "status", false, BranchManagerController.branchManager.getUserID(),
-					BranchManagerController.branchManager.getArea(), 0, null);
+					BranchManagerController.branchManager.getArea(), 0);
 
 			sentToJson(restaurant, supplier, supplierModorator);
 			response();

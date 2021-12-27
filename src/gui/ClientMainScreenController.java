@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
-import client.Request;
+import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

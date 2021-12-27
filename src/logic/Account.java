@@ -14,11 +14,9 @@ public class Account {
 	private int branch_manager_ID;
 	private String area;
 	private int debt;
-	private String w4c_card;
 
 	public Account(int userID, String userName, String password, String firstName, String lastName, String email,
-			String role, String phone, String status, boolean isBusiness, int branch_manager_ID, String area, int debt,
-			String w4c_card) {
+			String role, String phone, String status, boolean isBusiness, int branch_manager_ID, String area, int debt) {
 		this.userID = userID;
 		this.userName = userName;
 		this.password = password;
@@ -32,7 +30,6 @@ public class Account {
 		this.branch_manager_ID = branch_manager_ID;
 		this.area = area;
 		this.debt = debt;
-		this.w4c_card = w4c_card;
 	}
 
 	public int getUserID() {
@@ -129,14 +126,6 @@ public class Account {
 
 	public void setDebt(int debt) {
 		this.debt = debt;
-	}
-
-	public String getW4c_card() {
-		return w4c_card;
-	}
-
-	public void setW4c_card(String w4c_card) {
-		this.w4c_card = w4c_card;
 	}
 
 	public boolean isBusiness() {

@@ -16,7 +16,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import Server.Response;
 import client.ChatClient;
 import client.ClientUI;
-import client.Request;
+import common.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

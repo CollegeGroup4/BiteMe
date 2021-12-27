@@ -55,13 +55,15 @@ public class QueryConsts {
     public static final int PRIVATE_ACCOUNT_CREDIT_CARD_NUMBER = 2;
     public static final int PRIVATE_ACCOUNT_CREDIT_CARD_CVV = 3;
     public static final int PRIVATE_ACCOUNT_CREDIT_CARD_EXP = 4;
+    public static final int PRIVATE_ACCOUNT_W4C = 5;
 
     //for business_account
     public static final int BUSINESS_ACCOUNT_USER_NAME = 1;
     public static final int BUSINESS_ACCOUNT_MONTHLY_BILLING_CEILING = 2;
     public static final int BUSINESS_ACCOUNT_IS_APPROVED = 3;
     public static final int BUSINESS_ACCOUNT_BUSINESS_NAME = 4;
-    public static final int BUSINESS_ACCOUNT_CURRENT_SPENT = 4;
+    public static final int BUSINESS_ACCOUNT_CURRENT_SPENT = 5;
+    public static final int BUSINESS_ACCOUNT_W4C = 6;
 
     //for accounts
     public static final int ACCOUNT_USER_ID = 1;
@@ -77,10 +79,8 @@ public class QueryConsts {
     public static final int ACCOUNT_AREA = 11;
     public static final int ACCOUNT_IS_LOGGED_IN = 12;
     public static final int ACCOUNT_DEBT = 13;
-    public static final int ACCOUNT_W4C = 14;
-    public static final int ACCOUNT_IS_BUSINESS = 15;
+    public static final int ACCOUNT_IS_BUSINESS = 14;
 
-    
     //for restaurant
     public static final int RESTAURANT_ID = 1;
     public static final int RESTAURANT_NAME = 2;

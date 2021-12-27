@@ -13,5 +13,7 @@
 	<classpathentry kind="lib" path="/jdbc/lib/mysql-connector-java-8.0.13.jar"/>
 	<classpathentry kind="lib" path="jfoenix-9.0.10.jar"/>
 	<classpathentry kind="lib" path="gson-2.8.9.jar"/>
+	<classpathentry kind="lib" path="jfreechart-1.5.3.jar"/>
+	<classpathentry kind="lib" path="javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

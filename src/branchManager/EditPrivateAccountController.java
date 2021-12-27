@@ -15,7 +15,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.Response;
 import client.ChatClient;
-import client.Request;
+import common.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -135,32 +135,7 @@ public class EditPrivateAccountController implements Initializable {
 			listYear[i] = "20" + (i + 21);
 		comboBoxYear.getItems().setAll(listYear);
 		componnentDebt.setVisible(isEdit);
-		try {
-			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-			drawer.setSidePane(anchorPane);
-		} catch (IOException e) {
-			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
-		}
-
-		// transition animation of hamburger icon
-		HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(myHamburger);
-		drawer.setVisible(false);
-		transition.setRate(-1);
-
-		// click event - mouse click
-		myHamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
-
-			transition.setRate(transition.getRate() * -1);
-			transition.play();
-
-			if (drawer.isOpened()) {
-				drawer.setVisible(false);
-				drawer.close(); // this will close slide pane
-			} else {
-				drawer.open(); // this will open slide pane
-				drawer.setVisible(true);
-			}
-		});
+		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer); 
 	}
 
 

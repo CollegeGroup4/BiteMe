@@ -20,11 +20,6 @@
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
-            <Hyperlink fx:id="hyperLinkSignin" onAction="#signin" style="-fx-border-color: white;" text="SignIn" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
-               </font>
-            </Hyperlink>
             <Hyperlink fx:id="hyperLinkLogin" onAction="#login" text="Login" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />

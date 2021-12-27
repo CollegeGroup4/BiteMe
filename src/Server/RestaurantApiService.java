@@ -491,7 +491,7 @@ public class RestaurantApiService {
 		Double sendCredit;
 		try {
 			getCredit = EchoServer.con.prepareStatement(
-					"SELECT  credit.AmountInCredit FROM credit biteme.credit WHERE credit.UserName = ? and "
+					"SELECT credit.AmountInCredit FROM credit biteme.credit WHERE credit.UserName = ? AND "
 							+ "credit.RestaurantID = ?;");
 			getCredit.setString(1, userName);
 			getCredit.setInt(2, restaurantID);

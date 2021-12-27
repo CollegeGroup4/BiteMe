@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import client.ClientUI;
-import client.Request;
+import common.Request;
 import guiNew.Messages;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

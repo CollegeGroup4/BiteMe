@@ -1,138 +1,249 @@
 package guiNew;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 
-import client.ClientUI;
+import branchManager.BranchManagerFunctions;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class Navigation_SidePanelController extends Application {
-
+public class Navigation_SidePanelController extends Application implements Initializable {
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+	public static String role;
 	@FXML
 	private VBox vBoxManu;
-	@FXML
-	private JFXButton btnExit;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+
 		Parent root = FXMLLoader.load(getClass().getResource("/branchManager/OpenAccountPage.fxml"));
 
 		Scene scene = new Scene(root);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
 	}
 
-	public void setvBoxManu(VBox vBoxManu) {
-		this.vBoxManu = vBoxManu;
-	}
-
-	@FXML
-	void editPersonalInfo(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/branchManager/EditPersonalInfo.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Edit Personal Info");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		switch (role) {
+		case "CEO":
+			initSidePanelCEO(); // not ready!!!
+			break;
+		case "Branch Manager":
+			initSidePanelBranchManager();
+			break;
+		case "Supplier":
+			initSidePanelSupplier(); // not ready!!!
+			break;
+		case "Moderator":
+			initSidePanelModerator(); // not ready!!!
+			break;
+		case "HR":
+			initSidePanelHR(); // not ready!!!
+			break;
+		case "Client":
+			initSidePanelClient();
+			break;
 		}
 	}
 
-	@FXML
-	void createReports(ActionEvent event) {
+	private void initSidePanelCEO() {
+		JFXButton[] buttons = new JFXButton[7];
+		buttons[0] = new JFXButton("Order food");
+		createButton(buttons[0], "/gui/MainScreen.fxml", "Branch manager - Order food");
 
+		buttons[1] = new JFXButton("Edit personal info");
+		createButton(buttons[1], "/branchManager/EditPersonalInfo.fxml", "Branch manager - Edit Personal Info");
+
+		buttons[2] = new JFXButton("View reports");
+		createButton(buttons[2], "/gui/MainScreen.fxml", "Branch manager - Order food");
+
+		buttons[3] = new JFXButton("Create new report");
+		createButton(buttons[3], "/gui/MainScreen.fxml", "Branch manager - Order food");
+
+		buttons[4] = new JFXButton("open account");
+		createButton(buttons[4], "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+
+		buttons[5] = new JFXButton("Registeration Restaurant");
+		createButton(buttons[5], "/branchManager/RegisterationApprovalSupplier.fxml",
+				"Branch manager - registeration & Approval Supplier");
+		buttons[6] = new JFXButton("Exit");
+		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
+		buttons[6].setFont(font);
+		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.exit(e);
+		});
+		vBoxManu.getChildren().addAll(buttons);
 	}
 
-	@FXML
-	void openAccount(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/branchManager/OpenAccountPage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Branch manager - open account");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void createButton(JFXButton button, String path, String titleStage) {
+		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
+		button.setFont(font);
+		button.addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, path, titleStage);
+		});
 	}
 
-	@FXML
-	void orderFood(ActionEvent event) {
-		System.out.println("Order food - Branch manager");
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/gui/MainScreen.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Branch manager- Order food");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void initSidePanelBranchManager() {
+		JFXButton[] buttons = new JFXButton[7];
+		buttons[0] = new JFXButton("Order food");
+		createButton(buttons[0], "/gui/MainScreen.fxml", "Branch manager - Order food");
+
+		buttons[1] = new JFXButton("Edit personal info");
+		createButton(buttons[1], "/branchManager/EditPersonalInfo.fxml", "Branch manager - Edit Personal Info");
+
+		buttons[2] = new JFXButton("View reports");
+		createButton(buttons[2], "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+
+		buttons[3] = new JFXButton("Create new report");
+		createButton(buttons[3], "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+		buttons[4] = new JFXButton("open account");
+		createButton(buttons[4], "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+
+		buttons[5] = new JFXButton("Registeration Restaurant");
+		createButton(buttons[5], "/branchManager/RegisterationApprovalSupplier.fxml",
+				"Branch manager - registeration & Approval Supplier");
+		buttons[6] = new JFXButton("Exit");
+		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
+		buttons[6].setFont(font);
+		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.exit(e);
+		});
+		vBoxManu.getChildren().addAll(buttons);
 	}
 
-	@FXML
-	void RegisterationRestaurant(ActionEvent event) {
-		System.out.println("registeration & Approval Supplier - Branch manager");
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader
-					.load(getClass().getResource("/branchManager/RegisterationApprovalSupplier.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Branch manager - registeration & Approval Supplier ");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void initSidePanelSupplier() {
+		JFXButton[] buttons = new JFXButton[7];
+		buttons[0] = new JFXButton("Order food");
+		buttons[0].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/gui/MainScreen.fxml", "Branch manager - Order food");
+		});
+		buttons[1] = new JFXButton("Edit personal info");
+		buttons[1].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/EditPersonalInfo.fxml",
+					"Branch manager - Edit Personal Info");
+		});
+		buttons[2] = new JFXButton("View reports");
+		buttons[2].addEventHandler(ActionEvent.ACTION, (e) -> {
+			///////
+		});
+		buttons[3] = new JFXButton("Create new report");
+		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
+			//////
+		});
+		buttons[4] = new JFXButton("open account");
+		buttons[4].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+		});
+		buttons[5] = new JFXButton("Registeration Restaurant");
+		buttons[5].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/RegisterationApprovalSupplier.fxml",
+					"Branch manager - registeration & Approval Supplier");
+		});
+		buttons[6] = new JFXButton("Exit");
+		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.exit(e);
+		});
+		vBoxManu.getChildren().addAll(buttons);
 	}
 
-	@FXML
-	void viewReports(ActionEvent event) {
-
+	private void initSidePanelModerator() {
+		JFXButton[] buttons = new JFXButton[7];
+		buttons[0] = new JFXButton("Order food");
+		buttons[0].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/gui/MainScreen.fxml", "Branch manager - Order food");
+		});
+		buttons[1] = new JFXButton("Edit personal info");
+		buttons[1].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/EditPersonalInfo.fxml",
+					"Branch manager - Edit Personal Info");
+		});
+		buttons[2] = new JFXButton("View reports");
+		buttons[2].addEventHandler(ActionEvent.ACTION, (e) -> {
+			///////
+		});
+		buttons[3] = new JFXButton("Create new report");
+		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
+			//////
+		});
+		buttons[4] = new JFXButton("open account");
+		buttons[4].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+		});
+		buttons[5] = new JFXButton("Registeration Restaurant");
+		buttons[5].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/RegisterationApprovalSupplier.fxml",
+					"Branch manager - registeration & Approval Supplier");
+		});
+		buttons[6] = new JFXButton("Exit");
+		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.exit(e);
+		});
+		vBoxManu.getChildren().addAll(buttons);
 	}
 
-	@FXML
-	void Exit(ActionEvent event) throws Exception {
-		System.out.println("exit client Tool");
-		String[] ipHostName = new String[3];
-		ipHostName[0] = "EXIT";
-		ipHostName[1] = InetAddress.getLocalHost().getHostName();
-		ipHostName[2] = InetAddress.getLocalHost().getHostAddress();
-		try {
-			ClientUI.chat.accept(ipHostName);
-		} catch (NullPointerException e) {
-			System.out.println("new ClientController didn't work");
-		}
-		System.exit(0);
+	private void initSidePanelHR() {
+		JFXButton[] buttons = new JFXButton[7];
+		buttons[0] = new JFXButton("Order food");
+		buttons[0].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/gui/MainScreen.fxml", "Branch manager - Order food");
+		});
+		buttons[1] = new JFXButton("Edit personal info");
+		buttons[1].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/EditPersonalInfo.fxml",
+					"Branch manager - Edit Personal Info");
+		});
+		buttons[2] = new JFXButton("View reports");
+		buttons[2].addEventHandler(ActionEvent.ACTION, (e) -> {
+			///////
+		});
+		buttons[3] = new JFXButton("Create new report");
+		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
+			//////
+		});
+		buttons[4] = new JFXButton("open account");
+		buttons[4].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+		});
+		buttons[5] = new JFXButton("Registeration Restaurant");
+		buttons[5].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, "/branchManager/RegisterationApprovalSupplier.fxml",
+					"Branch manager - registeration & Approval Supplier");
+		});
+		buttons[6] = new JFXButton("Exit");
+		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.exit(e);
+		});
+		vBoxManu.getChildren().addAll(buttons);
+	}
+
+	private void initSidePanelClient() {
+		JFXButton[] buttons = new JFXButton[3];
+
+		buttons[0] = new JFXButton("Order food");
+		createButton(buttons[0], "/gui/MainScreen.fxml", "Branch manager - Order food");
+
+		buttons[1] = new JFXButton("My Orders");
+		createButton(buttons[1], "/branchManager/EditPersonalInfo.fxml", "Branch manager - Edit Personal Info");
+
+		buttons[3] = new JFXButton("Exit");
+		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
+		buttons[3].setFont(font);
+		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.exit(e);
+		});
+		vBoxManu.getChildren().addAll(buttons);
 	}
 }

@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
@@ -16,7 +15,7 @@ import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 import Server.Response;
 import client.ChatClient;
 import client.ClientUI;
-import client.Request;
+import common.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,17 +23,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import logic.Account;
 import logic.PrivateAccount;
 
 public class OpenPrivateAccountController implements Initializable {
@@ -66,9 +60,6 @@ public class OpenPrivateAccountController implements Initializable {
 	private Label labelTitle;
 
 	@FXML
-	private Button btnCreateAccount;
-
-	@FXML
 	private TextField textFieldUserNameUser;
 
 	@FXML
@@ -81,18 +72,22 @@ public class OpenPrivateAccountController implements Initializable {
 	private TextField textFieldID;
 
 	@FXML
+	private AnchorPane componnentDebt;
+
+	@FXML
 	private Label lblrequiredDebt;
 
 	@FXML
 	private TextField textFieldDebt;
+
 	@FXML
 	private JFXComboBox<String> comboBoxStatus;
 
 	@FXML
-	private Button btnBackBM;
+	private Label lableErrorMag;
 
 	@FXML
-	private Label lableErrorMag;
+	private AnchorPane componentExplain;
 
 	@FXML
 	private HBox Nav;
@@ -101,26 +96,14 @@ public class OpenPrivateAccountController implements Initializable {
 	private Label lableHello;
 
 	@FXML
-	private Hyperlink btnHome;
-
-	@FXML
-	private Button btnLogout;
-
-	@FXML
 	private JFXHamburger myHamburger;
 
 	@FXML
 	private JFXDrawer drawer;
-	@FXML
-	private AnchorPane componnentDebt;
-	@FXML
-	private Button btnHelp;
-	@FXML
-	private AnchorPane componentExplain;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		lableHello.setText("Hello, " + BranchManagerController.branchManager.getUserName());
+		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
 		comboBoxStatus.getItems().setAll("Active", "Frozen", "Blocked");
 		componentExplain.setVisible(false);
 		String[] listMonth = new String[12];
@@ -136,34 +119,8 @@ public class OpenPrivateAccountController implements Initializable {
 			listYear[i] = "20" + (i + 21);
 		comboBoxYear.getItems().setAll(listYear);
 		componnentDebt.setVisible(isEdit);
-		try {
-			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-			drawer.setSidePane(anchorPane);
-		} catch (IOException e) {
-			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
-		}
-
-		// transition animation of hamburger icon
-		HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(myHamburger);
-		drawer.setVisible(false);
-		transition.setRate(-1);
-
-		// click event - mouse click
-		myHamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
-
-			transition.setRate(transition.getRate() * -1);
-			transition.play();
-
-			if (drawer.isOpened()) {
-				drawer.setVisible(false);
-				drawer.close(); // this will close slide pane
-			} else {
-				drawer.open(); // this will open slide pane
-				drawer.setVisible(true);
-			}
-		});
+		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer); 
 	}
-
 
 	@FXML
 	void logout(ActionEvent event) {
@@ -175,22 +132,9 @@ public class OpenPrivateAccountController implements Initializable {
 		branchManagerFunctions.home(event);
 	}
 
-
 	@FXML
 	void backOpenAccount(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/branchManager/OpenAccountPage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Branch manager- Open account");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.reload(event, "/branchManager/OpenAccountPage.fxml", "Branch manager- Open account");
 	}
 
 	@FXML
@@ -232,8 +176,8 @@ public class OpenPrivateAccountController implements Initializable {
 					}
 
 				}
-				PrivateAccount privateAccount = new PrivateAccount(id, username, null, null, null, null, null, null, status,
-						false, BranchManagerController.branchManager.getUserID(),
+				PrivateAccount privateAccount = new PrivateAccount(id, username, null, null, null, null, null, null,
+						status, false, BranchManagerController.branchManager.getUserID(),
 						BranchManagerController.branchManager.getArea(), 0, null, cardNum, cvv, expDate);
 				sentToJson(privateAccount);
 				response();
@@ -251,16 +195,14 @@ public class OpenPrivateAccountController implements Initializable {
 		try {
 			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
-			System.out.println("new ClientController didn't work");
+			System.out.println("Open Private account - new ClientController didn't work");
 		}
 	}
 
 	void response() {
 		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201) 
+		if (response.getCode() != 200 && response.getCode() != 201)
 			lableErrorMag.setText(response.getDescription());// error massage
-		
-		System.out.println("-->>"+response.getDescription()); // Description from server
 	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {

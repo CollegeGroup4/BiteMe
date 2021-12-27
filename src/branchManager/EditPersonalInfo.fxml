@@ -28,7 +28,7 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink onAction="#home" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
+            <Hyperlink onAction="#homeAndback" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
@@ -69,7 +69,7 @@
                </columns>
             </TableView>
             <TextField fx:id="textFiledSearchID" layoutX="118.0" layoutY="192.0" prefHeight="25.0" prefWidth="175.0" />
-            <Button fx:id="btnEditID" layoutX="306.0" layoutY="189.0" mnemonicParsing="false" onAction="#editID" prefHeight="21.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
+            <Button layoutX="306.0" layoutY="189.0" mnemonicParsing="false" onAction="#editID" prefHeight="21.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="52.0" />
                </font>
@@ -84,12 +84,12 @@
                   <Font name="Berlin Sans FB Demi Bold" size="19.0" />
                </font>
             </Label>
-            <Button fx:id="btnEditTable" layoutX="388.0" layoutY="600.0" mnemonicParsing="false" onAction="#editTable" prefHeight="31.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
+            <Button layoutX="388.0" layoutY="600.0" mnemonicParsing="false" onAction="#editTable" prefHeight="31.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="52.0" />
                </font>
             </Button>
-            <Button fx:id="btnBackBM" layoutX="50.0" layoutY="616.0" mnemonicParsing="false" onAction="#backBM" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
+            <Button layoutX="50.0" layoutY="616.0" mnemonicParsing="false" onAction="#homeAndback" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
@@ -113,19 +113,29 @@
                         <Font name="David Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Button fx:id="btnFilter" layoutX="398.0" layoutY="31.0" mnemonicParsing="false" onAction="#filter" prefHeight="18.0" prefWidth="65.0" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="filter">
+                  <Button layoutX="398.0" layoutY="31.0" mnemonicParsing="false" onAction="#filter" prefHeight="18.0" prefWidth="65.0" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="filter">
                      <font>
                         <Font name="David Bold" size="16.0" />
                      </font>
                   </Button>
                </children>
             </AnchorPane>
-            <Label fx:id="lableSlectedUser" alignment="CENTER" layoutX="10.0" layoutY="569.0" prefHeight="23.0" prefWidth="861.0">
+            <Label fx:id="lableSlectedUser" alignment="CENTER" layoutX="11.0" layoutY="562.0" prefHeight="23.0" prefWidth="861.0">
                <font>
                   <Font name="David Bold" size="18.0" />
                </font>
             </Label>
             <Label fx:id="lblrequiredEnterid" alignment="CENTER" layoutX="117.0" layoutY="174.0" prefHeight="18.0" prefWidth="175.0" textFill="RED">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="lableErrorMsg" alignment="CENTER" layoutX="9.0" layoutY="585.0" prefHeight="18.0" prefWidth="862.0" textFill="RED">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="lableErrorMsgID" alignment="CENTER" layoutX="388.0" layoutY="196.0" prefHeight="18.0" prefWidth="463.0" textFill="RED">
                <font>
                   <Font name="System Bold Italic" size="12.0" />
                </font>

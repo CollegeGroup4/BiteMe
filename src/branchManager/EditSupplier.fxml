@@ -19,7 +19,7 @@
    <children>
       <AnchorPane layoutX="10.0" layoutY="96.0" prefHeight="665.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="46.0" prefHeight="46.0" prefWidth="682.0" text="Edit Registeration Restaurant" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="46.0" prefHeight="46.0" prefWidth="682.0" text="Edit Restaurant Info" textAlignment="CENTER">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
@@ -154,7 +154,7 @@
                         <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                      </font>
                   </Label>
-                  <AnchorPane disable="true" prefHeight="22.0" prefWidth="304.0">
+                  <AnchorPane prefHeight="22.0" prefWidth="304.0">
                      <children>
                         <Label fx:id="lblrequiredModeratorUsername" alignment="CENTER" layoutX="156.0" layoutY="2.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
                            <font>
@@ -169,7 +169,7 @@
                         <TextField fx:id="textFieldModeratorUsername" layoutX="152.0" layoutY="21.0" promptText="username" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane disable="true" prefHeight="22.0" prefWidth="304.0">
+                  <AnchorPane prefHeight="22.0" prefWidth="304.0">
                      <children>
                         <Label fx:id="lblrequiredModeratorID" alignment="CENTER" layoutX="156.0" layoutY="2.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
                            <font>

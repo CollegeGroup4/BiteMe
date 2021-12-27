@@ -43,7 +43,7 @@ public class ChatClient extends AbstractClient {
 	 * @param port     The port number to connect on.
 	 * @param clientUI The interface type variable.
 	 */
-	
+
 	public ChatClient(String host, int port, ChatIF clientUI) throws IOException {
 		super(host, port); // Call the superclass constructor
 		this.clientUI = clientUI;
@@ -61,8 +61,8 @@ public class ChatClient extends AbstractClient {
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("--> handleMessageFromServer");
 		awaitResponse = false;
-		serverAns = gson.fromJson((String) msg,Response.class);
-		System.out.println(serverAns.getDescription());
+		serverAns = gson.fromJson((String) msg, Response.class);
+		System.out.println("-->>" + serverAns.getDescription());
 	}
 
 	/**

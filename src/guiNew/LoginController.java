@@ -11,10 +11,11 @@ import CEO.CEOController;
 import Server.EchoServer;
 import Server.Response;
 import branchManager.BranchManagerController;
+import branchManager.BranchManagerFunctions;
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
-import client.Request;
+import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,8 +32,8 @@ import logic.Account;
 import logic.BranchManager;
 
 public class LoginController {
-	// private DB db = new DB(5555);
-//	private ClientController client;
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+
 	@FXML
 	private TextField textFieldUsername;
 
@@ -63,9 +64,9 @@ public class LoginController {
 		sentToJson(username, password);
 		Account account = response();
 		// need to get response from the server hear!
-		if (flag && account != null ) {
+		if (flag && account != null) {
 			try {
-				String role = account.getRole(); //= "CEO";
+				String role = account.getRole(); // = "CEO";
 				if (role != "") {
 					FXMLLoader loader = new FXMLLoader();
 					((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -75,35 +76,42 @@ public class LoginController {
 					case "CEO":
 						System.out.println("go to CEO");
 						CEOController.CEO = account;
+						Navigation_SidePanelController.role = "CEO";
 						root = loader.load(getClass().getResource("/CEO/CEOPage.fxml").openStream());
 						break;
 					case "Branch Manager":
 						System.out.println("go to barnch manager");
+						Navigation_SidePanelController.role = "Branch Manager";
 						BranchManagerController.branchManager = account;
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
 					case "Supplier":
 						System.out.println("go to supplier");
+						Navigation_SidePanelController.role = "Supplier";
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
 					case "Moderator":
 						System.out.println("go to supplier moderator");
+						Navigation_SidePanelController.role = "Moderator";
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
 					case "HR":
 						System.out.println("go to HR");
+						Navigation_SidePanelController.role = "HR";
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
 					case "Client":
 						System.out.println("go to ordinary client");
+						Navigation_SidePanelController.role = "Client";
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;
 					default:
+						Navigation_SidePanelController.role = "";
 						System.out.println("defult - error DB the user does not have a file");
 					}
 					lableErrorMag.setText("");
@@ -123,28 +131,18 @@ public class LoginController {
 		JsonElement jsonElem = gson.toJsonTree(new Object());
 		jsonElem.getAsJsonObject().addProperty("userName", username);
 		jsonElem.getAsJsonObject().addProperty("password", password);
-
-		Request request = new Request();
-		request.setPath("/users/login");
-		request.setMethod("GET");
-		request.setBody(jsonElem);
-		String jsonUser = gson.toJson(request);
-		try {
-			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
-		} catch (NullPointerException e) {
-			System.out.println("new ClientController didn't work");
-		}
+		branchManagerFunctions.sentToJson("/users/login", "GET", jsonElem, "new ClientController didn't work");
 	}
 
 	private Account response() {
 		Account account = null;
 		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201) 
+		if (response.getCode() != 200 && response.getCode() != 201)
 			lableErrorMag.setText(response.getDescription());// error massage
 		else {
-		System.out.println("-->>"+response.getDescription()); // Description from server
-		JsonElement j = EchoServer.gson.fromJson((String)response.getBody(), JsonElement.class);
-		 account =EchoServer.gson.fromJson(j.getAsJsonObject().get("account"), Account.class);
+			System.out.println("-->>" + response.getDescription()); // Description from server
+			JsonElement j = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
+			account = EchoServer.gson.fromJson(j.getAsJsonObject().get("account"), Account.class);
 		}
 		return account;
 	}
@@ -160,33 +158,11 @@ public class LoginController {
 
 	@FXML
 	void Exit(ActionEvent event) throws UnknownHostException {
-		System.out.println("exit client Tool");
-		String[] ipHostName = new String[3];
-		ipHostName[0] = "EXIT";
-		ipHostName[1] = InetAddress.getLocalHost().getHostName();
-		ipHostName[2] = InetAddress.getLocalHost().getHostAddress();
-		try {
-			ClientUI.chat.accept(ipHostName);
-		} catch (NullPointerException e) {
-			System.out.println("new ClientController didn't work");
-		}
-		System.exit(0);
+		branchManagerFunctions.exit(event);
 	}
 
 	@FXML
 	void home(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Branch manager");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.home(event);
 	}
 }

@@ -13,7 +13,10 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
-import client.Request;
+import Server.Response;
+import client.ChatClient;
+import client.ClientUI;
+import common.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -109,37 +112,13 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 	@FXML
 	private JFXDrawer drawer;
+	@FXML
+	private Label lableErrorMag;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getUserName());
-
-		try {
-			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-			drawer.setSidePane(anchorPane);
-		} catch (IOException e) {
-			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
-		}
-
-		// transition animation of hamburger icon
-		HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(myHamburger);
-		drawer.setVisible(false);
-		transition.setRate(-1);
-
-		// click event - mouse click
-		myHamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
-
-			transition.setRate(transition.getRate() * -1);
-			transition.play();
-
-			if (drawer.isOpened()) {
-				drawer.setVisible(false);
-				drawer.close(); // this will close slide pane
-			} else {
-				drawer.open(); // this will open slide pane
-				drawer.setVisible(true);
-			}
-		});
+		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
 	@FXML
@@ -148,7 +127,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	}
 
 	@FXML
-	void home(ActionEvent event) {
+	void homeANDback(ActionEvent event) {
 		branchManagerFunctions.home(event);
 	}
 
@@ -167,7 +146,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			System.out.println("File is not valid");
 	}
 
-	private boolean flag, validField;
+	private boolean flag, validField, moderator;
 
 	@FXML
 	void addSupplier(ActionEvent event) {
@@ -175,19 +154,17 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		checkTextFiled(textFieldSupplierUserame, lblrequiredSupplierUsername);
 		checkTextFiled(textFieldsupplierID, lblrequiredSupplierID);
 
-		checkTextFiled(textFieldModeratorUsername, lblrequiredModeratorUsername);
-		checkTextFiled(textFieldModeratorID, lblrequiredModeratorID);
-
 		checkTextFiled(textFieldRestaurantName, lblrequiredRestName);
 		checkTextFiled(textFieldRestaurantType, lblrequiredRestType);
 		checkTextFiled(textFieldRestaurantAddress, lblrequiredRestAdderss);
-		if (flag) {
-//			validField = true;
-//			checkValidFields(textFieldsupplierID, lblrequiredSupplierID);
-//			checkValidFields(textFieldModeratorID, lblrequiredModeratorID);
-//			if (validField) {
-//				int id = Integer.parseInt(textFieldID.getText());
 
+		if (textFieldModeratorUsername.getText() != null) { // if the user decided to add moderator
+			checkTextFiled(textFieldModeratorUsername, lblrequiredModeratorUsername);
+			checkTextFiled(textFieldModeratorID, lblrequiredModeratorID);
+			moderator = true;
+		}
+
+		if (flag) {
 			String supplierUserame = textFieldSupplierUserame.getText();
 			String moderatorUsername = textFieldModeratorUsername.getText();
 			String restaurantName = textFieldRestaurantName.getText();
@@ -199,10 +176,10 @@ public class RegisterationApprovalSupplierController implements Initializable {
 					photo, restaurantAddress, "");
 			Account supplier = new Account(0, supplierUserame, null, null, null, null, "Supplier", null, "status",
 					false, BranchManagerController.branchManager.getUserID(),
-					BranchManagerController.branchManager.getArea(), 0, null);
+					BranchManagerController.branchManager.getArea(), 0);
 			Account supplierModorator = new Account(0, moderatorUsername, null, null, null, null, "SupplierModorator",
 					null, "status", false, BranchManagerController.branchManager.getUserID(),
-					BranchManagerController.branchManager.getArea(), 0, null);
+					BranchManagerController.branchManager.getArea(), 0);
 
 			sentToJson(restaurant, supplier, supplierModorator);
 			response();
@@ -210,28 +187,20 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	}
 
 	void sentToJson(Restaurant restaurant, Account supplier, Account supplierModorator) {
-		Request request = new Request();
-		request.setPath("/branch_managers/restaurants");
-		request.setMethod("POST");
+		;
 		Gson gson = new Gson();
 		JsonElement jsonElem = gson.toJsonTree(new Object());
 		jsonElem.getAsJsonObject().add("restaurant", gson.toJsonTree(restaurant));
 		jsonElem.getAsJsonObject().add("supplier", gson.toJsonTree(supplier));
 		jsonElem.getAsJsonObject().add("supplierModerator", gson.toJsonTree(supplierModorator));
-		request.setBody(jsonElem);
-
-		String jsonFile = gson.toJson(request);
-//    	System.out.println("jsonFile : "+jsonFile);
-		// client.accept(jsonFile); // in here will be DB ask for restaurant id
+		branchManagerFunctions.sentToJson("/branch_managers/restaurants", "POST", jsonElem,
+				"Open Business account - new ClientController didn't work");
 	}
 
 	void response() {
-//		Gson gson = new Gson();
-//		Response response = gson.fromJson(ChatClient.serverAns, Response.class);
-//		if (response.getCode() != 200 && response.getCode() != 201) 
-//			lableErrorMag.setText(response.getDescription());// error massage
-//		
-//		System.out.println("-->>"+response.getDescription()); // Description from server
+		Response response = ChatClient.serverAns;
+//		if (response.getCode() != 200 && response.getCode() != 201)
+			lableErrorMag.setText(response.getDescription());// error massage
 	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {
@@ -249,22 +218,6 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		} catch (NumberFormatException e) {
 			lblrequired.setText("Enter only numbers");
 			validField = false;
-		}
-	}
-
-	@FXML
-	void backBM(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Branch manager");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
 		}
 	}
 

@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import com.google.gson.Gson;
+
+import branchManager.BranchManagerFunctions;
 import client.ClientUI;
+import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,24 +22,22 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class HomeController {
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+	@FXML
+	private HBox Nav;
 
-    @FXML
-    private HBox Nav;
+	@FXML
+	private Hyperlink hyperLinkLogin;
 
-    @FXML
-    private Hyperlink hyperLinkSignin;
+	@FXML
+	private Hyperlink hyperLinkAbout;
 
-    @FXML
-    private Hyperlink hyperLinkLogin;
+	@FXML
+	private Button btnJoin;
 
-    @FXML
-    private Hyperlink hyperLinkAbout;
+	@FXML
+	private HBox Nav1;
 
-    @FXML
-    private Button btnJoin;
-
-    @FXML
-    private HBox Nav1;
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/guiNew/HomePage.fxml"));
 		Scene scene = new Scene(root);
@@ -44,44 +46,31 @@ public class HomeController {
 		primaryStage.show();
 	}
 
-    @FXML
-    void about(ActionEvent event) {
+	@FXML
+	void about(ActionEvent event) {
 
-    }
+	}
 
-    @FXML
-    void login(ActionEvent event) {
-    		try {FXMLLoader loader = new FXMLLoader();
-    	((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		Stage primaryStage = new Stage();
-		AnchorPane root;
-	
-			root = loader.load(getClass().getResource("/guiNew/Login.fxml").openStream());
-		
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Login");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	} catch (IOException e) {}
-    }
-
-    @FXML
-    void signin(ActionEvent event) {
-
-    }
-
-    @FXML
-    void Exit(ActionEvent event) throws UnknownHostException {
-    	System.out.println("exit client Tool");
-		String[] ipHostName = new String[3];
-		ipHostName[0] = "EXIT";
-		ipHostName[1] = InetAddress.getLocalHost().getHostName();
-		ipHostName[2] = InetAddress.getLocalHost().getHostAddress();
+	@FXML
+	void login(ActionEvent event) {
 		try {
-			ClientUI.chat.accept(ipHostName);
-		} catch (NullPointerException e) {
-			System.out.println("new ClientController didn't work");
+			FXMLLoader loader = new FXMLLoader();
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			AnchorPane root;
+
+			root = loader.load(getClass().getResource("/guiNew/Login.fxml").openStream());
+
+			Scene scene = new Scene(root);
+			primaryStage.setTitle("Login");
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
 		}
-		System.exit(0);
-    }
+	}
+
+	@FXML
+	void Exit(ActionEvent event) throws UnknownHostException {
+		branchManagerFunctions.exit(event);
+	}
 }
