@@ -160,10 +160,10 @@ public class DeliveryAndTimeController implements Initializable {
 		Date date1=format.parse(time1);
 		Date date2=format.parse(time2);
 		long difference=date1.getTime()-date2.getTime();
-		//System.out.println(time1);
-		//System.out.println(time2);
-		//System.out.println(date1.getTime());
-		//System.out.println(date2.getTime());
+		System.out.println(time1);
+		System.out.println(time2);
+		System.out.println(date1.getTime());
+		System.out.println(date2.getTime());
 		System.out.println(TimeUnit.MILLISECONDS.toMinutes(difference));
 		
 		
@@ -189,8 +189,8 @@ public class DeliveryAndTimeController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		cbTime.getItems().addAll("00:00", "00:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30",
-				"5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30",
+		cbTime.getItems().addAll("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30",
+				"05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
 				"11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00",
 				"16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30",
 				"22:00", "22:30", "23:00", "23:30");

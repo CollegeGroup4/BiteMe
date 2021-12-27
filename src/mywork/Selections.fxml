@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="301.0" prefWidth="409.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.SelectionsController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="335.0" prefWidth="409.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.SelectionsController">
    <children>
       <HBox alignment="TOP_CENTER" prefHeight="42.0" prefWidth="180.0">
          <children>
@@ -23,7 +24,7 @@
                   <Label fx:id="priceOfItem" alignment="CENTER" prefHeight="22.0" prefWidth="39.0" text="price" />
                </children>
                <VBox.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="3.0" />
                </VBox.margin>
             </HBox>
             <HBox prefHeight="29.0" prefWidth="180.0">
@@ -38,7 +39,7 @@
                   <Button fx:id="btnDecrease" mnemonicParsing="false" onAction="#decrease" text="-" />
                </children>
                <VBox.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="3.0" />
                </VBox.margin>
             </HBox>
             <HBox prefHeight="27.0" prefWidth="180.0">
@@ -46,33 +47,50 @@
                   <Label alignment="CENTER" prefHeight="22.0" prefWidth="161.0" text="Select optional:" />
                </children>
                <VBox.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="3.0" />
                </VBox.margin>
             </HBox>
-            <ScrollPane prefHeight="64.0" prefWidth="305.0">
+            <ScrollPane prefHeight="46.0" prefWidth="407.0">
                <content>
                   <HBox fx:id="allOptionals" />
                </content>
                <VBox.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="3.0" />
                </VBox.margin></ScrollPane>
             <HBox prefHeight="24.0" prefWidth="287.0">
                <children>
                   <Label alignment="CENTER" prefHeight="17.0" prefWidth="181.0" text="Optional  selected :" />
                </children>
                <VBox.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="3.0" />
                </VBox.margin>
             </HBox>
-            <ScrollPane prefHeight="64.0" prefWidth="305.0">
+            <ScrollPane prefHeight="46.0" prefWidth="407.0">
                <content>
                   <HBox fx:id="optionalsSelected" />
                </content>
                <VBox.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="7.0" />
                </VBox.margin>
             </ScrollPane>
-            <HBox prefHeight="34.0" prefWidth="305.0">
+            <HBox prefHeight="24.0" prefWidth="407.0">
+               <children>
+                  <Label text="Any additional intructios?">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <ScrollPane>
+               <VBox.margin>
+                  <Insets bottom="3.0" />
+               </VBox.margin>
+               <content>
+                  <JFXTextArea fx:id="additionalInstructions" prefHeight="38.0" prefWidth="401.0" promptText="type here" />
+               </content>
+            </ScrollPane>
+            <HBox prefHeight="28.0" prefWidth="407.0">
                <children>
                   <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clear" text="Clear" />
                   <Button fx:id="submitBtn" mnemonicParsing="false" onAction="#submit" text="Submit" />

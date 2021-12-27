@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import logic.Item;
@@ -49,16 +50,15 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 
 	private void getInformation() {
 		for (int i = 0; i < ChooseADishController.menuSelected.getItems().length; i++) {
-			if(ChooseADishController.menuSelected.getItems()[i].getCourse().equals(
-					CoursesController.courseSelected)) {
-				for(int j=0;j<ChooseADishController.itemsArr.size();j++) {
-					if(ChooseADishController.menuSelected.getItems()[i].getItemID()
-							==ChooseADishController.itemsArr.get(j).getItemID()) {
-						if(ChooseADishController.itemsArr.get(j).getCategory().equals(
-								CategoriesController.categorySelected)) {
+			if (ChooseADishController.menuSelected.getItems()[i].getCourse().equals(CoursesController.courseSelected)) {
+				for (int j = 0; j < ChooseADishController.itemsArr.size(); j++) {
+					if (ChooseADishController.menuSelected.getItems()[i].getItemID() == ChooseADishController.itemsArr
+							.get(j).getItemID()) {
+						if (ChooseADishController.itemsArr.get(j).getCategory()
+								.equals(CategoriesController.categorySelected)) {
 							itemsInCategory.add(ChooseADishController.itemsArr.get(j));
 						}
-						
+
 					}
 				}
 			}
@@ -73,13 +73,13 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 		stringFromEvent = stringFromEvent.substring(0, stringFromEvent.length() - 1);
 		for (int i = 0; i < itemsInCategory.size(); i++) {
 			if (itemsInCategory.get(i).getName().equals(stringFromEvent)) {
-				//itemSelected = itemsInCourse.get(i);
-				itemSelected=new Item(itemsInCategory.get(i).getCategory(),itemsInCategory.get(i).getSubcategory()
-						,itemsInCategory.get(i).getItemID(),itemsInCategory.get(i).getRestaurantID()
-						,itemsInCategory.get(i).getName(),itemsInCategory.get(i).getPrice()
-						,itemsInCategory.get(i).getDescription(),itemsInCategory.get(i).getIngrediants()
-						,itemsInCategory.get(i).getOptions(),itemsInCategory.get(i).getPhoto()
-						,itemsInCategory.get(i).getAmount());
+				// itemSelected = itemsInCourse.get(i);
+				itemSelected = new Item(itemsInCategory.get(i).getCategory(), itemsInCategory.get(i).getSubcategory(),
+						itemsInCategory.get(i).getItemID(), itemsInCategory.get(i).getRestaurantID(),
+						itemsInCategory.get(i).getName(), itemsInCategory.get(i).getPrice(),
+						itemsInCategory.get(i).getDescription(), itemsInCategory.get(i).getIngrediants(),
+						itemsInCategory.get(i).getOptions(), itemsInCategory.get(i).getPhoto(),
+						itemsInCategory.get(i).getAmount());
 			}
 		}
 		Parent root = null;
@@ -88,8 +88,11 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ChooseADishController.chooseADishController.getPaneForCourses().setTop(null);
 		ChooseADishController.chooseADishController.getPaneForSelections().setCenter(root);
-	}
+		ChooseADishController.chooseADishController.getItemInfo().setVisible(true);
+		ChooseADishController.chooseADishController.getItemLabel().setText(itemSelected.getName());
+		ChooseADishController.chooseADishController.getItemImage().setImage(null); //implement later
+		ChooseADishController.chooseADishController.getItemDescription().setText(itemSelected.getDescription());
 
+	}
 }

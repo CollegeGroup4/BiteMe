@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXTextArea;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -61,6 +64,10 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 	@FXML
 	private TextArea txtDescription;
 
+    @FXML
+    private JFXTextArea additionalInstructions;
+
+
 	public void start(Stage stage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("IngredientsAnd.fxml"));
 		Scene scene = new Scene(root);
@@ -82,14 +89,6 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 				Button temp = new Button(categotyName + ":" + "\n" + specify + "-" + "$" + price);
 				temp.setOnAction(this);
 				b.add(temp);
-				/*
-				 * String specifies[] =
-				 * ItemsFromMenuController.itemSelected.getOptions()[i].getSpecify_option().
-				 * split(",", 0);
-				 * 
-				 * for (String a : specifies) { Button temp = new Button(a);
-				 * temp.setOnAction(this); b.add(temp); }
-				 */
 			}
 		allOptionals.getChildren().addAll(b);
 	}
@@ -103,7 +102,6 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			optionsSelectedHash.put(stringFromEvent, null);
 			optionalsSelected.getChildren().add(new Button(stringFromEvent));
 		}
-		// System.out.println(ingredientsSelectedArr.toString());
 	}
 
 	private String buttonRecognize(ActionEvent event) {
@@ -117,7 +115,6 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 	void clear(ActionEvent event) {
 		optionsSelectedHash = null;
 		optionalsSelected.getChildren().clear();
-
 	}
 
 	@FXML
@@ -147,16 +144,18 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 		}
 		ChooseADishController.chooseADishController.getPaneForSummary().setCenter(root);
 		ChooseADishController.chooseADishController.getPaneForCourses().setTop(
-				ChooseADishController.chooseADishController.getLblMenus());
+				new Label("Choose Menu:"));
 		ChooseADishController.chooseADishController.getPaneForCourses().setCenter(
 				ChooseADishController.chooseADishController.getSpMenus());
-
+		ChooseADishController.chooseADishController.getPaneForSelections().setCenter(null);
+		ChooseADishController.chooseADishController.getItemInfo().setVisible(false);
 		// **************** for check only ******************
 		// for (int j = 0; j < ItemsFromMenuController.itemsSelectedArr.size(); j++) {
 		// System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getName());
 		// System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getAmount());
 		// }
 	}
+	
 
 	@FXML
 	void decrease(ActionEvent event) {

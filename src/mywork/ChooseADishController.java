@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
 
+import com.jfoenix.controls.JFXTextArea;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -45,7 +47,6 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 	public static ArrayList<Menu> menusArr;
 	public static ArrayList<Item> itemsArr;
 	
-
 	@FXML
 	private HBox Nav;
 
@@ -70,20 +71,20 @@ public class ChooseADishController implements Initializable, EventHandler<Action
     @FXML
     private ScrollPane spMenus;
     
-	public ScrollPane getSpMenus() {
-		return spMenus;
-	}
-    
-    public VBox getMenus() {
-		return Menus;
-	}
+    @FXML
+    private AnchorPane itemInfo;
+
+	@FXML
+    private Label itemLabel;
+
+	@FXML
+    private ImageView itemImage;
+
+	@FXML
+    private JFXTextArea itemDescription;
 
 	@FXML
     private Label lblMenus;
-
-	public Label getLblMenus() {
-		return lblMenus;
-	}
 
 	@FXML
 	private BorderPane paneForItems;
@@ -91,46 +92,15 @@ public class ChooseADishController implements Initializable, EventHandler<Action
     @FXML
     private BorderPane paneForSummary;
 
-	public BorderPane getPaneForSummary() {
-		return paneForSummary;
-	}
-
-	public void setPaneForSummary(BorderPane paneForSummary) {
-		this.paneForSummary = paneForSummary;
-	}
-
-	public BorderPane getPaneForItems() {
-		return paneForItems;
-	}
-
-	public void setPaneForItems(BorderPane paneForItems) {
-		this.paneForItems = paneForItems;
-	}
-
 	@FXML
 	private BorderPane paneForSelections;
 
 	@FXML
 	private BorderPane paneForCourses;
 
-	public BorderPane getPaneForCourses() {
-		return paneForCourses;
-	}
-
-	public void setPaneForCourses(BorderPane paneForCourses) {
-		this.paneForCourses = paneForCourses;
-	}
-
-	public BorderPane getPaneForSelections() {
-		return paneForSelections;
-	}
-
-	public void setPaneForSelections(BorderPane paneForSelections) {
-		this.paneForSelections = paneForSelections;
-	}
-
 	@FXML
 	private HBox Nav1;
+	
 	@FXML
 	private Button btnBack;
 	
@@ -173,6 +143,7 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 
 		}
 		Menus.getChildren().addAll(b);
+		paneForCourses.setTop(new Label("Choose Menu:"));
 		paneForCourses.setCenter(spMenus);
 	}
 
@@ -252,6 +223,76 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
+	}
+    public AnchorPane getItemInfo() {
+		return itemInfo;
+	}
+
+	public void setItemInfo(AnchorPane itemInfo) {
+		this.itemInfo = itemInfo;
+	}
+    public Label getItemLabel() {
+		return itemLabel;
+	}
+
+    public ImageView getItemImage() {
+		return itemImage;
+	}
+
+	public void setItemImage(ImageView itemImage) {
+		this.itemImage = itemImage;
+	}
+    
+	public JFXTextArea getItemDescription() {
+		return itemDescription;
+	}
+
+	public void setItemDescription(JFXTextArea itemDescription) {
+		this.itemDescription = itemDescription;
+	}
+
+	public ScrollPane getSpMenus() {
+		return spMenus;
+	}
+    
+    public VBox getMenus() {
+		return Menus;
+	}
+
+	public Label getLblMenus() {
+		return lblMenus;
+	}
+
+	public BorderPane getPaneForSummary() {
+		return paneForSummary;
+	}
+
+	public void setPaneForSummary(BorderPane paneForSummary) {
+		this.paneForSummary = paneForSummary;
+	}
+
+	public BorderPane getPaneForItems() {
+		return paneForItems;
+	}
+
+	public void setPaneForItems(BorderPane paneForItems) {
+		this.paneForItems = paneForItems;
+	}
+
+	public BorderPane getPaneForCourses() {
+		return paneForCourses;
+	}
+
+	public void setPaneForCourses(BorderPane paneForCourses) {
+		this.paneForCourses = paneForCourses;
+	}
+
+	public BorderPane getPaneForSelections() {
+		return paneForSelections;
+	}
+
+	public void setPaneForSelections(BorderPane paneForSelections) {
+		this.paneForSelections = paneForSelections;
 	}
 
 }

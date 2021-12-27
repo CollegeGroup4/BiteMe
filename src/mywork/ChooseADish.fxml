@@ -49,13 +49,6 @@
                </children>
             </HBox>
             <BorderPane fx:id="paneForCourses" layoutX="14.0" layoutY="148.0" prefHeight="405.0" prefWidth="162.0">
-               <top>
-                  <Label fx:id="lblMenus" prefHeight="27.0" prefWidth="162.0" text="Menus:" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="20.0" />
-                     </font>
-                  </Label>
-               </top>
                <center>
                   <ScrollPane fx:id="spMenus" prefHeight="279.0" prefWidth="130.0" BorderPane.alignment="CENTER">
                      <content>
@@ -85,12 +78,12 @@
                   <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <BorderPane fx:id="paneForSelections" layoutX="204.0" layoutY="176.0" prefHeight="287.0" prefWidth="407.0" />
-            <AnchorPane layoutX="214.0" layoutY="499.0" prefHeight="138.0" prefWidth="388.0" style="-fx-border-color: black;">
+            <BorderPane fx:id="paneForSelections" layoutX="205.0" layoutY="148.0" prefHeight="333.0" prefWidth="407.0" />
+            <AnchorPane fx:id="itemInfo" layoutX="214.0" layoutY="499.0" prefHeight="138.0" prefWidth="388.0" style="-fx-border-color: black;">
                <children>
-                  <Label layoutX="119.0" layoutY="6.0" prefHeight="17.0" prefWidth="39.0" text="Label" />
-                  <ImageView fx:id="imageItem" fitHeight="148.0" fitWidth="109.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
-                  <JFXTextArea layoutX="119.0" layoutY="39.0" prefHeight="100.0" prefWidth="233.0" />
+                  <Label fx:id="itemLabel" layoutX="119.0" layoutY="6.0" prefHeight="17.0" prefWidth="152.0" text="Label" />
+                  <ImageView fx:id="itemImage" fitHeight="148.0" fitWidth="109.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                  <JFXTextArea fx:id="itemDescription" layoutX="119.0" layoutY="39.0" prefHeight="100.0" prefWidth="233.0" />
                </children>
             </AnchorPane>
          </children></AnchorPane>
