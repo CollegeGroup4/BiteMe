@@ -65,8 +65,7 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 	private TextArea txtDescription;
 
     @FXML
-    private JFXTextArea additionalInstructions;
-
+    private TextArea additionalInstructions;
 
 	public void start(Stage stage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("IngredientsAnd.fxml"));
@@ -74,6 +73,7 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 		stage.setScene(scene);
 		stage.show();
 	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		ArrayList<Button> b = new ArrayList<Button>();
@@ -92,6 +92,7 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			}
 		allOptionals.getChildren().addAll(b);
 	}
+
 	@Override
 	public void handle(ActionEvent event) {
 		String stringFromEvent = buttonRecognize(event);
@@ -143,19 +144,18 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			e.printStackTrace();
 		}
 		ChooseADishController.chooseADishController.getPaneForSummary().setCenter(root);
-		ChooseADishController.chooseADishController.getPaneForCourses().setTop(
-				new Label("Choose Menu:"));
-		ChooseADishController.chooseADishController.getPaneForCourses().setCenter(
-				ChooseADishController.chooseADishController.getSpMenus());
+		ChooseADishController.chooseADishController.getPaneForCourses().setTop(new Label("Choose Menu:"));
+		ChooseADishController.chooseADishController.getPaneForCourses()
+				.setCenter(ChooseADishController.chooseADishController.getSpMenus());
 		ChooseADishController.chooseADishController.getPaneForSelections().setCenter(null);
 		ChooseADishController.chooseADishController.getItemInfo().setVisible(false);
 		// **************** for check only ******************
-		// for (int j = 0; j < ItemsFromMenuController.itemsSelectedArr.size(); j++) {
-		// System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getName());
-		// System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getAmount());
-		// }
+		for (int j = 0; j < ItemsFromMenuController.itemsSelectedArr.size(); j++) {
+			System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getName());
+			for (int t = 0; t < ItemsFromMenuController.itemsSelectedArr.get(j).getOptions().length; t++)
+				System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getOptions()[t].getSpecify_option());
+		}
 	}
-	
 
 	@FXML
 	void decrease(ActionEvent event) {
