@@ -204,13 +204,13 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 															// server
 		restaurantsFromData = new ArrayList<Restaurant>();
 		Restaurant res0 = new Restaurant(0, true, 0, "McDonald's", "North", "Burgers", null,
-				"C:\\Users\\einan\\git\\BiteMe\\src\\images\\M.png",
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\M.png",
 				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
 		Restaurant res1 = new Restaurant(1, true, 0, "Ruben", "North", "Burgers", null,
-				"C:\\Users\\einan\\git\\BiteMe\\src\\images\\ruben.png",
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\ruben.png",
 				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
 		Restaurant res2 = new Restaurant(2, true, 0, "BBB", "North", "Burgers", null,
-				"C:\\Users\\einan\\git\\BiteMe\\src\\images\\BBB.png",
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\BBB.png",
 				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
 		restaurantsFromData.add(res0);
 		restaurantsFromData.add(res1);

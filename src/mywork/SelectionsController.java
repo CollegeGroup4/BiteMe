@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 
 import javafx.event.ActionEvent;
@@ -13,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,9 +23,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import logic.Item;
 import logic.Options;
@@ -56,17 +64,13 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 	private HBox optionalsSelected;
 
 	@FXML
-	private Button clearBtn;
+	private TextArea additionalInstructions;
 
 	@FXML
-	private Button submitBtn;
+	private JFXButton clearBtn;
 
 	@FXML
-	private TextArea txtDescription;
-
-    @FXML
-    private JFXTextArea additionalInstructions;
-
+	private JFXButton submitBtn;
 
 	public void start(Stage stage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("IngredientsAnd.fxml"));
@@ -74,24 +78,43 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 		stage.setScene(scene);
 		stage.show();
 	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		ArrayList<Button> b = new ArrayList<Button>();
+		ArrayList<Button> listOptional = new ArrayList<Button>();
 		optionsSelectedHash = null;
 		quantityOfItem.setText("0");
 		itemName.setText(ItemsFromMenuController.itemSelected.getName());
+//		designLabel(itemName);
 		priceOfItem.setText(String.valueOf(ItemsFromMenuController.itemSelected.getPrice()));
 		if (ItemsFromMenuController.itemSelected.getOptions() != null)
 			for (int i = 0; i < ItemsFromMenuController.itemSelected.getOptions().length; i++) {
 				String categotyName = ItemsFromMenuController.itemSelected.getOptions()[i].getOption_category();
 				String specify = ItemsFromMenuController.itemSelected.getOptions()[i].getSpecify_option();
 				double price = ItemsFromMenuController.itemSelected.getOptions()[i].getPrice();
-				Button temp = new Button(categotyName + ":" + "\n" + specify + "-" + "$" + price);
-				temp.setOnAction(this);
-				b.add(temp);
+				JFXButton categotyBtn = new JFXButton(categotyName + ":" + "\n" + specify + "-" + "$" + price);
+				designButton(categotyBtn);
+				categotyBtn.setOnAction(this);
+				listOptional.add(categotyBtn);
 			}
-		allOptionals.getChildren().addAll(b);
+		allOptionals.getChildren().addAll(listOptional);
+		allOptionals.setSpacing(5);
 	}
+
+//	private void designLabel(Label label) {
+//		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 16);
+//		label.setFont(font);
+//	}
+
+	private void designButton(JFXButton button) {
+		button.setPrefHeight(43);
+		BackgroundFill background_fill = new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY);
+		Background background = new Background(background_fill);
+		button.setBackground(background);
+		Font font = Font.font("Arial", FontWeight.BOLD, 12);
+		button.setFont(font);
+	}
+
 	@Override
 	public void handle(ActionEvent event) {
 		String stringFromEvent = buttonRecognize(event);
@@ -100,7 +123,10 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 		if (optionsSelectedHash.containsKey(stringFromEvent)) {
 		} else {
 			optionsSelectedHash.put(stringFromEvent, null);
-			optionalsSelected.getChildren().add(new Button(stringFromEvent));
+			JFXButton optionalsSelectedBtn = new JFXButton(stringFromEvent);
+			designButton(optionalsSelectedBtn);
+			optionalsSelected.getChildren().add(optionalsSelectedBtn);
+			optionalsSelected.setSpacing(5);
 		}
 	}
 
@@ -143,10 +169,9 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			e.printStackTrace();
 		}
 		ChooseADishController.chooseADishController.getPaneForSummary().setCenter(root);
-		ChooseADishController.chooseADishController.getPaneForCourses().setTop(
-				new Label("Choose Menu:"));
-		ChooseADishController.chooseADishController.getPaneForCourses().setCenter(
-				ChooseADishController.chooseADishController.getSpMenus());
+		ChooseADishController.chooseADishController.getPaneForCourses().setTop(new Label("Choose Menu:"));
+		ChooseADishController.chooseADishController.getPaneForCourses()
+				.setCenter(ChooseADishController.chooseADishController.getSpMenus());
 		ChooseADishController.chooseADishController.getPaneForSelections().setCenter(null);
 		ChooseADishController.chooseADishController.getItemInfo().setVisible(false);
 		// **************** for check only ******************
@@ -155,7 +180,6 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 		// System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getAmount());
 		// }
 	}
-	
 
 	@FXML
 	void decrease(ActionEvent event) {
