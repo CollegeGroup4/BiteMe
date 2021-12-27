@@ -231,12 +231,14 @@ public class PaymentController implements Initializable {
 	void showOrderDetails(ActionEvent event) {
 		orderDetails.setVisible(true);
 		btnShowOrder.setVisible(false);
+		btnHideOrder.setVisible(true);
 	}
 
 	@FXML
 	void hideOrderDetails(ActionEvent event) {
 		orderDetails.setVisible(false);
 		btnShowOrder.setVisible(true);
+		btnHideOrder.setVisible(false);
 
 	}
 

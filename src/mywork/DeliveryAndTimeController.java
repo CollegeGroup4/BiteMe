@@ -2,9 +2,13 @@ package mywork;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -102,7 +106,7 @@ public class DeliveryAndTimeController implements Initializable {
 	}
 
 	@FXML
-	void next(ActionEvent event) {
+	void next(ActionEvent event) throws ParseException {
 		insertValues();
 		((Node) event.getSource()).getScene().getWindow().hide();
 		PaymentController aFrame = new PaymentController();
@@ -114,7 +118,7 @@ public class DeliveryAndTimeController implements Initializable {
 
 	}
 
-	private void insertValues() {
+	private void insertValues() throws ParseException {
 		shippment = new Shippment(0, workplace.getText(), address.getText(), name.getText(), cbType.getValue(),
 				phoneNumber.getText());
 		orderToSend = new OrderToSend();
@@ -149,7 +153,20 @@ public class DeliveryAndTimeController implements Initializable {
 		return items;
 	}
 
-	private int calculateDiscount() {
+	private int calculateDiscount() throws ParseException {
+		String time1=orderToSend.required_time.substring(orderToSend.required_time.length()-4,orderToSend.required_time.length());	
+		String time2=orderToSend.time_taken.substring(orderToSend.required_time.length()-4,orderToSend.required_time.length());
+		SimpleDateFormat format =new SimpleDateFormat("HH:mm");
+		Date date1=format.parse(time1);
+		Date date2=format.parse(time2);
+		long difference=date1.getTime()-date2.getTime();
+		//System.out.println(time1);
+		//System.out.println(time2);
+		//System.out.println(date1.getTime());
+		//System.out.println(date2.getTime());
+		System.out.println(TimeUnit.MILLISECONDS.toMinutes(difference));
+		
+		
 		return 0;
 	}
 

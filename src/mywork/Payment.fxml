@@ -124,7 +124,7 @@
                   <Font name="Arial" size="37.0" />
                </font>
             </Label>
-            <BorderPane fx:id="orderDetails" layoutX="473.0" layoutY="98.0" visible="false">
+            <BorderPane fx:id="orderDetails" layoutX="603.0" layoutY="176.0" visible="false">
                <top>
                   <Label text="Order Details" BorderPane.alignment="CENTER">
                      <font>
@@ -139,7 +139,7 @@
                   <Insets />
                </opaqueInsets>
             </BorderPane>
-            <Button fx:id="btnShowOrder" layoutX="541.0" layoutY="153.0" mnemonicParsing="false" onAction="#showOrderDetails" prefHeight="41.0" prefWidth="210.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Show Order Details" textFill="WHITE">
+            <Button fx:id="btnShowOrder" layoutX="612.0" layoutY="128.0" mnemonicParsing="false" onAction="#showOrderDetails" prefHeight="41.0" prefWidth="210.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Show Order Details" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -152,6 +152,14 @@
                   <Font name="Arial" size="14.0" />
                </font>
             </CheckBox>
+            <Button fx:id="btnHideOrder" layoutX="612.0" layoutY="128.0" mnemonicParsing="false" onAction="#hideOrderDetails" prefHeight="41.0" prefWidth="210.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Hide Order Details" textFill="WHITE" visible="false">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
          </children>
       </AnchorPane>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="92.0" prefWidth="884.0" spacing="50.0" style="-fx-background-radius: 50px;">
