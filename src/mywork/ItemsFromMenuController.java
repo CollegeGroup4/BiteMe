@@ -45,7 +45,7 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 			b.add(temp);
 
 		}
-		Items.getChildren().addAll(b);
+		Items.getChildren().addAll(b);//
 	}
 
 	private void getInformation() {
