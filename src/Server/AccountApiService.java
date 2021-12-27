@@ -190,14 +190,13 @@ public class AccountApiService {
 	 * Get all Accounts
 	 *
 	 */
-	// TODO
 	public static void getAllAccounts(int branch_manager_id, Response response) {
 		ResultSet rs;
 		Account account = null;
 		ArrayList<Account> accounts = new ArrayList<Account>();
 		try {
 			PreparedStatement getAllAccounts = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.account WHERE BranchManagerID = ?;");
+					.prepareStatement("SELECT * FROM biteme.account WHERE BranchManagerID = ? AND Role != 'Branch Manager';");
 			getAllAccounts.setInt(1, branch_manager_id);
 			rs = getAllAccounts.executeQuery();
 			while (rs.next()) {
@@ -217,14 +216,14 @@ public class AccountApiService {
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in fetching accounts " + account.getUserID());
-		response.setBody(accounts.toArray());
+		response.setDescription("Success in fetching accounts -> branchManagerID: " + branch_manager_id);
+		response.setBody(EchoServer.gson.toJson(accounts.toArray()));
 	}
 
 	/**
 	 * Get Full Account (With private or business fields) by Account
 	 *
-	 */
+	 */// TODO if there is 2 accounts
 	public static void getAccount(Account account, Response response) {
 		ResultSet rs;
 		try {
@@ -235,13 +234,12 @@ public class AccountApiService {
 					getAccount.setString(1, account.getUserName());
 					rs = getAccount.executeQuery();
 					if (rs.next()) {
-						response.setBody(new BusinessAccount(account.getUserID(), account.getUserName(),
+						response.setBody(EchoServer.gson.toJson(new BusinessAccount(account.getUserID(), account.getUserName(),
 								account.getPassword(), account.getFirstName(), account.getLastName(),
 								account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(),
 								account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
 								account.getDebt(), rs.getString(QueryConsts.BUSINESS_ACCOUNT_W4C) ,rs.getInt(QueryConsts.BUSINESS_ACCOUNT_MONTHLY_BILLING_CEILING), rs.getBoolean(QueryConsts.BUSINESS_ACCOUNT_IS_APPROVED),
-								rs.getString(QueryConsts.BUSINESS_ACCOUNT_BUSINESS_NAME), rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT)));
-
+								rs.getString(QueryConsts.BUSINESS_ACCOUNT_BUSINESS_NAME), rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT))));
 						response.setCode(200);
 						response.setDescription("Success fetching business account");
 					} else {
@@ -254,12 +252,12 @@ public class AccountApiService {
 					getAccount.setInt(1, account.getUserID());
 					rs = getAccount.executeQuery();
 					if (rs.next()) {
-						response.setBody(new PrivateAccount(account.getUserID(), account.getUserName(),
+						response.setBody(EchoServer.gson.toJson(new PrivateAccount(account.getUserID(), account.getUserName(),
 								account.getPassword(), account.getFirstName(), account.getLastName(),
 								account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(),
 								account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
 								account.getDebt(), rs.getString(QueryConsts.PRIVATE_ACCOUNT_W4C), rs.getString(2), rs.getString(3),
-								rs.getString(4)));
+								rs.getString(4))));
 						response.setCode(200);
 						response.setDescription("Success fetching private account");
 					} else {
@@ -268,11 +266,9 @@ public class AccountApiService {
 					}
 				}
 			}
-
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
-			response.setBody(null);
 		}
 	}
 

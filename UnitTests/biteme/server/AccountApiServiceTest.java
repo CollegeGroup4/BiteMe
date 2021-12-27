@@ -3,6 +3,8 @@ package biteme.server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,31 +26,31 @@ public class AccountApiServiceTest {
 		response = new Response();
 	}
 
-	@Test
-	public void testCreatePrivateAccount() {
-		int userID = 2;
-		String userName = "b";
-		AccountApiService.getAccountByUserNameAndID(userName, userID, response);
-		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
-		PrivateAccount acc = new PrivateAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
-				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-				account.getDebt(), "1234567891234567", "123", "12-2026", null);
-		AccountApiService.createPrivateAccount(acc, response);
-		assertEquals("Success in registering private account: 2", response.getDescription());
-	}
+//	@Test
+//	public void testCreatePrivateAccount() {
+//		int userID = 2;
+//		String userName = "b";
+//		AccountApiService.getAccountByUserNameAndID(userName, userID, response);
+//		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
+//		PrivateAccount acc = new PrivateAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
+//				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
+//				 account.getDebt(), null,"1234567891234567", "123", "12-2026");
+//		AccountApiService.createPrivateAccount(acc, response);
+//		assertEquals("Success in registering private account: 2", response.getDescription());
+//	}
 
-	@Test
-	public void testCreateBusinessAccount() {
-		int userID = 2;
-		String userName = "b";
-		AccountApiService.getAccountByUserNameAndID(userName, userID, response);
-		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
-		BusinessAccount acc = new BusinessAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
-				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), true, account.getBranch_manager_ID(), account.getArea(),
-				account.getDebt(), 1000, false, "intel",0 , null);
-		AccountApiService.createBusinessAccount(acc, response);
-		assertEquals("Success in registering business account -> UserID: 2", response.getDescription());
-	}
+//	@Test
+//	public void testCreateBusinessAccount() {
+//		int userID = 2;
+//		String userName = "b";
+//		AccountApiService.getAccountByUserNameAndID(userName, userID, response);
+//		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
+//		BusinessAccount acc = new BusinessAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
+//				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), true, account.getBranch_manager_ID(), account.getArea(),
+//				account.getDebt(), null,1000, false, "intel",0);
+//		AccountApiService.createBusinessAccount(acc, response);
+//		assertEquals("Success in registering business account -> UserID: 2", response.getDescription());
+//	}
 
 //	@Test
 //	public void testDeleteAccount() {
@@ -57,10 +59,13 @@ public class AccountApiServiceTest {
 //		assertEquals("Success in deleting account -> userName: b", response.getDescription());
 //	}
 //
-//	@Test
-//	public void testGetAllAccounts() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	public void testGetAllAccounts() {
+		int branchManager = 1;
+		AccountApiService.getAllAccounts(branchManager, response);
+		Account[] acc = EchoServer.gson.fromJson((String)response.getBody(), Account[].class);
+		System.out.println(Arrays.toString(acc));
+	}
 //
 //	@Test
 //	public void testGetAccount() {
