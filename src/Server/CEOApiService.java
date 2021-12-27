@@ -3,6 +3,7 @@ package Server;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import logic.Order;
 
 public class CEOApiService {
 
-	public static ArrayList<Order> getAllOrders(LocalDateTime from, LocalDateTime to) {
+	private static ArrayList<Order> getAllOrders(LocalDateTime from, LocalDateTime to, int BranchManagerID) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		ArrayList<Order> orders = new ArrayList<>();
 		PreparedStatement getOrders;
@@ -21,7 +22,8 @@ public class CEOApiService {
 		LocalDateTime orderTimeTaken;
 		ResultSet rs;
 		try {
-			getOrders = EchoServer.con.prepareStatement("SELECT * FROM biteme.order;");
+			getOrders = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE BranchManagerID = ?;");
+			getOrders.setInt(1, BranchManagerID);
 			getOrders.executeQuery();
 			rs = getOrders.getResultSet();
 			while (rs.next()) {
@@ -44,7 +46,7 @@ public class CEOApiService {
 		return orders;
 	}
 
-	public static void getReportForOrdersCEO() {
+	private static void getReportForOrdersCEO(int BranchManagerID) {
 		ArrayList<Order> orders;
 		HashMap<LocalDateTime, Integer> datesToOrders = new HashMap<>();
 		HashMap<LocalDateTime, Double> datesToIncome = new HashMap<>();
@@ -56,7 +58,7 @@ public class CEOApiService {
 		String[] stringToHelp = new String[2];
 		Double amountOfIncome;
 		LocalDateTime now = LocalDateTime.now(), orderTime;
-		orders = getAllOrders(now.minusMonths(3), now);
+		orders = getAllOrders(now.minusMonths(3), now, BranchManagerID);
 		for(Order temp : orders) {
 			orderTime = LocalDateTime.parse(temp.getTime_taken(), fullFormat);
 			if(datesToOrders.containsKey(orderTime)) {
@@ -80,4 +82,23 @@ public class CEOApiService {
 			incomeData.add(stringToHelp);
 		}
 	}
+	
+	public static void generateQuarterlyReports() {
+		PreparedStatement getBR;
+		ResultSet rs;
+		try {
+			getBR = EchoServer.con.prepareStatement("SELECT BranchManagerID FROM biteme.branch_manager;");
+			rs = getBR.executeQuery();
+			while(rs.next()) {
+				getReportForOrdersCEO(rs.getInt(1));
+			}
+		}catch(SQLException e) {
+			
+		}
+	}
+	
+	public static void getTwoReports(String typeOfFirst, LocalDate fromFirst, String typeOfSecond, LocalDate fromSecond) {
+		
+	}
+	
 }

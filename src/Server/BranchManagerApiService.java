@@ -373,7 +373,7 @@ public class BranchManagerApiService {
 					}
 					header = "Revenue Report for restaurant id:" + j + " Total sales: " + total;
 					total = 0.0;
-					fromDataSetToReportImage(dataset, "Sales", i, now.format(year) + now.format(month), j, "$",
+					fromDataSetToReportImage(dataset, "Sales", i, now.format(year) + "/" + now.format(month), j, "$",
 							"DayOfTheMonth: " + now.format(month), header);
 				}
 			}
@@ -447,7 +447,7 @@ public class BranchManagerApiService {
 					}
 					header = "Items in orders Report for restaurant id:" + j + " Total sales: " + total;
 					total = 0;
-					fromDataSetToReportImage(dataset, "Items", i, now.format(year) + now.format(month), j, "Amount",
+					fromDataSetToReportImage(dataset, "Items", i, now.format(year) + "/" + now.format(month), j, "Amount",
 							"Course", header);
 				}
 			}
@@ -511,7 +511,7 @@ public class BranchManagerApiService {
 				}
 				header = "Performence report for branch id:" + i + " total orders: " + total;
 				total = 0;
-				fromDataSetToReportImage(dataset, "Performence", i, now.format(year) + now.format(month), 0,
+				fromDataSetToReportImage(dataset, "Performence", i, now.format(year) + "/" + now.format(month), 0,
 						"Amount of orders", "Restaurants", header);
 			}
 

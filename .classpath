@@ -17,5 +17,7 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/twilio-8.23.0-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="lib/twilio-8.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/aspose-words-21.9-jdk16.jar"/>
+	<classpathentry kind="lib" path="lib/aspose-pdf-21.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

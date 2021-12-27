@@ -1,6 +1,7 @@
 package Server;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +13,16 @@ import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart; 
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset; 
-import org.jfree.data.category.DefaultCategoryDataset; 
+import org.jfree.data.category.DefaultCategoryDataset;
+
+import com.aspose.pdf.Document;
+import com.aspose.pdf.Image;
+import com.aspose.pdf.Page;
+import com.aspose.words.Paragraph;
+import com.aspose.words.ReplaceAction;
+import com.aspose.words.ReplacingArgs;
+import com.aspose.words.Run;
+
 
 public class mainfortesting {
    
@@ -32,7 +42,7 @@ public class mainfortesting {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-      String time = "2021-12-21 12:30:14", str;
+      String time = "2021-12-21 12:30:14";
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
       DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
       LocalDateTime test = LocalDateTime.parse(time, formatter);
@@ -70,9 +80,100 @@ public class mainfortesting {
    }
    
    public static void main( String[ ] args ) {
-	   mainfortesting a = new mainfortesting("t", "b");
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM");
-		LocalDateTime now = LocalDateTime.now();
-	   System.out.println(now.format(dtf));
+//	   mainfortesting a = new mainfortesting("t", "b");
+//		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM");
+//		LocalDateTime now = LocalDateTime.now();
+//	   System.out.println(now.format(dtf));
+	   
+	   
+	   
+	// Instantiate Document Object
+	   Document doc = new Document();
+
+	   // Access image files in the folder
+	   String imageDir = "C:/Images/";
+	   File file = new File(imageDir);
+	   String[] fileList = file.list();
+
+	   for (String fileName : fileList) {
+	   	// Add a page to pages collection of document
+	   	Page page = doc.getPages().add();
+
+	   	// Load the source image file to Stream object
+	   	java.io.FileInputStream fs = null;
+		try {
+			fs = new java.io.FileInputStream(imageDir + fileName);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	   	// Set margins so image will fit, etc.
+	   	page.getPageInfo().getMargin().setBottom(0);
+	   	page.getPageInfo().getMargin().setTop(0);
+	   	page.getPageInfo().getMargin().setLeft(0);
+	   	page.getPageInfo().getMargin().setRight(0);
+	   	page.setCropBox(new com.aspose.pdf.Rectangle(0, 0, 800, 600));
+
+	   	// Create an image object
+	   	Image image1 = new Image();
+
+	   	// Add the image into paragraphs collection of the section
+	   	page.getParagraphs().add(image1);
+
+	   	// Set the image file stream
+	   	image1.setImageStream(fs);
+	   }
+
+	   // Save resultant PDF file
+	   doc.save("document.pdf");
+	   
+	   
+	   
+   }
+   
+   public void Test199()
+
+   {
+
+   //Open document
+
+   Document doc = new Document(@"Test199\in.doc");
+
+   //Create regex
+
+   Regex regex = new Regex(Regex.Escape(""));
+
+   doc.Range.Replace(regex, new ReplaceEvaluator(ReplaceEvaluatorInsertText), false);
+
+   //Save document
+
+   doc.Save(@"Test199\out.doc");
+
+   }
+
+
+   private ReplaceAction ReplaceEvaluatorInsertText(Object sender, ReplacingArgs e)
+
+   {
+
+   //Get parent Paragraph of matched node
+
+   Paragraph par = (Paragraph)e.MatchNode.GetAncestor(NodeType.Paragraph);
+
+   //Create paragraph that will be inserted before
+
+   Paragraph newPar = new Paragraph(e.MatchNode.Document);
+
+   Run run = new Run(e.MatchNode.Document, "");
+
+   newPar.AppendChild(run);
+
+   //Insert new paragraph into the docuemnt
+
+   par.ParentNode.InsertBefore(newPar, par);
+
+   return ReplaceAction.Stop;
+
    }
 }
