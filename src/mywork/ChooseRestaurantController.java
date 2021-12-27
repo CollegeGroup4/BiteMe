@@ -89,9 +89,9 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 		// PrepareADishController prepareADishController = loader.getController();
 		// prepareADishController.setName();
 		// prepareADishController.setRestName();
-		PrepareADishController.prepareADishController = loader.getController();
-		PrepareADishController.prepareADishController.setName();
-		PrepareADishController.prepareADishController.setRestName();
+		ChooseADishController.chooseADishController = loader.getController();
+		ChooseADishController.chooseADishController.setName();
+		ChooseADishController.chooseADishController.setRestName();
 
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("Prepare A Dish Page");
@@ -169,10 +169,10 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 		Stage primaryStage = new Stage();
 		Pane root;
 		try {
-			root = loader.load(getClass().getResource("/mywork/PrepareADish.fxml").openStream());
-			PrepareADishController.prepareADishController = loader.getController();
+			root = loader.load(getClass().getResource("/mywork/ChooseADish.fxml").openStream());
+			ChooseADishController.chooseADishController = loader.getController();
 			//PrepareADishController.prepareADishController.setName();  //set when will be logged into a real user
-			PrepareADishController.prepareADishController.setRestName();
+			ChooseADishController.chooseADishController.setRestName();
 			Scene scene = new Scene(root);
 			primaryStage.setTitle("Prepare A Dish Page");
 			primaryStage.setScene(scene);

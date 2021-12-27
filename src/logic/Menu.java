@@ -29,6 +29,4 @@ public class Menu {
 	public void setItems(item_in_menu[] items) {
 		this.items = items;
 	}
-	
-	
 }

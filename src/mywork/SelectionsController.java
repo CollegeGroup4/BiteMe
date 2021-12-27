@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -40,6 +41,12 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 	private TextField quantityOfItem;
 
 	@FXML
+	private Button btnIncrease;
+
+	@FXML
+	private Button btnDecrease;
+
+	@FXML
 	private HBox allOptionals;
 
 	@FXML
@@ -51,13 +58,15 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 	@FXML
 	private Button submitBtn;
 
+	@FXML
+	private TextArea txtDescription;
+
 	public void start(Stage stage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("IngredientsAnd.fxml"));
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.show();
 	}
-
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		ArrayList<Button> b = new ArrayList<Button>();
@@ -84,7 +93,6 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			}
 		allOptionals.getChildren().addAll(b);
 	}
-
 	@Override
 	public void handle(ActionEvent event) {
 		String stringFromEvent = buttonRecognize(event);
@@ -95,9 +103,7 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			optionsSelectedHash.put(stringFromEvent, null);
 			optionalsSelected.getChildren().add(new Button(stringFromEvent));
 		}
-
 		// System.out.println(ingredientsSelectedArr.toString());
-
 	}
 
 	private String buttonRecognize(ActionEvent event) {
@@ -118,15 +124,6 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 	void submit(ActionEvent event) {
 		if (ItemsFromMenuController.itemsSelectedArr == null)
 			ItemsFromMenuController.itemsSelectedArr = new ArrayList<>();
-		/*
-		 * StringBuilder str = new StringBuilder(); boolean flag = true; for (String a :
-		 * optionsSelectedHash.keySet()) { if (flag == true) { str.append(a); flag =
-		 * false; } else { str.append("," + a); } }
-		 */
-
-		// Options tempOpt = new Options("", "", 0,
-		// ItemsFromMenuController.itemSelected.getItemID());
-		// optionsSelectedArr.add(tempOpt);
 		int i = 0;
 		Options optionsArr[] = new Options[optionsSelectedHash.size()];
 		for (String a : optionsSelectedHash.keySet()) {
@@ -134,12 +131,13 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			String specify = a.split("\n", 0)[1].split("-", 0)[0];
 			double price = Double.valueOf(a.split("-", 0)[1].substring(1, a.split("-", 0)[1].length()));
 			optionsArr[i] = new Options(category, specify, price, ItemsFromMenuController.itemSelected.getItemID());
-			ItemsFromMenuController.itemSelected.setPrice(ItemsFromMenuController.itemSelected.getPrice()+(float)price);
+			ItemsFromMenuController.itemSelected
+					.setPrice(ItemsFromMenuController.itemSelected.getPrice() + (float) price);
 		}
 		ItemsFromMenuController.itemSelected.setOptions(optionsArr);
 		ItemsFromMenuController.itemSelected.setAmount(Integer.valueOf(quantityOfItem.getText()));
-		ItemsFromMenuController.itemSelected.setPrice(Integer.valueOf(quantityOfItem.getText())
-				* ItemsFromMenuController.itemSelected.getPrice());
+		ItemsFromMenuController.itemSelected
+				.setPrice(Integer.valueOf(quantityOfItem.getText()) * ItemsFromMenuController.itemSelected.getPrice());
 		ItemsFromMenuController.itemsSelectedArr.add(ItemsFromMenuController.itemSelected);
 		Parent root = null;
 		try {
@@ -147,18 +145,37 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//Hide all screens to prepare for another dish
-		PrepareADishController.prepareADishController.getPaneForSummary().setCenter(root);
-		PrepareADishController.prepareADishController.getPaneForSelections().setCenter(null);
-		PrepareADishController.prepareADishController.getPaneForItems().setCenter(null);
-		PrepareADishController.prepareADishController.getPaneForCourses().setCenter(null);
+		ChooseADishController.chooseADishController.getPaneForSummary().setCenter(root);
+		ChooseADishController.chooseADishController.getPaneForCourses().setTop(
+				ChooseADishController.chooseADishController.getLblMenus());
+		ChooseADishController.chooseADishController.getPaneForCourses().setCenter(
+				ChooseADishController.chooseADishController.getSpMenus());
 
 		// **************** for check only ******************
-		//for (int j = 0; j < ItemsFromMenuController.itemsSelectedArr.size(); j++) {
-		//	System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getName());
-			//System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getAmount());
-		//}
-
+		// for (int j = 0; j < ItemsFromMenuController.itemsSelectedArr.size(); j++) {
+		// System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getName());
+		// System.out.println(ItemsFromMenuController.itemsSelectedArr.get(j).getAmount());
+		// }
 	}
 
+	@FXML
+	void decrease(ActionEvent event) {
+		int tmp;
+		if (quantityOfItem.getText() != null)
+			if (Integer.valueOf(quantityOfItem.getText()) > 0) {
+				tmp = Integer.valueOf(quantityOfItem.getText());
+				tmp--;
+				quantityOfItem.setText(String.valueOf(tmp));
+			}
+	}
+
+	@FXML
+	void increase(ActionEvent event) {
+		int tmp;
+		if (quantityOfItem.getText() != null) {
+			tmp = Integer.valueOf(quantityOfItem.getText());
+			tmp++;
+			quantityOfItem.setText(String.valueOf(tmp));
+		}
+	}
 }

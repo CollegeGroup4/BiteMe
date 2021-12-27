@@ -14,11 +14,10 @@ public class Account {
 	private int branch_manager_ID;
 	private String area;
 	private int debt;
-	private String w4c_card;
 
 	public Account(int userID, String userName, String password, String firstName, String lastName, String email,
-			String role, String phone, String status, boolean isBusiness, int branch_manager_ID, String area, int debt,
-			String w4c_card) {
+			String role, String phone, String status, boolean isBusiness, int branch_manager_ID, String area,
+			int debt) {
 		this.userID = userID;
 		this.userName = userName;
 		this.password = password;
@@ -32,7 +31,6 @@ public class Account {
 		this.branch_manager_ID = branch_manager_ID;
 		this.area = area;
 		this.debt = debt;
-		this.w4c_card = w4c_card;
 	}
 
 	public int getUserID() {
@@ -131,14 +129,6 @@ public class Account {
 		this.debt = debt;
 	}
 
-	public String getW4c_card() {
-		return w4c_card;
-	}
-
-	public void setW4c_card(String w4c_card) {
-		this.w4c_card = w4c_card;
-	}
-
 	public boolean isBusiness() {
 		return isBusiness;
 	}
@@ -147,4 +137,11 @@ public class Account {
 		this.isBusiness = isBusiness;
 	}
 
+	@Override
+	public String toString() {
+		return "Account [userID=" + userID + ", userName=" + userName + ", password=" + password + ", firstName="
+				+ firstName + ", lastName=" + lastName + ", email=" + email + ", role=" + role + ", phone=" + phone
+				+ ", status=" + status + ", isBusiness=" + isBusiness + ", branch_manager_ID=" + branch_manager_ID
+				+ ", area=" + area + ", debt=" + debt + "]";
+	}
 }

@@ -25,7 +25,7 @@
                         <Font name="Berlin Sans FB Demi Bold" size="23.0" />
                      </font>
                   </Label>
-                  <Label prefHeight="23.0" prefWidth="126.0" text="Prepare a Dish">
+                  <Label prefHeight="23.0" prefWidth="126.0" text="Choose A Dish">
                      <font>
                         <Font name="Arial" size="18.0" />
                      </font>
