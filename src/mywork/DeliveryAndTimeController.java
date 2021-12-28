@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +39,7 @@ public class DeliveryAndTimeController implements Initializable {
 		int orderId;
 		int restaurantId;
 		String time_taken;
-		double check_out_price;
+		float check_out_price;
 		String required_time;
 		String type_of_order;
 		int userID;
@@ -123,59 +124,50 @@ public class DeliveryAndTimeController implements Initializable {
 				phoneNumber.getText());
 		orderToSend = new OrderToSend();
 		orderToSend.orderId = 0;
-		orderToSend.restaurantId = ItemsFromMenuController.itemSelected.getRestaurantID();
+		orderToSend.restaurantId = ChooseADishController.itemSelected.getRestaurantID();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime now = LocalDateTime.now();
 		orderToSend.time_taken = now.format(formatter);
-
-		orderToSend.check_out_price = calculateCheckOutPrice();
-
 		orderToSend.required_time = dpDate.getValue() + " " + cbTime.getValue();
 		orderToSend.type_of_order = cbType.getValue();
 		// orderToSend.userID=CustomerPageController.user.getId(); ** implement when
 		// connected to database
 		orderToSend.phone = shippment.getPhone();
-		orderToSend.discount_for_early_order = calculateDiscount(); // implement it!
+		orderToSend.discount_for_early_order = calculateDiscount();
+		orderToSend.check_out_price = calculateCheckOutPrice();
+		System.out.println(orderToSend.check_out_price);
 		orderToSend.items = castItems();
 		if (cbType.getValue().equals("Shared Delivery"))
 			orderToSend.num_of_people = Integer.valueOf(numOfPeople.getText());
 
-		
 	}
 
 	private Item[] castItems() {
 
-		Item[] items = new Item[ItemsFromMenuController.itemsSelectedArr.size()];
+		Item[] items = new Item[ChooseADishController.itemsSelectedArr.size()];
 		for (int i = 0; i < items.length; i++) {
-			items[i] = ItemsFromMenuController.itemsSelectedArr.get(i);
+			items[i] = ChooseADishController.itemsSelectedArr.get(i);
 		}
 
 		return items;
 	}
 
 	private int calculateDiscount() throws ParseException {
-		String time1=orderToSend.required_time.substring(orderToSend.required_time.length()-4,orderToSend.required_time.length());	
-		String time2=orderToSend.time_taken.substring(orderToSend.required_time.length()-4,orderToSend.required_time.length());
-		SimpleDateFormat format =new SimpleDateFormat("HH:mm");
-		Date date1=format.parse(time1);
-		Date date2=format.parse(time2);
-		long difference=date1.getTime()-date2.getTime();
-		System.out.println(time1);
-		//System.out.println(time2);
-		//System.out.println(date1.getTime());
-		//System.out.println(date2.getTime());
-		
-		System.out.println(TimeUnit.MILLISECONDS.toMinutes(difference));
-		
-		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime d1 = LocalDateTime.parse(orderToSend.required_time, formatter);
+		LocalDateTime d2 = LocalDateTime.parse(orderToSend.time_taken, formatter);
+		if (d2.until(d1, ChronoUnit.MINUTES) >= 120) {
+			return 10;
+		}
 		return 0;
 	}
 
 	private float calculateCheckOutPrice() {
 		float sum = 0;
-		for (int i = 0; i < ItemsFromMenuController.itemsSelectedArr.size(); i++) {
-			sum += ItemsFromMenuController.itemsSelectedArr.get(i).getPrice();
+		for (int i = 0; i < ChooseADishController.itemsSelectedArr.size(); i++) {
+			sum += ChooseADishController.itemsSelectedArr.get(i).getPrice();
 		}
+		sum = sum - sum * orderToSend.discount_for_early_order / 100;
 		return sum;
 	}
 
@@ -190,13 +182,13 @@ public class DeliveryAndTimeController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		cbTime.getItems().addAll("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30",
-				"05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
-				"11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00",
-				"16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30",
-				"22:00", "22:30", "23:00", "23:30");
+		cbTime.getItems().addAll("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00",
+				"04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30",
+				"10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00",
+				"15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+				"21:00", "21:30", "22:00", "22:30", "23:00", "23:30");
 
-		cbType.getItems().addAll("Take-Away", "Regular Delivery", "Shared Delivery");
+		cbType.getItems().addAll("Take-Away", "Regular Delivery", "Shared Delivery", "Deliver By Robot");
 		cbType.setOnAction(e -> sharedTypeFunc());
 	}
 

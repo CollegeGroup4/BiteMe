@@ -27,6 +27,7 @@ import logic.Shippment;
 public class PaymentController implements Initializable {
 
 	public static PaymentSaved payment;
+	public float priceOfShippment = 0;
 
 	class PaymentSaved {
 		String cardType;
@@ -51,9 +52,9 @@ public class PaymentController implements Initializable {
 
 	@FXML
 	private CheckBox creditCard;
-	
-    @FXML
-    private CheckBox credit; //Not used because I do not receive this information
+
+	@FXML
+	private CheckBox credit; // Not used because I do not receive this information
 
 	@FXML
 	private Label expLabel;
@@ -176,13 +177,20 @@ public class PaymentController implements Initializable {
 	}
 
 	private void setOrderDetailsLabels() {
-		//lblDate.setText(lblDate.getText() + " " + DeliveryAndTimeController.orderToSend.required_time);
-		//lblOrderType.setText(lblOrderType.getText() + " " + DeliveryAndTimeController.orderToSend.type_of_order);
-		//lblAddress.setText(lblAddress.getText() + " " + DeliveryAndTimeController.shippment.getAddress());
-		//lblWorkplace.setText(lblWorkplace.getText() + " " + DeliveryAndTimeController.shippment.getWork_place());
-		//lblID.setText(lblID.getText() + " " + CustomerPageController.user.getId());         *** Implement when connect to the DB
-		//lblName.setText(lblName.getText() + " " + CustomerPageController.user.getName());   *** Implement when connect to the DB
-		//lblPhone.setText(lblPhone.getText()+" "+DeliveryAndTimeController.shippment.getPhone());
+		// lblDate.setText(lblDate.getText() + " " +
+		// DeliveryAndTimeController.orderToSend.required_time);
+		// lblOrderType.setText(lblOrderType.getText() + " " +
+		// DeliveryAndTimeController.orderToSend.type_of_order);
+		// lblAddress.setText(lblAddress.getText() + " " +
+		// DeliveryAndTimeController.shippment.getAddress());
+		// lblWorkplace.setText(lblWorkplace.getText() + " " +
+		// DeliveryAndTimeController.shippment.getWork_place());
+		// lblID.setText(lblID.getText() + " " + CustomerPageController.user.getId());
+		// *** Implement when connect to the DB
+		// lblName.setText(lblName.getText() + " " +
+		// CustomerPageController.user.getName()); *** Implement when connect to the DB
+		// lblPhone.setText(lblPhone.getText()+"
+		// "+DeliveryAndTimeController.shippment.getPhone());
 	}
 
 	private void americanExpressSelected() {
@@ -204,11 +212,30 @@ public class PaymentController implements Initializable {
 	}
 
 	private void setTotalPrice() {
-		float sum = 0;
-		for (int i = 0; i < ItemsFromMenuController.itemsSelectedArr.size(); i++) {
-			sum += ItemsFromMenuController.itemsSelectedArr.get(i).getPrice();
-		}
+		// float sum = 0;
+		// for (int i = 0; i < ItemsFromMenuController.itemsSelectedArr.size(); i++) {
+		// sum += ItemsFromMenuController.itemsSelectedArr.get(i).getPrice();
+		// }
+		float sum = DeliveryAndTimeController.orderToSend.check_out_price;
+		checkShippmentPrice();
+		sum += priceOfShippment;
 		totalPrice.setText("$" + sum);
+
+	}
+
+	private void checkShippmentPrice() {
+		if (DeliveryAndTimeController.orderToSend.type_of_order.equals("Take-Away"))
+			priceOfShippment = 0;
+		if (DeliveryAndTimeController.orderToSend.type_of_order.equals("Regular Delivery"))
+			priceOfShippment = 25;
+		if (DeliveryAndTimeController.orderToSend.type_of_order.equals("Shared Delivery")) {
+			if (DeliveryAndTimeController.orderToSend.num_of_people > 2)
+				priceOfShippment = 15;
+			else
+				priceOfShippment = 25 - 5 * DeliveryAndTimeController.orderToSend.num_of_people;
+		}
+		if (DeliveryAndTimeController.orderToSend.type_of_order.equals("Deliver By Robot"))
+			priceOfShippment = 0;
 
 	}
 

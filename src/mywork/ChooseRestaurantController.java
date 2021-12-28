@@ -41,7 +41,7 @@ import javafx.stage.Stage;
 import logic.Restaurant;
 import temporaryDatabase.myOwnDatabase;
 
-public class ChooseRestaurantController implements Initializable, EventHandler<ActionEvent> {
+public class ChooseRestaurantController implements Initializable {
 
 	public ArrayList<Restaurant> restaurantsFromData;
 	public static Restaurant restaurantSelected;
@@ -85,39 +85,36 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 		}
 	}
 
-	@FXML
-	void ChooseRest(ActionEvent event) throws IOException {
-		btnRecognize(event);
-		FXMLLoader loader = new FXMLLoader();
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/mywork/PrepareADish.fxml").openStream());
-		// PrepareADishController prepareADishController = loader.getController();
-		// prepareADishController.setName();
-		// prepareADishController.setRestName();
-		ChooseADishController.chooseADishController = loader.getController();
-		ChooseADishController.chooseADishController.setName();
-		ChooseADishController.chooseADishController.setRestName();
-
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Prepare A Dish Page");
-
-		primaryStage.setScene(scene);
-		primaryStage.show();
-
-	}
-
-	private void btnRecognize(ActionEvent event) {
-		String stringFromEvent = event.getSource().toString();
-		stringFromEvent = stringFromEvent.split("'", 2)[1];
-		stringFromEvent = stringFromEvent.substring(0, stringFromEvent.length() - 1);
-		for (int i = 0; i < restaurantsFromData.size(); i++) {
-			if (restaurantsFromData.get(i).getName().equals(stringFromEvent)) {
-				restaurantSelected = restaurantsFromData.get(i);
-				break;
-			}
-		}
-	}
+//	@FXML
+//	void ChooseRest(ActionEvent event) throws IOException {
+//		btnRecognize(event);
+//		FXMLLoader loader = new FXMLLoader();
+//		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+//		Stage primaryStage = new Stage();
+//		Pane root = loader.load(getClass().getResource("/mywork/PrepareADish.fxml").openStream());
+//		ChooseADishController.chooseADishController = loader.getController();
+//		ChooseADishController.chooseADishController.setName();
+//		ChooseADishController.chooseADishController.setRestName();
+//
+//		Scene scene = new Scene(root);
+//		primaryStage.setTitle("Prepare A Dish Page");
+//
+//		primaryStage.setScene(scene);
+//		primaryStage.show();
+//
+//	}
+//
+//	private void btnRecognize(ActionEvent event) {
+//		String stringFromEvent = event.getSource().toString();
+//		stringFromEvent = stringFromEvent.split("'", 2)[1];
+//		stringFromEvent = stringFromEvent.substring(0, stringFromEvent.length() - 1);
+//		for (int i = 0; i < restaurantsFromData.size(); i++) {
+//			if (restaurantsFromData.get(i).getName().equals(stringFromEvent)) {
+//				restaurantSelected = restaurantsFromData.get(i);
+//				break;
+//			}
+//		}
+//	}
 
 	public void setName() {
 		welcomeLabel.setText("Welcome, " + CustomerPageController.user.getName());
@@ -134,11 +131,11 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 	}
 
 	private void handeleClick(MouseEvent event, String name) {
-		System.out.println("hello i hare!" + name);
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
 		Pane root;
+		sentToServer();
 		try {
 			root = loader.load(getClass().getResource("/mywork/ChooseADish.fxml").openStream());
 			ChooseADishController.chooseADishController = loader.getController();
@@ -152,6 +149,11 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 			e.printStackTrace();
 		}
 
+	}
+
+	void sentToServer() {
+
+		//TODO - need to sent restaurantSelected.getId()
 	}
 
 	@FXML
@@ -183,19 +185,11 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 			restaurant.getChildren().addAll(name, hbox);
 			restaurant.setPadding(new Insets(10, 0, 50, 10));
 			restaurant.setCursor(Cursor.HAND);
-			final int index = i;
 			restaurantSelected = restaurantsFromData.get(i);
 			restaurant.addEventHandler(MouseEvent.MOUSE_CLICKED,
-					(e) -> handeleClick(e, restaurantsFromData.get(index).getName()));
+					(e) -> handeleClick(e, restaurantSelected.getName()));
 			restaurantList.add(restaurant);
 		}
-
-//		ArrayList<Button> b = new ArrayList<Button>();
-//		for (int i = 0; i < restaurantsFromData.size(); i++) {
-//			Button temp = new Button(restaurantsFromData.get(i).getName());
-//			temp.setOnAction(this);
-//			b.add(temp);
-//		}
 		restaurantsContainer.getChildren().clear();
 		restaurantsContainer.getChildren().addAll(restaurantList);
 	}
@@ -204,13 +198,13 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 															// server
 		restaurantsFromData = new ArrayList<Restaurant>();
 		Restaurant res0 = new Restaurant(0, true, 0, "McDonald's", "North", "Burgers", null,
-				"C:\\Users\\einan\\git\\BiteMe\\src\\images\\M.png",
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\M.png",
 				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
 		Restaurant res1 = new Restaurant(1, true, 0, "Ruben", "North", "Burgers", null,
-				"C:\\Users\\einan\\git\\BiteMe\\src\\images\\ruben.png",
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\ruben.png",
 				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
 		Restaurant res2 = new Restaurant(2, true, 0, "BBB", "North", "Burgers", null,
-				"C:\\Users\\einan\\git\\BiteMe\\src\\images\\BBB.png",
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\BBB.png",
 				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
 		restaurantsFromData.add(res0);
 		restaurantsFromData.add(res1);
@@ -227,25 +221,25 @@ public class ChooseRestaurantController implements Initializable, EventHandler<A
 
 	}
 
-	@Override
-	public void handle(ActionEvent event) {
-//		btnRecognize(event);
-		FXMLLoader loader = new FXMLLoader();
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		Stage primaryStage = new Stage();
-		Pane root;
-		try {
-			root = loader.load(getClass().getResource("/mywork/ChooseADish.fxml").openStream());
-			ChooseADishController.chooseADishController = loader.getController();
-
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Prepare A Dish Page");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	@Override
+//	public void handle(ActionEvent event) {
+////		btnRecognize(event);
+//		FXMLLoader loader = new FXMLLoader();
+//		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+//		Stage primaryStage = new Stage();
+//		Pane root;
+//		try {
+//			root = loader.load(getClass().getResource("/mywork/ChooseADish.fxml").openStream());
+//			ChooseADishController.chooseADishController = loader.getController();
+//
+//			Scene scene = new Scene(root);
+//			primaryStage.setTitle("Prepare A Dish Page");
+//			primaryStage.setScene(scene);
+//			primaryStage.show();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 }

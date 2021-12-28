@@ -49,9 +49,9 @@ public class SummaryController implements Initializable {
 	}
 
 	public void insertitemsToTbl() {
-		for (int i = 0; i < ItemsFromMenuController.itemsSelectedArr.size(); i++) {
+		for (int i = 0; i < ChooseADishController.itemsSelectedArr.size(); i++) {
 			// System.out.println(ItemsFromMenuController.itemsSelectedArr.get(i).getName());
-			itemsList.add(ItemsFromMenuController.itemsSelectedArr.get(i));
+			itemsList.add(ChooseADishController.itemsSelectedArr.get(i));
 
 		}
 	}
