@@ -90,13 +90,13 @@ public class LoginController {
 						System.out.println("go to supplier");
 						Navigation_SidePanelController.role = "Supplier";
 						root = loader
-								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+								.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
 						break;
 					case "Moderator":
 						System.out.println("go to supplier moderator");
 						Navigation_SidePanelController.role = "Moderator";
 						root = loader
-								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+								.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
 						break;
 					case "HR":
 						System.out.println("go to HR");

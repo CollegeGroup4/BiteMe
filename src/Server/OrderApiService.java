@@ -144,7 +144,7 @@ public class OrderApiService {
 			}
 		}
 		response.setCode(200);
-		response.setDescription("A new order has been successfuly added -> orderID:"+Integer.toString(orderID));
+		response.setDescription("A new order has been successfuly added -> orderID: "+Integer.toString(orderID));
 		JsonElement body = EchoServer.gson.toJsonTree(new Object());
 		body.getAsJsonObject().addProperty("orderID", orderID);
 		response.setBody(EchoServer.gson.toJson(body));
@@ -171,7 +171,8 @@ public class OrderApiService {
 						rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER), null, null,
 						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRIVED),
 						rs.getBoolean(QueryConsts.ORDER_IS_APPROVED));
-
+				getItemsByOrderID(order.getOrderID(), response);
+				order.setItems(EchoServer.gson.fromJson((String) response.getBody(), Item[].class));
 				orders.add(order);
 			}
 		} catch (SQLException e) {
@@ -232,6 +233,8 @@ public class OrderApiService {
 						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRIVED),
 						rs.getBoolean(QueryConsts.ORDER_IS_APPROVED));
 			}
+			getItemsByOrderID(orderId, response);
+			order.setItems(EchoServer.gson.fromJson((String) response.getBody(), Item[].class));
 		} catch (SQLException e) {
 			response.setCode(404);
 			response.setDescription("Order not found");
@@ -247,49 +250,53 @@ public class OrderApiService {
 	 * Get payment approval for monthly budget
 	 *
 	 */
-	public static void getPaymentApproval(Integer UserID, float amount, Response response) {
+	public static void getPaymentApproval(String userName, float amount, String w4c, String businessName, Response response) {
+		JsonElement body = EchoServer.gson.toJsonTree(new Object());
 		PreparedStatement getAccount, getBusinessAccount, updateCurrentSpend;
 		ResultSet rs;
+		float remainingPayment = 0;
 		float monthBillingCelling, currentSpent;
 		try {
-			getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.account WHERE UserID = ?");
-			getAccount.setInt(1, UserID);
-			getAccount.execute();
+			getAccount = EchoServer.con.prepareStatement("SELECT isApproved FROM biteme.employees WHERE Name = ?");
+			getAccount.setString(1, businessName);
+			rs = getAccount.executeQuery();
 			rs = getAccount.getResultSet();
 			if (rs.next()) {
+				//check if the business approved
+				if(!rs.getBoolean(1)) 
+					throw new SQLException("Buisiness " + businessName + "isn't approved", "401", 401);
 				getBusinessAccount = EchoServer.con
-						.prepareStatement("SELECT * FROM biteme.business_account WHERE UserID = ?");
-				getBusinessAccount.setInt(1, UserID);
-				getBusinessAccount.execute();
-				rs.close();
-				rs = getBusinessAccount.getResultSet();
+						.prepareStatement("SELECT * FROM biteme.business_account WHERE UserName = ?");
+				getBusinessAccount.setString(1, userName);
+				rs = getBusinessAccount.executeQuery();
 				if (rs.next()) {
-					monthBillingCelling = rs.getFloat(2);
-					currentSpent = rs.getFloat(5);
+					monthBillingCelling = rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_MONTHLY_BILLING_CEILING);
+					currentSpent = rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT);
+					remainingPayment = amount - (monthBillingCelling - currentSpent); 
+					updateCurrentSpend = EchoServer.con.prepareStatement(
+							"UPDATE biteme.business_account SET CurrentSpend = ? WHERE UserName = ?;");
 					if (monthBillingCelling < currentSpent + amount) {
-						throw new SQLException("Account" + UserID + "will exceed monthlry billing celling", "400", 400);
+						updateCurrentSpend.setFloat(1, monthBillingCelling);
 					} else {
-						updateCurrentSpend = EchoServer.con.prepareStatement(
-								"UPDATE biteme.business_account SET CurrentSpend = ? WHERE UserID = ?;");
 						updateCurrentSpend.setFloat(1, currentSpent + amount);
-						updateCurrentSpend.setInt(2, UserID);
-						updateCurrentSpend.execute();
-					}
-				}
 
+					}
+					updateCurrentSpend.setString(2, userName);
+					updateCurrentSpend.executeQuery();
+				}
 			} else {
-				throw new SQLException("Account" + UserID + "is not found in table", "401", 401);
+				throw new SQLException("Buisiness " + businessName + " doesn't exist", "401", 401);
 			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
-			response.setBody(null);
 		}
 		response.setCode(200);
-		response.setDescription("Payment approved");
-		response.setBody(null);
+		response.setDescription("Business payment approved -> businessName: " + businessName);
+		body.getAsJsonObject().addProperty("remainToPay", remainingPayment);
+		response.setBody(EchoServer.gson.toJson(body));
 	}
-
+	
 	/**
 	 * Updates a order in the DB with form data
 	 *
@@ -356,7 +363,6 @@ public class OrderApiService {
 						rs1.getString(QueryConsts.ITEM_INGREDIENTS), null, rs1.getString(QueryConsts.ITEM_IMAGE),
 						rs1.getInt(10));
 				items.add(itemTemp);
-
 				PreparedStatement getOptions = EchoServer.con
 						.prepareStatement("SELECT * FROM biteme.optional_category WHERE itemID = ?");
 				getOptions.setInt(1, itemTemp.getItemID());
@@ -365,7 +371,7 @@ public class OrderApiService {
 				while (rs2.next()) {
 					optionsTemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
 							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getDouble(QueryConsts.OPTIONAL_PRICE),
-							itemTemp.getItemID());
+							itemTemp.getItemID(), rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE));
 
 					options.add(optionsTemp);
 				}

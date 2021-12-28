@@ -112,12 +112,14 @@ public class EchoServer extends AbstractServer {
 						break;
 					}
 				break;
-			case "/orders/paymentApproval/business"://TODO
+			case "/orders/paymentApproval/business":
 				switch (method) {
 					case GET:
-//							Integer accountID = gson.fromJson(m.get("userID"), Integer.class);
-//							Integer accountID = gson.fromJson(m.get("userID"), Integer.class);
-//							OrderApiService.getPaymentApproval(accountID,response);
+							String userName = gson.fromJson(body.get("userName"), String.class);
+							Float amountToPay = gson.fromJson(body.get("amountToPay"), Float.class);
+							String businessName = gson.fromJson(body.get("businessName"), String.class); 
+							String businessW4C = gson.fromJson(body.get("businessW4C"), String.class);
+							OrderApiService.getPaymentApproval(userName, amountToPay, businessW4C, businessName,response);
 						break;
 					}
 				break;

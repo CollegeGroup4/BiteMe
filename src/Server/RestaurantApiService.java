@@ -143,7 +143,8 @@ public class RestaurantApiService {
 				ResultSet rs2 = stmt.getResultSet();
 				while (rs2.next()) {
 					options.add(new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
-							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getInt(QueryConsts.OPTIONAL_PRICE),rs2.getInt(QueryConsts.OPTIONAL_ITEM_ID)));
+							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getInt(QueryConsts.OPTIONAL_PRICE),
+							rs2.getInt(QueryConsts.OPTIONAL_ITEM_ID), rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE)));
 				}
 				item.setOptions((Options[]) options.toArray());
 				options.clear();
@@ -240,8 +241,8 @@ public class RestaurantApiService {
 				rs2 = getOptions.getResultSet();
 				while (rs2.next()) {
 					otemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
-							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getDouble(QueryConsts.OPTIONAL_PRICE),itemp.getItemID());
-
+							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getDouble(QueryConsts.OPTIONAL_PRICE),itemp.getItemID(),
+							rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE));
 					options.add(otemp);
 				}
 				itemp.setOptions(options.toArray(new Options[0]));
