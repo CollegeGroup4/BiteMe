@@ -5,16 +5,25 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXButton;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import logic.Item;
 import logic.item_in_menu;
@@ -37,17 +46,27 @@ public class ItemsFromMenuController implements Initializable, EventHandler<Acti
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		ArrayList<Button> b = new ArrayList<Button>();
+		ArrayList<Button> listItems = new ArrayList<Button>();
 		itemsInCategory = new ArrayList<>();
 		getInformation();
 		for (int i = 0; i < itemsInCategory.size(); i++) {
-			Button temp = new Button(itemsInCategory.get(i).getName());
-			temp.setOnAction(this);
-			b.add(temp);
+			JFXButton itemBtn = new JFXButton(itemsInCategory.get(i).getName());
+			designButton(itemBtn);
+			itemBtn.setOnAction(this);
+			listItems.add(itemBtn);
 		}
-		Items.getChildren().addAll(b);
+		Items.getChildren().addAll(listItems);
+		
 	}
 
+	private void designButton(JFXButton button) {
+		button.setPrefWidth(160);
+		BackgroundFill background_fill = new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY);
+		Background background = new Background(background_fill);
+		button.setBackground(background);
+		Font font = Font.font("Arial", FontWeight.BOLD, 15);
+		button.setFont(font);
+	}
 	private void getInformation() {
 		for (int i = 0; i < ChooseADishController.menuSelected.getItems().length; i++) {
 			if (ChooseADishController.menuSelected.getItems()[i].getCourse().equals(CoursesController.courseSelected)) {

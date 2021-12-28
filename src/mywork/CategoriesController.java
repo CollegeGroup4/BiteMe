@@ -6,16 +6,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXButton;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import logic.Category;
 import logic.Item;
@@ -38,17 +47,32 @@ public class CategoriesController implements Initializable, EventHandler<ActionE
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		ArrayList<Button> b = new ArrayList<Button>();
+		ArrayList<Button> listCategories = new ArrayList<Button>();
 		getInformation();
 		for (String i : categories.keySet()) {
-			Button temp = new Button(i);
-			temp.setOnAction(this);
-			b.add(temp);
+			JFXButton CategoryBtn = new JFXButton(i);
+			designButton(CategoryBtn);
+			CategoryBtn.setOnAction(this);
+			listCategories.add(CategoryBtn);
 		}
-		categoriesContainer.getChildren().addAll(b);
-
+		categoriesContainer.getChildren().addAll(listCategories);
+		Label chooseManu = new Label("Choose Category:");
+		designLabel(chooseManu);
 	}
-	
+	private void designLabel(Label label) {
+		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 16);
+		label.setFont(font);
+	}
+
+	private void designButton(JFXButton button) {
+		button.setPrefWidth(160);
+//		button
+		BackgroundFill background_fill = new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY);
+		Background background = new Background(background_fill);
+		button.setBackground(background);
+		Font font = Font.font("Arial", FontWeight.BOLD, 15);
+		button.setFont(font);
+	}
 	private void getInformation() {// find all categories for a specific menu
 		categories= new HashMap<>();
 		item_in_menu[] itemsInMenu=ChooseADishController.menuSelected.getItems();
@@ -75,7 +99,9 @@ public class CategoriesController implements Initializable, EventHandler<ActionE
 			e.printStackTrace();
 		}
 		ChooseADishController.chooseADishController.getPaneForCourses().setCenter(root);
-		ChooseADishController.chooseADishController.getPaneForCourses().setTop(new Label("Choose Item:"));
+		Label chooseItem = new Label("Choose Item:");
+		designLabel(chooseItem);
+		ChooseADishController.chooseADishController.getPaneForCourses().setTop(chooseItem);
 		
 	}
 

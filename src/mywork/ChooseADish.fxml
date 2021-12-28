@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.ChooseADishController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.ChooseADishController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <HBox alignment="CENTER" layoutX="36.0" layoutY="81.0" prefHeight="50.0" prefWidth="810.0" spacing="20.0" style="-fx-border-color: black;">
+            <HBox alignment="CENTER" layoutX="36.0" layoutY="76.0" prefHeight="27.0" prefWidth="810.0" spacing="20.0" style="-fx-border-color: black;">
                <children>
                   <Label prefHeight="24.0" prefWidth="162.0" text="Choose Restaurant">
                      <font>
@@ -56,7 +56,7 @@
                      </content>
                   </ScrollPane>
                </center></BorderPane>
-            <Button fx:id="btnBack" layoutX="48.0" layoutY="586.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">
+            <Button fx:id="btnBack" layoutX="36.0" layoutY="615.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -65,7 +65,7 @@
                </cursor>
             </Button>
             <BorderPane fx:id="paneForSummary" layoutX="640.0" layoutY="176.0" prefHeight="385.0" prefWidth="226.0" />
-            <Button fx:id="btnNext" layoutX="704.0" layoutY="586.0" mnemonicParsing="false" onAction="#next" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Next" textFill="WHITE">
+            <Button fx:id="btnNext" layoutX="769.0" layoutY="615.0" mnemonicParsing="false" onAction="#next" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Next" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -79,11 +79,14 @@
                </font>
             </Label>
             <BorderPane fx:id="paneForSelections" layoutX="205.0" layoutY="148.0" prefHeight="333.0" prefWidth="407.0" />
-            <AnchorPane fx:id="itemInfo" layoutX="214.0" layoutY="499.0" prefHeight="138.0" prefWidth="388.0" style="-fx-border-color: black;">
+            <AnchorPane fx:id="itemInfo" layoutX="215.0" layoutY="515.0" prefHeight="112.0" prefWidth="388.0" style="-fx-border-color: black;" visible="false">
                <children>
-                  <Label fx:id="itemLabel" layoutX="119.0" layoutY="6.0" prefHeight="17.0" prefWidth="152.0" text="Label" />
-                  <ImageView fx:id="itemImage" fitHeight="148.0" fitWidth="109.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
-                  <JFXTextArea fx:id="itemDescription" layoutX="119.0" layoutY="39.0" prefHeight="100.0" prefWidth="233.0" />
+                  <Label fx:id="itemLabel" layoutX="119.0" layoutY="6.0" prefHeight="17.0" prefWidth="152.0" text="Label">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="18.0" />
+                     </font></Label>
+                  <ImageView fx:id="itemImage" fitHeight="100.0" fitWidth="100.0" layoutX="7.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
+                  <JFXTextArea fx:id="itemDescription" layoutX="119.0" layoutY="29.0" prefHeight="64.0" prefWidth="263.0" />
                </children>
             </AnchorPane>
          </children></AnchorPane>

@@ -161,9 +161,10 @@ public class DeliveryAndTimeController implements Initializable {
 		Date date2=format.parse(time2);
 		long difference=date1.getTime()-date2.getTime();
 		System.out.println(time1);
-		System.out.println(time2);
-		System.out.println(date1.getTime());
-		System.out.println(date2.getTime());
+		//System.out.println(time2);
+		//System.out.println(date1.getTime());
+		//System.out.println(date2.getTime());
+		
 		System.out.println(TimeUnit.MILLISECONDS.toMinutes(difference));
 		
 		

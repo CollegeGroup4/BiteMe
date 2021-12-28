@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,11 +29,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import logic.Item;
 import logic.Menu;
@@ -43,10 +51,10 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 
 	public static ChooseADishController chooseADishController = null;
 	public static Menu menuSelected;
-	//public static ArrayList<item_in_menu> items_in_menuArr;
+	// public static ArrayList<item_in_menu> items_in_menuArr;
 	public static ArrayList<Menu> menusArr;
 	public static ArrayList<Item> itemsArr;
-	
+
 	@FXML
 	private HBox Nav;
 
@@ -67,30 +75,30 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 
 	@FXML
 	private VBox Menus;
-	
-    @FXML
-    private ScrollPane spMenus;
-    
-    @FXML
-    private AnchorPane itemInfo;
 
 	@FXML
-    private Label itemLabel;
+	private ScrollPane spMenus;
 
 	@FXML
-    private ImageView itemImage;
+	private AnchorPane itemInfo;
 
 	@FXML
-    private JFXTextArea itemDescription;
+	private Label itemLabel;
 
 	@FXML
-    private Label lblMenus;
+	private ImageView itemImage;
+
+	@FXML
+	private JFXTextArea itemDescription;
+
+	@FXML
+	private Label lblMenus;
 
 	@FXML
 	private BorderPane paneForItems;
-	
-    @FXML
-    private BorderPane paneForSummary;
+
+	@FXML
+	private BorderPane paneForSummary;
 
 	@FXML
 	private BorderPane paneForSelections;
@@ -100,12 +108,12 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 
 	@FXML
 	private HBox Nav1;
-	
+
 	@FXML
 	private Button btnBack;
-	
-    @FXML
-    private Button btnNext;
+
+	@FXML
+	private Button btnNext;
 
 	@FXML
 	void goBack(ActionEvent event) {
@@ -131,34 +139,52 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		ArrayList<Button> b = new ArrayList<Button>();
-		//items_in_menuArr = new ArrayList<item_in_menu>();
+		ArrayList<Button> listManu = new ArrayList<Button>();
+		// items_in_menuArr = new ArrayList<item_in_menu>();
 		itemsArr = new ArrayList<Item>();
 		menusArr = new ArrayList<Menu>();
 		setTempDatabase();
 		for (int i = 0; i < menusArr.size(); i++) {
-			Button temp = new Button(menusArr.get(i).getName());
-			temp.setOnAction(this);
-			b.add(temp);
+			JFXButton menuBtn = new JFXButton(menusArr.get(i).getName());
+			designButton(menuBtn);
+			menuBtn.setOnAction(this);
+			listManu.add(menuBtn);
 
 		}
-		Menus.getChildren().addAll(b);
-		paneForCourses.setTop(new Label("Choose Menu:"));
+		
+		Menus.getChildren().addAll(listManu);
+		Menus.setSpacing(5);
+		
+		Label chooseManu = new Label("Choose Menu:");
+		designLabel(chooseManu);
+		paneForCourses.setTop(chooseManu);
 		paneForCourses.setCenter(spMenus);
 	}
 
+	private void designLabel(Label label) {
+		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 16);
+		label.setFont(font);
+	}
 
+	private void designButton(JFXButton button) {
+		button.setPrefWidth(160);
+//		button
+		BackgroundFill background_fill = new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY);
+		Background background = new Background(background_fill);
+		button.setBackground(background);
+		Font font = Font.font("Arial", FontWeight.BOLD, 15);
+		button.setFont(font);
+	}
 
 	@Override
 	public void handle(ActionEvent event) {
 		String stringFromEvent = event.getSource().toString();
 		stringFromEvent = stringFromEvent.split("'", 2)[1];
 		stringFromEvent = stringFromEvent.substring(0, stringFromEvent.length() - 1);
-		for(int i=0;i<menusArr.size();i++) {
-			if(menusArr.get(i).getName().equals(stringFromEvent))
-				menuSelected=menusArr.get(i);
+		for (int i = 0; i < menusArr.size(); i++) {
+			if (menusArr.get(i).getName().equals(stringFromEvent))
+				menuSelected = menusArr.get(i);
 		}
-
 
 		Parent root = null;
 		try {
@@ -166,47 +192,47 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//Menus.setVisible(false);
-		paneForCourses.setTop(new Label("Choose Course"));
+		// Menus.setVisible(false);
+		Label chooseCourse = new Label("Choose Course:");
+		designLabel(chooseCourse);
+		paneForCourses.setTop(chooseCourse);
 		paneForCourses.setCenter(root);
 	}
 
 	private void setTempDatabase() {
 
-		Options op0[] = { new Options("Size", "Regular", 0,0),new Options("Size", "Big", 15,0),
-				new Options("Select", "Not tomatoes", 0,0),new Options("Select", "No onions", 0,0) };
-		
-		Options op1[] = { new Options("Cook Size", "Medium", 0,1),new Options("Cook Size", "Medium Well", 0,1),
-				new Options("Cook Size", "Well Done", 0,1)};
-		
+		Options op0[] = { new Options("Size", "Regular", 0, 0), new Options("Size", "Big", 15, 0),
+				new Options("Select", "Not tomatoes", 0, 0), new Options("Select", "No onions", 0, 0) };
+
+		Options op1[] = { new Options("Cook Size", "Medium", 0, 1), new Options("Cook Size", "Medium Well", 0, 1),
+				new Options("Cook Size", "Well Done", 0, 1) };
+
 		Item item0 = new Item("Italiano", null, 0, 0, "Regular Pizza", 47,
 				"High-quality mozzarella pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
 				null, 5);
-		
-		Item item1 = new Item("Steaks", null, 1, 0, "Entrecote", 85,
-				"A classic 300 gram slice of entrecote", null, op1,
+
+		Item item1 = new Item("Steaks", null, 1, 0, "Entrecote", 85, "A classic 300 gram slice of entrecote", null, op1,
 				null, 3);
-		
+
 		itemsArr.add(item0);
 		itemsArr.add(item1);
 
 		item_in_menu item_in_menu0 = new item_in_menu(0, 0, "Night", "Second Course");
 		item_in_menu item_in_menu1 = new item_in_menu(1, 0, "Day", "Second Course");
-		
-		//items_in_menuArr.add(item_in_menu0);
-		//items_in_menuArr.add(item_in_menu1);
 
+		// items_in_menuArr.add(item_in_menu0);
+		// items_in_menuArr.add(item_in_menu1);
 
-		Menu temp0 = new Menu("Day", 0,new item_in_menu[]{item_in_menu0});
-		Menu temp1 = new Menu("Night", 0,new item_in_menu[]{item_in_menu1});
+		Menu temp0 = new Menu("Day", 0, new item_in_menu[] { item_in_menu0 });
+		Menu temp1 = new Menu("Night", 0, new item_in_menu[] { item_in_menu1 });
 		menusArr = new ArrayList<Menu>();
 		menusArr.add(temp0);
 		menusArr.add(temp1);
 	}
 
-    @FXML
-    void next(ActionEvent event) {
-    	((Node) event.getSource()).getScene().getWindow().hide();
+	@FXML
+	void next(ActionEvent event) {
+		((Node) event.getSource()).getScene().getWindow().hide();
 		DeliveryAndTimeController aFrame = new DeliveryAndTimeController();
 		try {
 			aFrame.start(new Stage());
@@ -214,7 +240,7 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 			e.printStackTrace();
 		}
 
-    }
+	}
 
 	public void start(Stage primaryStage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource("/mywork/ChooseADish.fxml"));
@@ -222,27 +248,29 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 		primaryStage.setTitle("Prepare A Dish Page");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		
+
 	}
-    public AnchorPane getItemInfo() {
+
+	public AnchorPane getItemInfo() {
 		return itemInfo;
 	}
 
 	public void setItemInfo(AnchorPane itemInfo) {
 		this.itemInfo = itemInfo;
 	}
-    public Label getItemLabel() {
+
+	public Label getItemLabel() {
 		return itemLabel;
 	}
 
-    public ImageView getItemImage() {
+	public ImageView getItemImage() {
 		return itemImage;
 	}
 
 	public void setItemImage(ImageView itemImage) {
 		this.itemImage = itemImage;
 	}
-    
+
 	public JFXTextArea getItemDescription() {
 		return itemDescription;
 	}
@@ -254,8 +282,8 @@ public class ChooseADishController implements Initializable, EventHandler<Action
 	public ScrollPane getSpMenus() {
 		return spMenus;
 	}
-    
-    public VBox getMenus() {
+
+	public VBox getMenus() {
 		return Menus;
 	}
 
