@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="branchManager.OpenAccountController">
+   <children>
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="102.0" prefWidth="784.0" spacing="50.0" style="-fx-background-radius: 50px;">
+         <children>
+            <Label fx:id="lableHello" prefHeight="88.0" prefWidth="202.0" styleClass="f" text="Hello, BManager">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" top="50.0" />
+               </padding>
+            </Label>
+            <Hyperlink onAction="#homeANDback" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Button mnemonicParsing="false" onAction="#logout" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="64.0" fitWidth="200.0">
+               <image>
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="217.0" layoutY="104.0" prefHeight="43.0" prefWidth="378.0" text="Open Account" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="40.0" />
+               </font>
+            </Label>
+            <Button layoutX="55.0" layoutY="597.0" mnemonicParsing="false" onAction="#homeANDback" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <AnchorPane layoutX="62.0" layoutY="200.0" prefHeight="312.0" prefWidth="672.0">
+               <children>
+                  <Button layoutX="134.0" layoutY="156.0" mnemonicParsing="false" onAction="#openPrivateAccount" prefHeight="64.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Open private account" textFill="WHITE">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="430.0" layoutY="156.0" mnemonicParsing="false" onAction="#openBusinessAccount" prefHeight="64.0" prefWidth="242.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Open business account" textFill="WHITE">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="8.0" layoutY="54.0" prefHeight="43.0" prefWidth="502.0" text="Which account would you like to open?" textAlignment="CENTER">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="28.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <JFXHamburger fx:id="myHamburger" layoutX="856.0" layoutY="41.0" />
+      <JFXDrawer fx:id="drawer" layoutX="-2.0" layoutY="1.0" prefHeight="770.0" prefWidth="300.0" />
+   </children>
+</AnchorPane>
