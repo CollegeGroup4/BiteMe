@@ -7,13 +7,17 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.JsonElement;
+
 import Server.EchoServer;
 import Server.Response;
 import Server.RestaurantApiService;
 import common.DBController;
 import logic.Item;
+import logic.Menu;
 import logic.Options;
 import logic.Restaurant;
+import logic.item_in_menu;
 
 public class RestaurantApiServiceTest {
 	private Response response;
@@ -74,19 +78,19 @@ public class RestaurantApiServiceTest {
 //		assertEquals("Success in fetching restaurants -> Area: north, type: shushi", response.getDescription());
 //	}
 
-	@Test
-	public void testGetAllCategories() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	public void testGetAllCategories() {
+//		fail("Not yet implemented");
+//	}
 
-	@Test
-	public void testAllItems() {
-		int restaurantID = 10;
-		RestaurantApiService.allItems(restaurantID, response);
-		Item[] items = EchoServer.gson.fromJson((String)response.getBody(), Item[].class);
-		System.out.println(Arrays.toString(items));
-		assertEquals("Success in fetching all restaurant items -> restaurantID: 10",response.getDescription());
-	}
+//	@Test
+//	public void testAllItems() {
+//		int restaurantID = 10;
+//		RestaurantApiService.allItems(restaurantID, response);
+//		Item[] items = EchoServer.gson.fromJson((String)response.getBody(), Item[].class);
+//		System.out.println(Arrays.toString(items));
+//		assertEquals("Success in fetching all restaurant items -> restaurantID: 10",response.getDescription());
+//	}
 
 //	@Test
 //	public void testCreateItem() {
@@ -98,36 +102,46 @@ public class RestaurantApiServiceTest {
 //		assertEquals("Success in creating a new item -> itemID: 9", response.getDescription());
 //	}
 
-	@Test
-	public void testUpdateItem() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testItemsDelete() {
-		fail("Not yet implemented");
-	}
-	
-	@Test
-	public void testAllMenues() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	public void testUpdateItem() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	public void testItemsDelete() {
+//		fail("Not yet implemented");
+//	}
+//	
+//	@Test
+//	public void testAllMenues() {
+//		int restaurantID = 10;
+//		RestaurantApiService.allMenues(restaurantID, response);
+//		JsonElement j = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
+//		Menu[] menues = EchoServer.gson.fromJson(j.getAsJsonObject().get("menues"), Menu[].class);
+//		Item[] items = EchoServer.gson.fromJson(j.getAsJsonObject().get("items"), Item[].class);
+//		System.out.println(Arrays.toString(menues));
+//		System.out.println(Arrays.toString(items));
+//	}
 
 	@Test
 	public void testApproveOrder() {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	public void testCreateMenu() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	public void testCreateMenu() {
+//		item_in_menu[] items = new item_in_menu[2];
+//		items[0] = new item_in_menu(8, 10, "Night", "first");
+//		items[1] = new item_in_menu(9, 10, "Night", "first");
+//		Menu menu = new Menu("Night", 10, items);
+//		RestaurantApiService.createMenu(menu, response);
+//		assertEquals("Success in creating menu -> menuName:  Night", response.getDescription());	
+//	}
 
 	@Test
 	public void testEditMenu() {
 		fail("Not yet implemented");
 	}
-
 
 	@Test
 	public void testGetCredit() {

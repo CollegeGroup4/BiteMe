@@ -255,18 +255,8 @@ public class EchoServer extends AbstractServer {
 				break;
 			}
 			break;
-//			case "/restaurants/getItemsByMenu":
-//				switch (method) {
-//				case GET:
-//					String menuName = gson.fromJson(body.get("menuName"), String.class);
-//					int restaurantNum = gson.fromJson(body.get("restaurantNum"), Integer.class);
-//					RestaurantApiService.get
-//					break;
-//
-//				default:
-//					break;
-//				}
-//				break;
+		case "/restaurants/getItemsByMenu":
+			break;
 		case "/restaurants/menus/getItemsByType":
 			break;
 		case "/restaurants/menus/category/getItemsBySubCategory":

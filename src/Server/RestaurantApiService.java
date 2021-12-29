@@ -134,8 +134,8 @@ public class RestaurantApiService {
 		Item item = null;
 		ResultSet rs, rs2;
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.item AS items"
-					+ " WHERE items.RestaurantID = ?;");
+			stmt = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.item AS items" + " WHERE items.RestaurantID = ?;");
 			stmt.setInt(1, restaurantID);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -144,8 +144,7 @@ public class RestaurantApiService {
 						rs.getString(QueryConsts.ITEM_NAME), rs.getFloat(QueryConsts.ITEM_PRICE),
 						rs.getString(QueryConsts.ITEM_DESCRIPTION), rs.getString(QueryConsts.ITEM_INGREDIENTS), null,
 						rs.getString(QueryConsts.ITEM_IMAGE), 0);
-				stmt = EchoServer.con
-						.prepareStatement("SELECT * FROM biteme.optional_category WHERE ItemID = ?;");
+				stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.optional_category WHERE ItemID = ?;");
 				stmt.setInt(1, item.getItemID());
 				rs2 = stmt.executeQuery();
 				while (rs2.next()) {
@@ -162,7 +161,8 @@ public class RestaurantApiService {
 			e.printStackTrace();
 		}
 		response.setCode(200);
-		response.setDescription("Success in fetching all restaurant items -> restaurantID: " + Integer.toString(restaurantID));
+		response.setDescription(
+				"Success in fetching all restaurant items -> restaurantID: " + Integer.toString(restaurantID));
 		response.setBody(EchoServer.gson.toJson(items.toArray()));
 	}
 
@@ -176,8 +176,8 @@ public class RestaurantApiService {
 		PreparedStatement stmt, updateOptions;
 		int rowsUpdated;
 		try {
-			stmt = EchoServer.con.prepareStatement(
-					"UPDATE biteme.item SET Category = ?, SubCategory = ?, Name = ?, Price = ?,"
+			stmt = EchoServer.con
+					.prepareStatement("UPDATE biteme.item SET Category = ?, SubCategory = ?, Name = ?, Price = ?,"
 							+ "Ingredients = ?, Image = ?, Description = ?  WHERE ItemID = ?"
 							+ "AND RestaurantID = ?;");
 			stmt.setString(1, item.getCategory());
@@ -190,14 +190,13 @@ public class RestaurantApiService {
 			stmt.setInt(8, item.getItemID());
 			stmt.setInt(9, item.getRestaurantID());
 			rowsUpdated = stmt.executeUpdate();
-			if(rowsUpdated == 0) {
+			if (rowsUpdated == 0) {
 				throw new SQLException();
 			}
-			stmt = EchoServer.con
-					.prepareStatement("DELETE FROM biteme.optional_category WHERE ItemID = ?;");
+			stmt = EchoServer.con.prepareStatement("DELETE FROM biteme.optional_category WHERE ItemID = ?;");
 			stmt.setInt(1, item.getItemID());
 			rowsUpdated = stmt.executeUpdate();
-			if(rowsUpdated == 0) {
+			if (rowsUpdated == 0) {
 				throw new SQLException();
 			}
 			if (item.getOptions() != null) {
@@ -233,66 +232,37 @@ public class RestaurantApiService {
 	public static void allMenues(int restaurantID, Response response) {
 		ResultSet rs1, rs2;
 		ArrayList<Menu> menus = new ArrayList<>();
-		ArrayList<Item> items = new ArrayList<>();
+		Item[] items = null;
 		ArrayList<item_in_menu> item_in_menu = new ArrayList<>();
-		ArrayList<Options> options = new ArrayList<>();
 		Menu mtemp;
-		Item itemp;
 		item_in_menu iimtemp;
-		Options otemp;
+		allItems(restaurantID, response);
+		items = EchoServer.gson.fromJson((String) response.getBody(), Item[].class);
 		try {
-			PreparedStatement getItems = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ?");
-			getItems.setInt(1, restaurantID);
-			rs1 = getItems.getResultSet();
-			while (rs1.next()) {
-				itemp = new Item(rs1.getString(QueryConsts.ITEM_CATEGORY), rs1.getString(QueryConsts.ITEM_SUB_CATEGORY),
-						rs1.getInt(QueryConsts.ITEM_ID), rs1.getInt(QueryConsts.ITEM_RES_ID),
-						rs1.getString(QueryConsts.ITEM_NAME), rs1.getFloat(QueryConsts.ITEM_PRICE),
-						rs1.getString(QueryConsts.ITEM_DESCRIPTION), rs1.getString(QueryConsts.ITEM_INGREDIENTS), null,
-						rs1.getString(QueryConsts.ITEM_IMAGE), 0);
-				items.add(itemp);
-
-				PreparedStatement getOptions = EchoServer.con
-						.prepareStatement("SELECT * FROM biteme.optional_category WHERE itemID = ?");
-				getOptions.setInt(1, itemp.getItemID());
-				getOptions.execute();
-				rs2 = getOptions.getResultSet();
-				while (rs2.next()) {
-					otemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
-							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getDouble(QueryConsts.OPTIONAL_PRICE),
-							itemp.getItemID(), rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE));
-					options.add(otemp);
-				}
-				itemp.setOptions(options.toArray(new Options[0]));
-				options.clear();
-				rs2.close();
-			}
-			rs1.close();
-
 			PreparedStatement getMenus = EchoServer.con
 					.prepareStatement("SELECT * FROM biteme.menu WHERE RestaurantID = ?");
 			getMenus.setInt(1, restaurantID);
-			getMenus.execute();
-			rs1 = getMenus.getResultSet();
-
+			rs1 = getMenus.executeQuery();
 			while (rs1.next()) {
-				// mtemp = new Menu(rs1.getString(2), restaurantID);
-				PreparedStatement getItemInMenu = EchoServer.con.prepareStatement(
-						"SELECT * FROM biteme.item_in_menu WHERE " + "IIM.RestaurantID = ? AND IIM.MenuName = ?;");
-				getItemInMenu.setInt(1, restaurantID);
-				getItemInMenu.setString(2, rs1.getString(2));
-				getItemInMenu.execute();
-				rs2 = getItemInMenu.getResultSet();
-				while (rs2.next()) {
-					iimtemp = new item_in_menu(rs2.getInt(QueryConsts.ITEM_IN_MENU_ITEM_ID),
-							rs2.getInt(QueryConsts.ITEM_IN_MENU_RES_ID),
-							rs2.getString(QueryConsts.ITEM_IN_MENU_MENU_NAME),
-							rs2.getString(QueryConsts.ITEM_IN_MENU_COURSE));
-					item_in_menu.add(iimtemp);
+				try {
+					PreparedStatement getItemInMenu = EchoServer.con.prepareStatement(
+							"SELECT * FROM biteme.item_in_menu WHERE RestaurantID = ? AND MenuName = ?;");
+					getItemInMenu.setInt(1, restaurantID);
+					getItemInMenu.setString(2, rs1.getString(2));
+					rs2 = getItemInMenu.executeQuery();
+					while (rs2.next()) {
+						iimtemp = new item_in_menu(rs2.getInt(QueryConsts.ITEM_IN_MENU_ITEM_ID),
+								rs2.getInt(QueryConsts.ITEM_IN_MENU_RES_ID),
+								rs2.getString(QueryConsts.ITEM_IN_MENU_MENU_NAME),
+								rs2.getString(QueryConsts.ITEM_IN_MENU_COURSE));
+						item_in_menu.add(iimtemp);
+					}
+					mtemp = new Menu(rs1.getString(2), rs1.getInt(1), item_in_menu.toArray(new item_in_menu[0]));
+					menus.add(mtemp);
+				} catch (SQLException e) {
+					response.setCode(405);
+					response.setDescription("Couldn't get all the menus -> restaurantID: " + Integer.toString(restaurantID));
 				}
-				mtemp = new Menu(rs1.getString(2), rs1.getInt(1), (item_in_menu[]) item_in_menu.toArray());
-				menus.add(mtemp);
 			}
 		} catch (SQLException e) {
 			response.setCode(405);
@@ -300,10 +270,10 @@ public class RestaurantApiService {
 			return;
 		}
 		JsonElement itemim = EchoServer.gson.toJsonTree(new Object());
-		JsonElement itemi = EchoServer.gson.toJsonTree(items.toArray());
+		JsonElement itemi = EchoServer.gson.toJsonTree(items);
 		JsonElement menui = EchoServer.gson.toJsonTree(menus.toArray());
 		itemim.getAsJsonObject().add("items", itemi);
-		itemim.getAsJsonObject().add("menus", menui);
+		itemim.getAsJsonObject().add("menues", menui);
 		response.setBody(EchoServer.gson.toJson(itemim));
 		response.setCode(200);
 		response.setDescription("Success in fetching items and menus for restaurant " + restaurantID);
@@ -432,20 +402,27 @@ public class RestaurantApiService {
 	 */
 	public static void createMenu(Menu menu, Response response) {
 		try {
-			PreparedStatement postMenu = EchoServer.con
-					.prepareStatement("INSERT INTO biteme.menu SET (RestaurantID, " + "MenuName) VALUES(?,?);");
+			checkMenu(menu);
+		} catch (SQLException e1) {
+			response.setCode(e1.getErrorCode());
+			response.setDescription(e1.getMessage());
+			return;
+		}
+		PreparedStatement postIIM, postMenu;
+		try {
+			postMenu = EchoServer.con.prepareStatement("INSERT INTO biteme.menu (RestaurantID, MenuName) VALUES(?,?);");
 			postMenu.setInt(1, menu.getRestaurantID());
 			postMenu.setString(2, menu.getName());
-			postMenu.execute();
-			PreparedStatement postIIM = EchoServer.con.prepareStatement("INSERT INTO biteme.item_in_menu SET (ItemID, "
-					+ "RestaurantID, MenuName, Course) VALUES(?,?,?,?);");
-			postIIM.setInt(2, menu.getRestaurantID());
-			postIIM.setString(3, menu.getName());
+			postMenu.executeUpdate();
 			for (item_in_menu temp : menu.getItems()) {
 				try {
+					postIIM = EchoServer.con.prepareStatement("INSERT INTO biteme.item_in_menu (ItemID, "
+							+ "RestaurantID, MenuName, Course) VALUES(?,?,?,?);");
 					postIIM.setInt(1, temp.getItemID());
+					postIIM.setInt(2, menu.getRestaurantID());
+					postIIM.setString(3, menu.getName());
 					postIIM.setString(4, temp.getCourse());
-					postIIM.execute();
+					postIIM.executeUpdate();
 				} catch (SQLException e) {
 				}
 			}
@@ -461,9 +438,17 @@ public class RestaurantApiService {
 			}
 			return;
 		}
-		response.setBody(null);
 		response.setCode(200);
-		response.setDescription("Success in creating menu " + menu.getName());
+		response.setDescription("Success in creating menu -> menuName:  " + menu.getName());
+	}
+
+	private static void checkMenu(Menu menu) throws SQLException {
+
+		for (item_in_menu items : menu.getItems()) {
+			if (!items.getMenu_name().equals(menu.getName()) || items.getRestaurantNum() != menu.getRestaurantID()) {
+				throw new SQLException("Menu information doesn't match items information", "400", 400);
+			}
+		}
 	}
 
 	/**
@@ -506,12 +491,12 @@ public class RestaurantApiService {
 	public static void itemsDelete(int itemID, Response response) {
 		int rowsDeleted;
 		try {
-			PreparedStatement deleteItem = EchoServer.con
-					.prepareStatement("DELETE FROM biteme.item WHERE ItemID = ?;DELETE FROM biteme.optional_category WHERE ItemID = ?;");
+			PreparedStatement deleteItem = EchoServer.con.prepareStatement(
+					"DELETE FROM biteme.item WHERE ItemID = ?;DELETE FROM biteme.optional_category WHERE ItemID = ?;");
 			deleteItem.setInt(1, itemID);
 			// Its the first userName that he had so the test is in users table on login
 			rowsDeleted = deleteItem.executeUpdate();
-			if(rowsDeleted == 0) {
+			if (rowsDeleted == 0) {
 				throw new SQLException();
 			}
 		} catch (SQLException e) {

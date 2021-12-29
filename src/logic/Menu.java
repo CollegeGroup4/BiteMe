@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.Arrays;
+
 public class Menu {
 	private String name;
 	private int restaurantID;
@@ -29,4 +31,10 @@ public class Menu {
 	public void setItems(item_in_menu[] items) {
 		this.items = items;
 	}
+
+	@Override
+	public String toString() {
+		return "Menu [name=" + name + ", restaurantID=" + restaurantID + ", items=" + Arrays.toString(items) + "]";
+	}
+	
 }
