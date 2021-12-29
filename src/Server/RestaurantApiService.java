@@ -33,12 +33,13 @@ public class RestaurantApiService {
 	// @SuppressWarnings("resource")
 	public static void getRestaurants(String area, Response response, String type) {
 		PreparedStatement stmt;
+		ResultSet rs;
 		ArrayList<Restaurant> restaurants = new ArrayList<>();
 		Restaurant restaurant = null;
 		try {
 			stmt = EchoServer.con.prepareStatement(
-					"SELECT * FROM restaurant biteme.restaurant WHERE restaurant.IsApproved = 1" + area + type + ";");
-			ResultSet rs = stmt.executeQuery();
+					"SELECT * FROM biteme.restaurant WHERE IsApproved = 1" + area + type + ";");
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				restaurant = new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
 						rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
@@ -54,7 +55,7 @@ public class RestaurantApiService {
 		response.setCode(200);
 		response.setDescription(
 				"Success in fetching restaurants -> Area:" + area + ", type: " + (type.equals("") ? "All" : type));
-		response.setBody(restaurants);
+		response.setBody(EchoServer.gson.toJson(restaurants.toArray()));
 	}
 
 	public static void getRestaurantsByArea(String area, Response response) {

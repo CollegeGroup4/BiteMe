@@ -116,9 +116,9 @@ public class BranchManagerApiServiceTest {
 //	 *///TODO works perfectly
 //	@Test
 //	public void testRegisterSupplierModerator() {
-//		Restaurant restaurant = new Restaurant(0, false, 1, "steak", "north", "shushi", "d", null, "raines", "this is carnivors restu");
+//		Restaurant restaurant = new Restaurant(0, false, 2, "piz", "south", "pizza", "d", null, "raines", "Only potatoes");
 //		BranchManagerApiService.registerSupplierModerator("d", "Supplier", restaurant, response);
-//		assertEquals("Success in registering a new restaurant -> role: Supplier, restaurantName steak", response.getDescription());
+//		assertEquals("Success in registering a new restaurant -> role: Supplier, restaurantName piz", response.getDescription());
 //	}
 //	
 //	/**
@@ -152,19 +152,19 @@ public class BranchManagerApiServiceTest {
 //		BranchManagerApiService.deleteRestaurant("e", restaurant, response);
 //		assertEquals("Success in deleting a restaurant -> restaurantName: " + restaurant.getName(), response.getDescription());
 //	}
-	
-	/**
-	 * Test method for
-	 * {@link Server.BranchManagerApiService#getBranchRestaurants(int, Server.Response)}.
-	 */
-	@Test
-	public void testGetBranchRestaurants() {
-		int branchManagerID = 1;
-		BranchManagerApiService.getBranchRestaurants(branchManagerID, response);
-		Restaurant[] res = EchoServer.gson.fromJson((String)response.getBody(), Restaurant[].class);
-		System.out.println(Arrays.toString(res));
-		assertEquals("Success in fetching all branch restaurants -> branch manager id: "+ Integer.toString(branchManagerID), response.getDescription());
-	}
+//	
+//	/**
+//	 * Test method for
+//	 * {@link Server.BranchManagerApiService#getBranchRestaurants(int, Server.Response)}.
+//	 */
+//	@Test
+//	public void testGetBranchRestaurants() {
+//		int branchManagerID = 1;
+//		BranchManagerApiService.getBranchRestaurants(branchManagerID, response);
+//		Restaurant[] res = EchoServer.gson.fromJson((String)response.getBody(), Restaurant[].class);
+//		System.out.println(Arrays.toString(res));
+//		assertEquals("Success in fetching all branch restaurants -> branch manager id: "+ Integer.toString(branchManagerID), response.getDescription());
+//	}
 
 	/**
 	 * Test method for
