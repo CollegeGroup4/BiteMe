@@ -413,8 +413,8 @@ public class OrderApiService {
 			insertToDelivery.setInt(1, order.getOrderID());
 			insertToDelivery.setInt(2, order.getRestaurantID());
 			insertToDelivery.setString(3, now.format(formatter));
-			timeElapsed = Duration.between(LocalTime.parse(order.getRequired_time()),
-					LocalTime.parse(order.getTime_taken()));
+			timeElapsed = Duration.between(LocalTime.parse(order.getRequired_time(), formatter),
+					LocalTime.parse(order.getTime_taken(), formatter));
 			if (timeElapsed.toMinutes() < 120) {
 
 				if (Duration.between(now, LocalDateTime.parse(order.getApproved_time())).toMinutes() > 60) {

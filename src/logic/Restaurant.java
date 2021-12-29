@@ -105,4 +105,11 @@ public class Restaurant {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	@Override
+	public String toString() {
+		return "Restaurant [id=" + id + ", isApproved=" + isApproved + ", BranchManagerID=" + BranchManagerID
+				+ ", name=" + name + ", area=" + area + ", type=" + type + ", userName=" + userName + ", photo=" + photo
+				+ ", address=" + address + ", description=" + description + "]";
+	}
 }

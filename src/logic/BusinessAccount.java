@@ -50,4 +50,11 @@ public class BusinessAccount extends Account {
 	public void setCurrentSpent(float currentSpent) {
 		this.currentSpent = currentSpent;
 	}
+	@Override
+	public String toString() {
+		return "BusinessAccount [monthlyBillingCeiling=" + monthlyBillingCeiling + ", isApproved=" + isApproved
+				+ ", businessName=" + businessName + ", currentSpent=" + currentSpent + ", W4C=" + W4C + "]";
+	}
+	
+	
 }
