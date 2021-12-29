@@ -87,15 +87,15 @@ public class RestaurantApiService {
 	 */
 	public static void getAllCategories(int restaurantID, Response response) {
 		PreparedStatement stmt;
+		ResultSet rs;
 		ArrayList<Category> categories = new ArrayList<>();
 		HashMap<String, ArrayList<String>> cat = new HashMap<>();
 		Category category = null;
 		try {
 			stmt = EchoServer.con
-					.prepareStatement("SELECT DISTINCT (items.category, items.subCategory) FROM items biteme.item"
-							+ " WHERE items.restaurantNID = ?;");
+					.prepareStatement("SELECT DISTINCT Category, SubCategory FROM biteme.item WHERE restaurantID = ?;");
 			stmt.setInt(1, restaurantID);
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				if (cat.containsKey(rs.getString(1))) {
 					cat.get(rs.getString(1)).add(rs.getString(2));
@@ -504,21 +504,23 @@ public class RestaurantApiService {
 	 *
 	 */
 	public static void itemsDelete(int itemID, Response response) {
+		int rowsDeleted;
 		try {
 			PreparedStatement deleteItem = EchoServer.con
-					.prepareStatement("DELETE FROM items biteme.item WHERE items.ItemID = ?;");
+					.prepareStatement("DELETE FROM biteme.item WHERE ItemID = ?;DELETE FROM biteme.optional_category WHERE ItemID = ?;");
 			deleteItem.setInt(1, itemID);
 			// Its the first userName that he had so the test is in users table on login
-			deleteItem.execute();
-			deleteItem.getResultSet();
+			rowsDeleted = deleteItem.executeUpdate();
+			if(rowsDeleted == 0) {
+				throw new SQLException();
+			}
 		} catch (SQLException e) {
 			response.setCode(400);
-			response.setDescription("Fields are missing");
-			response.setBody(null);
+			response.setDescription("Couldn't delete an item -> itemID: " + Integer.toString(itemID));
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in deleting an item -> itemID: " + itemID);
+		response.setDescription("Success in deleting an item -> itemID: " + Integer.toString(itemID));
 		response.setBody(null);
 	}
 
