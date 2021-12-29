@@ -289,34 +289,27 @@ public class RestaurantApiService {
 		ResultSet rs;
 		try {
 			PreparedStatement approveOrder = EchoServer.con
-					.prepareStatement("UPDATE biteme.order AS orders SET isApproved = 1 WHERE order.OrderNum = ?;");
+					.prepareStatement("UPDATE biteme.order SET isApproved = 1 WHERE OrderNum = ?;");
 			approveOrder.setInt(1, orderId);
-			approveOrder.execute();
-			rs = approveOrder.getResultSet();
-			if (rs.rowUpdated() == false) {
+			if (approveOrder.executeUpdate() == 0) {
 				throw new SQLException("couldn't approve order " + Integer.toString(orderId));
 			}
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
 			PreparedStatement updateApprovalTime = EchoServer.con
-					.prepareStatement("UPDATE biteme.order AS orders SET approve_time = ? WHERE order.OrderNum = ?;");
+					.prepareStatement("UPDATE biteme.order SET approve_time = ? WHERE OrderNum = ?;");
 			updateApprovalTime.setString(1, dtf.format(now));
 			updateApprovalTime.setInt(2, orderId);
-			updateApprovalTime.execute();
-			rs = updateApprovalTime.getResultSet();
-			if (rs.rowUpdated() == false) {
+			if (updateApprovalTime.executeUpdate() == 0) {
 				throw new SQLException("couldn't update the time in menu" + Integer.toString(orderId));
 			}
 		} catch (SQLException e) {
 			response.setCode(400);
 			response.setDescription(e.getMessage());
-			response.setBody(null);
 			return;
 		}
 		response.setCode(200);
 		response.setDescription("Success in approve order " + Integer.toString(orderId));
-		response.setBody(null);
-
 	}
 
 	/**
@@ -463,7 +456,7 @@ public class RestaurantApiService {
 					.prepareStatement("DELETE FROM biteme.item_in_menu WHERE RestaurantID = ? AND MenuName = ?;");
 			deleteOldMenu.setInt(1, oldMenu.getRestaurantID());
 			deleteOldMenu.setString(2, oldMenu.getName());
-			deleteOldMenu.execute();
+			deleteOldMenu.executeUpdate();
 		} catch (SQLException e) {
 		}
 		try {
@@ -471,7 +464,7 @@ public class RestaurantApiService {
 					.prepareStatement("DELETE FROM biteme.menu WHERE RestaurantID = ? AND MenuName = ?;");
 			deleteOldMenu.setInt(1, oldMenu.getRestaurantID());
 			deleteOldMenu.setString(2, oldMenu.getName());
-			deleteOldMenu.execute();
+			deleteOldMenu.executeUpdate();
 		} catch (SQLException e) {
 			response.setBody(null);
 			response.setCode(400);
@@ -482,6 +475,36 @@ public class RestaurantApiService {
 			createMenu(newMenu, response);
 	}
 
+	/**
+	 * Edit menu
+	 *
+	 * This can only be done by the logged in supplier/moderator
+	 *
+	 */
+	public static void deleteMenu(Menu menu, Response response) {
+		try {
+			PreparedStatement deleteOldMenu = EchoServer.con
+					.prepareStatement("DELETE FROM biteme.item_in_menu WHERE RestaurantID = ? AND MenuName = ?;");
+			deleteOldMenu.setInt(1, menu.getRestaurantID());
+			deleteOldMenu.setString(2, menu.getName());
+			deleteOldMenu.execute();
+		} catch (SQLException e) {
+		}
+		try {
+			PreparedStatement deleteOldMenu = EchoServer.con
+					.prepareStatement("DELETE FROM biteme.menu WHERE RestaurantID = ? AND MenuName = ?;");
+			deleteOldMenu.setInt(1, menu.getRestaurantID());
+			deleteOldMenu.setString(2, menu.getName());
+			deleteOldMenu.execute();
+		} catch (SQLException e) {
+			response.setBody(null);
+			response.setCode(400);
+			response.setDescription("Old menu dosn't exist!");
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in deletint menu -> menuName: " + menu.getName());
+	}
 	/**
 	 * Delete item
 	 *
@@ -521,12 +544,11 @@ public class RestaurantApiService {
 		Double sendCredit;
 		try {
 			getCredit = EchoServer.con.prepareStatement(
-					"SELECT credit.AmountInCredit FROM credit biteme.credit WHERE credit.UserName = ? AND "
-							+ "credit.RestaurantID = ?;");
+					"SELECT AmountInCredit FROM biteme.credit WHERE UserName = ? AND "
+							+ "RestaurantID = ?;");
 			getCredit.setString(1, userName);
 			getCredit.setInt(2, restaurantID);
-			getCredit.execute();
-			rs = getCredit.getResultSet();
+			rs = getCredit.executeQuery();
 			sendCredit = rs.getDouble(1);
 		} catch (SQLException e) {
 			response.setCode(405);
@@ -540,6 +562,5 @@ public class RestaurantApiService {
 		JsonElement setCredit = EchoServer.gson.toJsonTree(new Object());
 		setCredit.getAsJsonObject().addProperty("credit", sendCredit);
 		response.setBody(EchoServer.gson.toJson(setCredit));
-		return;
 	}
 }
