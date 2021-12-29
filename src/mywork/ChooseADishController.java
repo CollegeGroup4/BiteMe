@@ -107,6 +107,10 @@ public class ChooseADishController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		///---------------------------------------------
+		System.out.println("path:" + System.getProperty("user.dir"));
+		///---------------------------------------------
+		
 		requstFromServer();
 		if (itemsSelectedArr == null)
 			itemsSelectedArr = new ArrayList<>();

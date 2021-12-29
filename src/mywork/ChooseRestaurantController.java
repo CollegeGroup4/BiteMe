@@ -45,6 +45,8 @@ public class ChooseRestaurantController implements Initializable {
 
 	public ArrayList<Restaurant> restaurantsFromData;
 	public static Restaurant restaurantSelected;
+	String projectPath = System.getProperty("user.dir") + "\\src\\images\\"; // locate the Path of the current project
+																				// directory
 
 	@FXML
 	private VBox restaurantsContainer;
@@ -153,7 +155,7 @@ public class ChooseRestaurantController implements Initializable {
 
 	void sentToServer() {
 
-		//TODO - need to sent restaurantSelected.getId()
+		// TODO - need to sent restaurantSelected.getId()
 	}
 
 	@FXML
@@ -167,7 +169,7 @@ public class ChooseRestaurantController implements Initializable {
 			Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
 			name.setFont(font);
 
-			InputStream stream = new FileInputStream(restaurantsFromData.get(i).getPhoto());
+			InputStream stream = new FileInputStream(projectPath +""+ restaurantsFromData.get(i).getPhoto());
 			Image logo = new Image(stream);
 			ImageView logoImage = new ImageView();
 			logoImage.setImage(logo);
@@ -186,8 +188,7 @@ public class ChooseRestaurantController implements Initializable {
 			restaurant.setPadding(new Insets(10, 0, 50, 10));
 			restaurant.setCursor(Cursor.HAND);
 			restaurantSelected = restaurantsFromData.get(i);
-			restaurant.addEventHandler(MouseEvent.MOUSE_CLICKED,
-					(e) -> handeleClick(e, restaurantSelected.getName()));
+			restaurant.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClick(e, restaurantSelected.getName()));
 			restaurantList.add(restaurant);
 		}
 		restaurantsContainer.getChildren().clear();
@@ -197,15 +198,13 @@ public class ChooseRestaurantController implements Initializable {
 	private void getInformation(String area, String type) {// getting and arranging the data from the
 															// server
 		restaurantsFromData = new ArrayList<Restaurant>();
-		Restaurant res0 = new Restaurant(0, true, 0, "McDonald's", "North", "Burgers", null,
-				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\M.png",
-				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
-		Restaurant res1 = new Restaurant(1, true, 0, "Ruben", "North", "Burgers", null,
-				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\ruben.png",
-				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
-		Restaurant res2 = new Restaurant(2, true, 0, "BBB", "North", "Burgers", null,
-				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\BBB.png",
-				null, "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
+
+		Restaurant res0 = new Restaurant(0, true, 0, "McDonald's", "North", "Burgers", null, "M.png", null,
+				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
+		Restaurant res1 = new Restaurant(1, true, 0, "Ruben", "North", "Burgers", null, "ruben.png", null,
+				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
+		Restaurant res2 = new Restaurant(2, true, 0, "BBB", "North", "Burgers", null, "BBB.png", null,
+				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
 		restaurantsFromData.add(res0);
 		restaurantsFromData.add(res1);
 		restaurantsFromData.add(res2);
