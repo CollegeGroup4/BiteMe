@@ -61,11 +61,10 @@ public class ChooseADishController implements Initializable {
 	public static ChooseADishController chooseADishController = null;
 	public static Menu menuSelected;
 	public static ArrayList<Menu> menusArr;
-	public HashMap<String, Integer> categories;
 	public HashMap<Integer, Item> allItems;
 	public static ArrayList<Item> itemsSelectedArr;
 	public static Item itemSelected;
-	private ArrayList<Item> itemsInCategory;
+	public HashMap<String, Integer> categories;
 	public static boolean isOpen = false;
 
 	@FXML
@@ -87,7 +86,7 @@ public class ChooseADishController implements Initializable {
 	private JFXComboBox<String> comboBoxCourse;
 
 	@FXML
-	private JFXComboBox<String> comboBoxCatgory;
+	private JFXComboBox<String> comboBoxCategory;
 
 	@FXML
 	private ImageView shoppingCart;
@@ -112,13 +111,13 @@ public class ChooseADishController implements Initializable {
 		if (itemsSelectedArr == null)
 			itemsSelectedArr = new ArrayList<>();
 		paneForSelections.setVisible(false);
-		setComboBoxMenu();//--create menu list--
+		setComboBoxMenu();// --create menu list--
 		comboBoxMenu.setValue(menusArr.get(0).getName());
 
-		setComboBoxCourses();//--create course list--
-		setComboBoxCategory();//--create category list--
-		setItemsInCategory();//--create item in category list--
-
+		setComboBoxCourses();// --create course list--
+		setComboBoxCategory();// --create category list--
+		setItemsInCategory();// --create item in category list--
+		comboBoxCategory.setDisable(true);
 		shoppingCart.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClickShoppingCart(e));
 
 		try {
@@ -126,6 +125,26 @@ public class ChooseADishController implements Initializable {
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
+	}
+
+	@FXML
+	void onClickMenu(ActionEvent event) throws FileNotFoundException {
+		setComboBoxCourses();
+		setComboBoxCategory();
+		setItemContainer();
+		comboBoxCategory.setDisable(true);
+	}
+
+	@FXML
+	void onClickCourse(ActionEvent event) throws FileNotFoundException {
+		setComboBoxCategory();
+		setItemContainer();
+		comboBoxCategory.setDisable(false);
+	}
+
+	@FXML
+	void onClickCategory(ActionEvent event) throws FileNotFoundException {
+		setItemContainer();
 	}
 
 	public void handeleClickShoppingCart(MouseEvent event) {
@@ -147,58 +166,62 @@ public class ChooseADishController implements Initializable {
 
 	private void setItemContainer() throws FileNotFoundException {
 		ArrayList<VBox> itemList = new ArrayList<>();
+		String selectedCourse = comboBoxCourse.getValue();
+		String selectedCategory = comboBoxCategory.getValue();
+
 		for (int i = 0; i < menuSelected.getItems().length; i++) {
 			item_in_menu itemInMenu = menuSelected.getItems()[i];
-			Item item = allItems.get(itemInMenu.getItemID());
+			if (selectedCourse == null || (itemInMenu.getCourse()).equals(selectedCourse)) {
+				Item item = allItems.get(itemInMenu.getItemID());
+				if (selectedCategory == null || (item.getCategory()).equals(selectedCategory)) {
+					// ---get the img of the dish---//
+					InputStream stream;
+					stream = new FileInputStream(item.getPhoto());
 
-			// ---get the img of the dish---//
-			InputStream stream;
-			stream = new FileInputStream(item.getPhoto());
+					Image logo = new Image(stream);
+					ImageView logoImage = new ImageView();
+					logoImage.setImage(logo);
+					logoImage.setFitWidth(80);
+					logoImage.setFitHeight(80);
 
-			Image logo = new Image(stream);
-			ImageView logoImage = new ImageView();
-			logoImage.setImage(logo);
-			logoImage.setFitWidth(80);
-			logoImage.setFitHeight(80);
+					// ---get the name of the dish---//
+					Label name = new Label(item.getName());
+					Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 15);
+					name.setFont(font);
 
-			// ---get the name of the dish---//
-			Label name = new Label(item.getName());
-			Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 15);
-			name.setFont(font);
+					// ---get the name of the dish---//
+					String price = new DecimalFormat("##.##").format(item.getPrice()) + "$";
+					Label priceLabel = new Label(price);
+					priceLabel.setFont(font);
 
-			// ---get the name of the dish---//
-			String price = new DecimalFormat("##.##").format(item.getPrice()) + "$";
-			Label priceLabel = new Label(price);
-			priceLabel.setFont(font);
+					// ---get the description of the dish---//
+					JFXTextArea description = new JFXTextArea(item.getDescription());
+					description.setEditable(false);
+					description.setPrefHeight(50);
+					description.setPrefWidth(300);
 
-			// ---get the description of the dish---//
-			JFXTextArea description = new JFXTextArea(item.getDescription());
-			description.setEditable(false);
-			description.setPrefHeight(50);
-			description.setPrefWidth(300);
+					VBox name_description = new VBox(5);
+					name_description.getChildren().addAll(name, description);
 
-			VBox name_description = new VBox(5);
-			name_description.getChildren().addAll(name, description);
+					HBox itemInLine = new HBox(5);
+					itemInLine.getChildren().addAll(logoImage, name_description, priceLabel);
+					itemInLine.setSpacing(30);
 
-			HBox itemInLine = new HBox(5);
-			itemInLine.getChildren().addAll(logoImage, name_description, priceLabel);
-			itemInLine.setSpacing(30);
-
-			VBox dishes = new VBox(20);
-			dishes.getChildren().add(itemInLine);
-			dishes.setPadding(new Insets(10, 0, 50, 10));
-			dishes.setCursor(Cursor.HAND);
-
-			final int index = i;
-
-			dishes.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClick(e, allItems.get(index)));
-			itemList.add(dishes);
-			ItemContainer.getChildren().clear();
-			ItemContainer.getChildren().addAll(itemList);
+					VBox dishes = new VBox(20);
+					dishes.getChildren().add(itemInLine);
+					dishes.setPadding(new Insets(10, 0, 50, 10));
+					dishes.setCursor(Cursor.HAND);
+				
+					dishes.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClickDish(e,item));
+					itemList.add(dishes);
+					ItemContainer.getChildren().clear();
+					ItemContainer.getChildren().addAll(itemList);
+				}
+			}
 		}
 	}
 
-	private void handeleClick(MouseEvent event, Item item) {
+	private void handeleClickDish(MouseEvent event, Item item) {
 
 		setVisibleItemContainer(false);
 		itemSelected = item;
@@ -210,7 +233,6 @@ public class ChooseADishController implements Initializable {
 			e.printStackTrace();
 		}
 		paneForSelections.setCenter(root);
-
 	}
 
 	private void setComboBoxMenu() {
@@ -229,7 +251,6 @@ public class ChooseADishController implements Initializable {
 		comboBoxCourse.getItems().clear();
 		for (String course : courseList.keySet()) // enter courses to the comboBox
 			comboBoxCourse.getItems().add(course);
-
 	}
 
 	private void getMenuName() {
@@ -241,9 +262,9 @@ public class ChooseADishController implements Initializable {
 
 	private void setComboBoxCategory() {
 		setCategoriesInformation();
-		comboBoxCatgory.getItems().clear();
+		comboBoxCategory.getItems().clear();
 		for (String category : categories.keySet()) {
-			comboBoxCatgory.getItems().add(category);
+			comboBoxCategory.getItems().add(category);
 		}
 	}
 
@@ -256,12 +277,13 @@ public class ChooseADishController implements Initializable {
 	}
 
 	private void setItemsInCategory() {
+		 ArrayList<Item> itemsInCategory = new ArrayList<>();
 		for (int i = 0; i < menuSelected.getItems().length; i++) {
 			if (menuSelected.getItems()[i].getCourse().equals(comboBoxCourse.getValue())) {
-				Item it = allItems.get(menuSelected.getItems()[i].getItemID());
+				Item item = allItems.get(menuSelected.getItems()[i].getItemID());
 
-				if (it.getCategory().equals(comboBoxCourse.getValue()))
-					itemsInCategory.add(it);
+				if (item.getCategory().equals(comboBoxCategory.getValue()))
+					itemsInCategory.add(item);
 			}
 		}
 	}
@@ -271,20 +293,6 @@ public class ChooseADishController implements Initializable {
 		allItems = new HashMap<>();
 		// TODO - need to get menus and items list
 		setTempDatabase();
-	}
-
-	@FXML
-	void filter(ActionEvent event) {
-		setComboBoxMenu();// ============ create menu list ============
-
-		setComboBoxCourses();// ============ create course list ============
-
-		setComboBoxCategory();// ============ create category list ============
-		try {
-			setItemContainer();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	public void setVisibleItemContainer(boolean visible) {
@@ -337,7 +345,6 @@ public class ChooseADishController implements Initializable {
 
 	}
 
-
 	private void setTempDatabase() {
 
 		Options op0[] = { new Options("Size", "Regular", 0, 0), new Options("Size", "Big", 15, 0),
@@ -345,30 +352,66 @@ public class ChooseADishController implements Initializable {
 
 		Options op1[] = { new Options("Cook Size", "Medium", 0, 1), new Options("Cook Size", "Medium Well", 0, 1),
 				new Options("Cook Size", "Well Done", 0, 1) };
-
-		Item item0 = new Item("Italiano", null, 0, 0, "Regular Pizza", 47,
+//========Day menu =======//
+		Item item0 = new Item("Italiano", null, 0, 0, "Regular Pizza", 40,
+				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\regular-pizza.jpg",
+				5);
+		Item item2 = new Item("Italiano", null, 2, 0, "Margherita Pizza", 47,
 				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
 				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\margherita-pizza.jpg",
 				5);
-
-		Item item1 = new Item("Steaks", null, 1, 0, "Entrecote", 85, "A classic 300 gram slice of entrecote", null, op1,
-				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\M.png",
-				3);
+		Item item3 = new Item("Italiano", null, 3, 0, "Special Pizza", 52,
+				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\agg-pizza.jpeg",
+				5);
+		Item item6 = new Item("Salads", null, 6, 0, "Greek Salad", 52,
+				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\GreekSalad.jpg",
+				5);
+//		Item item3 = new Item("Italiano", null, 3, 0, "Special Pizza", 52,
+//				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
+//				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\agg-pizza.jpeg",
+//				5);
 		allItems.put(item0.getItemID(), item0);
+		allItems.put(item2.getItemID(), item2);
+		allItems.put(item3.getItemID(), item3);
+		allItems.put(item6.getItemID(), item6);
+
+		item_in_menu[] item_in_Daymenu = new item_in_menu[4];
+		item_in_Daymenu[0] = new item_in_menu(6, 0, "Day", "First Course");
+		item_in_Daymenu[1] = new item_in_menu(0, 0, "Day", "Second Course");
+		item_in_Daymenu[2] = new item_in_menu(2, 0, "Day", "Second Course");
+		item_in_Daymenu[3] = new item_in_menu(3, 0, "Day", "Second Course");
+
+//		item_in_menu item_in_Daymenu= new item_in_menu(1, 0, "Day", "Second Course");
+
+		// ========Night menu =======//
+		Item item1 = new Item("Steaks", null, 1, 0, "Entrecote", 85, "A classic 300 gram slice of entrecote", null, op1,
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\meat-bar.jpg",
+				3);
+		Item item4 = new Item("Steaks", null, 4, 0, "Hamburger", 60, "A classic 300 gram slice of entrecote", null, op1,
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\hamburger.jpg",
+				3);
+		Item item5 = new Item("Steaks", null, 5, 0, "Fries", 15, "A classic 300 gram slice of entrecote", null, op1,
+				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\fries.jpg",
+				3);
 		allItems.put(item1.getItemID(), item1);
-
-
-		item_in_menu item_in_menu0 = new item_in_menu(0, 0, "Night", "Second Course");
-		item_in_menu item_in_menu1 = new item_in_menu(1, 0, "Day", "Second Course");
+		allItems.put(item4.getItemID(), item4);
+		allItems.put(item5.getItemID(), item5);
+		item_in_menu[] item_in_Nightmenu = new item_in_menu[3];
+		item_in_Nightmenu[0] = new item_in_menu(1, 0, "Night", "Second Course");
+		item_in_Nightmenu[1] = new item_in_menu(4, 0, "Night", "Second Course");
+		item_in_Nightmenu[2] = new item_in_menu(0, 0, "Night", "Second Course");
 
 		// items_in_menuArr.add(item_in_menu0);
 		// items_in_menuArr.add(item_in_menu1);
 
-		Menu temp0 = new Menu("Day", 0, new item_in_menu[] { item_in_menu0 });
-		Menu temp1 = new Menu("Night", 0, new item_in_menu[] { item_in_menu1 });
+		Menu dayMenu = new Menu("Day", 0, item_in_Daymenu);
+		Menu nightMenu = new Menu("Night", 0, item_in_Nightmenu);
 		menusArr = new ArrayList<Menu>();
-		menusArr.add(temp0);
-		menusArr.add(temp1);
+		menusArr.add(dayMenu);
+		menusArr.add(nightMenu);
 	}
 
 	public BorderPane getPaneForSummary() {

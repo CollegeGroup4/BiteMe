@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
+import com.jfoenix.controls.JFXComboBox;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -69,10 +71,10 @@ public class DeliveryAndTimeController implements Initializable {
 	private DatePicker dpDate;
 
 	@FXML
-	private ComboBox<String> cbTime;
+	private JFXComboBox<String> cbTime;
 
 	@FXML
-	private ComboBox<String> cbType;
+	private JFXComboBox<String> cbType;
 
 	@FXML
 	private TextField workplace;
