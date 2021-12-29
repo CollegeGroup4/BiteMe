@@ -3,12 +3,15 @@ package Server;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.google.gson.JsonElement;
+import com.mysql.cj.xdevapi.Result;
+
 import logic.Category;
 import logic.Item;
 import logic.Menu;
@@ -31,7 +34,8 @@ public class RestaurantApiService {
 	 *
 	 */
 	// @SuppressWarnings("resource")
-	private static void getRestaurants(String area, Response response, String type, String areaBlank, String typeBlank) {
+	private static void getRestaurants(String area, Response response, String type, String areaBlank,
+			String typeBlank) {
 		PreparedStatement stmt;
 		ResultSet rs;
 		ArrayList<Restaurant> restaurants = new ArrayList<>();
@@ -53,14 +57,13 @@ public class RestaurantApiService {
 			e.printStackTrace();
 		}
 		response.setCode(200);
-		response.setDescription("Success in fetching restaurants -> Area: " + areaBlank
-				+ ", type: " + typeBlank);
+		response.setDescription("Success in fetching restaurants -> Area: " + areaBlank + ", type: " + typeBlank);
 		response.setBody(EchoServer.gson.toJson(restaurants.toArray()));
 	}
 
 	public static void getRestaurantsByArea(String area, Response response) {
 		if (area.equals("All"))
-			getRestaurants("", response, "",area, "All");
+			getRestaurants("", response, "", area, "All");
 		else
 			getRestaurants(" AND Area = '" + area + "'", response, "", area, "All");
 	}
@@ -129,14 +132,12 @@ public class RestaurantApiService {
 		ArrayList<Item> items = new ArrayList<>();
 		ArrayList<Options> options = new ArrayList<>();
 		Item item = null;
+		ResultSet rs, rs2;
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT * FROM items biteme.item, itemInMenu biteme.item_in_menu"
-					+ " WHERE items.RestaurantID = ? and itemInMenu.ItemID = items.ItemID and"
-					+ "itemInMenu.RestaurantID = ?;");
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.item AS items"
+					+ " WHERE items.RestaurantID = ?;");
 			stmt.setInt(1, restaurantID);
-			stmt.setInt(2, restaurantID);
-			stmt.executeQuery();
-			ResultSet rs = stmt.getResultSet();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				item = new Item(rs.getString(QueryConsts.ITEM_CATEGORY), rs.getString(QueryConsts.ITEM_SUB_CATEGORY),
 						rs.getInt(QueryConsts.ITEM_ID), rs.getInt(QueryConsts.ITEM_RES_ID),
@@ -144,17 +145,16 @@ public class RestaurantApiService {
 						rs.getString(QueryConsts.ITEM_DESCRIPTION), rs.getString(QueryConsts.ITEM_INGREDIENTS), null,
 						rs.getString(QueryConsts.ITEM_IMAGE), 0);
 				stmt = EchoServer.con
-						.prepareStatement("SELECT * FROM options biteme.optional_category WHERE options.itemID = ?;");
+						.prepareStatement("SELECT * FROM biteme.optional_category WHERE ItemID = ?;");
 				stmt.setInt(1, item.getItemID());
-				stmt.executeQuery();
-				ResultSet rs2 = stmt.getResultSet();
+				rs2 = stmt.executeQuery();
 				while (rs2.next()) {
 					options.add(new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
 							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getInt(QueryConsts.OPTIONAL_PRICE),
 							rs2.getInt(QueryConsts.OPTIONAL_ITEM_ID),
 							rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE)));
 				}
-				item.setOptions((Options[]) options.toArray());
+				item.setOptions(options.toArray(new Options[0]));
 				options.clear();
 				items.add(item);
 			}
@@ -162,8 +162,8 @@ public class RestaurantApiService {
 			e.printStackTrace();
 		}
 		response.setCode(200);
-		response.setDescription("Success in fetching all restaurant itesm" + Integer.toString(restaurantID));
-		response.setBody(items.toArray());
+		response.setDescription("Success in fetching all restaurant items -> restaurantID: " + Integer.toString(restaurantID));
+		response.setBody(EchoServer.gson.toJson(items.toArray()));
 	}
 
 	/**
@@ -173,12 +173,13 @@ public class RestaurantApiService {
 	 *
 	 */
 	public static void updateItem(Item item, Response response) {
-		PreparedStatement stmt;
+		PreparedStatement stmt, updateOptions;
+		int rowsUpdated;
 		try {
 			stmt = EchoServer.con.prepareStatement(
-					"UPDATE biteme.item AS items SET Category = ?, SubCategory = ?, Name = ?, Price = ?,"
-							+ "Ingredients = ?, Image = ?, Description = ?  WHERE items.ItemID = ?"
-							+ "AND items.RestaurantID = ?;");
+					"UPDATE biteme.item SET Category = ?, SubCategory = ?, Name = ?, Price = ?,"
+							+ "Ingredients = ?, Image = ?, Description = ?  WHERE ItemID = ?"
+							+ "AND RestaurantID = ?;");
 			stmt.setString(1, item.getCategory());
 			stmt.setString(2, item.getSubcategory());
 			stmt.setString(3, item.getName());
@@ -188,28 +189,36 @@ public class RestaurantApiService {
 			stmt.setString(7, item.getDescription());
 			stmt.setInt(8, item.getItemID());
 			stmt.setInt(9, item.getRestaurantID());
-			stmt.executeQuery();
+			rowsUpdated = stmt.executeUpdate();
+			if(rowsUpdated == 0) {
+				throw new SQLException();
+			}
 			stmt = EchoServer.con
-					.prepareStatement("DELETE FROM options biteme.optional_category WHERE options.itemID = ?;");
+					.prepareStatement("DELETE FROM biteme.optional_category WHERE ItemID = ?;");
 			stmt.setInt(1, item.getItemID());
-			stmt.executeQuery();
-
-			PreparedStatement updateOptions = EchoServer.con
-					.prepareStatement("INSERT INTO biteme.optional_category (OptionalType, Specify, ItemID, price)"
-							+ " VALUES (?,?,?,?);");
-			updateOptions.setInt(3, item.getItemID());
-			for (Options temp : item.getOptions()) {
-				try { // just in case
-					updateOptions.setString(1, temp.getOption_category());
-					updateOptions.setString(2, temp.getSpecify_option());
-					updateOptions.setDouble(4, temp.getPrice());
-					updateOptions.execute();
-				} catch (SQLException e) {
+			rowsUpdated = stmt.executeUpdate();
+			if(rowsUpdated == 0) {
+				throw new SQLException();
+			}
+			if (item.getOptions() != null) {
+				for (Options temp : item.getOptions()) {
+					try { // just in case
+						updateOptions = EchoServer.con.prepareStatement(
+								"INSERT INTO biteme.optional_category (OptionalType, Specify, ItemID, price, isDuplicatable)"
+										+ " VALUES (?,?,?,?,?);");
+						updateOptions.setString(1, temp.getOption_category());
+						updateOptions.setString(2, temp.getSpecify_option());
+						updateOptions.setInt(3, item.getItemID());
+						updateOptions.setDouble(4, temp.getPrice());
+						updateOptions.setBoolean(5, temp.isDuplicatable());
+						updateOptions.executeUpdate();
+					} catch (SQLException e) {
+					}
 				}
 			}
 		} catch (SQLException e) {
 			response.setCode(400);
-			response.setDescription("Fail in update item -> itemID: " + Integer.toString(item.getItemID()));
+			response.setDescription("Fail in update an item -> itemID: " + Integer.toString(item.getItemID()));
 		}
 		response.setCode(200);
 		response.setDescription("Success in updating item -> itemID: " + Integer.toString(item.getItemID()));
@@ -347,14 +356,23 @@ public class RestaurantApiService {
 	 *
 	 */
 	public static void createItem(Item item, Response response) {
+		PreparedStatement postItem, checkDuplicate, postCategory, postOptions;
 		ResultSet rs = null;
 		int itemID;
 		try {
-
-			PreparedStatement postItem = EchoServer.con
-					.prepareStatement("INSERT INTO items biteme.item (Category, SubCategory, Name, Price, Ingredients,"
-							+ "RestaurantID, Image, Description)"
-							+ " VALUES (?,?,?,?,?,?,?,?);SELECT last_insert_id();");
+			checkDuplicate = EchoServer.con
+					.prepareStatement("SELECT COUNT(Name) FROM biteme.item WHERE Name = ? AND RestaurantID = ?;");
+			checkDuplicate.setString(1, item.getName());
+			checkDuplicate.setInt(2, item.getRestaurantID());
+			rs = checkDuplicate.executeQuery();
+			rs.next();
+			if (rs.getInt(1) >= 1) {
+				throw new SQLException(null, null, 1062);
+			}
+			postItem = EchoServer.con.prepareStatement(
+					"INSERT INTO biteme.item (Category, SubCategory, Name, Price, Ingredients,"
+							+ "RestaurantID, Image, Description)" + " VALUES (?,?,?,?,?,?,?,?);",
+					Statement.RETURN_GENERATED_KEYS);
 			postItem.setString(1, item.getCategory());
 			postItem.setString(2, item.getSubcategory());
 			postItem.setString(3, item.getName());
@@ -363,23 +381,34 @@ public class RestaurantApiService {
 			postItem.setInt(6, item.getRestaurantID());
 			postItem.setString(7, item.getPhoto());
 			postItem.setString(8, item.getDescription());
-			postItem.execute();
-			rs = postItem.getResultSet();
+			postItem.executeUpdate();
+			rs = postItem.getGeneratedKeys();
+			rs.next();
 			itemID = rs.getInt(1);
-
-			PreparedStatement postOptions = EchoServer.con
-					.prepareStatement("INSERT INTO biteme.optional_category (OptionalType, Specify, ItemID, price)"
-							+ " VALUES (?,?,?,?);");
-			postOptions.setInt(3, itemID);
-
-			for (Options temp : item.getOptions()) {
-				try { // just in case
-					postOptions.setString(1, temp.getOption_category());
-					postOptions.setString(2, temp.getSpecify_option());
-					postOptions.setDouble(4, temp.getPrice());
-					postOptions.execute();
-				} catch (SQLException e) {
+			if (item.getOptions() != null) {
+				for (Options temp : item.getOptions()) {
+					try { // just in case
+						postOptions = EchoServer.con.prepareStatement(
+								"INSERT INTO biteme.optional_category (OptionalType, Specify, ItemID, price, isDuplicatable)"
+										+ " VALUES (?,?,?,?,?);");
+						postOptions.setString(1, temp.getOption_category());
+						postOptions.setString(2, temp.getSpecify_option());
+						postOptions.setInt(3, itemID);
+						postOptions.setDouble(4, temp.getPrice());
+						postOptions.setBoolean(5, temp.isDuplicatable());
+						postOptions.executeUpdate();
+					} catch (SQLException e) {
+					}
 				}
+			}
+			try {
+				postCategory = EchoServer.con
+						.prepareStatement("INSERT INTO biteme.item_category (Category, SubCategory) VALUES (?,?);");
+				postCategory.setString(1, item.getCategory());
+				postCategory.setString(2, item.getSubcategory());
+				postCategory.executeUpdate();
+			} catch (SQLException e) {
+				// TODO: handle exception
 			}
 
 		} catch (SQLException e) {
@@ -388,11 +417,11 @@ public class RestaurantApiService {
 				response.setDescription("Item already exist in the restaurant");
 			}
 			response.setCode(401);
-			response.setDescription("Invalid input");
+			response.setDescription("Invalid input" + e.getMessage());
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in creating a new item -> itemID:" + Integer.toString(itemID));
+		response.setDescription("Success in creating a new item -> itemID: " + Integer.toString(itemID));
 	}
 
 	/**

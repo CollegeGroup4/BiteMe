@@ -11,6 +11,8 @@ import Server.EchoServer;
 import Server.Response;
 import Server.RestaurantApiService;
 import common.DBController;
+import logic.Item;
+import logic.Options;
 import logic.Restaurant;
 
 public class RestaurantApiServiceTest {
@@ -79,8 +81,22 @@ public class RestaurantApiServiceTest {
 
 	@Test
 	public void testAllItems() {
-		fail("Not yet implemented");
+		int restaurantID = 10;
+		RestaurantApiService.allItems(restaurantID, response);
+		Item[] items = EchoServer.gson.fromJson((String)response.getBody(), Item[].class);
+		System.out.println(Arrays.toString(items));
+		assertEquals("Success in fetching all restaurant items -> restaurantID: 10",response.getDescription());
 	}
+
+//	@Test
+//	public void testCreateItem() {
+//		Options[] options = new Options[2];
+//		options[0] = new Options("size","XL", 10, 0, false);
+//		options[1] = new Options("tona","yes", 5, 0, false);		
+//		Item item = new Item("italian", "pasta", 0, 10, "carbonara", 34, "The best pasta in the world", "cheese, oil, macaroni, etc.", options, null, 0);
+//		RestaurantApiService.createItem(item, response);
+//		assertEquals("Success in creating a new item -> itemID: 9", response.getDescription());
+//	}
 
 	@Test
 	public void testUpdateItem() {
@@ -88,17 +104,17 @@ public class RestaurantApiServiceTest {
 	}
 
 	@Test
+	public void testItemsDelete() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
 	public void testAllMenues() {
 		fail("Not yet implemented");
 	}
 
 	@Test
 	public void testApproveOrder() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testCreateItem() {
 		fail("Not yet implemented");
 	}
 
@@ -112,10 +128,6 @@ public class RestaurantApiServiceTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	public void testItemsDelete() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testGetCredit() {

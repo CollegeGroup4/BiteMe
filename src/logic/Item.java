@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.Arrays;
+
 public class Item {
 	private String category;
 	private String subcategory;
@@ -13,16 +15,16 @@ public class Item {
 	private String photo;
 	private int amount;
 	
-	@Override
-	public String toString() {
-		String temp = "";
-		StringBuilder invoice = new StringBuilder();
-		for (Options option : options) {
-			temp += option.getOption_category() +":"+option.getSpecify_option()+"\n\t\t    ";
-		}
-		invoice.append(name +price+"\t\t"+Integer.toString(amount)+"\t\t"+temp);
-		return invoice.toString();
-	}
+//	@Override
+//	public String toString() {
+//		String temp = "";
+//		StringBuilder invoice = new StringBuilder();
+//		for (Options option : options) {
+//			temp += option.getOption_category() +":"+option.getSpecify_option()+"\n\t\t    ";
+//		}
+//		invoice.append(name +price+"\t\t"+Integer.toString(amount)+"\t\t"+temp);
+//		return invoice.toString();
+//	}
 	
 	public Item(String category, String subcategory, int itemID, int restaurantID, String name, float price,
 			String description, String ingrediants, Options[] options, String photo, int amount) {
@@ -39,6 +41,14 @@ public class Item {
 		this.amount = amount;
 	}
 	
+	@Override
+	public String toString() {
+		return "Item [category=" + category + ", subcategory=" + subcategory + ", itemID=" + itemID + ", restaurantID="
+				+ restaurantID + ", name=" + name + ", price=" + price + ", description=" + description
+				+ ", ingrediants=" + ingrediants + ", options=" + Arrays.toString(options) + ", photo=" + photo
+				+ ", amount=" + amount + "]";
+	}
+
 	public String getCategory() {
 		return category;
 	}

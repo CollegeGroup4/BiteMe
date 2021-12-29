@@ -14,6 +14,12 @@ public class Options {
 		this.itemID = itemID;
 	}
 	
+	@Override
+	public String toString() {
+		return "Options [option_category=" + option_category + ", specify_option=" + specify_option + ", price=" + price
+				+ ", isDuplicatable=" + isDuplicatable + ", itemID=" + itemID + "]";
+	}
+
 	public String getOption_category() {
 		return option_category;
 	}
