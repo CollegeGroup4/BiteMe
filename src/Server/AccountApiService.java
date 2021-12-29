@@ -228,7 +228,7 @@ public class AccountApiService {
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in fetching accounts -> branchManagerID: " + branch_manager_id);
+		response.setDescription("Success in fetching accounts -> branchManagerID: " + Integer.toString(branch_manager_id));
 		response.setBody(EchoServer.gson.toJson(accounts.toArray()));
 	}
 
