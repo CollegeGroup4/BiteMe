@@ -1,4 +1,4 @@
-package mywork;
+package toRemove;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +27,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import logic.Item;
 import logic.item_in_menu;
+import mywork.ChooseADishController;
 import temporaryDatabase.myOwnDatabase;
 
 public class ItemsFromMenuController implements Initializable, EventHandler<ActionEvent> {

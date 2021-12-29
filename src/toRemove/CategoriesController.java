@@ -1,4 +1,4 @@
-package mywork;
+package toRemove;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import logic.Category;
 import logic.Item;
 import logic.item_in_menu;
+import mywork.ChooseADishController;
 
 public class CategoriesController implements Initializable, EventHandler<ActionEvent> {
 	

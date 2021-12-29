@@ -1,4 +1,4 @@
-package mywork;
+package toRemove;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import mywork.ChooseADishController;
 
 public class CoursesController implements Initializable, EventHandler<ActionEvent> {
 	
