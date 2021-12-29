@@ -1,4 +1,4 @@
-package biteme.server;
+package Server;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

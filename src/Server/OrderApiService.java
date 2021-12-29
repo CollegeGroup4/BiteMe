@@ -3,6 +3,7 @@ package Server;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -48,7 +49,7 @@ public class OrderApiService {
 			PreparedStatement postOrder = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.order (ResturantID, ResturantName, UserName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
 							+ "Check_out_price, isApproved, required_time, approved_time, hasArraived)"
-							+ " VALUES (?,?,?,?,?,?,?,?,?,?); SELECT last_insert_id();");
+							+ " VALUES (?,?,?,?,?,?,?,?,?,?);",Statement.RETURN_GENERATED_KEYS);
 			postOrder.setInt(1, order.getRestaurantID());
 			postOrder.setString(2, order.getRestaurantName());
 			postOrder.setString(3, order.getUserName());
@@ -61,10 +62,10 @@ public class OrderApiService {
 			postOrder.setString(10, order.getRequired_time());
 			postOrder.setString(11, order.getApproved_time());
 			postOrder.setBoolean(12, order.getHasArrived());
-			postOrder.execute();
-			rs = postOrder.getResultSet();
+			postOrder.executeUpdate();
+			rs = postOrder.getGeneratedKeys();
+			rs.next();
 			orderID = rs.getInt(1);
-
 		} catch (SQLException e) {
 			response.setCode(405);
 			response.setDescription("Invalid input");
@@ -73,40 +74,43 @@ public class OrderApiService {
 		try {
 			PreparedStatement postItem = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.item_in_menu_in_order (OrderNum, ItemID, Item_name, OptionalType, OptionalSpecify,"
-							+ "Amount)" + " VALUES (?,?,?,?,?,?);");
-			postItem.setInt(1, orderID);
+							+ "Amount) VALUES (?,?,?,?,?,?);");
+			
 			for (Item temp : order.getItems()) {
+				postItem.setInt(1, orderID);
 				postItem.setInt(2, temp.getItemID());
 				postItem.setInt(6, temp.getAmount());
 				postItem.setString(3, temp.getName());
 
 				for (Options opt : temp.getOptions()) {
+					postItem.setInt(1, orderID);
+					postItem.setInt(2, temp.getItemID());
+					postItem.setString(3, temp.getName());
 					postItem.setString(4, opt.getOption_category());
 					postItem.setString(5, opt.getSpecify_option());
+					postItem.setInt(6, temp.getAmount());
 					options = opt;
 					try {
-						postItem.execute();
+						postItem.executeUpdate();
 					} catch (SQLException e) {
-
 						PreparedStatement getAmount = EchoServer.con.prepareStatement(
 								"SELECT amount from biteme.item_in_menu_in_order WHRER OrderNum =? AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?;");
 						getAmount.setInt(1, orderID);
 						getAmount.setInt(2, temp.getItemID());
 						getAmount.setString(3, options.getOption_category());
 						getAmount.setString(4, options.getSpecify_option());
-						getAmount.execute();
-						rs = getAmount.getResultSet();
+						rs = getAmount.executeQuery();
 
 						PreparedStatement updateOrder = EchoServer.con.prepareStatement(
-								"UPDATE biteme.item_in_menu_in_order " + "SET Amount = ? WHERE OrderNum = ?"
-										+ "ItemID = ? OptionalType = ? OptionalSpecify = ?");
+								"UPDATE biteme.item_in_menu_in_order SET Amount = ? WHERE OrderNum = ?"
+										+ "AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?;");
 
 						updateOrder.setInt(1, rs.getInt(1) + temp.getAmount());
 						updateOrder.setInt(2, orderID);
 						updateOrder.setInt(3, options.getItemID());
 						updateOrder.setString(4, options.getOption_category());
 						updateOrder.setString(4, options.getSpecify_option());
-						updateOrder.execute();
+						updateOrder.executeUpdate();
 					}
 				}
 			}
@@ -134,7 +138,7 @@ public class OrderApiService {
 				setShipment.setString(3, order.getShippment().getReceiver_name());
 				setShipment.setString(4, order.getShippment().getPhone());
 				setShipment.setString(5, order.getShippment().getDelivery());
-				setShipment.execute();
+				setShipment.executeUpdate();
 
 			} catch (SQLException e) {
 				response.setBody(null);
@@ -148,7 +152,7 @@ public class OrderApiService {
 		JsonElement body = EchoServer.gson.toJsonTree(new Object());
 		body.getAsJsonObject().addProperty("orderID", orderID);
 		response.setBody(EchoServer.gson.toJson(body));
-		invoiceSender(order, orderID);
+		//invoiceSender(order, orderID);
 	}
 
 	/**
