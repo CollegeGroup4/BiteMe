@@ -261,7 +261,7 @@ public class OrderApiService {
 		float remainingPayment = 0;
 		float monthBillingCelling, currentSpent;
 		try {
-			getAccount = EchoServer.con.prepareStatement("SELECT isApproved FROM biteme.employees WHERE Name = ?");
+			getAccount = EchoServer.con.prepareStatement("SELECT isApproved FROM biteme.employer WHERE businessName = ?");
 			getAccount.setString(1, businessName);
 			rs = getAccount.executeQuery();
 			rs = getAccount.getResultSet();

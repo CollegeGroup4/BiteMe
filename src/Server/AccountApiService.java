@@ -73,11 +73,11 @@ public class AccountApiService {
 		ResultSet rs;
 		try {
 			isBusinessApproved = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.employees WHERE Name = ? AND isApproved = 1;");
+					.prepareStatement("SELECT * FROM biteme.employer WHERE businessName = ? AND isApproved = 1;");
 			isBusinessApproved.setString(1, account.getBusinessName());
 			rs = isBusinessApproved.executeQuery();
 			if (!rs.next())
-				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employees", "400",
+				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employers", "400",
 						400);
 
 		} catch (SQLException e) {
