@@ -5,16 +5,14 @@ public class Employer {
 	private boolean isApproved;
 	private String hrName;
 	private String hrUserName;
-	private String branchManagerUserName;
+	private int branchManagerID;
 	
-	
-	public Employer(String businessName, boolean isApproved, String hrName, String hrUserName,
-			String branchManagerUserName) {
+	public Employer(String businessName, boolean isApproved, String hrName, String hrUserName, int branchManagerID) {
 		this.businessName = businessName;
 		this.isApproved = isApproved;
 		this.hrName = hrName;
 		this.hrUserName = hrUserName;
-		this.branchManagerUserName = branchManagerUserName;
+		this.branchManagerID = branchManagerID;
 	}
 	
 	public String getBusinessName() {
@@ -41,14 +39,10 @@ public class Employer {
 	public void setHrUserName(String hrUserName) {
 		this.hrUserName = hrUserName;
 	}
-	public String getBranchManagerUserName() {
-		return branchManagerUserName;
+	public int getBranchManagerID() {
+		return branchManagerID;
 	}
-	public void setBranchManagerUserName(String branchManagerUserName) {
-		this.branchManagerUserName = branchManagerUserName;
+	public void setBranchManagerID(int branchManagerID) {
+		this.branchManagerID = branchManagerID;
 	}
-
-
-
-
 }

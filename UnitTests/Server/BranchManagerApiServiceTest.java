@@ -109,6 +109,18 @@ public class BranchManagerApiServiceTest {
 	public void testGetBranchReports() {
 		fail("Not yet implemented");
 	}
+	
+//	/**
+//	 * Test method for
+//	 * {@link Server.BranchManagerApiService#getBranchReports(java.util.List)}.
+//	 */
+//	@Test
+//	public void testApproveEmployer() {
+//		String businessName = "intel";
+//		int branchManagerID = 1;
+//		BranchManagerApiService.approveEmployer(businessName, branchManagerID, response);
+//		assertEquals("Success in adding a new employer -> BusinessName: " + businessName, response.getDescription());
+//	}
 
 //	/**
 //	 * Test method for

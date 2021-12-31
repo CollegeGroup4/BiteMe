@@ -456,5 +456,24 @@ public class BranchManagerApiService {
 		}
 
 	}
-
+	/**
+	 * Approve a business
+	 *
+	 * This can only be done by the logged in branch manager.
+	 *
+	 */
+	public static void approveEmployer(String businessName, int branchManagerID, Response response) {
+		PreparedStatement postEmployer;		
+		try {
+			postEmployer = EchoServer.con.prepareStatement(
+					"UPDATE biteme.employer SET isApproved = 1 WHERE businessName = ? AND BranchManagerID = ?");
+			postEmployer.setString(1, businessName);
+			postEmployer.setInt(2, branchManagerID);
+			postEmployer.executeUpdate();
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Couldn't approve a new employer -> BusinessName: " + businessName);
+		}
+		response.setDescription("Success in approving a new employer -> BusinessName: " + businessName);
+	}
 }

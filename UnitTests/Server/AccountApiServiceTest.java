@@ -41,18 +41,17 @@ public class AccountApiServiceTest {
 //		assertEquals("Success in registering private account: 2", response.getDescription());
 //	}
 //
-//	@Test
-//	public void testCreateBusinessAccount() {
-//		int userID = 2;
-//		String userName = "b";
-//		AccountApiService.getAccountByUserNameAndID(userName, userID, response);
-//		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
-//		BusinessAccount acc = new BusinessAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
-//				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), true, account.getBranch_manager_ID(), account.getArea(),
-//				account.getDebt(), null,1000, false, "intel",0);
-//		AccountApiService.createBusinessAccount(acc, response);
-//		assertEquals("Success in registering business account -> UserID: 2", response.getDescription());
-//	}
+	@Test
+	public void testCreateBusinessAccount() {
+		String userName = "b";
+		AccountApiService.getAccountByUserName(userName, response);
+		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
+		BusinessAccount acc = new BusinessAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
+				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), true, account.getBranch_manager_ID(), account.getArea(),
+				account.getDebt(), null,1000, false, "intel",0);
+		AccountApiService.createBusinessAccount(acc, response);
+		assertEquals("Success in registering business account -> UserID: 2", response.getDescription());
+	}
 //
 //	@Test
 //	public void testDeleteAccount() {
@@ -97,28 +96,28 @@ public class AccountApiServiceTest {
 //		}
 //		assertEquals("Success in login 1", response.getDescription());		
 //	}
-
-	@Test
-	public void testLoginAccountW4C() {
-		String w4c = "d4443cc65d4335a323753495938867731af47c7d73bbab3d76";
-		AccountApiService.loginAccountW4C(w4c, response);
-		try {
-			JsonElement j = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
-			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("account"), Account.class));
-			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("privateAccount"), PrivateAccount.class));
-			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("businessAccount"), BusinessAccount.class));
-		} catch (Exception e) {
-			fail(response.getDescription());
-		}
-		assertEquals("Success in login: userID -> 2", response.getDescription());
-	}
-
-	@Test
-	public void testLogoutAccount() {
-		String userName = "a";
-		AccountApiService.logoutAccount(userName, response);
-		assertEquals("Success in logging out", response.getDescription());
-	}
+//
+//	@Test
+//	public void testLoginAccountW4C() {
+//		String w4c = "d4443cc65d4335a323753495938867731af47c7d73bbab3d76";
+//		AccountApiService.loginAccountW4C(w4c, response);
+//		try {
+//			JsonElement j = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
+//			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("account"), Account.class));
+//			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("privateAccount"), PrivateAccount.class));
+//			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("businessAccount"), BusinessAccount.class));
+//		} catch (Exception e) {
+//			fail(response.getDescription());
+//		}
+//		assertEquals("Success in login: userID -> 2", response.getDescription());
+//	}
+//
+//	@Test
+//	public void testLogoutAccount() {
+//		String userName = "a";
+//		AccountApiService.logoutAccount(userName, response);
+//		assertEquals("Success in logging out", response.getDescription());
+//	}
 
 	@Test
 	public void testUpdateAccount() {
