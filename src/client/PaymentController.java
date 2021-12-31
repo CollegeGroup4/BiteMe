@@ -1,4 +1,4 @@
-package mywork;
+package client;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,6 +19,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -28,10 +29,13 @@ public class PaymentController implements Initializable {
 
 	public static PaymentSaved payment;
 	public float priceOfShippment = 0;
+	private boolean errorOccurred = false;
+	public boolean isOpen = false;
 
 	class PaymentSaved {
 		String cardType;
 		String cardNum;
+		String cardSecurity;
 		String expMonth;
 		String expYear;
 
@@ -81,6 +85,15 @@ public class PaymentController implements Initializable {
 	private CheckBox masterCard;
 
 	@FXML
+	private Label lblShippmentPrice;
+
+	@FXML
+	private Label lblDiscountPrice;
+
+	@FXML
+	private Label lblSubTotalPrice;
+
+	@FXML
 	private Label totalPrice;
 
 	@FXML
@@ -96,7 +109,7 @@ public class PaymentController implements Initializable {
 	private Button btnHideOrder;
 
 	@FXML
-	private Button btnShowOrder;
+	private ImageView shoppingCart;
 
 	@FXML
 	private Label lblDate;
@@ -120,13 +133,16 @@ public class PaymentController implements Initializable {
 	private Label lblPhone;
 
 	@FXML
+	private Label errorLabel;
+
+	@FXML
 	private Hyperlink btnHome;
 
 	@FXML
 	private Button btnLogout;
 
 	public void start(Stage primaryStage) throws IOException {
-		Parent root = FXMLLoader.load(getClass().getResource("/mywork/Payment.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/client/Payment.fxml"));
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("Payment Page");
 		primaryStage.setScene(scene);
@@ -143,9 +159,13 @@ public class PaymentController implements Initializable {
 
 	@FXML
 	void next(ActionEvent event) {
-		payment.cardNum = cardNumber.getText();
-		payment.expMonth = expMonth.getValue();
-		payment.expYear = expYear.getValue();
+		checkValidInputes();
+		if (!errorOccurred)
+			insertValues();
+		else {
+			errorOccurred = false;
+			return;
+		}
 		((Node) event.getSource()).getScene().getWindow().hide();
 		FinalApproveController aFrame = new FinalApproveController();
 		try {
@@ -155,25 +175,57 @@ public class PaymentController implements Initializable {
 		}
 	}
 
+	private void checkValidInputes() {
+		if (creditCard.isSelected()) {
+			if (cardNumber.getText().equals("")) {
+				errorLabelFunc("Please insert card number");
+				return;
+			}
+			if (cardNumber.getText().length() < 4) {
+				errorLabelFunc("Card number too short");
+				return;
+			}
+			if (cardNumber.getText().length() > 16) {
+				errorLabelFunc("Card number too long");
+				return;
+			}
+			if (securityCode.getText().equals("")) {
+				errorLabelFunc("Please insert security code");
+				return;
+			}
+			if (!(visa.isSelected() || masterCard.isSelected() || americanExpress.isSelected())) {
+				errorLabelFunc("Please select card type");
+				return;
+			}
+			if (expMonth.getValue() == null || expYear.getValue() == null) {
+				errorLabelFunc("Please select expire date");
+				return;
+			}
+		}
+
+	}
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		payment = new PaymentSaved();
-		setTotalPrice();
+		errorLabel.setVisible(false);
+		setPrices();
 		creditCard.setOnAction(e -> turnOnOfCreditCard());
+		shoppingCart.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClickShoppingCart(e));
 		expMonth.getItems().addAll("January", "February", "March", "April", "May", "June", "July", "August",
 				"September", "October", "November", "December");
 		expYear.getItems().addAll("2022", "2023", "2024", "2025", "2026", "2027");
 		visa.setOnAction(e -> visaSelected());
 		masterCard.setOnAction(e -> masterCardSelected());
 		americanExpress.setOnAction(e -> americanExpressSelected());
-		Parent root = null;
-		try {
-			root = FXMLLoader.load(getClass().getResource("Summary.fxml"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		orderDetails.setCenter(root);
 		setOrderDetailsLabels();
+	}
+
+	private void insertValues() {
+		payment.cardNum = cardNumber.getText();
+		payment.expMonth = expMonth.getValue();
+		payment.expYear = expYear.getValue();
+		payment.cardSecurity = securityCode.getText();
 	}
 
 	private void setOrderDetailsLabels() {
@@ -191,6 +243,23 @@ public class PaymentController implements Initializable {
 		// CustomerPageController.user.getName()); *** Implement when connect to the DB
 		// lblPhone.setText(lblPhone.getText()+"
 		// "+DeliveryAndTimeController.shippment.getPhone());
+	}
+
+	public void handeleClickShoppingCart(MouseEvent event) {
+		if (isOpen) {
+			orderDetails.setCenter(null);
+			orderDetails.toBack();
+		} else {
+			Parent root = null;
+			try {
+				root = FXMLLoader.load(getClass().getResource("Summary.fxml"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			orderDetails.setCenter(root);
+			orderDetails.toFront();
+		}
+		isOpen = !isOpen;
 	}
 
 	private void americanExpressSelected() {
@@ -211,16 +280,23 @@ public class PaymentController implements Initializable {
 		americanExpress.setSelected(false);
 	}
 
-	private void setTotalPrice() {
-		// float sum = 0;
-		// for (int i = 0; i < ItemsFromMenuController.itemsSelectedArr.size(); i++) {
-		// sum += ItemsFromMenuController.itemsSelectedArr.get(i).getPrice();
-		// }
-		float sum = DeliveryAndTimeController.orderToSend.check_out_price;
+	private void setPrices() {
+		float discount = DeliveryAndTimeController.orderToSend.discount_for_early_order / (float) 100;
+		float sumAfterDiscount = DeliveryAndTimeController.orderToSend.check_out_price;
+		float sumBeforeDiscount = sumAfterDiscount / (1 - discount);
+		lblSubTotalPrice.setText("$" + sumBeforeDiscount);
 		checkShippmentPrice();
-		sum += priceOfShippment;
-		totalPrice.setText("$" + sum);
+		lblShippmentPrice.setText("$" + priceOfShippment);
+		lblDiscountPrice.setText("$" + discount * sumBeforeDiscount);
+		sumAfterDiscount += priceOfShippment;
+		totalPrice.setText("$" + sumAfterDiscount);
 
+	}
+
+	private void errorLabelFunc(String errorMsg) {
+		errorLabel.setVisible(true);
+		errorLabel.setText(errorMsg);
+		errorOccurred = true;
 	}
 
 	private void checkShippmentPrice() {
@@ -251,21 +327,6 @@ public class PaymentController implements Initializable {
 		expLabel.setDisable(b);
 		expMonth.setDisable(b);
 		expYear.setDisable(b);
-
-	}
-
-	@FXML
-	void showOrderDetails(ActionEvent event) {
-		orderDetails.setVisible(true);
-		btnShowOrder.setVisible(false);
-		btnHideOrder.setVisible(true);
-	}
-
-	@FXML
-	void hideOrderDetails(ActionEvent event) {
-		orderDetails.setVisible(false);
-		btnShowOrder.setVisible(true);
-		btnHideOrder.setVisible(false);
 
 	}
 

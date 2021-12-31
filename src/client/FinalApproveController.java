@@ -1,4 +1,4 @@
-package mywork;
+package client;
 
 import java.io.IOException;
 import java.net.URL;
@@ -58,17 +58,20 @@ public class FinalApproveController implements Initializable {
 	private Label lblExp;
 
 	@FXML
+	private Label lblTypeOfCard;
+
+	@FXML
 	private HBox Nav;
 
 	@FXML
 	private Label welcomeLabel;
-	
-    @FXML
-    private BorderPane confirmation;
 
-    @FXML
-    private ImageView imageV;
-    
+	@FXML
+	private BorderPane confirmation;
+
+	@FXML
+	private ImageView imageV;
+
 	@FXML
 	private Hyperlink btnHome;
 
@@ -76,7 +79,7 @@ public class FinalApproveController implements Initializable {
 	private Button btnLogout;
 
 	public void start(Stage primaryStage) throws IOException {
-		Parent root = FXMLLoader.load(getClass().getResource("/mywork/FinalApprove.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/client/FinalApprove.fxml"));
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("Final Approve");
 		primaryStage.setScene(scene);
@@ -126,7 +129,10 @@ public class FinalApproveController implements Initializable {
 			lblCardNum.setText("***" + PaymentController.payment.cardNum.substring(
 					PaymentController.payment.cardNum.length() - 4, PaymentController.payment.cardNum.length()));
 		if (PaymentController.payment.expMonth != null && PaymentController.payment.expYear != null)
-			lblExp.setText(lblExp.getText()+PaymentController.payment.expMonth + ", " + PaymentController.payment.expYear);
+			lblExp.setText(
+					lblExp.getText() + PaymentController.payment.expMonth + ", " + PaymentController.payment.expYear);
+		if (PaymentController.payment.cardType != null)
+			lblTypeOfCard.setText(lblTypeOfCard.getText() + " " + PaymentController.payment.cardType);
 	}
 
 }

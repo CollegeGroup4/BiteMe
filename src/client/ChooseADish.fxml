@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -15,15 +15,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.ChooseADishController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ChooseADishController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
+            <BorderPane fx:id="paneForSummary" layoutX="616.0" layoutY="176.0" prefHeight="430.0" prefWidth="250.0" />
             <HBox alignment="CENTER" layoutX="36.0" layoutY="76.0" prefHeight="27.0" prefWidth="810.0" spacing="20.0" style="-fx-border-color: black;">
                <children>
-                  <Label prefHeight="24.0" prefWidth="162.0" text="Choose Restaurant">
+                  <Label prefHeight="24.0" prefWidth="170.0" text="Choose Restaurant">
                      <font>
-                        <Font name="Arial" size="18.0" />
+                        <Font name="Arial Bold" size="18.0" />
                      </font>
                   </Label>
                   <Label prefHeight="28.0" prefWidth="152.0" text="Choose A Dish">
@@ -48,15 +49,7 @@
                   </Label>
                </children>
             </HBox>
-            <BorderPane fx:id="paneForCourses" layoutX="14.0" layoutY="148.0" prefHeight="405.0" prefWidth="162.0">
-               <center>
-                  <ScrollPane fx:id="spMenus" prefHeight="279.0" prefWidth="130.0" BorderPane.alignment="CENTER">
-                     <content>
-                        <VBox fx:id="Menus" />
-                     </content>
-                  </ScrollPane>
-               </center></BorderPane>
-            <Button fx:id="btnBack" layoutX="36.0" layoutY="615.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">
+            <Button layoutX="36.0" layoutY="615.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -64,8 +57,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <BorderPane fx:id="paneForSummary" layoutX="640.0" layoutY="176.0" prefHeight="385.0" prefWidth="226.0" />
-            <Button fx:id="btnNext" layoutX="769.0" layoutY="615.0" mnemonicParsing="false" onAction="#next" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Next" textFill="WHITE">
+            <Button layoutX="769.0" layoutY="615.0" mnemonicParsing="false" onAction="#next" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Next" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -78,17 +70,24 @@
                   <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <BorderPane fx:id="paneForSelections" layoutX="205.0" layoutY="148.0" prefHeight="333.0" prefWidth="407.0" />
-            <AnchorPane fx:id="itemInfo" layoutX="215.0" layoutY="515.0" prefHeight="112.0" prefWidth="388.0" style="-fx-border-color: black;" visible="false">
+            <BorderPane fx:id="paneForSelections" layoutX="187.0" layoutY="240.0" prefHeight="360.0" prefWidth="530.0" />
+            <ScrollPane fx:id="scrolePaneListItems" layoutX="201.0" layoutY="240.0" prefHeight="360.0" prefWidth="500.0">
+               <content>
+                  <VBox fx:id="ItemContainer" />
+               </content>
+            </ScrollPane>
+            <AnchorPane layoutX="143.0" layoutY="109.0" prefHeight="125.0" prefWidth="592.0">
                <children>
-                  <Label fx:id="itemLabel" layoutX="119.0" layoutY="6.0" prefHeight="17.0" prefWidth="152.0" text="Label">
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="18.0" />
-                     </font></Label>
-                  <ImageView fx:id="itemImage" fitHeight="100.0" fitWidth="100.0" layoutX="7.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
-                  <JFXTextArea fx:id="itemDescription" layoutX="119.0" layoutY="29.0" prefHeight="64.0" prefWidth="263.0" />
+                  <JFXComboBox fx:id="comboBoxMenu" layoutX="195.0" layoutY="3.0" onAction="#onClickMenu" prefHeight="41.0" prefWidth="218.0" />
+                  <JFXComboBox fx:id="comboBoxCourse" layoutX="103.0" layoutY="70.0" onAction="#onClickCourse" promptText="Course" />
+                  <JFXComboBox fx:id="comboBoxCategory" layoutX="430.0" layoutY="70.0" onAction="#onClickCategory" promptText="Category" />
                </children>
             </AnchorPane>
+            <ImageView fx:id="shoppingCart" fitHeight="42.0" fitWidth="43.0" layoutX="800.0" layoutY="127.0">
+               <image>
+                  <Image url="file:/C:/Users/einan/git/BiteMe/src/images/shopping_cart.png" />
+               </image>
+            </ImageView>
          </children></AnchorPane>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="92.0" prefWidth="884.0" spacing="50.0" style="-fx-background-radius: 50px;">
          <children>
@@ -100,12 +99,12 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink fx:id="btnHome" prefHeight="27.0" prefWidth="53.0" text="Home" textFill="WHITE">
+            <Hyperlink onAction="#home" prefHeight="27.0" prefWidth="53.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
-            <Button fx:id="btnLogout" mnemonicParsing="false" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+            <Button mnemonicParsing="false" onAction="#logout" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>

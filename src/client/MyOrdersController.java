@@ -1,12 +1,10 @@
-package mywork;
+package client;
 
 import java.net.URL;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import client.ChatClient;
-import client.ClientUI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

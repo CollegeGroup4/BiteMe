@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.PaymentController">
+   <children>
+      <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+         <children>
+            <Button fx:id="btnBack" layoutX="48.0" layoutY="586.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button fx:id="btnNext" layoutX="748.0" layoutY="586.0" mnemonicParsing="false" onAction="#next" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Next" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label layoutX="167.0" layoutY="197.0" prefHeight="47.0" prefWidth="210.0" text="Total Price:">
+               <font>
+                  <Font name="Arial Bold" size="30.0" />
+               </font>
+            </Label>
+            <Label layoutX="205.0" layoutY="253.0" prefHeight="27.0" prefWidth="149.0" text="Payment details:">
+               <font>
+                  <Font name="Arial Bold" size="18.0" />
+               </font>
+            </Label>
+            <CheckBox fx:id="w4c" layoutX="205.0" layoutY="294.0" mnemonicParsing="false" text="W4C QR code">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="creditCard" layoutX="205.0" layoutY="362.0" mnemonicParsing="false" text="Credit Card">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </CheckBox>
+            <ComboBox fx:id="expMonth" disable="true" layoutX="289.0" layoutY="491.0" prefHeight="25.0" prefWidth="79.0" promptText="Month" visibleRowCount="7" />
+            <ComboBox fx:id="expYear" disable="true" layoutX="379.0" layoutY="491.0" prefHeight="25.0" prefWidth="67.0" promptText="Year" visibleRowCount="7" />
+            <Label fx:id="expLabel" disable="true" layoutX="228.0" layoutY="490.0" prefHeight="27.0" prefWidth="55.0" text="Expires:">
+               <font>
+                  <Font name="System Italic" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="securityCode" disable="true" layoutX="504.0" layoutY="457.0" prefHeight="25.0" prefWidth="99.0" promptText="Security Code">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="cardNumber" disable="true" layoutX="228.0" layoutY="457.0" prefHeight="25.0" prefWidth="270.0" promptText="Debit/Credit Card Number">
+               <font>
+                  <Font name="System Italic" size="12.0" />
+               </font>
+            </TextField>
+            <ImageView fitHeight="44.0" fitWidth="67.0" layoutX="263.0" layoutY="399.0">
+               <image>
+                  <Image url="@../images/Visa.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="44.0" fitWidth="67.0" layoutX="368.0" layoutY="399.0">
+               <image>
+                  <Image url="@../images/MasterCard_Logo.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="44.0" fitWidth="54.0" layoutX="471.0" layoutY="401.0">
+               <image>
+                  <Image url="@../images/American_Express_logo.png" />
+               </image>
+            </ImageView>
+            <CheckBox fx:id="visa" disable="true" layoutX="236.0" layoutY="413.0" mnemonicParsing="false" />
+            <CheckBox fx:id="americanExpress" disable="true" layoutX="446.0" layoutY="414.0" mnemonicParsing="false" />
+            <CheckBox fx:id="masterCard" disable="true" layoutX="344.0" layoutY="413.0" mnemonicParsing="false" />
+            <Label fx:id="totalPrice" layoutX="343.0" layoutY="197.0" prefHeight="47.0" prefWidth="400.0" text=" XX.xx USD">
+               <font>
+                  <Font name="Arial" size="30.0" />
+               </font>
+            </Label>
+            <BorderPane fx:id="orderDetails" layoutX="603.0" layoutY="176.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </BorderPane>
+            <CheckBox fx:id="credit" layoutX="205.0" layoutY="328.0" mnemonicParsing="false" text="Credit">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </CheckBox>
+            <Label fx:id="errorLabel" alignment="CENTER" layoutX="257.0" layoutY="539.0" prefHeight="41.0" prefWidth="367.0" text="Error Message" textFill="#ff0404">
+               <font>
+                  <Font name="Arial" size="18.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="shoppingCart" fitHeight="42.0" fitWidth="43.0" layoutX="810.0" layoutY="130.0">
+               <image>
+                  <Image url="file:/C:/Users/einan/git/BiteMe/src/images/shopping_cart.png" />
+               </image>
+            </ImageView>
+            <HBox alignment="CENTER" layoutX="36.0" layoutY="76.0" prefHeight="27.0" prefWidth="810.0" spacing="20.0" style="-fx-border-color: black;">
+               <children>
+                  <Label prefHeight="24.0" prefWidth="170.0" text="Choose Restaurant">
+                     <font>
+                        <Font name="Arial Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="25.0" prefWidth="129.0" text="Choose A Dish">
+                     <font>
+                        <Font name="Arial Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="22.0" prefWidth="144.0" text="Delivery &amp; Time">
+                     <font>
+                        <Font name="Arial Bold" size="19.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="28.0" prefWidth="103.0" text="Paymant">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="21.0" prefWidth="118.0" text="Final Approvel">
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Label layoutX="340.0" layoutY="14.0" text="Order Food">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="40.0" />
+               </font>
+            </Label>
+            <AnchorPane layoutX="154.0" layoutY="107.0" prefHeight="88.0" prefWidth="400.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" text="SUBTOTAL:">
+                     <font>
+                        <Font name="Arial Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblShippmentPrice" layoutX="141.0" layoutY="41.0" prefHeight="21.0" prefWidth="91.0" text="XX.xx USD">
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblDiscountPrice" layoutX="140.0" layoutY="66.0" text="XX.xx USD">
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="39.0" text="SHIPPMENT:">
+                     <font>
+                        <Font name="Arial Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="64.0" text="DISCOUNT:">
+                     <font>
+                        <Font name="Arial Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblSubTotalPrice" layoutX="140.0" layoutY="16.0" text="XX.xx USD">
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="92.0" prefWidth="884.0" spacing="50.0" style="-fx-background-radius: 50px;">
+         <children>
+            <Label fx:id="welcomeLabel" prefHeight="88.0" prefWidth="202.0" styleClass="f" text="Hello, Customer">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" top="50.0" />
+               </padding>
+            </Label>
+            <Hyperlink fx:id="btnHome" prefHeight="27.0" prefWidth="53.0" text="Home" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Button fx:id="btnLogout" mnemonicParsing="false" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="64.0" fitWidth="200.0">
+               <image>
+                  <Image url="file:/C:/Users/einan/git/BiteMe/src/images/biteMe.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

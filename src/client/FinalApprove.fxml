@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mywork.FinalApproveController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.FinalApproveController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
@@ -172,6 +172,11 @@
                            <VBox.margin>
                               <Insets bottom="5.0" />
                            </VBox.margin>
+                        </Label>
+                        <Label fx:id="lblTypeOfCard" text="Type of card:">
+                           <font>
+                              <Font name="Arial" size="12.0" />
+                           </font>
                         </Label>
                      </children>
                      <BorderPane.margin>

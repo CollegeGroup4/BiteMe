@@ -1,9 +1,8 @@
-package mywork;
+package client;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import client.ChatClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,7 +64,7 @@ public class CustomerPageController /* implements Initializable */ {
 	public static UserTemp user;
 
 	public void start(Stage primaryStage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/mywork/CustomerPage.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/client/CustomerPage.fxml"));
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("Customer Page");
 		primaryStage.setScene(scene);
@@ -77,7 +76,7 @@ public class CustomerPageController /* implements Initializable */ {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/mywork/MyOrders.fxml").openStream());
+		Pane root = loader.load(getClass().getResource("/client/MyOrders.fxml").openStream());
 		MyOrdersController myOrdersController = loader.getController();
 		myOrdersController.insertOrdersToTbl();
 		myOrdersController.setName();
@@ -94,7 +93,7 @@ public class CustomerPageController /* implements Initializable */ {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/mywork/ChooseRestaurant.fxml").openStream());
+		Pane root = loader.load(getClass().getResource("/client/ChooseRestaurant.fxml").openStream());
 		ChooseRestaurantController chooseRestaurantController = loader.getController();
 		chooseRestaurantController.setName();
 

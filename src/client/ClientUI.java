@@ -2,7 +2,6 @@ package client;
 import gui.ClientMainScreenController;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import mywork.ChooseRestaurantController;
 
 public class ClientUI extends Application {
 	public static ClientController chat; //only one instance
