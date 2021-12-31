@@ -37,4 +37,10 @@ public class item_in_menu {
 	public void setCourse(String course) {
 		this.course = course;
 	}
+
+	@Override
+	public String toString() {
+		return "item_in_menu [itemID=" + itemID + ", restaurantNum=" + restaurantNum + ", menu_name=" + menu_name
+				+ ", course=" + course + "]";
+	}
 }

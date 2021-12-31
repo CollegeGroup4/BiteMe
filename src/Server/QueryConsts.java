@@ -36,6 +36,7 @@ public class QueryConsts {
     public static final int OPTIONAL_SPECIFY = 2;
     public static final int OPTIONAL_ITEM_ID = 3;
     public static final int OPTIONAL_PRICE = 4;
+    public static final int OPTIONAL_IS_DUPLICATABLE = 5;
 
     //for item_in_menu_in_order
     public static final int ITEM_IN_ORDER_ORDER_NUM = 1;

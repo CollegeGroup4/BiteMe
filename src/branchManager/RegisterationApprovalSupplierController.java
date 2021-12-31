@@ -149,7 +149,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	private boolean flag, validField, moderator;
 
 	@FXML
-	void addSupplier(ActionEvent event) {
+	void createRestaurant(ActionEvent event) {
 		flag = true;
 		checkTextFiled(textFieldSupplierUserame, lblrequiredSupplierUsername);
 		checkTextFiled(textFieldsupplierID, lblrequiredSupplierID);
@@ -181,6 +181,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 					null, "status", false, BranchManagerController.branchManager.getUserID(),
 					BranchManagerController.branchManager.getArea(), 0);
 
+			
 			sentToJson(restaurant, supplier, supplierModorator);
 			response();
 		}

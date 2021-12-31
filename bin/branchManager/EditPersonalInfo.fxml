@@ -69,7 +69,7 @@
                </columns>
             </TableView>
             <TextField fx:id="textFiledSearchID" layoutX="118.0" layoutY="192.0" prefHeight="25.0" prefWidth="175.0" />
-            <Button layoutX="306.0" layoutY="189.0" mnemonicParsing="false" onAction="#editID" prefHeight="21.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
+            <Button layoutX="306.0" layoutY="189.0" mnemonicParsing="false" onAction="#editByID" prefHeight="21.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="52.0" />
                </font>
@@ -96,8 +96,8 @@
             </Button>
             <AnchorPane layoutX="93.0" layoutY="274.0" prefHeight="67.0" prefWidth="463.0">
                <children>
-                  <JFXComboBox fx:id="coboBoxRole" layoutX="84.0" layoutY="36.0" prefHeight="26.0" prefWidth="98.0" promptText="All" />
-                  <JFXComboBox fx:id="coboBoxStatus" layoutX="267.0" layoutY="37.0" prefHeight="26.0" prefWidth="98.0" promptText="All" />
+                  <JFXComboBox fx:id="coboBoxRole" layoutX="84.0" layoutY="36.0" onAction="#onChengedRole" prefHeight="26.0" prefWidth="98.0" />
+                  <JFXComboBox fx:id="coboBoxStatus" layoutX="267.0" layoutY="37.0" onAction="#onChengedStatus" prefHeight="26.0" prefWidth="98.0" />
                   <Label layoutX="14.0" layoutY="14.0" text="Select Your Filter:">
                      <font>
                         <Font name="David Bold" size="16.0" />
@@ -113,11 +113,6 @@
                         <Font name="David Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Button layoutX="398.0" layoutY="31.0" mnemonicParsing="false" onAction="#filter" prefHeight="18.0" prefWidth="65.0" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="filter">
-                     <font>
-                        <Font name="David Bold" size="16.0" />
-                     </font>
-                  </Button>
                </children>
             </AnchorPane>
             <Label fx:id="lableSlectedUser" alignment="CENTER" layoutX="11.0" layoutY="562.0" prefHeight="23.0" prefWidth="861.0">

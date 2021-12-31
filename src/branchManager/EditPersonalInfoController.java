@@ -123,6 +123,7 @@ public class EditPersonalInfoController implements Initializable {
 			Account[] account = EchoServer.gson.fromJson((String) response.getBody(), Account[].class);
 			for (Account a : account) { // update the list of users to be the response from the DB
 				userList.add(a);
+				allUsres.put(a.getUserID(), a);
 			}
 		}
 
@@ -135,9 +136,8 @@ public class EditPersonalInfoController implements Initializable {
 		JsonElement jsonElem = gson.toJsonTree(new Object());
 		jsonElem.getAsJsonObject().addProperty("branchManagerID", BranchManagerController.branchManager.getUserID());
 		branchManagerFunctions.sentToJson("/accounts", "GET", jsonElem,
-				"Open Business account - new ClientController didn't work");
+				"Edit personal info - new ClientController didn't work");
 
-//		sentToJson();
 		response();
 
 		// create the table
@@ -153,7 +153,9 @@ public class EditPersonalInfoController implements Initializable {
 
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
 		coboBoxStatus.getItems().setAll("All", "Active", "Frozen", "Blocked");
+		coboBoxStatus.setValue("All");
 		coboBoxRole.getItems().setAll("All", "Client", "Supplier");
+		coboBoxRole.setValue("All");
 
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
@@ -187,11 +189,9 @@ public class EditPersonalInfoController implements Initializable {
 	}
 
 	@FXML
-	void filter(ActionEvent event) {
+	void onChengedRole(ActionEvent event) {
 		String status = coboBoxStatus.getValue();
 		String role = coboBoxRole.getValue();
-		role = role == null ? "All" : role;
-		status = status == null ? "All" : status;
 
 		usersFilter = FXCollections.observableArrayList();
 		if (status.equals("All") && role.equals("All"))
@@ -210,14 +210,35 @@ public class EditPersonalInfoController implements Initializable {
 	}
 
 	@FXML
-	void editID(ActionEvent event) {
+	void onChengedStatus(ActionEvent event) {
+		String status = coboBoxStatus.getValue();
+		String role = coboBoxRole.getValue();
+
+		usersFilter = FXCollections.observableArrayList();
+		if (status.equals("All") && role.equals("All"))
+			usersFilter = userList;
+		else
+			for (Account user : userList) {
+				if (status.equals("All") && (user.getRole()).equals(role))
+					usersFilter.add(user);
+				if (user.getStatus().equals(status) && role.equals("All"))
+					usersFilter.add(user);
+				if (user.getStatus().equals(status) && user.getRole().equals(role))
+					usersFilter.add(user);
+			}
+
+		tableViewUsers.setItems(usersFilter);
+	}
+
+	@FXML
+	void editByID(ActionEvent event) {
 		int id;
 		if (textFiledSearchID.getText() != null) {
 			try {
 				id = Integer.parseInt(textFiledSearchID.getText());
 				Account selecteduser = allUsres.get(id);
 				System.out.println(selecteduser.getFirstName());
-				branchManagerFunctions.sentToJson("/account/getAccount", "GET", selecteduser,
+				branchManagerFunctions.sentToJson("/accounts/getAccountType", "GET", selecteduser,
 						"Edit personal info - new ClientController didn't work");
 				responseGetAccountID();
 			} catch (NumberFormatException e) {
@@ -237,7 +258,7 @@ public class EditPersonalInfoController implements Initializable {
 //			JsonElement jsonFile = gson.toJsonTree(response.getBody());
 //			jsonFile.getAsJsonObject().get("id");
 			Account account = EchoServer.gson.fromJson((String) response.getBody(), Account.class);
-			//?!?!?! what they are return a 1 account or 2 ? or both?
+			// ?!?!?! what they are return a 1 account or 2 ? or both?
 		}
 	}
 }

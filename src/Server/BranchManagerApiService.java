@@ -72,7 +72,7 @@ public class BranchManagerApiService {
 		ArrayList<Restaurant> restaurants = new ArrayList<>();
 		try {
 			stmt = EchoServer.con.prepareStatement(
-					"SELECT * FROM restaurants biteme.restaurant WHERE " + "restaurants.BranchManagerID = ?");
+					"SELECT * FROM biteme.restaurant WHERE BranchManagerID = ?");
 			stmt.setInt(1, branchManagerID);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -112,32 +112,22 @@ public class BranchManagerApiService {
 	 * This can only be done by the logged in branch manager.
 	 *
 	 */
-	public static void registerSupplier(int id, String userName, String role, Restaurant restaurant,
-			Response response) {
+	public static void registerSupplierModerator(String userName, String role, Restaurant restaurant,Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT RestaurantName FROM "
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM "
 					+ "biteme.restaurant WHERE UserName = ? AND RestaurantName = ?;");
 			stmt.setString(1, userName);
 			stmt.setString(2, restaurant.getName());
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				throw new SQLException("Restaurant" + restaurant.getName() + " is already exist", "400", 400);
+				throw new SQLException("Restaurant " + restaurant.getName() + " is already exist", "400", 400);
 			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
-			response.setBody(e.getMessage());
+			response.setDescription(e.getMessage());
 			return;
-		}
-		try {
-			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account AS accounts SET Role = ? WHERE "
-					+ "UserName = ? AND UserID = ?;");
-			stmt.setString(1, role);
-			stmt.setString(2, userName);
-			stmt.setInt(3, id);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
 		}
 		try {
 			stmt = EchoServer.con.prepareStatement(
@@ -148,177 +138,108 @@ public class BranchManagerApiService {
 			stmt.setInt(3, restaurant.getBranchManagerID());
 			stmt.setString(4, restaurant.getArea());
 			stmt.setString(5, restaurant.getPhoto());
-			stmt.setString(5, restaurant.getUserName());
-			stmt.setString(5, restaurant.getType());
-			stmt.setString(5, restaurant.getAddress());
-			stmt.setString(5, restaurant.getDescription());
+			stmt.setString(6, restaurant.getUserName());
+			stmt.setString(7, restaurant.getType());
+			stmt.setString(8, restaurant.getAddress());
+			stmt.setString(9, restaurant.getDescription());
 			stmt.executeUpdate();
 		} catch (SQLException ex) {
 			response.setCode(400);
 			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName" + userName);
+			return;
+		}
+		try {
+			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ? WHERE "
+					+ "UserName = ?;");
+			stmt.setString(1, role);
+			stmt.setString(2, userName);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
 		}
 		response.setCode(200);
-		response.setDescription("Success in registering a new restaurant -> role: " + role + ", userName" + userName);
+		response.setDescription("Success in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());
 	}
 	
 	/**
-	 * Register a resturant - mind that the supplier shcema isn&#x27;t finish
+	 * edit a resturant - mind that the supplier shcema isn&#x27;t finish
 	 *
 	 * This can only be done by the logged in branch manager.
 	 *
 	 */
-	public static void registerModerator(int id, String userName, String role, Restaurant restaurant,
-			Response response) {
+	public static void editRestaurant(String userName, Restaurant restaurant,Response response) {
 		PreparedStatement stmt;
-		ResultSet rs;
+		int rowsUpdated;
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT RestaurantName FROM "
-					+ "biteme.restaurant WHERE UserName = ? AND RestaurantName = ?;");
-			stmt.setString(1, userName);
-			stmt.setString(2, restaurant.getName());
-			rs = stmt.executeQuery();
-			if (!rs.next()) {
-				throw new SQLException("Restaurant" + restaurant.getName() + " doesn't exist", "400", 400);
+			stmt = EchoServer.con.prepareStatement(
+					"UPDATE biteme.restaurant SET RestaurantName = ?, IsApproved = ?, BranchManagerID = ?, Area = ?, Image = ?, "
+							+ "UserName = ?, Type = ?, Address = ?, Description = ? WHERE RestaurantNum = ? AND UserName = ?;");
+			//set
+			stmt.setString(1, restaurant.getName());
+			stmt.setBoolean(2, restaurant.isApproved());
+			stmt.setInt(3, restaurant.getBranchManagerID());
+			stmt.setString(4, restaurant.getArea());
+			stmt.setString(5, restaurant.getPhoto());
+			stmt.setString(6, restaurant.getUserName());
+			stmt.setString(7, restaurant.getType());
+			stmt.setString(8, restaurant.getAddress());
+			stmt.setString(9, restaurant.getDescription());
+			//where
+			stmt.setInt(10, restaurant.getId());
+			stmt.setString(11, userName);			
+			rowsUpdated = stmt.executeUpdate();
+			if (rowsUpdated == 0) {
+				throw new SQLException("Couldn't update " + restaurant.getName(), "400", 400);
 			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setBody(e.getMessage());
 			return;
 		}
-		try {
-			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account AS accounts SET Role = ? WHERE "
-					+ "UserName = ? AND UserID = ?;");
-			stmt.setString(1, role);
-			stmt.setString(2, userName);
-			stmt.setInt(3, id);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-		}
-		try {
-			stmt = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.restaurant (RestaurantName, IsApproved, BranchManagerID, Area, Image, "
-							+ "UserName, Type, Address, Description) VALUES (?,?,?,?,?,?,?,?,?);");
-			stmt.setString(1, restaurant.getName());
-			stmt.setBoolean(2, restaurant.isApproved());
-			stmt.setInt(3, restaurant.getBranchManagerID());
-			stmt.setString(4, restaurant.getArea());
-			stmt.setString(5, restaurant.getPhoto());
-			stmt.setString(5, restaurant.getUserName());
-			stmt.setString(5, restaurant.getType());
-			stmt.setString(5, restaurant.getAddress());
-			stmt.setString(5, restaurant.getDescription());
-			stmt.executeUpdate();
-		} catch (SQLException ex) {
-			response.setCode(400);
-			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName" + userName);
-		}
 		response.setCode(200);
-		response.setDescription("Success in registering a new restaurant -> role: " + role + ", userName" + userName);
+		response.setDescription("Success in updating a restaurant -> restaurantName: " + restaurant.getName());
 	}
 	
-	
-
-//	/**
-//	 * Register a resturant - mind that the supplier shcema isn&#x27;t finish
-//	 *
-//	 * This can only be done by the logged in branch manager.
-//	 *
-//	 */
-//	public static void registerPrivateAccount(PrivateAccount body, Response response) {
-//		PreparedStatement stmt;
-//		ResultSet rs;
-//		try {
-//			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account AS accounts SET Role = ? WHERE "
-//					+ "accounts.UserName = ? and accounts.UserID = ?;");
-//			stmt.setString(1, "client");
-//			stmt.setString(1, body.getUserName());
-//			stmt.setInt(2, body.getUserID());
-//			stmt.executeUpdate();
-//			rs = stmt.getResultSet();
-//			if (rs.getFetchSize() == 0) {
-//				throw new SQLException("Couldn't update " + body.getUserName() + " as " + body.getRole(), "400", 400);
-//			}
-//		} catch (SQLException e) {
-//			response.setCode(e.getErrorCode());
-//			response.setBody(e.getMessage());
-//			return;
-//		}
-//		try {
-//			stmt = EchoServer.con.prepareStatement(
-//					"INSERT INTO biteme.private_account (UserName, CreditCardNumber, CreditCardCVV, CreditCardEXP)"
-//							+ " VALUES (?,?,?,?);");
-//			stmt.setString(1, body.getUserName());
-//			stmt.setString(2, body.getCreditCardNumber());
-//			stmt.setString(3, body.getCreditCardCVV());
-//			stmt.setString(4, body.getCreditCardExpDate());
-//			stmt.executeUpdate();
-//		} catch (SQLException e) {
-//			if (e.getErrorCode() == 1062) {
-//				response.setCode(400);
-//				response.setDescription("Fail! Private account already exist -> userName: " + body.getUserName());
-//			}
-//		}
-//		response.setCode(200);
-//		response.setDescription("Success in registering a new private account -> userName: " + body.getUserName());
-//	}
-//
-//	/**
-//	 * Register a resturant - mind that the supplier shcema isn&#x27;t finish
-//	 *
-//	 * This can only be done by the logged in branch manager.
-//	 *
-//	 */
-//	public static void registerBusinessAccount(BusinessAccount body, Response response) {
-//		PreparedStatement stmt;
-//		ResultSet rs;
-//		try {
-//			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.employees WHERE Name = ? AND isApproved = ?;");
-//			stmt.setString(1, body.getBusinessName());
-//			stmt.setBoolean(2, true);
-//			stmt.executeQuery();
-//			rs = stmt.getResultSet();
-//			if (rs.getFetchSize() == 0) {
-//				response.setBody(null);
-//				response.setCode(401);
-//				response.setDescription("Employee didn't get approvel yet!");
-//				return;
-//			}
-//			rs.close();
-//			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account AS accounts SET Role = ? WHERE "
-//					+ "accounts.UserName = ? and accounts.UserID = ?;");
-//			stmt.setString(1, "client");
-//			stmt.setString(1, body.getUserName());
-//			stmt.setInt(2, body.getUserID());
-//			stmt.executeUpdate();
-//			rs = stmt.getResultSet();
-//			if (rs.getFetchSize() == 0) {
-//				throw new SQLException("Couldn't update " + body.getUserName() + " as " + body.getRole(), "400", 400);
-//			}
-//			rs.close();
-//		} catch (SQLException e) {
-//			response.setCode(e.getErrorCode());
-//			response.setBody(e.getMessage());
-//			return;
-//		}
-//		try {
-//			stmt = EchoServer.con.prepareStatement(
-//					"INSERT INTO biteme.business_account (UserName, MonthlyBillingCeling, isApproved, BusinessName, CurrentSpent)"
-//							+ " VALUES (?,?,?,?,?);");
-//			stmt.setString(1, body.getUserName());
-//			stmt.setInt(2, body.getMonthlyBillingCeiling());
-//			stmt.setBoolean(3, body.getIsApproved());
-//			stmt.setString(4, body.getBusinessName());
-//			stmt.setFloat(5, 0);
-//			stmt.executeUpdate();
-//		} catch (SQLException e) {
-//			if (e.getErrorCode() == 1062) {
-//				response.setCode(400);
-//				response.setDescription("Fail! Business account already exist -> userName: " + body.getUserName());
-//			}
-//		}
-//		response.setCode(200);
-//		response.setDescription("Success in registering a new business account -> userName: " + body.getUserName());
-//	}
+	/**
+	 * delete a resturant and reset the user role- mind that the supplier shcema isn&#x27;t finish
+	 *
+	 * This can only be done by the logged in branch manager.
+	 *
+	 */
+	public static void deleteRestaurant(String userName, Restaurant restaurant,Response response) {
+		PreparedStatement stmt;
+		int rowsUpdated;
+		ResultSet rs;
+		try {
+			stmt = EchoServer.con
+					.prepareStatement("DELETE FROM biteme.restaurant WHERE UserName = ? AND RestaurantNum = ? AND RestaurantName = ?;");
+			//set
+			stmt.setString(1, userName);
+			stmt.setInt(2, restaurant.getId());
+			stmt.setString(3, restaurant.getName());
+			rowsUpdated = stmt.executeUpdate();
+			if (rowsUpdated == 0) {
+				throw new SQLException("Couldn't delete " + restaurant.getName(), "400", 400);
+			}
+			stmt = EchoServer.con
+					.prepareStatement("SELECT COUNT(RestaurantNum) FROM biteme.restaurant WHERE UserName = ?;");
+			stmt.setString(1, userName);
+			rs = stmt.executeQuery();
+			//if the supplier has no restaurants anymore, reset his role
+			rs.next();
+			if(rs.getInt(1) == 0) {
+				stmt = EchoServer.con
+						.prepareStatement("UPDATE biteme.account SET Role = 'Not Assigned', Status = 'active' WHERE UserName = ?;");
+				stmt.setString(1, userName);
+				stmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			response.setCode(e.getErrorCode());
+			response.setDescription(e.getMessage());
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in deleting a restaurant -> restaurantName: " + restaurant.getName());
+	}
 
 	public static void getReportForRestaurantSales() {
 		ResultSet rs;
@@ -373,7 +294,7 @@ public class BranchManagerApiService {
 					}
 					header = "Revenue Report for restaurant id:" + j + " Total sales: " + total;
 					total = 0.0;
-					fromDataSetToReportImage(dataset, "Sales", i, now.format(year) + now.format(month), j, "$",
+					fromDataSetToReportImage(dataset, "Sales", i, now.format(year) + "/" + now.format(month), j, "$",
 							"DayOfTheMonth: " + now.format(month), header);
 				}
 			}
@@ -447,7 +368,7 @@ public class BranchManagerApiService {
 					}
 					header = "Items in orders Report for restaurant id:" + j + " Total sales: " + total;
 					total = 0;
-					fromDataSetToReportImage(dataset, "Items", i, now.format(year) + now.format(month), j, "Amount",
+					fromDataSetToReportImage(dataset, "Items", i, now.format(year) + "/" + now.format(month), j, "Amount",
 							"Course", header);
 				}
 			}
@@ -511,7 +432,7 @@ public class BranchManagerApiService {
 				}
 				header = "Performence report for branch id:" + i + " total orders: " + total;
 				total = 0;
-				fromDataSetToReportImage(dataset, "Performence", i, now.format(year) + now.format(month), 0,
+				fromDataSetToReportImage(dataset, "Performence", i, now.format(year) + "/" + now.format(month), 0,
 						"Amount of orders", "Restaurants", header);
 			}
 
