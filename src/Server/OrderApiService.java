@@ -21,11 +21,13 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.google.gson.JsonElement;
+import com.mysql.cj.xdevapi.Result;
 
 import logic.Account;
 import logic.Item;
 import logic.Options;
 import logic.Order;
+import logic.Shippment;
 
 /**
  * BiteMe
@@ -47,9 +49,10 @@ public class OrderApiService {
 
 		try {
 			PreparedStatement postOrder = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.order (ResturantID, ResturantName, UserName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
-							+ "Check_out_price, isApproved, required_time, approved_time, hasArraived)"
-							+ " VALUES (?,?,?,?,?,?,?,?,?,?);",Statement.RETURN_GENERATED_KEYS);
+					"INSERT INTO biteme.order (RestaurantID, RestaurantName, UserName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
+							+ "Check_out_price, isApproved, required_time, hasArrived)"
+							+ " VALUES (?,?,?,?,?,?,?,?,?,?,?);",
+					Statement.RETURN_GENERATED_KEYS);
 			postOrder.setInt(1, order.getRestaurantID());
 			postOrder.setString(2, order.getRestaurantName());
 			postOrder.setString(3, order.getUserName());
@@ -60,8 +63,7 @@ public class OrderApiService {
 			postOrder.setDouble(8, order.getCheck_out_price());
 			postOrder.setBoolean(9, order.isApproved());
 			postOrder.setString(10, order.getRequired_time());
-			postOrder.setString(11, order.getApproved_time());
-			postOrder.setBoolean(12, order.getHasArrived());
+			postOrder.setBoolean(11, order.getHasArrived());
 			postOrder.executeUpdate();
 			rs = postOrder.getGeneratedKeys();
 			rs.next();
@@ -73,22 +75,16 @@ public class OrderApiService {
 		}
 		try {
 			PreparedStatement postItem = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.item_in_menu_in_order (OrderNum, ItemID, Item_name, OptionalType, OptionalSpecify,"
-							+ "Amount) VALUES (?,?,?,?,?,?);");
-			
-			for (Item temp : order.getItems()) {
-				postItem.setInt(1, orderID);
-				postItem.setInt(2, temp.getItemID());
-				postItem.setInt(6, temp.getAmount());
-				postItem.setString(3, temp.getName());
+					"INSERT INTO biteme.item_in_menu_in_order (OrderNum, ItemID, OptionalType, OptionalSpecify,"
+							+ "Amount) VALUES (?,?,?,?,?);");
 
+			for (Item temp : order.getItems()) {
 				for (Options opt : temp.getOptions()) {
 					postItem.setInt(1, orderID);
 					postItem.setInt(2, temp.getItemID());
-					postItem.setString(3, temp.getName());
-					postItem.setString(4, opt.getOption_category());
-					postItem.setString(5, opt.getSpecify_option());
-					postItem.setInt(6, temp.getAmount());
+					postItem.setString(3, opt.getOption_category());
+					postItem.setString(4, opt.getSpecify_option());
+					postItem.setInt(5, temp.getAmount());
 					options = opt;
 					try {
 						postItem.executeUpdate();
@@ -122,6 +118,7 @@ public class OrderApiService {
 				PreparedStatement deleteOrder = EchoServer.con
 						.prepareStatement("DELETE biteme.order WHERE OrderNum = ?;");
 				deleteOrder.setInt(1, orderID);
+				deleteOrder.executeUpdate();
 			} catch (SQLException ex) {
 				e.printStackTrace();
 			}
@@ -130,29 +127,43 @@ public class OrderApiService {
 		if (order.getShippment() != null) {
 			try {
 				PreparedStatement setShipment = EchoServer.con.prepareStatement(
-						"INSERT INTO biteme.shipment (workPlace, Address, receiver_name, receiver_phone_number"
-								+ ", deliveryType) VALUES (?,?,?,?,?);");
-
-				setShipment.setString(1, order.getShippment().getWork_place());
-				setShipment.setString(2, order.getShippment().getAddress());
+						"INSERT INTO biteme.shipment (WorkPlace, Address, reciever_name, reciever_phone_number"
+								+ ", deliveryType, OrderNum) VALUES (?,?,?,?,?,?);");
+				if (order.getShippment().getWork_place() == null)
+					setShipment.setString(1, "");
+				else
+					setShipment.setString(1, order.getShippment().getWork_place());
+				if (order.getShippment().getAddress() == null)
+					setShipment.setString(2, "");
+				else
+					setShipment.setString(2, order.getShippment().getAddress());
 				setShipment.setString(3, order.getShippment().getReceiver_name());
 				setShipment.setString(4, order.getShippment().getPhone());
 				setShipment.setString(5, order.getShippment().getDelivery());
+				setShipment.setInt(6, orderID);
 				setShipment.executeUpdate();
 
 			} catch (SQLException e) {
 				response.setBody(null);
 				response.setCode(400);
-				response.setDescription(e.getMessage());
+				response.setDescription("Could not add shipment information to the order");
+				try {
+					PreparedStatement deleteOrder = EchoServer.con.prepareStatement(
+							"DELETE biteme.order WHERE OrderNum = ?;DELETE biteme.item_in_menu_in_order WHERE OrderNum = ?;");
+					deleteOrder.setInt(1, orderID);
+					deleteOrder.setInt(1, orderID);
+					deleteOrder.executeUpdate();
+				} catch (SQLException ex) {
+					e.printStackTrace();
+				}
 				return;
 			}
 		}
 		response.setCode(200);
-		response.setDescription("A new order has been successfuly added -> orderID: "+Integer.toString(orderID));
+		response.setDescription("A new order has been successfuly added -> orderID: " + Integer.toString(orderID));
 		JsonElement body = EchoServer.gson.toJsonTree(new Object());
 		body.getAsJsonObject().addProperty("orderID", orderID);
 		response.setBody(EchoServer.gson.toJson(body));
-		//invoiceSender(order, orderID);
 	}
 
 	/**
@@ -162,22 +173,12 @@ public class OrderApiService {
 	public static void allOrders(String condition, Response response) {
 		PreparedStatement stmt;
 		ArrayList<Order> orders = new ArrayList<>();
-		Order order = null;
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE " + condition + ";");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				order = new Order(rs.getInt(QueryConsts.ORDER_ORDER_NUM), rs.getInt(QueryConsts.ORDER_RESTAURANT_ID),
-						rs.getString(QueryConsts.ORDER_RESTAURANT_NAME), rs.getString(QueryConsts.ORDER_ORDER_TIME),
-						rs.getFloat(QueryConsts.ORDER_CHECK_OUT_PRICE), rs.getString(QueryConsts.ORDER_REQUIRED_TIME),
-						rs.getString(QueryConsts.ORDER_TYPE_OF_ORDER), rs.getString(QueryConsts.ORDER_USER_NAME),
-						rs.getString(QueryConsts.ORDER_PHONE_NUM),
-						rs.getInt(QueryConsts.ORDER_DISCOUNT_FOR_EARLY_ORDER), null, null,
-						rs.getString(QueryConsts.ORDER_APPROVED_TIME), rs.getBoolean(QueryConsts.ORDER_HAS_ARRIVED),
-						rs.getBoolean(QueryConsts.ORDER_IS_APPROVED));
-				getItemsByOrderID(order.getOrderID(), response);
-				order.setItems(EchoServer.gson.fromJson((String) response.getBody(), Item[].class));
-				orders.add(order);
+				getOrderById(rs.getInt(QueryConsts.ORDER_ORDER_NUM), response);
+				orders.add(EchoServer.gson.fromJson((String) response.getBody(), Order.class));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -188,7 +189,7 @@ public class OrderApiService {
 	}
 
 	public static void AllOrdersByRestaurantID(int restaurantID, Response response) {
-		allOrders("RestaurantID = " + restaurantID, response);
+		allOrders("RestaurantID = " + "'" + restaurantID + "'", response);
 	}
 
 	public static void AllOrdersByUserName(String UserName, Response response) {
@@ -239,6 +240,11 @@ public class OrderApiService {
 			}
 			getItemsByOrderID(orderId, response);
 			order.setItems(EchoServer.gson.fromJson((String) response.getBody(), Item[].class));
+			getShipmentByOrderID(orderId, response);
+			try {
+				order.setShippment(EchoServer.gson.fromJson((String) response.getBody(), Shippment.class));
+			} catch (NullPointerException e) {
+			}
 		} catch (SQLException e) {
 			response.setCode(404);
 			response.setDescription("Order not found");
@@ -254,20 +260,21 @@ public class OrderApiService {
 	 * Get payment approval for monthly budget
 	 *
 	 */
-	public static void getPaymentApproval(String userName, float amount, String w4c, String businessName, Response response) {
+	public static void getPaymentApproval(String userName, float amount, String w4c, String businessName,
+			Response response) {
 		JsonElement body = EchoServer.gson.toJsonTree(new Object());
 		PreparedStatement getAccount, getBusinessAccount, updateCurrentSpend;
 		ResultSet rs;
 		float remainingPayment = 0;
 		float monthBillingCelling, currentSpent;
 		try {
-			getAccount = EchoServer.con.prepareStatement("SELECT isApproved FROM biteme.employees WHERE Name = ?");
+			getAccount = EchoServer.con
+					.prepareStatement("SELECT isApproved FROM biteme.employer WHERE businessName = ?");
 			getAccount.setString(1, businessName);
 			rs = getAccount.executeQuery();
-			rs = getAccount.getResultSet();
 			if (rs.next()) {
-				//check if the business approved
-				if(!rs.getBoolean(1)) 
+				// check if the business approved
+				if (!rs.getBoolean(1))
 					throw new SQLException("Buisiness " + businessName + "isn't approved", "401", 401);
 				getBusinessAccount = EchoServer.con
 						.prepareStatement("SELECT * FROM biteme.business_account WHERE UserName = ?");
@@ -276,7 +283,7 @@ public class OrderApiService {
 				if (rs.next()) {
 					monthBillingCelling = rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_MONTHLY_BILLING_CEILING);
 					currentSpent = rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT);
-					remainingPayment = amount - (monthBillingCelling - currentSpent); 
+					remainingPayment = amount - (monthBillingCelling - currentSpent);
 					updateCurrentSpend = EchoServer.con.prepareStatement(
 							"UPDATE biteme.business_account SET CurrentSpend = ? WHERE UserName = ?;");
 					if (monthBillingCelling < currentSpent + amount) {
@@ -300,7 +307,7 @@ public class OrderApiService {
 		body.getAsJsonObject().addProperty("remainToPay", remainingPayment);
 		response.setBody(EchoServer.gson.toJson(body));
 	}
-	
+
 	/**
 	 * Updates a order in the DB with form data
 	 *
@@ -342,6 +349,35 @@ public class OrderApiService {
 	}
 
 	/**
+	 * Get shipment for a specific orderID
+	 *
+	 */
+	// TODO Is there anything to update in order as client??
+	public static void getShipmentByOrderID(int orderID, Response response) {
+		ResultSet rs;
+		Shippment shi = null;
+		try {
+			PreparedStatement getItems = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.shipment WHERE OrderNum = ?;");
+			getItems.setInt(1, orderID);
+			rs = getItems.executeQuery();
+			if (rs.next()) {
+				shi = new Shippment(rs.getInt(QueryConsts.SHIPMENT_ID), rs.getString(QueryConsts.SHIPMENT_WORK_PLACE),
+						rs.getString(QueryConsts.SHIPMENT_ADDRESS), rs.getString(QueryConsts.SHIPMENT_RECIEVER_NAME),
+						rs.getString(QueryConsts.SHIPMENT_RECIEVER_DELIVERY_TYPE),
+						rs.getString(QueryConsts.SHIPMENT_RECIEVER_PHONE_NUMBER));
+			}
+		} catch (SQLException e) {
+			response.setCode(404);
+			response.setDescription("Couldn't fetch a shipment information -> orderID: " + Integer.toString(orderID));
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in fetching a shipment information -> orderID: " + Integer.toString(orderID));
+		response.setBody(EchoServer.gson.toJson(shi));
+	}
+
+	/**
 	 * Get item for a specific orderID
 	 *
 	 */
@@ -353,12 +389,12 @@ public class OrderApiService {
 		Item itemTemp;
 		Options optionsTemp;
 		try {
-			PreparedStatement getItems = EchoServer.con.prepareStatement(
-					"SELECT items.*, itemsOrder.amount FROM items biteme.items, itemsOrder biteme.item_int_menu_in_order "
-							+ "WHERE items.ItemID = itemsOrder.ItemID AND itemsOrder.OrderNum = ?;");
+			PreparedStatement getItems = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.items AS items WHERE EXISTS("
+							+ "SELECT * FROM biteme.item_int_menu_in_order AS itemsOrder WHERE items.ItemID = itemsOrder.ItemID AND itemsOrder.OrderNum = ?;");
+
 			getItems.setInt(1, orderID);
-			getItems.execute();
-			rs1 = getItems.getResultSet();
+			rs1 = getItems.executeQuery();
 			while (rs1.next()) {
 				itemTemp = new Item(rs1.getString(QueryConsts.ITEM_CATEGORY),
 						rs1.getString(QueryConsts.ITEM_SUB_CATEGORY), rs1.getInt(QueryConsts.ITEM_ID),
@@ -368,10 +404,9 @@ public class OrderApiService {
 						rs1.getInt(10));
 				items.add(itemTemp);
 				PreparedStatement getOptions = EchoServer.con
-						.prepareStatement("SELECT * FROM biteme.optional_category WHERE itemID = ?");
+						.prepareStatement("SELECT * FROM biteme.optional_category WHERE ItemID = ?");
 				getOptions.setInt(1, itemTemp.getItemID());
-				getOptions.execute();
-				rs2 = getOptions.getResultSet();
+				rs2 = getOptions.executeQuery();
 				while (rs2.next()) {
 					optionsTemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
 							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getDouble(QueryConsts.OPTIONAL_PRICE),
@@ -390,7 +425,7 @@ public class OrderApiService {
 		}
 		response.setCode(200);
 		response.setDescription("Success fetchin items for order -> orderID: " + Integer.toString(orderID));
-		response.setBody(items.toArray());
+		response.setBody(EchoServer.gson.toJson(items.toArray()));
 	}
 
 	/**
@@ -503,7 +538,7 @@ public class OrderApiService {
 		response.setDescription("Success in updating credit for: " + UserName);
 		return;
 	}
-	
+
 	private static void invoiceSender(Order order, int orderID) {
 		PreparedStatement getAccount;
 		ResultSet rs;
@@ -511,8 +546,7 @@ public class OrderApiService {
 		String temp;
 		Account account = null;
 		try {
-			getAccount = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ?;");
+			getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ?;");
 			getAccount.setString(1, order.getUserName());
 			getAccount.execute();
 			rs = getAccount.getResultSet();
@@ -530,65 +564,68 @@ public class OrderApiService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		//TODO Use the item toString for it
-		temp = "Hi!" + account.getFirstName() + "\n\n\n Thank you for your purchase from BiteMe\n INVOICE ID: " + Integer.toString(orderID);
+		// TODO Use the item toString for it
+		temp = "Hi!" + account.getFirstName() + "\n\n\n Thank you for your purchase from BiteMe\n INVOICE ID: "
+				+ Integer.toString(orderID);
 		invoice.append(temp);
 		invoice.append("\n\nYour Order inforamation:\n\n");
 		invoice.append("Bill To: " + account.getEmail() + "\nOrder ID: " + Integer.toString(orderID));
-		invoice.append("\n\nRestaurant Name: " + order.getRestaurantName() +"\nOrder Date: " + order.getTime_taken()
-						+"\nType of Order: " + order.getType_of_order());
+		invoice.append("\n\nRestaurant Name: " + order.getRestaurantName() + "\nOrder Date: " + order.getTime_taken()
+				+ "\nType of Order: " + order.getType_of_order());
 		invoice.append("Here is what you ordered: \n\n");
 		invoice.append("Name\t\tprice\t\tQuantity\t\tOptions");
 		for (Item item : order.getItems()) {
 			invoice.append(item.toString());
 		}
-		invoice.append("Total ->: "+ Double.toString(order.getCheck_out_price()));
-		if(order.getShippment() != null) {
+		invoice.append("Total ->: " + Double.toString(order.getCheck_out_price()));
+		if (order.getShippment() != null) {
 			invoice.append("\nShipment information: \n\n");
-			invoice.append("\nwork place / address: " + order.getShippment().getWork_place() + order.getShippment().getAddress());
+			invoice.append("\nwork place / address: " + order.getShippment().getWork_place()
+					+ order.getShippment().getAddress());
 			invoice.append("\ndelivery type: " + order.getShippment().getDelivery());
 			invoice.append("\nreceiver name: " + order.getShippment().getReceiver_name());
 			invoice.append("\nreceiver phone number: " + order.getShippment().getPhone());
 		}
 		try {
-			sendMail(account.getEmail(),"BiteMe Order ID:"+Integer.toString(orderID),invoice.toString());
+			sendMail(account.getEmail(), "BiteMe Order ID:" + Integer.toString(orderID), invoice.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-    public static void sendMail(String recepient, String subject, String message) throws Exception{
-        Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
 
-        final String myAccountEmail = System.getenv("MyEmail");
-        final String password =  System.getenv("MyPassEmail");
+	public static void sendMail(String recepient, String subject, String message) throws Exception {
+		Properties properties = new Properties();
+		properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.host", "smtp.gmail.com");
+		properties.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(myAccountEmail, password);
-            }
-        });
-        Message msg = prepareMessage(session, myAccountEmail, recepient, subject, message);
-        javax.mail.Transport.send(msg);
-        System.out.println("Invoice was Sent successfully to "+ recepient);
-    }
+		final String myAccountEmail = System.getenv("MyEmail");
+		final String password = System.getenv("MyPassEmail");
 
-    private static Message prepareMessage(Session session, String myEmail, String recepient, String subject, String message) {
-        try {
-            Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress("BITEME_SERVER"));
-            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient));
-            msg.setSubject(subject);
-            msg.setText(message);
-            return msg;
-        } catch (Exception e) {
-            Logger.getLogger(OrderApiService.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return null;
-    }
+		Session session = Session.getInstance(properties, new Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(myAccountEmail, password);
+			}
+		});
+		Message msg = prepareMessage(session, myAccountEmail, recepient, subject, message);
+		javax.mail.Transport.send(msg);
+		System.out.println("Invoice was Sent successfully to " + recepient);
+	}
+
+	private static Message prepareMessage(Session session, String myEmail, String recepient, String subject,
+			String message) {
+		try {
+			Message msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress("BITEME_SERVER"));
+			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient));
+			msg.setSubject(subject);
+			msg.setText(message);
+			return msg;
+		} catch (Exception e) {
+			Logger.getLogger(OrderApiService.class.getName()).log(Level.SEVERE, null, e);
+		}
+		return null;
+	}
 }

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.google.gson.JsonElement;
-//import com.twilio.twiml.voice.Echo;
 
 import logic.Account;
 import logic.BusinessAccount;
@@ -23,6 +22,7 @@ import logic.Restaurant;
  *
  */
 public class AccountApiService {
+	
 	/**
 	 * Create Private Account
 	 *
@@ -73,11 +73,11 @@ public class AccountApiService {
 		ResultSet rs;
 		try {
 			isBusinessApproved = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.employees WHERE Name = ? AND isApproved = 1;");
+					.prepareStatement("SELECT * FROM biteme.employer WHERE businessName = ? AND isApproved = 1;");
 			isBusinessApproved.setString(1, account.getBusinessName());
 			rs = isBusinessApproved.executeQuery();
 			if (!rs.next())
-				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employees", "400",
+				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employers or is not approved", "400",
 						400);
 
 		} catch (SQLException e) {
@@ -87,16 +87,16 @@ public class AccountApiService {
 		}
 		try {
 			postAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.account SET Role = 'Client', Status = 'active',"
-							+ "BranchManagerID = ? , Area = ? WHERE UserName = ?, isBusiness = ?;");
+					.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active',"
+							+ "BranchManagerID = ? , Area = ? , isBusiness = ? WHERE UserName = ?;");
 			if (account.getRole().equals("Not Assigned"))
 				postAccount.setString(1, account.getRole());
 			else
 				postAccount.setString(1, "Client");
 			postAccount.setInt(2, account.getBranch_manager_ID());
 			postAccount.setString(3, account.getArea());
-			postAccount.setString(4, account.getUserName());
-			postAccount.setBoolean(5, true);
+			postAccount.setBoolean(4, true);
+			postAccount.setString(5, account.getUserName());
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
 			response.setBody(null);
@@ -165,7 +165,7 @@ public class AccountApiService {
 			if (rs.next()) {
 				if (rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS)) {
 					deleteQuery("biteme.business_account", userName);
-
+ 
 				} else {
 					if (rs.getString(QueryConsts.ACCOUNT_ROLE).equals("Supplier")) {
 						// get the supplier restaurant ID

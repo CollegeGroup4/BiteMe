@@ -191,9 +191,18 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		;
 		Gson gson = new Gson();
 		JsonElement jsonElem = gson.toJsonTree(new Object());
+		JsonElement jsonElemModorator = gson.toJsonTree(new Object());
+		JsonElement jsonElemSupplier = gson.toJsonTree(new Object());
+
+		jsonElemModorator.getAsJsonObject().addProperty("userName", supplierModorator.getUserName());
+//		jsonElemModorator.getAsJsonObject().addProperty("userID", supplierModorator.getUserID());
+		jsonElemSupplier.getAsJsonObject().addProperty("userName", supplier.getUserName());
+//		jsonElemSupplier.getAsJsonObject().addProperty("userID", supplier.getUserID());
+
+		
+		jsonElem.getAsJsonObject().add("moderator", jsonElemModorator);
+		jsonElem.getAsJsonObject().add("supplier",jsonElemSupplier);
 		jsonElem.getAsJsonObject().add("restaurant", gson.toJsonTree(restaurant));
-		jsonElem.getAsJsonObject().add("supplier", gson.toJsonTree(supplier));
-		jsonElem.getAsJsonObject().add("supplierModerator", gson.toJsonTree(supplierModorator));
 		branchManagerFunctions.sentToJson("/branch_managers/restaurants", "POST", jsonElem,
 				"Open Business account - new ClientController didn't work");
 	}
@@ -201,6 +210,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	void response() {
 		Response response = ChatClient.serverAns;
 //		if (response.getCode() != 200 && response.getCode() != 201)
+		System.out.println("response.getDescription()"+response.getDescription());
 			lableErrorMag.setText(response.getDescription());// error massage
 	}
 

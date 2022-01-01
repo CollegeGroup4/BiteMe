@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import common.DBController;
@@ -167,13 +168,23 @@ public class EchoServer extends AbstractServer {
 			}
 		case "/branch_managers/restaurants":
 			switch (method) {
+			case POST:
+				Restaurant restaurant = gson.fromJson(body.get("restaurant"), Restaurant.class);
+				JsonElement supplier = gson.fromJson(body.get("supplier"), JsonElement.class);
+				String supplierUserName = gson.fromJson(supplier.getAsJsonObject().get("userName"), String.class);
+				if(supplierUserName != null)
+					BranchManagerApiService.registerSupplierModerator(supplierUserName, "Supplier", restaurant, response);
+				JsonElement moderator = gson.fromJson(body.get("moderator"), JsonElement.class);
+				String moderatorUserName = gson.fromJson(moderator.getAsJsonObject().get("userName"), String.class);
+				if(moderatorUserName != null)
+					BranchManagerApiService.registerSupplierModerator(moderatorUserName, "Moderator", restaurant, response);
 			case GET:
 				Integer branchManagerID = gson.fromJson(body.get("branchManagerID"), Integer.class);
 				BranchManagerApiService.getBranchRestaurants(branchManagerID, response);
 				break;
 			case PUT:
 				String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
-				Restaurant restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
+				restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
 				BranchManagerApiService.editRestaurant(userName, restaurant, response);
 				break;
 			case DELETE:
