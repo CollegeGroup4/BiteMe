@@ -296,7 +296,7 @@ public class RestaurantApiService {
 			if (approveOrder.executeUpdate() == 0) {
 				throw new SQLException("couldn't approve order " + Integer.toString(orderId));
 			}
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
 			PreparedStatement updateApprovalTime = EchoServer.con
 					.prepareStatement("UPDATE biteme.order SET approve_time = ? WHERE OrderNum = ?;");
@@ -351,7 +351,6 @@ public class RestaurantApiService {
 			rs.next();
 			itemID = rs.getInt(1);
 			if (item.getOptions() != null) {
-				
 				String sufix = item.getItemImage().getFileName().substring(item.getItemImage().getFileName().length()-4);
 				String imageFileName = "item_" + itemID + sufix;
 				item.getItemImage().setFileName(imageFileName);
