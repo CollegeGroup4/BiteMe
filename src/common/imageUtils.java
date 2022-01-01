@@ -39,12 +39,8 @@ public class imageUtils {
 		}
 	}
 
-	public static void sender(MyPhoto myphoto, String savedImagePath) {
-//		String[] path;
-//		int index;
+	public static void sender(MyPhoto myphoto) {
 		try {
-//			path = myphoto.getFileName().split("\\");
-//			index = path.length-1;
 			File newFile = new File(myphoto.getFileName());
 			byte[] mybytearray = new byte[(int) newFile.length()];
 			FileInputStream fis = new FileInputStream(newFile);

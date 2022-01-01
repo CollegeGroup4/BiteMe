@@ -313,6 +313,34 @@ public class RestaurantApiService {
 		response.setCode(200);
 		response.setDescription("Success in approve order " + Integer.toString(orderId));
 	}
+	
+	/**
+	 * Approve order
+	 *
+	 * This can only be done by the logged in supplier.
+	 *
+	 */
+	public static void setPrepTime(int orderId, Response response) {
+		ResultSet rs;
+		try {
+
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime now = LocalDateTime.now();
+			PreparedStatement updateApprovalTime = EchoServer.con
+					.prepareStatement("UPDATE biteme.order SET prep_time = ? WHERE OrderNum = ?;");
+			updateApprovalTime.setString(1, dtf.format(now));
+			updateApprovalTime.setInt(2, orderId);
+			if (updateApprovalTime.executeUpdate() == 0) {
+				throw new SQLException("couldn't update the time in menu" + Integer.toString(orderId));
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription(e.getMessage());
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in approve order " + Integer.toString(orderId));
+	}
 
 	/**
 	 * Create item
