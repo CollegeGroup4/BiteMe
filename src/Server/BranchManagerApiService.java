@@ -18,6 +18,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import common.Response;
 import logic.*;
 
 /**
@@ -112,7 +113,7 @@ public class BranchManagerApiService {
 	 * This can only be done by the logged in branch manager.
 	 *
 	 */
-	public static void registerSupplierModerator(String userName, String role, Restaurant restaurant,Response response) {
+	public static void registerSupplierModerator(String userName, int userID,String role, Restaurant restaurant,Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
 		try {
@@ -127,6 +128,18 @@ public class BranchManagerApiService {
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
+			return;
+		}
+		try {
+			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ? WHERE "
+					+ "UserName = ? AND UserID = ?;");
+			stmt.setString(1, role);
+			stmt.setString(2, userName);
+			stmt.setInt(3, userID);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("User "+userName+"does Not found");	
 			return;
 		}
 		try {
@@ -146,15 +159,15 @@ public class BranchManagerApiService {
 		} catch (SQLException ex) {
 			response.setCode(400);
 			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName" + userName);
+			try {
+				stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = 'Not Assigned' WHERE "
+						+ "UserName = ? AND UserID = ?;");
+				stmt.setString(1, userName);
+				stmt.setInt(2, userID);
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+			}
 			return;
-		}
-		try {
-			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ? WHERE "
-					+ "UserName = ?;");
-			stmt.setString(1, role);
-			stmt.setString(2, userName);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
 		}
 		response.setCode(200);
 		response.setDescription("Success in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());

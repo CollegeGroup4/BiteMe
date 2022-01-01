@@ -1,4 +1,4 @@
-package Server;
+package common;
 
 public class Response {
 	private Integer code;

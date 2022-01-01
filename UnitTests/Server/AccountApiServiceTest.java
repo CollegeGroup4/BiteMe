@@ -12,8 +12,8 @@ import com.google.gson.JsonElement;
 
 import Server.AccountApiService;
 import Server.EchoServer;
-import Server.Response;
 import common.DBController;
+import common.Response;
 import logic.Account;
 import logic.BusinessAccount;
 import logic.PrivateAccount;

@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.google.gson.JsonElement;
 
+import common.Response;
 import logic.Account;
 import logic.BusinessAccount;
 import logic.PrivateAccount;
@@ -309,7 +310,6 @@ public class AccountApiService {
 	 */
 	public static void loginAccount(String userName, String password, Response response) {
 		ResultSet rs;
-		JsonElement body = EchoServer.gson.toJsonTree(new Object());
 		Account account = null;
 		try {
 			PreparedStatement loginAccount = EchoServer.con

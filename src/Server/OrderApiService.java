@@ -23,6 +23,7 @@ import javax.mail.internet.MimeMessage;
 import com.google.gson.JsonElement;
 import com.mysql.cj.xdevapi.Result;
 
+import common.Response;
 import logic.Account;
 import logic.Item;
 import logic.Options;

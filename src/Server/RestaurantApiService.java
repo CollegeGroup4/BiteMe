@@ -12,6 +12,7 @@ import java.util.HashMap;
 import com.google.gson.JsonElement;
 import com.mysql.cj.xdevapi.Result;
 
+import common.Response;
 import logic.Category;
 import logic.Item;
 import logic.Menu;
@@ -451,60 +452,75 @@ public class RestaurantApiService {
 	 *
 	 */
 	public static void editMenu(Menu oldMenu, Menu newMenu, Response response) {
-		try {
-			PreparedStatement deleteOldMenu = EchoServer.con
-					.prepareStatement("DELETE FROM biteme.item_in_menu WHERE RestaurantID = ? AND MenuName = ?;");
-			deleteOldMenu.setInt(1, oldMenu.getRestaurantID());
-			deleteOldMenu.setString(2, oldMenu.getName());
-			deleteOldMenu.executeUpdate();
-		} catch (SQLException e) {
-		}
-		try {
-			PreparedStatement deleteOldMenu = EchoServer.con
-					.prepareStatement("DELETE FROM biteme.menu WHERE RestaurantID = ? AND MenuName = ?;");
-			deleteOldMenu.setInt(1, oldMenu.getRestaurantID());
-			deleteOldMenu.setString(2, oldMenu.getName());
-			deleteOldMenu.executeUpdate();
-		} catch (SQLException e) {
-			response.setBody(null);
-			response.setCode(400);
-			response.setDescription("Old menu dosn't exist!");
-			return;
-		}
+		deleteMenu(oldMenu.getName(),oldMenu.getRestaurantID(), response);
 		if (newMenu != null)
 			createMenu(newMenu, response);
 	}
-
+	
 	/**
-	 * Edit menu
+	 * Delete menu
 	 *
 	 * This can only be done by the logged in supplier/moderator
 	 *
 	 */
-	public static void deleteMenu(Menu menu, Response response) {
+	public static void deleteMenu(String menuName, int restaurantID, Response response) {
 		try {
 			PreparedStatement deleteOldMenu = EchoServer.con
 					.prepareStatement("DELETE FROM biteme.item_in_menu WHERE RestaurantID = ? AND MenuName = ?;");
-			deleteOldMenu.setInt(1, menu.getRestaurantID());
-			deleteOldMenu.setString(2, menu.getName());
-			deleteOldMenu.execute();
+			deleteOldMenu.setInt(1, restaurantID);
+			deleteOldMenu.setString(2, menuName);
+			deleteOldMenu.executeUpdate();
 		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Couldn't delete menu");
+			return;
 		}
 		try {
 			PreparedStatement deleteOldMenu = EchoServer.con
 					.prepareStatement("DELETE FROM biteme.menu WHERE RestaurantID = ? AND MenuName = ?;");
-			deleteOldMenu.setInt(1, menu.getRestaurantID());
-			deleteOldMenu.setString(2, menu.getName());
-			deleteOldMenu.execute();
+			deleteOldMenu.setInt(1, restaurantID);
+			deleteOldMenu.setString(2, menuName);
+			deleteOldMenu.executeUpdate();
 		} catch (SQLException e) {
-			response.setBody(null);
 			response.setCode(400);
-			response.setDescription("Old menu dosn't exist!");
+			response.setDescription("Couldn't delete menu");
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in deletint menu -> menuName: " + menu.getName());
+		response.setDescription("Success in deleting menu");
 	}
+	
+
+//	/**
+//	 * Edit menu
+//	 *
+//	 * This can only be done by the logged in supplier/moderator
+//	 *
+//	 */
+//	public static void deleteMenu(Menu menu, Response response) {
+//		try {
+//			PreparedStatement deleteOldMenu = EchoServer.con
+//					.prepareStatement("DELETE FROM biteme.item_in_menu WHERE RestaurantID = ? AND MenuName = ?;");
+//			deleteOldMenu.setInt(1, menu.getRestaurantID());
+//			deleteOldMenu.setString(2, menu.getName());
+//			deleteOldMenu.execute();
+//		} catch (SQLException e) {
+//		}
+//		try {
+//			PreparedStatement deleteOldMenu = EchoServer.con
+//					.prepareStatement("DELETE FROM biteme.menu WHERE RestaurantID = ? AND MenuName = ?;");
+//			deleteOldMenu.setInt(1, menu.getRestaurantID());
+//			deleteOldMenu.setString(2, menu.getName());
+//			deleteOldMenu.execute();
+//		} catch (SQLException e) {
+//			response.setBody(null);
+//			response.setCode(400);
+//			response.setDescription("Old menu dosn't exist!");
+//			return;
+//		}
+//		response.setCode(200);
+//		response.setDescription("Success in deletint menu -> menuName: " + menu.getName());
+//	}
 	/**
 	 * Delete item
 	 *

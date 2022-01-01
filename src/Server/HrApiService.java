@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.google.gson.JsonElement;
 
+import common.Response;
 import logic.Account;
 import logic.BusinessAccount;
 import logic.Employer;

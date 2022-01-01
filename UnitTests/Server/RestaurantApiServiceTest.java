@@ -10,9 +10,9 @@ import org.junit.Test;
 import com.google.gson.JsonElement;
 
 import Server.EchoServer;
-import Server.Response;
 import Server.RestaurantApiService;
 import common.DBController;
+import common.Response;
 import logic.Item;
 import logic.Menu;
 import logic.Options;
