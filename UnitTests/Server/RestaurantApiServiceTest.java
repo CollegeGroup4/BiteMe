@@ -12,7 +12,9 @@ import com.google.gson.JsonElement;
 import Server.EchoServer;
 import Server.RestaurantApiService;
 import common.DBController;
+import common.MyPhoto;
 import common.Response;
+import common.imageUtils;
 import logic.Item;
 import logic.Menu;
 import logic.Options;
@@ -25,7 +27,7 @@ public class RestaurantApiServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		EchoServer.con = DBController.getMySQLConnection("jdbc:mysql://localhost/biteme?serverTimezone=IST", "root",
-				"MoshPe2969999");
+				"Tal4EvEr");
 		response = new Response();
 	}
 
@@ -92,15 +94,18 @@ public class RestaurantApiServiceTest {
 //		assertEquals("Success in fetching all restaurant items -> restaurantID: 10",response.getDescription());
 //	}
 
-//	@Test
-//	public void testCreateItem() {
-//		Options[] options = new Options[2];
-//		options[0] = new Options("size","XL", 10, 0, false);
-//		options[1] = new Options("tona","yes", 5, 0, false);		
-//		Item item = new Item("italian", "pasta", 0, 10, "carbonara", 34, "The best pasta in the world", "cheese, oil, macaroni, etc.", options, null, 0);
-//		RestaurantApiService.createItem(item, response);
-//		assertEquals("Success in creating a new item -> itemID: 9", response.getDescription());
-//	}
+	@Test
+	public void testCreateItem() {
+		Options[] options = new Options[2];
+		options[0] = new Options("size","XL", 10, 0, false);
+		options[1] = new Options("tona","yes", 5, 0, false);		
+		Item item = new Item("italian", "pasta", 0, 10, "pizzaWithSon", 34, "The best pasta in the world", "cheese, oil, macaroni, etc.", options, null, 0);
+		item.setItemImage(new MyPhoto("C:\\Users\\talye\\git\\BiteMeFinal\\Images\\pizza.jpg"));
+		imageUtils.sender(item.getItemImage(), null);
+		System.out.println(item.getItemImage().getMybytearray().toString());
+		RestaurantApiService.createItem(item, response);
+		assertEquals("Success in creating a new item -> itemID: 10", response.getDescription());
+	}
 
 //	@Test
 //	public void testUpdateItem() {

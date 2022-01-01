@@ -1,5 +1,7 @@
 package logic;
 
+import common.MyPhoto;
+
 public class Restaurant {
 	private int id;
 	private boolean isApproved;
@@ -11,6 +13,15 @@ public class Restaurant {
 	private String photo;
 	private String address;
 	private String description;
+	private MyPhoto restaurantImage;
+
+	public MyPhoto getRestaurantImage() {
+		return restaurantImage;
+	}
+
+	public void setRestaurantImage(MyPhoto restaurantImage) {
+		this.restaurantImage = restaurantImage;
+	}
 
 	public Restaurant(int id, boolean isApproved, int branchManagerID, String name,
 					  String area, String type, String userName, String photo, String address, String description) {

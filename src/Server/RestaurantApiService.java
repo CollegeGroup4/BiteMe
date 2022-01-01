@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.mysql.cj.xdevapi.Result;
 
 import common.Response;
+import common.imageUtils;
 import logic.Category;
 import logic.Item;
 import logic.Menu;
@@ -331,7 +332,7 @@ public class RestaurantApiService {
 			rs = checkDuplicate.executeQuery();
 			rs.next();
 			if (rs.getInt(1) >= 1) {
-				throw new SQLException(null, null, 1062);
+				throw new SQLException("Duplicate key ", null, 1062);
 			}
 			postItem = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.item (Category, SubCategory, Name, Price, Ingredients,"
@@ -350,6 +351,17 @@ public class RestaurantApiService {
 			rs.next();
 			itemID = rs.getInt(1);
 			if (item.getOptions() != null) {
+				
+				String sufix = item.getItemImage().getFileName().substring(item.getItemImage().getFileName().length()-4);
+				String imageFileName = "item_" + itemID + sufix;
+				item.getItemImage().setFileName(imageFileName);
+				imageUtils.receiver(item.getItemImage(), QueryConsts.FILE_PATH_ITEMS);
+				postItem = EchoServer.con.prepareStatement(
+						"UPDATE biteme.item SET Image = ? WHERE ItemID = ?;");
+				postItem.setString(1, imageFileName);
+				postItem.setInt(2, itemID);
+				postItem.executeUpdate();
+				
 				for (Options temp : item.getOptions()) {
 					try { // just in case
 						postOptions = EchoServer.con.prepareStatement(
@@ -381,7 +393,7 @@ public class RestaurantApiService {
 				response.setDescription("Item already exist in the restaurant");
 			}
 			response.setCode(401);
-			response.setDescription("Invalid input" + e.getMessage());
+			response.setDescription("Invalid input " + e.getMessage());
 			return;
 		}
 		response.setCode(200);

@@ -2,6 +2,8 @@ package logic;
 
 import java.util.Arrays;
 
+import common.MyPhoto;
+
 public class Item {
 	private String category;
 	private String subcategory;
@@ -14,18 +16,16 @@ public class Item {
 	private Options[] options;
 	private String photo;
 	private int amount;
+	private MyPhoto itemImage;
 	
-//	@Override
-//	public String toString() {
-//		String temp = "";
-//		StringBuilder invoice = new StringBuilder();
-//		for (Options option : options) {
-//			temp += option.getOption_category() +":"+option.getSpecify_option()+"\n\t\t    ";
-//		}
-//		invoice.append(name +price+"\t\t"+Integer.toString(amount)+"\t\t"+temp);
-//		return invoice.toString();
-//	}
-	
+	public MyPhoto getItemImage() {
+		return itemImage;
+	}
+
+	public void setItemImage(MyPhoto itemImage) {
+		this.itemImage = itemImage;
+	}
+
 	public Item(String category, String subcategory, int itemID, int restaurantID, String name, float price,
 			String description, String ingrediants, Options[] options, String photo, int amount) {
 		this.category = category;

@@ -3,17 +3,13 @@
 // license found at www.lloseng.com 
 package Server;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import common.DBController;
 import common.Request;

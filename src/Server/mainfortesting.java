@@ -46,8 +46,6 @@ public class mainfortesting {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
       DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
       LocalDateTime test = LocalDateTime.parse(time, formatter);
-     LocalDateTime test2 = LocalDateTime.parse(str, formatter2);
-      System.out.println(test2);
    }
 
 
@@ -91,8 +89,9 @@ public class mainfortesting {
 	   Document doc = new Document();
 
 	   // Access image files in the folder
-	   String imageDir = "C:/Images/";
+	   String imageDir = "C:\\MosheP\\";
 	   File file = new File(imageDir);
+	   file.mkdir();
 	   String[] fileList = file.list();
 
 	   for (String fileName : fileList) {
@@ -132,48 +131,5 @@ public class mainfortesting {
 	   
    }
    
-   public void Test199()
-
-   {
-
-   //Open document
-
-   Document doc = new Document(@"Test199\in.doc");
-
-   //Create regex
-
-   Regex regex = new Regex(Regex.Escape(""));
-
-   doc.Range.Replace(regex, new ReplaceEvaluator(ReplaceEvaluatorInsertText), false);
-
-   //Save document
-
-   doc.Save(@"Test199\out.doc");
-
-   }
-
-
-   private ReplaceAction ReplaceEvaluatorInsertText(Object sender, ReplacingArgs e)
-
-   {
-
-   //Get parent Paragraph of matched node
-
-   Paragraph par = (Paragraph)e.MatchNode.GetAncestor(NodeType.Paragraph);
-
-   //Create paragraph that will be inserted before
-
-   Paragraph newPar = new Paragraph(e.MatchNode.Document);
-
-   Run run = new Run(e.MatchNode.Document, "");
-
-   newPar.AppendChild(run);
-
-   //Insert new paragraph into the docuemnt
-
-   par.ParentNode.InsertBefore(newPar, par);
-
-   return ReplaceAction.Stop;
-
-   }
+   
 }
