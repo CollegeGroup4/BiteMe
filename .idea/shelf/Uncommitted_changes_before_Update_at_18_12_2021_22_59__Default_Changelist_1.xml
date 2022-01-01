@@ -1,0 +1,49 @@
+<changelist name="Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1" date="1639861315681" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 18/12/2021 22:59 [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="bin/client/ClientUI.class" />
+    <option name="AFTER_PATH" value="bin/client/ClientUI.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/ClientUI.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="bin/logic/Shippment.class" />
+    <option name="AFTER_PATH" value="bin/logic/Shippment.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/Shippment.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="bin/common/DBController.class" />
+    <option name="AFTER_PATH" value="bin/common/DBController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/DBController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="bin/logic/Restaurant.class" />
+    <option name="AFTER_PATH" value="bin/logic/Restaurant.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/Restaurant.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="bin/logic/Category.class" />
+    <option name="AFTER_PATH" value="bin/logic/Category.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/Category.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="bin/logic/Order.class" />
+    <option name="AFTER_PATH" value="bin/logic/Order.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/Order.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="bin/client/ask.class" />
+    <option name="AFTER_PATH" value="bin/client/ask.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/ask.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="bin/common/DBControllerTest.class" />
+    <option name="AFTER_PATH" value="bin/common/DBControllerTest.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/DBControllerTest.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="bin/logic/Menu.class" />
+    <option name="AFTER_PATH" value="bin/logic/Menu.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_18_12_2021_22_59_[Default_Changelist]1/Menu.class" />
+  </binary>
+</changelist>
