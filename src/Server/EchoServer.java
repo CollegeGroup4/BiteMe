@@ -214,10 +214,14 @@ public class EchoServer extends AbstractServer {
 			break;
 		case "/branch_manager/employers":
 			switch (method) {
+			case GET:
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
+				int branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
+				BranchManagerApiService.getAllUnapprovedEmployer(branchManagerID, response);
 			case POST:
 				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				String businessName = gson.fromJson(body.getAsJsonObject().get("businessName"), String.class);
-				int branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
+				branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
 				BranchManagerApiService.approveEmployer(businessName, branchManagerID, response);
 				break;
 			}

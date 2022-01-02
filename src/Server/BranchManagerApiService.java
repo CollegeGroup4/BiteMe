@@ -120,7 +120,7 @@ public class BranchManagerApiService {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM "
 					+ "biteme.restaurant WHERE UserName = ? AND RestaurantName = ?;");
 			stmt.setString(1, userName);
-			stmt.setString(2, restaurant.getName());
+			stmt.setString(2, userName);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				throw new SQLException("Restaurant " + restaurant.getName() + " is already exist", "400", 400);
@@ -472,7 +472,7 @@ public class BranchManagerApiService {
 
 	}
 	/**
-	 * Approve a business
+	 * Approve an Employer
 	 *
 	 * This can only be done by the logged in branch manager.
 	 *
@@ -489,6 +489,36 @@ public class BranchManagerApiService {
 			response.setCode(400);
 			response.setDescription("Couldn't approve a new employer -> BusinessName: " + businessName);
 		}
+		response.setCode(200);
 		response.setDescription("Success in approving a new employer -> BusinessName: " + businessName);
+	}
+	
+	/**
+	 * Get All unapproved employer
+	 *
+	 * This can only be done by the logged in branch manager.
+	 *
+	 */
+	public static void getAllUnapprovedEmployer(int branchManagerID, Response response) {
+		PreparedStatement postEmployer;
+		ResultSet rs;
+		ArrayList<Employer> employers = new ArrayList<>();
+		try {
+			postEmployer = EchoServer.con.prepareStatement(
+					"SELECT * biteme.employer WHERE BranchManagerID = ? AND isApproved = 0");
+			postEmployer.setInt(1, branchManagerID);
+			rs = postEmployer.executeQuery();
+			while(rs.next()) {
+				employers.add(new Employer(rs.getString(QueryConsts.EMPLOYER_BUSINESS_NAME),rs.getBoolean(QueryConsts.EMPLOYER_IS_APPROVED),
+						rs.getString(QueryConsts.EMPLOYER_HR_NAME), rs.getString(QueryConsts.EMPLOYER_HR_USER_NAME), 
+						 rs.getInt(QueryConsts.EMPLOYER_BRANCH_MANAGER_ID)));
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Couldn't fetch all unapproved employers -> branchManagerID: " + Integer.toString(branchManagerID));
+		}
+		response.setCode(200);
+		response.setDescription("Success in fetching all unapproved employers -> branchManagerID: " + Integer.toString(branchManagerID));
+		response.setBody(EchoServer.gson.toJson(employers.toArray()));
 	}
 }

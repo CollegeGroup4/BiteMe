@@ -108,5 +108,12 @@ public class QueryConsts {
     public static final int SHIPMENT_RECIEVER_NAME = 4;
     public static final int SHIPMENT_RECIEVER_PHONE_NUMBER = 5;
     public static final int SHIPMENT_RECIEVER_DELIVERY_TYPE = 6;
+    
+    //for employer
+    public static final int EMPLOYER_BUSINESS_NAME = 1;
+    public static final int EMPLOYER_IS_APPROVED= 2;
+    public static final int EMPLOYER_HR_NAME = 3;
+    public static final int EMPLOYER_HR_USER_NAME = 4;
+    public static final int EMPLOYER_BRANCH_MANAGER_ID = 5;
 
 }
