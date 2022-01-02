@@ -346,8 +346,7 @@ public class BranchManagerApiService {
 				PreparedStatement getRestaurants = EchoServer.con.prepareStatement(
 						"SELECT DISTINCT RestaurantID FROM biteme.restaurant WHERE BranchManagerID = ?;");
 				getRestaurants.setInt(1, i);
-				getRestaurants.executeQuery();
-				rs = getRestaurants.getResultSet();
+				rs = getRestaurants.executeQuery();
 				while (rs.next()) {
 					res_id.add(rs.getInt(1));
 				}
@@ -358,8 +357,7 @@ public class BranchManagerApiService {
 					PreparedStatement getOrders = EchoServer.con.prepareStatement(
 							"SELECT OrderTime, Check_out_price, RestaurantID, RestaurantName, OrderNum FROM biteme.order WHERE RestaurantID = ?;");
 					getOrders.setInt(1, j);
-					getOrders.executeQuery();
-					rs = getOrders.getResultSet();
+					rs = getOrders.executeQuery();
 					PreparedStatement getItems = EchoServer.con
 							.prepareStatement("SELECT IIM.Course, I.Category FROM biteme.item_in_menu_in_order IIMIO, "
 									+ "biteme.item_in_menu IIM, biteme.item I WHERE IIMIO.OrderNum = ? AND IIMIO.ItemID = IIM.ItemID AND IIM.RestaurantID = ?"
