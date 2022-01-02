@@ -141,7 +141,7 @@ public class BranchManagerApiService {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			response.setCode(400);
-			response.setDescription("User "+userName+"does Not found");	
+			response.setDescription("User "+userName+" does Not found");	
 			return;
 		}
 		try {
@@ -153,7 +153,7 @@ public class BranchManagerApiService {
 			stmt.setInt(3, restaurant.getBranchManagerID());
 			stmt.setString(4, restaurant.getArea());
 			stmt.setString(5, restaurant.getPhoto());
-			stmt.setString(6, restaurant.getUserName());
+			stmt.setString(6, userName);
 			stmt.setString(7, restaurant.getType());
 			stmt.setString(8, restaurant.getAddress());
 			stmt.setString(9, restaurant.getDescription());
