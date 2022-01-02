@@ -113,7 +113,7 @@ public class BranchManagerApiService {
 	 * This can only be done by the logged in branch manager.
 	 *
 	 */
-	public static void registerSupplierModerator(String userName, int userID,String role, Restaurant restaurant,Response response) {
+	public static void registerSupplierModerator(String userName, int userID, String role, Restaurant restaurant,Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
 		try {
@@ -131,11 +131,13 @@ public class BranchManagerApiService {
 			return;
 		}
 		try {
-			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ? WHERE "
+			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ?, BranchManagerID = ?, Area = ? WHERE "
 					+ "UserName = ? AND UserID = ?;");
 			stmt.setString(1, role);
-			stmt.setString(2, userName);
-			stmt.setInt(3, userID);
+			stmt.setInt(2, restaurant.getBranchManagerID());
+			stmt.setString(3, restaurant.getArea());
+			stmt.setString(4, userName);
+			stmt.setInt(5, userID);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			response.setCode(400);
@@ -158,7 +160,7 @@ public class BranchManagerApiService {
 			stmt.executeUpdate();
 		} catch (SQLException ex) {
 			response.setCode(400);
-			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName" + userName);
+			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName " + userName);
 			try {
 				stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = 'Not Assigned' WHERE "
 						+ "UserName = ? AND UserID = ?;");

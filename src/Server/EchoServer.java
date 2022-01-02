@@ -186,10 +186,11 @@ public class EchoServer extends AbstractServer {
 				JsonElement moderator = gson.fromJson(body.getAsJsonObject().get("moderator"), JsonElement.class);
 				if (moderator != null) {
 					String moderatorUserName = gson.fromJson(moderator.getAsJsonObject().get("userName"), String.class);
-					int moderatorUserID = gson.fromJson(supplier.getAsJsonObject().get("userID"), Integer.class);
+					int moderatorUserID = gson.fromJson(moderator.getAsJsonObject().get("userID"), Integer.class);
 					BranchManagerApiService.registerSupplierModerator(moderatorUserName, moderatorUserID,"Moderator", restaurant,
 							response);
 				}
+				break;
 			case GET:
 				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				Integer branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
