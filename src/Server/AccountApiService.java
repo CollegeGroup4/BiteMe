@@ -302,7 +302,6 @@ public class AccountApiService {
 					getAccount.setString(1, account.getUserName());
 					rs = getAccount.executeQuery();
 					if (rs.next()) {
-
 						temp = EchoServer.gson.toJsonTree(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
 								rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
 								rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),

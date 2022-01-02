@@ -124,34 +124,34 @@ public class BranchManagerApiServiceTest {
 //		BranchManagerApiService.approveEmployer(businessName, branchManagerID, response);
 //		assertEquals("Success in adding a new employer -> BusinessName: " + businessName, response.getDescription());
 //	}
-
-	/**
-	 * Test method for
-	 * {@link Server.BranchManagerApiService#registerSupplier(int, java.lang.String, java.lang.String, logic.Restaurant, Server.Response)}.
-	 *///TODO works perfectly
-	@Test
-	public void testRegisterSupplierModerator() {
-		JsonElement j = EchoServer.gson.toJsonTree(new Object());
-		JsonElement sup = EchoServer.gson.toJsonTree(new Object());
-		JsonElement mod = EchoServer.gson.toJsonTree(new Object());
-		
-		Restaurant restaurant = new Restaurant(0, false, 2, "pizz", "south", "pizza", "d", null, "raines", "Only potatoes");
-		j.getAsJsonObject().add("restaurant", EchoServer.gson.toJsonTree(restaurant));
-		sup.getAsJsonObject().addProperty("userName", "d");
-		sup.getAsJsonObject().addProperty("userID", 2);
-		mod.getAsJsonObject().addProperty("userName", "e");
-		mod.getAsJsonObject().addProperty("userID", 2);
-		j.getAsJsonObject().add("moderator", mod);
-		j.getAsJsonObject().add("supplier", sup);
-		Request r = new Request();
-		r.setPath("/branch_managers/restaurants");
-		r.setMethod("POST");
-		r.setBody(EchoServer.gson.toJson(j));
-		EchoServer i = new EchoServer(5555);
-		i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
-		//BranchManagerApiService.registerSupplierModerator("d", 2,"Supplier", restaurant, response);
-		assertEquals("Success in registering a new restaurant -> role: Supplier, restaurantName piz", response.getDescription());
-	}
+//
+//	/**
+//	 * Test method for
+//	 * {@link Server.BranchManagerApiService#registerSupplier(int, java.lang.String, java.lang.String, logic.Restaurant, Server.Response)}.
+//	 *///TODO works perfectly
+//	@Test
+//	public void testRegisterSupplierModerator() {
+//		JsonElement j = EchoServer.gson.toJsonTree(new Object());
+//		JsonElement sup = EchoServer.gson.toJsonTree(new Object());
+//		JsonElement mod = EchoServer.gson.toJsonTree(new Object());
+//		
+//		Restaurant restaurant = new Restaurant(0, false, 2, "pizz", "south", "pizza", "d", null, "raines", "Only potatoes");
+//		j.getAsJsonObject().add("restaurant", EchoServer.gson.toJsonTree(restaurant));
+//		sup.getAsJsonObject().addProperty("userName", "d");
+//		sup.getAsJsonObject().addProperty("userID", 2);
+//		mod.getAsJsonObject().addProperty("userName", "e");
+//		mod.getAsJsonObject().addProperty("userID", 2);
+//		j.getAsJsonObject().add("moderator", mod);
+//		j.getAsJsonObject().add("supplier", sup);
+//		Request r = new Request();
+//		r.setPath("/branch_managers/restaurants");
+//		r.setMethod("POST");
+//		r.setBody(EchoServer.gson.toJson(j));
+//		EchoServer i = new EchoServer(5555);
+//		i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
+//		//BranchManagerApiService.registerSupplierModerator("d", 2,"Supplier", restaurant, response);
+//		assertEquals("Success in registering a new restaurant -> role: Supplier, restaurantName piz", response.getDescription());
+//	}
 //	
 //	/**
 //	 * Test method for

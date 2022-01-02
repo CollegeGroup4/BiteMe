@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import Server.AccountApiService;
 import Server.EchoServer;
 import common.DBController;
+import common.Request;
 import common.Response;
 import logic.Account;
 import logic.BusinessAccount;
@@ -68,10 +69,23 @@ public class AccountApiServiceTest {
 //		System.out.println(Arrays.toString(acc));
 //	}
 //
-//	@Test
-//	public void testGetAccount() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	public void testGetAccount() {
+
+		AccountApiService.getAccountByUserName("b", response);
+		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
+		Request r = new Request();
+		r.setPath("/accounts/getAccount");
+		r.setMethod("GET");
+		r.setBody(EchoServer.gson.toJson(account));
+		EchoServer i = new EchoServer(5555);
+		i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
+		AccountApiService.getAccount(account, response);
+		JsonElement j = EchoServer.gson.fromJson((String)response.getBody(), JsonElement.class);
+		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("account"), Account.class));
+		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("businessAccount"), BusinessAccount.class));
+		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("privateAccount"), PrivateAccount.class));
+	}
 //
 //	@Test
 //	public void testGetAccountByUserNameAndID() {
@@ -83,19 +97,19 @@ public class AccountApiServiceTest {
 //		assertEquals("Success in fetching UserID: -> 2", response.getDescription());
 //	}
 //
-	@Test
-	public void testLoginAccount() {
-		String userName = "b";
-		String password = "b";
-		AccountApiService.loginAccount(userName, password, response);
-		try {
-			JsonElement j = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
-			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("privateAccount"), PrivateAccount.class));
-		} catch (Exception e) {
-			fail(response.getDescription());
-		}
-		assertEquals("Success in login 1", response.getDescription());		
-	}
+//	@Test
+//	public void testLoginAccount() {
+//		String userName = "b";
+//		String password = "b";
+//		AccountApiService.loginAccount(userName, password, response);
+//		try {
+//			JsonElement j = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
+//			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("privateAccount"), PrivateAccount.class));
+//		} catch (Exception e) {
+//			fail(response.getDescription());
+//		}
+//		assertEquals("Success in login 1", response.getDescription());		
+//	}
 //
 //	@Test
 //	public void testLoginAccountW4C() {

@@ -394,6 +394,10 @@ public class EchoServer extends AbstractServer {
 			break;
 		case "/accounts/getAccount":
 			switch (method) {
+			case GET:
+				Account account = gson.fromJson((String)m.getBody(), Account.class);
+				AccountApiService.getAccount(account, response);
+				break;
 			case DELETE:
 				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
