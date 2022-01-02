@@ -83,6 +83,8 @@ public class EchoServer extends AbstractServer {
 		switch (path) {
 		// TODO start reports generator with a thread
 		case "/import":
+			AccountApiService.importSuper(response);
+			break;
 		case "/ping":
 			clients.put(client.getInetAddress().getHostName(), client.getInetAddress().getHostAddress());
 			ServerPortFrameController.isAdded = true;

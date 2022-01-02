@@ -33,8 +33,8 @@ public class AccountApiService {
 	public static void importSuper(Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con
-					.prepareStatement("INSERT INTO table2"
-							+ "SELECT * FROM biteme.account;");
+					.prepareStatement("INSERT INTO biteme.account"
+							+ "SELECT * FROM biteme.user_management;");
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
 				response.setCode(400);
@@ -42,7 +42,7 @@ public class AccountApiService {
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in registering a new private account -> userName: " + account.getUserName());
+		response.setDescription("Success in importing from UsersManagement");
 	}
 	
 	/**
