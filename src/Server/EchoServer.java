@@ -301,10 +301,25 @@ public class EchoServer extends AbstractServer {
 			}
 			break;
 		case "/restaurants/getItemsByMenu":
+			body = gson.fromJson((String) m.getBody(), JsonElement.class);
+			int restaurantID = gson.fromJson(body.getAsJsonObject().get("restaurantID"), Integer.class);
+			String menuName = gson.fromJson(body.getAsJsonObject().get("menuName"), String.class);
+			RestaurantApiService.getItemsByMenu(restaurantID, menuName,response);
 			break;
-		case "/restaurants/menus/getItemsByType":
+		case "/restaurants/menus/getItemsByCategory":
+			body = gson.fromJson((String) m.getBody(), JsonElement.class);
+			restaurantID = gson.fromJson(body.getAsJsonObject().get("restaurantID"), Integer.class);
+			menuName = gson.fromJson(body.getAsJsonObject().get("menuName"), String.class);
+			String itemCategory = gson.fromJson(body.getAsJsonObject().get("itemCategory"), String.class);
+			RestaurantApiService.getItemsByCategory(restaurantID, menuName, itemCategory, response);
 			break;
 		case "/restaurants/menus/category/getItemsBySubCategory":
+			body = gson.fromJson((String) m.getBody(), JsonElement.class);
+			restaurantID = gson.fromJson(body.getAsJsonObject().get("restaurantID"), Integer.class);
+			menuName = gson.fromJson(body.getAsJsonObject().get("menuName"), String.class);
+			itemCategory = gson.fromJson(body.getAsJsonObject().get("itemCategory"), String.class);
+			String itemSubCategory = gson.fromJson(body.getAsJsonObject().get("itemSubCategory "), String.class);
+			RestaurantApiService.getItemsBySubCategory(restaurantID, menuName, itemCategory, itemSubCategory, response);
 			break;
 		case "/restaurants/approveOrder":
 			switch (method) {
