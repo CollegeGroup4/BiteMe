@@ -311,7 +311,7 @@ public class AccountApiService {
 							rs.getString(QueryConsts.PRIVATE_ACCOUNT_CREDIT_CARD_EXP)));
 					body.getAsJsonObject().add("privateAccount", temp);
 				}
-				if (account.getRole().equals("Supplier") || account.getRole().equals("Moderator")) {
+				if (account.getRole().equals("Supplier")) {
 					getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE UserName = ?;");
 					getAccount.setString(1, account.getUserName());
 					rs = getAccount.executeQuery();
