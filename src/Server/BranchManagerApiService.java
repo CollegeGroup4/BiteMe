@@ -113,7 +113,7 @@ public class BranchManagerApiService {
 	 * This can only be done by the logged in branch manager.
 	 *
 	 */
-	public static void registerSupplierModerator(String userName, int userID, String role, Restaurant restaurant,Response response) {
+	public static void registerSupplier(String userName, int userID, String role, Restaurant restaurant,Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
 		try {
@@ -141,7 +141,7 @@ public class BranchManagerApiService {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			response.setCode(400);
-			response.setDescription("User "+userName+" does Not found");	
+			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());	
 			return;
 		}
 		try {
@@ -168,11 +168,66 @@ public class BranchManagerApiService {
 				stmt.setInt(2, userID);
 				stmt.executeUpdate();
 			} catch (SQLException e) {
+				response.setCode(400);
+				response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());
 			}
 			return;
 		}
 		response.setCode(200);
 		response.setDescription("Success in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());
+	}
+	
+	/**
+	 * Register a resturant - mind that the supplier shcema isn&#x27;t finish
+	 *
+	 * This can only be done by the logged in branch manager.
+	 *
+	 */
+	public static void registerModerator(String userName, String supplierUserName,int userID, String role, Restaurant restaurant,Response response) {
+		PreparedStatement stmt;
+		ResultSet rs;
+		try {
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM "
+					+ "biteme.restaurant WHERE UserName = ? AND RestaurantName = ?;");
+			stmt.setString(1, userName);
+			stmt.setString(2, userName);
+			rs = stmt.executeQuery();
+			if (!rs.next()) {
+				throw new SQLException("Restaurant " + restaurant.getName() + " doesn't exist", "400", 400);
+			}
+		} catch (SQLException e) {
+			response.setCode(e.getErrorCode());
+			response.setDescription(e.getMessage());
+			return;
+		}
+		try {
+			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ?, BranchManagerID = ?, Area = ? WHERE "
+					+ "UserName = ? AND UserID = ?;");
+			stmt.setString(1, role);
+			stmt.setInt(2, restaurant.getBranchManagerID());
+			stmt.setString(3, restaurant.getArea());
+			stmt.setString(4, userName);
+			stmt.setInt(5, userID);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());	
+			return;
+		}
+		try {
+			stmt = EchoServer.con.prepareStatement("UPDATE biteme.restaurant SET ModeratorUserName = ? WHERE "
+					+ "UserName = ? AND RestaurantName = ?;");
+			stmt.setString(1, userName);
+			stmt.setString(2, supplierUserName);
+			stmt.setString(3, restaurant.getName());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());	
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in registering a new moderator -> role: " + role + ", restaurantName " + restaurant.getName());
 	}
 	
 	/**

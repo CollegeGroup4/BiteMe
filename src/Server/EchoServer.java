@@ -158,7 +158,7 @@ public class EchoServer extends AbstractServer {
 				String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				int userID = gson.fromJson(body.getAsJsonObject().get("userID"), Integer.class);
 				Restaurant restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
-				BranchManagerApiService.registerSupplierModerator(userName, userID, "Supplier", restaurant, response);
+				BranchManagerApiService.registerSupplier(userName, userID, "Supplier", restaurant, response);
 				break;
 			}
 		case "/branch_managers/restaurants/moderators":
@@ -168,7 +168,8 @@ public class EchoServer extends AbstractServer {
 				String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				int userID = gson.fromJson(body.getAsJsonObject().get("userID"), Integer.class);
 				Restaurant restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
-				BranchManagerApiService.registerSupplierModerator(userName, userID, "Moderator", restaurant, response);
+				String supplierUserName = gson.fromJson(body.getAsJsonObject().get("supplierUserName"), String.class);
+				BranchManagerApiService.registerModerator(userName, supplierUserName, userID, "Moderator", restaurant, response);
 				break;
 			}
 		case "/branch_managers/restaurants":
@@ -180,7 +181,7 @@ public class EchoServer extends AbstractServer {
 				if (supplier != null) {
 					String supplierUserName = gson.fromJson(supplier.getAsJsonObject().get("userName"), String.class);
 					int supplierUserID = gson.fromJson(supplier.getAsJsonObject().get("userID"), Integer.class);
-					BranchManagerApiService.registerSupplierModerator(supplierUserName, supplierUserID, "Supplier",
+					BranchManagerApiService.registerSupplier(supplierUserName, supplierUserID, "Supplier",
 							restaurant, response);
 				}
 				String supAndModResponse = response.getDescription() + "\n";
@@ -188,7 +189,8 @@ public class EchoServer extends AbstractServer {
 				if (moderator != null) {
 					String moderatorUserName = gson.fromJson(moderator.getAsJsonObject().get("userName"), String.class);
 					int moderatorUserID = gson.fromJson(moderator.getAsJsonObject().get("userID"), Integer.class);
-					BranchManagerApiService.registerSupplierModerator(moderatorUserName, moderatorUserID,"Moderator", 
+					String supplierUserName = gson.fromJson(moderator.getAsJsonObject().get("supplierUserName"), String.class);
+					BranchManagerApiService.registerModerator(moderatorUserName, supplierUserName, moderatorUserID,"Moderator", 
 							restaurant, response);
 				}
 				response.setDescription(supAndModResponse + response.getDescription());
