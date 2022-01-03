@@ -462,7 +462,7 @@ public class RestaurantApiService {
 	 * Approve order
 	 *
 	 * This can only be done by the logged in supplier.
-	 *
+	 *l
 	 */
 	public static void setPrepTime(int orderId, Response response) {
 		ResultSet rs;
