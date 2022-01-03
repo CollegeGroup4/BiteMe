@@ -93,19 +93,19 @@ public class RestaurantApiServiceTest {
 //		System.out.println(Arrays.toString(items));
 //		assertEquals("Success in fetching all restaurant items -> restaurantID: 10",response.getDescription());
 //	}
-
-	@Test
-	public void testCreateItem() {
-		Options[] options = new Options[2];
-		options[0] = new Options("size","XL", 10, 0, false);
-		options[1] = new Options("tona","yes", 5, 0, false);		
-		Item item = new Item("italian", "pasta", 0, 10, "pizzaWithSon", 34, "The best pasta in the world", "cheese, oil, macaroni, etc.", options, null, 0);
-		item.setItemImage(new MyPhoto("C:\\Users\\talye\\git\\BiteMeFinal\\Images\\pizza.jpg"));
-		imageUtils.sender(item.getItemImage());
-		System.out.println(item.getItemImage().getMybytearray().toString());
-		RestaurantApiService.createItem(item, response);
-		assertEquals("Success in creating a new item -> itemID: 10", response.getDescription());
-	}
+//
+//	@Test
+//	public void testCreateItem() {
+//		Options[] options = new Options[2];
+//		options[0] = new Options("size","XL", 10, 0, false);
+//		options[1] = new Options("tona","yes", 5, 0, false);		
+//		Item item = new Item("italian", "pasta", 0, 10, "pizzaWithSon", 34, "The best pasta in the world", "cheese, oil, macaroni, etc.", options, null, 0);
+//		item.setItemImage(new MyPhoto("C:\\Users\\talye\\git\\BiteMeFinal\\Images\\pizza.jpg"));
+//		imageUtils.sender(item.getItemImage());
+//		System.out.println(item.getItemImage().getMybytearray().toString());
+//		RestaurantApiService.createItem(item, response);
+//		assertEquals("Success in creating a new item -> itemID: 10", response.getDescription());
+//	}
 
 //	@Test
 //	public void testUpdateItem() {

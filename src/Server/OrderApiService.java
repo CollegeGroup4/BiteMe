@@ -254,7 +254,7 @@ public class OrderApiService {
 		}
 		response.setCode(200);
 		response.setDescription("Success in fetching order" + orderId);
-		response.setBody(order);
+		response.setBody(EchoServer.gson.toJson(order));
 	}
 
 	/**
@@ -392,7 +392,7 @@ public class OrderApiService {
 		try {
 			PreparedStatement getItems = EchoServer.con
 					.prepareStatement("SELECT * FROM biteme.items AS items WHERE EXISTS("
-							+ "SELECT * FROM biteme.item_int_menu_in_order AS itemsOrder WHERE items.ItemID = itemsOrder.ItemID AND itemsOrder.OrderNum = ?;");
+							+ "SELECT * FROM biteme.item_in_menu_in_order AS itemsOrder WHERE items.ItemID = itemsOrder.ItemID AND itemsOrder.OrderNum = ?;");
 
 			getItems.setInt(1, orderID);
 			rs1 = getItems.executeQuery();
@@ -492,7 +492,7 @@ public class OrderApiService {
 			insertCredit.setString(1, order.getUserName());
 			insertCredit.setDouble(2, (order.getCheck_out_price() * 0.5));
 			insertCredit.setInt(3, order.getRestaurantID());
-			insertCredit.execute();
+			insertCredit.executeUpdate();
 
 			insertToLateDelivery = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.late_delivery (OrderNum, UserName, RestaurantID, Date) VALUES(?,?,?,?)");
@@ -500,7 +500,7 @@ public class OrderApiService {
 			insertToLateDelivery.setString(2, order.getUserName());
 			insertToLateDelivery.setInt(3, order.getRestaurantID());
 			insertToLateDelivery.setString(4, now.format(formatter));
-			insertToLateDelivery.execute();
+			insertToLateDelivery.executeUpdate();
 		} catch (SQLException e) {
 			response.setCode(405);
 			response.setDescription("Couldn't insert credit to a late delivered order -> orderID: "
