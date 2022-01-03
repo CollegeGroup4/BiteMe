@@ -29,27 +29,38 @@ public class AccountApiServiceTest {
 		response = new Response();
 	}
 
-//	@Test
-//	public void testCreatePrivateAccount() {
-//		int userID = 2;
-//		String userName = "b";
-//		AccountApiService.getAccountByUserNameAndID(userName, userID, response);
-//		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
-//		PrivateAccount acc = new PrivateAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
-//				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-//				 account.getDebt(), null,"1234567891234567", "123", "12-2026");
-//		AccountApiService.createPrivateAccount(acc, response);
-//		assertEquals("Success in registering private account: 2", response.getDescription());
-//	}
+	@Test
+	public void testCreatePrivateAccount() {
+		String userName = "c";
+		Request r = new Request();
+		AccountApiService.getAccountByUserName(userName, response);
+		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
+		PrivateAccount acc = new PrivateAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
+				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
+				 account.getDebt(), null,"1234567891234567", "123", "12-2026");
+		AccountApiService.createPrivateAccount(acc, response);
+	r.setPath("/accounts/privateAccount");
+	r.setMethod("POST");
+	r.setBody(EchoServer.gson.toJson(account));
+	EchoServer i = new EchoServer(5555);
+	i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
+		assertEquals("Success in registering private account: 2", response.getDescription());
+	}
 //
 //	@Test
 //	public void testCreateBusinessAccount() {
-//		String userName = "b";
+//		String userName = "c";
+//		Request r = new Request();
 //		AccountApiService.getAccountByUserName(userName, response);
 //		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
 //		BusinessAccount acc = new BusinessAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
 //				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), true, account.getBranch_manager_ID(), account.getArea(),
 //				account.getDebt(), null,1000, false, "intel",0);
+//		r.setPath("/accounts/businessAccount");
+//		r.setMethod("POST");
+//		r.setBody(EchoServer.gson.toJson(account));
+//		EchoServer i = new EchoServer(5555);
+//		i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
 //		AccountApiService.createBusinessAccount(acc, response);
 //		assertEquals("Success in registering business account -> UserID: 2", response.getDescription());
 //	}
@@ -69,23 +80,23 @@ public class AccountApiServiceTest {
 //		System.out.println(Arrays.toString(acc));
 //	}
 //
-	@Test
-	public void testGetAccount() {
-
-		AccountApiService.getAccountByUserName("b", response);
-		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
-		Request r = new Request();
-		r.setPath("/accounts/getAccount");
-		r.setMethod("GET");
-		r.setBody(EchoServer.gson.toJson(account));
-		EchoServer i = new EchoServer(5555);
-		i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
-		AccountApiService.getAccount(account, response);
-		JsonElement j = EchoServer.gson.fromJson((String)response.getBody(), JsonElement.class);
-		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("account"), Account.class));
-		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("businessAccount"), BusinessAccount.class));
-		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("privateAccount"), PrivateAccount.class));
-	}
+//	@Test
+//	public void testGetAccount() {
+//
+//		AccountApiService.getAccountByUserName("b", response);
+//		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
+//		Request r = new Request();
+//		r.setPath("/accounts/getAccount");
+//		r.setMethod("GET");
+//		r.setBody(EchoServer.gson.toJson(account));
+//		EchoServer i = new EchoServer(5555);
+//		i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
+//		AccountApiService.getAccount(account, response);
+//		JsonElement j = EchoServer.gson.fromJson((String)response.getBody(), JsonElement.class);
+//		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("account"), Account.class));
+//		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("businessAccount"), BusinessAccount.class));
+//		System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("privateAccount"), PrivateAccount.class));
+//	}
 //
 //	@Test
 //	public void testGetAccountByUserNameAndID() {

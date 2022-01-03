@@ -52,8 +52,9 @@ public class AccountApiService {
 	 *
 	 */
 	public static void createPrivateAccount(PrivateAccount account, Response response) {
+		PreparedStatement postAccount;
 		try {
-			PreparedStatement postAccount = EchoServer.con
+			postAccount = EchoServer.con
 					.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active', "
 							+ "BranchManagerID = ?, Area = ? WHERE UserName = ?;");
 			if (account.getRole().equals("Not Assigned"))
@@ -64,6 +65,10 @@ public class AccountApiService {
 			postAccount.setString(3, account.getArea());
 			postAccount.setString(4, account.getUserName());
 			postAccount.executeUpdate();
+		}catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
+		}try {
 			postAccount = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.private_account (UserName, CreditCardNumber, CreditCardCVV, CreditCardExp, W4C) "
 							+ "VALUES(?,?,?,?,?)");
@@ -77,6 +82,10 @@ public class AccountApiService {
 			if (e.getErrorCode() == 1062) {
 				response.setCode(400);
 				response.setDescription("Fail! Private account already exist -> userName: " + account.getUserName());
+			}
+			else {
+				response.setCode(400);
+				response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
 			}
 			return;
 		}
@@ -99,8 +108,8 @@ public class AccountApiService {
 			isBusinessApproved.setString(1, account.getBusinessName());
 			rs = isBusinessApproved.executeQuery();
 			if (!rs.next())
-				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employers or is not approved", "400",
-						400);
+				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employers or is not approved", "404",
+						404);
 
 		} catch (SQLException e) {
 			response.setDescription(e.getMessage());
@@ -121,9 +130,14 @@ public class AccountApiService {
 			postAccount.setString(5, account.getUserName());
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
-			response.setBody(null);
-			response.setDescription(e.getMessage());
-			response.setCode(400);
+			if(e.getErrorCode() == 404) {
+				response.setDescription(e.getMessage());
+				response.setCode(404);
+			}
+			else {
+				response.setCode(400);
+				response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
+			}
 			return;
 		}
 		try {
@@ -140,7 +154,7 @@ public class AccountApiService {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
 				response.setCode(400);
-				response.setDescription("Fail! Business account already exist -> userName: " + account.getUserName());
+				response.setDescription("Fail!  Couldn't create Business account -> userName: " + account.getUserName());
 			}
 			return;
 		}

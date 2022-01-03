@@ -183,6 +183,7 @@ public class EchoServer extends AbstractServer {
 					BranchManagerApiService.registerSupplierModerator(supplierUserName, supplierUserID, "Supplier",
 							restaurant, response);
 				}
+				String supAndModResponse = response.getDescription() + "\n";
 				JsonElement moderator = gson.fromJson(body.getAsJsonObject().get("moderator"), JsonElement.class);
 				if (moderator != null) {
 					String moderatorUserName = gson.fromJson(moderator.getAsJsonObject().get("userName"), String.class);
@@ -190,6 +191,7 @@ public class EchoServer extends AbstractServer {
 					BranchManagerApiService.registerSupplierModerator(moderatorUserName, moderatorUserID,"Moderator", 
 							restaurant, response);
 				}
+				response.setDescription(supAndModResponse + response.getDescription());
 				break;
 			case GET:
 				body = gson.fromJson((String)m.getBody(), JsonElement.class);
