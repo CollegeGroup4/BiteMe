@@ -88,14 +88,6 @@ public class Navigation_SidePanelController extends Application implements Initi
 		vBoxManu.getChildren().addAll(buttons);
 	}
 
-	private void createButton(JFXButton button, String path, String titleStage) {
-		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
-		button.setFont(font);
-		button.addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, path, titleStage);
-		});
-	}
-
 	private void initSidePanelBranchManager() {
 		JFXButton[] buttons = new JFXButton[7];
 		buttons[0] = new JFXButton("Order food");
@@ -239,11 +231,22 @@ public class Navigation_SidePanelController extends Application implements Initi
 		createButton(buttons[1], "/branchManager/EditPersonalInfo.fxml", "Branch manager - Edit Personal Info");
 
 		buttons[3] = new JFXButton("Exit");
+		createExitButton(buttons[3]);
+		
+		vBoxManu.getChildren().addAll(buttons);
+	}
+	private void createButton(JFXButton button, String path, String titleStage) {
 		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
-		buttons[3].setFont(font);
-		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
+		button.setFont(font);
+		button.addEventHandler(ActionEvent.ACTION, (e) -> {
+			branchManagerFunctions.reload(e, path, titleStage);
+		});
+	}
+	private void createExitButton(JFXButton button) {
+		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
+		button.setFont(font);
+		button.addEventHandler(ActionEvent.ACTION, (e) -> {
 			branchManagerFunctions.exit(e);
 		});
-		vBoxManu.getChildren().addAll(buttons);
 	}
 }

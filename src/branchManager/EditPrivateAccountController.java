@@ -213,11 +213,11 @@ public class EditPrivateAccountController implements Initializable {
 	}
 
 	void sentToJson(PrivateAccount privateAccount) {
+		Gson gson = new Gson();
 		Request request = new Request();
 		request.setPath("/accounts/PrivateAccount");
-		request.setMethod("Post");
-		request.setBody(privateAccount);
-		Gson gson = new Gson();
+		request.setMethod("POST");
+		request.setBody(gson.toJson(privateAccount));
 		JsonElement jsonUser = gson.toJsonTree(request);
 
 		String jsonFile = gson.toJson(jsonUser);

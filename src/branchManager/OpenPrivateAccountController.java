@@ -176,7 +176,7 @@ public class OpenPrivateAccountController implements Initializable {
 					}
 
 				}
-				PrivateAccount privateAccount = new PrivateAccount(id, username, null, null, null, null, null, null,
+				PrivateAccount privateAccount = new PrivateAccount(id, username, null, null, null, null, null, "Not Assigned",
 						status, false, BranchManagerController.branchManager.getUserID(),
 						BranchManagerController.branchManager.getArea(), 0, null, cardNum, cvv, expDate);
 				sentToJson(privateAccount);
@@ -186,14 +186,13 @@ public class OpenPrivateAccountController implements Initializable {
 	}
 
 	void sentToJson(PrivateAccount privateAccount) {
+		Gson gson = new Gson();
 		Request request = new Request();
 		request.setPath("/accounts/privateAccount");
 		request.setMethod("POST");
-		request.setBody(privateAccount);
-		Gson gson = new Gson();
-		String jsonUser = gson.toJson(request);
+		request.setBody(gson.toJson(privateAccount));
 		try {
-			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+			ClientUI.chat.accept(gson.toJson(request)); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
 			System.out.println("Open Private account - new ClientController didn't work");
 		}

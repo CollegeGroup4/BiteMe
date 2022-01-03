@@ -73,6 +73,7 @@ public class LoginController {
 					((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 					Stage primaryStage = new Stage();
 					AnchorPane root = null;
+					HomeController.role = role;
 					switch (role) {
 					case "CEO":
 						System.out.println("go to CEO");

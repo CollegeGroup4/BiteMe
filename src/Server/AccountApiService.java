@@ -30,6 +30,27 @@ public class AccountApiService {
 	 * This can only be done by the logged in Account.
 	 *
 	 */
+	public static void importSuper(Response response) {
+		try {
+			PreparedStatement postAccount = EchoServer.con
+					.prepareStatement("INSERT INTO biteme.account"
+							+ "SELECT * FROM biteme.user_management;");
+			postAccount.executeUpdate();
+		} catch (SQLException e) {
+				response.setCode(400);
+				response.setDescription("Fail importing from UsersManagement");
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in importing from UsersManagement");
+	}
+	
+	/**
+	 * Create Private Account
+	 *
+	 * This can only be done by the logged in Account.
+	 *
+	 */
 	public static void createPrivateAccount(PrivateAccount account, Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con

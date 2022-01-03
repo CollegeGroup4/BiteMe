@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.mysql.cj.xdevapi.Result;
 
 import common.Response;
+import common.imageUtils;
 import logic.Category;
 import logic.Item;
 import logic.Menu;
@@ -86,6 +87,150 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
+	public static void getItemsByMenu(int restaurantID, String menuName,Response response) {
+		PreparedStatement stmt;
+		ResultSet rs, rs2;
+		Item item = null;
+		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<Options> options = new ArrayList<>();
+		try {
+			stmt = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ? AND ItemID IN "
+							+ "(SELECT ItemID FROM biteme.item_in_menu WHERE MenuName = ?);");
+			stmt.setInt(1, restaurantID);
+			stmt.setString(2, menuName);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				item = new Item(rs.getString(QueryConsts.ITEM_CATEGORY), rs.getString(QueryConsts.ITEM_SUB_CATEGORY),
+						rs.getInt(QueryConsts.ITEM_ID), rs.getInt(QueryConsts.ITEM_RES_ID),
+						rs.getString(QueryConsts.ITEM_NAME), rs.getFloat(QueryConsts.ITEM_PRICE),
+						rs.getString(QueryConsts.ITEM_DESCRIPTION), rs.getString(QueryConsts.ITEM_INGREDIENTS), null,
+						rs.getString(QueryConsts.ITEM_IMAGE), 0);
+				stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.optional_category WHERE ItemID = ?;");
+				stmt.setInt(1, item.getItemID());
+				rs2 = stmt.executeQuery();
+				while (rs2.next()) {
+					options.add(new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
+							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getInt(QueryConsts.OPTIONAL_PRICE),
+							rs2.getInt(QueryConsts.OPTIONAL_ITEM_ID),
+							rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE)));
+				}
+				item.setOptions(options.toArray(new Options[0]));
+				options.clear();
+				items.add(item);
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Couldn't fetch items for menuName "+ menuName +" for restaurantID" + Integer.toString(restaurantID));
+		}
+		response.setCode(200);
+		response.setDescription("Success in fetching item in menu "+ menuName +" for restaurantID" + Integer.toString(restaurantID));
+		response.setBody(EchoServer.gson.toJson(items.toArray()));
+	}
+
+	/**
+	 * Get all categories
+	 *
+	 * This can only be done by the logged in supplier.
+	 *
+	 */
+	public static void getItemsByCategory(int restaurantID, String menuName, String itemCategory, Response response) {
+		PreparedStatement stmt;
+		ResultSet rs, rs2;
+		Item item = null;
+		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<Options> options = new ArrayList<>();
+		try {
+			stmt = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ? AND Category = ? AND ItemID IN "
+							+ "(SELECT ItemID FROM biteme.item_in_menu WHERE MenuName = ?);");
+			stmt.setInt(1, restaurantID);
+			stmt.setString(2, itemCategory);
+			stmt.setString(3, menuName);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				item = new Item(rs.getString(QueryConsts.ITEM_CATEGORY), rs.getString(QueryConsts.ITEM_SUB_CATEGORY),
+						rs.getInt(QueryConsts.ITEM_ID), rs.getInt(QueryConsts.ITEM_RES_ID),
+						rs.getString(QueryConsts.ITEM_NAME), rs.getFloat(QueryConsts.ITEM_PRICE),
+						rs.getString(QueryConsts.ITEM_DESCRIPTION), rs.getString(QueryConsts.ITEM_INGREDIENTS), null,
+						rs.getString(QueryConsts.ITEM_IMAGE), 0);
+				stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.optional_category WHERE ItemID = ?;");
+				stmt.setInt(1, item.getItemID());
+				rs2 = stmt.executeQuery();
+				while (rs2.next()) {
+					options.add(new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
+							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getInt(QueryConsts.OPTIONAL_PRICE),
+							rs2.getInt(QueryConsts.OPTIONAL_ITEM_ID),
+							rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE)));
+				}
+				item.setOptions(options.toArray(new Options[0]));
+				options.clear();
+				items.add(item);
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Couldn't fetch items by categories for restaurantID" + Integer.toString(restaurantID));
+		}
+		response.setCode(200);
+		response.setDescription("Success in fetching items by categories for restaurantID" + Integer.toString(restaurantID));
+		response.setBody(EchoServer.gson.toJson(items.toArray()));
+	}
+	
+	/**
+	 * Get all categories
+	 *
+	 * This can only be done by the logged in supplier.
+	 *
+	 */
+	public static void getItemsBySubCategory(int restaurantID, String menuName, String itemCategory, String itemSubCategory, Response response) {
+		PreparedStatement stmt;
+		ResultSet rs, rs2;
+		Item item = null;
+		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<Options> options = new ArrayList<>();
+		try {
+			stmt = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ? AND Category = ? AND SubCategory = ? AND ItemID IN "
+							+ "(SELECT ItemID FROM biteme.item_in_menu WHERE MenuName = ?);");
+			stmt.setInt(1, restaurantID);
+			stmt.setString(2, itemCategory);
+			stmt.setString(3, itemSubCategory);			
+			stmt.setString(4, menuName);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				item = new Item(rs.getString(QueryConsts.ITEM_CATEGORY), rs.getString(QueryConsts.ITEM_SUB_CATEGORY),
+						rs.getInt(QueryConsts.ITEM_ID), rs.getInt(QueryConsts.ITEM_RES_ID),
+						rs.getString(QueryConsts.ITEM_NAME), rs.getFloat(QueryConsts.ITEM_PRICE),
+						rs.getString(QueryConsts.ITEM_DESCRIPTION), rs.getString(QueryConsts.ITEM_INGREDIENTS), null,
+						rs.getString(QueryConsts.ITEM_IMAGE), 0);
+				stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.optional_category WHERE ItemID = ?;");
+				stmt.setInt(1, item.getItemID());
+				rs2 = stmt.executeQuery();
+				while (rs2.next()) {
+					options.add(new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
+							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getInt(QueryConsts.OPTIONAL_PRICE),
+							rs2.getInt(QueryConsts.OPTIONAL_ITEM_ID),
+							rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE)));
+				}
+				item.setOptions(options.toArray(new Options[0]));
+				options.clear();
+				items.add(item);
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Couldn't fetch items by subCategories for restaurantID" + Integer.toString(restaurantID));
+		}
+		response.setCode(200);
+		response.setDescription("Success in fetching items by subCategories for restaurantID" + Integer.toString(restaurantID));
+		response.setBody(EchoServer.gson.toJson(items.toArray()));
+	}
+	
+	/**
+	 * Get all categories
+	 *
+	 * This can only be done by the logged in supplier.
+	 *
+	 */
 	public static void getAllCategories(int restaurantID, Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
@@ -115,13 +260,13 @@ public class RestaurantApiService {
 				categories.add(category);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			response.setCode(400);
+			response.setDescription("Couldn't fetch all categories for restaurantID" + Integer.toString(restaurantID));
 		}
 		response.setCode(200);
 		response.setDescription("Success in fetching categories for restaurantID" + Integer.toString(restaurantID));
-		response.setBody(categories.toArray());
+		response.setBody(EchoServer.gson.toJson(categories.toArray()));
 	}
-
 	/**
 	 * Getting list of all related items
 	 *
@@ -159,11 +304,11 @@ public class RestaurantApiService {
 				items.add(item);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			response.setCode(400);
+			response.setDescription("Couldn't fetch all items for restaurantID" + Integer.toString(restaurantID));
 		}
 		response.setCode(200);
-		response.setDescription(
-				"Success in fetching all restaurant items -> restaurantID: " + Integer.toString(restaurantID));
+		response.setDescription("Success in fetching all restaurant items -> restaurantID: " + Integer.toString(restaurantID));
 		response.setBody(EchoServer.gson.toJson(items.toArray()));
 	}
 
@@ -295,10 +440,38 @@ public class RestaurantApiService {
 			if (approveOrder.executeUpdate() == 0) {
 				throw new SQLException("couldn't approve order " + Integer.toString(orderId));
 			}
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
 			PreparedStatement updateApprovalTime = EchoServer.con
 					.prepareStatement("UPDATE biteme.order SET approve_time = ? WHERE OrderNum = ?;");
+			updateApprovalTime.setString(1, dtf.format(now));
+			updateApprovalTime.setInt(2, orderId);
+			if (updateApprovalTime.executeUpdate() == 0) {
+				throw new SQLException("couldn't update the time in menu" + Integer.toString(orderId));
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription(e.getMessage());
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in approve order " + Integer.toString(orderId));
+	}
+	
+	/**
+	 * Approve order
+	 *
+	 * This can only be done by the logged in supplier.
+	 *
+	 */
+	public static void setPrepTime(int orderId, Response response) {
+		ResultSet rs;
+		try {
+
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime now = LocalDateTime.now();
+			PreparedStatement updateApprovalTime = EchoServer.con
+					.prepareStatement("UPDATE biteme.order SET prep_time = ? WHERE OrderNum = ?;");
 			updateApprovalTime.setString(1, dtf.format(now));
 			updateApprovalTime.setInt(2, orderId);
 			if (updateApprovalTime.executeUpdate() == 0) {
@@ -331,7 +504,7 @@ public class RestaurantApiService {
 			rs = checkDuplicate.executeQuery();
 			rs.next();
 			if (rs.getInt(1) >= 1) {
-				throw new SQLException(null, null, 1062);
+				throw new SQLException("Duplicate key ", null, 1062);
 			}
 			postItem = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.item (Category, SubCategory, Name, Price, Ingredients,"
@@ -350,6 +523,16 @@ public class RestaurantApiService {
 			rs.next();
 			itemID = rs.getInt(1);
 			if (item.getOptions() != null) {
+				String sufix = item.getItemImage().getFileName().substring(item.getItemImage().getFileName().length()-4);
+				String imageFileName = "item_" + itemID + sufix;
+				item.getItemImage().setFileName(imageFileName);
+				imageUtils.receiver(item.getItemImage(), QueryConsts.FILE_PATH_ITEMS);
+				postItem = EchoServer.con.prepareStatement(
+						"UPDATE biteme.item SET Image = ? WHERE ItemID = ?;");
+				postItem.setString(1, imageFileName);
+				postItem.setInt(2, itemID);
+				postItem.executeUpdate();
+				
 				for (Options temp : item.getOptions()) {
 					try { // just in case
 						postOptions = EchoServer.con.prepareStatement(
@@ -381,7 +564,7 @@ public class RestaurantApiService {
 				response.setDescription("Item already exist in the restaurant");
 			}
 			response.setCode(401);
-			response.setDescription("Invalid input" + e.getMessage());
+			response.setDescription("Invalid input " + e.getMessage());
 			return;
 		}
 		response.setCode(200);
@@ -545,7 +728,6 @@ public class RestaurantApiService {
 		}
 		response.setCode(200);
 		response.setDescription("Success in deleting an item -> itemID: " + Integer.toString(itemID));
-		response.setBody(null);
 	}
 
 	/**

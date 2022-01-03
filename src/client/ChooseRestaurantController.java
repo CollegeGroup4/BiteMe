@@ -58,9 +58,11 @@ public class ChooseRestaurantController implements Initializable {
 
 	public ArrayList<Restaurant> restaurantsFromData;
 	public static Restaurant restaurantSelected;
+	private CustomerFunctions customerFunctions = new CustomerFunctions();
+
 	String projectPath = System.getProperty("user.dir") + "\\src\\images\\"; // locate the Path of the current project
 																				// directory
-
+ 
 	@FXML
 	private VBox restaurantsContainer;
 
@@ -89,17 +91,12 @@ public class ChooseRestaurantController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
 		
-		System.out.println("aaaa");
-		sentToServer();
-		System.out.println("llll");
-		response();
-		System.out.println("bbbbb");
-		
 		areas.getItems().addAll("North", "South", "East", "West");
-		areas.setValue(CustomerPageController.client.getArea()); 
-
-		types.getItems().addAll("All", "Pizza", "Burgers", "Italian", "Sushi", "SteakHouse"); //TODO - function that find all the types and set hare!
-		types.setValue("All");
+		areas.setValue(CustomerPageController.client.getArea());
+		System.out.println("client: " + CustomerPageController.client);
+		System.out.println("area: " + CustomerPageController.client.getArea());
+		sentToServer();
+		response();
 		try {
 			reSetContainer();
 		} catch (FileNotFoundException e) {
@@ -130,12 +127,12 @@ public class ChooseRestaurantController implements Initializable {
 	}
 
 	void reSetContainer() throws FileNotFoundException {
-		getInformation(areas.getValue(), types.getValue());
+		// getInformation(areas.getValue(), types.getValue());
 		ArrayList<HBox> restaurantList = new ArrayList<>();
 		String areaSelected = areas.getValue();
 		String typeSelected = types.getValue();
 		for (int i = 0; i < restaurantsFromData.size(); i++) {
-			if (areaSelected == restaurantsFromData.get(i).getArea()
+			if (areaSelected.equals(restaurantsFromData.get(i).getArea())
 					&& (typeSelected.equals("All") || typeSelected.equals(restaurantsFromData.get(i).getType()))) {
 				Label name = new Label(restaurantsFromData.get(i).getName());
 				Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
@@ -214,7 +211,7 @@ public class ChooseRestaurantController implements Initializable {
 		Request request = new Request();
 		request.setPath("/restaurants/areas");
 		request.setMethod("GET");
-		
+
 		JsonElement body = gson.toJsonTree(new Object());
 		body.getAsJsonObject().addProperty("area", areas.getValue());
 		request.setBody(gson.toJson(body));
@@ -222,46 +219,51 @@ public class ChooseRestaurantController implements Initializable {
 		try {
 			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
-			System.out.println( "get restaurants by area didn't work");
+			System.out.println("get restaurants by area didn't work");
 		}
 	}
 
 	private void response() {
-		
+
 		restaurantsFromData = new ArrayList<Restaurant>();
-		Response response = ChatClient.serverAns; 
-		if (response.getCode() != 200 && response.getCode() != 201) // TODO- if there was an error then need to print an ERORR!
-			//lableErrorMag.setText(response.getDescription()); // TODO-  error massage
-			System.out.println(response.getDescription()); 
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) // TODO- if there was an error then need to print an
+																	// ERORR!
+			// lableErrorMag.setText(response.getDescription()); // TODO- error massage
+			System.out.println(response.getDescription());
 		else {
 //			System.out.println("-->>" + response.getDescription()); // Description from server
 //			JsonElement body = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
 //			restaurantList = EchoServer.gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant[].class);
 			Restaurant[] restaurantList = EchoServer.gson.fromJson((String) response.getBody(), Restaurant[].class);
-			System.out.println("restaurantList " + restaurantList );
-			for (Restaurant r : restaurantList)  // update the  list of restaurant to be the response from the DB
+			System.out.println("restaurantList " + restaurantList);
+			types.getItems().add("All");
+			for (Restaurant r : restaurantList) { // update the list of restaurant to be the response from the DB
 				restaurantsFromData.add(r);
-			
+				types.getItems().add(r.getType());
+			}
+			types.setValue("All");
+
 		}
 	}
-	
-	private void getInformation(String area, String type) {// getting and arranging the data from the
-															// server
-		restaurantsFromData = new ArrayList<Restaurant>();
 
-		Restaurant res0 = new Restaurant(0, true, 0, "McDonald's", "North", "Burgers", null, "M.png",
-				"Carmiel, kalnit 1",
-				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
-		Restaurant res1 = new Restaurant(1, true, 0, "Ruben", "North", "Burgers", null, "ruben.png",
-				"Carmiel, hasalom 33",
-				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
-		Restaurant res2 = new Restaurant(2, true, 0, "BBB", "North", "Burgers", null, "BBB.png", "Carmiel, yefe 22",
-				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
-		restaurantsFromData.add(res0);
-		restaurantsFromData.add(res1);
-		restaurantsFromData.add(res2);
-
-	}
+//	private void getInformation(String area, String type) {// getting and arranging the data from the
+//															// server
+//		restaurantsFromData = new ArrayList<Restaurant>();
+//
+//		Restaurant res0 = new Restaurant(0, true, 0, "McDonald's", "North", "Burgers", null, "M.png",
+//				"Carmiel, kalnit 1",
+//				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
+//		Restaurant res1 = new Restaurant(1, true, 0, "Ruben", "North", "Burgers", null, "ruben.png",
+//				"Carmiel, hasalom 33",
+//				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
+//		Restaurant res2 = new Restaurant(2, true, 0, "BBB", "North", "Burgers", null, "BBB.png", "Carmiel, yefe 22",
+//				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
+//		restaurantsFromData.add(res0);
+//		restaurantsFromData.add(res1);
+//		restaurantsFromData.add(res2);
+//
+//	}
 
 	public void start(Stage primaryStage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource("/client/ChooseRestaurant.fxml"));
@@ -282,5 +284,15 @@ public class ChooseRestaurantController implements Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@FXML
+	void home(ActionEvent event) {
+		customerFunctions.home(event);
+	}
+
+	@FXML
+	void logout(ActionEvent event) {
+		customerFunctions.logout(event);
 	}
 }

@@ -1,13 +1,11 @@
 package client;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextArea;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -116,12 +114,43 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			optionsSelectedHash = new HashMap<String, String>();
 		if (optionsSelectedHash.containsKey(stringFromEvent)) {
 		} else {
-			optionsSelectedHash.put(stringFromEvent, null);
-			JFXButton optionalsSelectedBtn = new JFXButton(stringFromEvent);
-			designButton(optionalsSelectedBtn);
-			optionalsSelected.getChildren().add(optionalsSelectedBtn);
-			optionalsSelected.setSpacing(5);
+//			optionsSelectedHash.put(stringFromEvent, null);
+//			JFXButton optionalsSelectedBtn = new JFXButton(stringFromEvent);
+//			designButton(optionalsSelectedBtn);
+//			optionalsSelected.getChildren().add(optionalsSelectedBtn);
+//			optionalsSelected.setSpacing(5);
+
+			if (stringFromEvent.split(":", 2)[0].equals("Select") || checkIfDuplicate(stringFromEvent)) {
+				optionsSelectedHash.put(stringFromEvent, null);
+				JFXButton optionalsSelectedBtn = new JFXButton(stringFromEvent);
+				designButton(optionalsSelectedBtn);
+				optionalsSelected.getChildren().add(optionalsSelectedBtn);
+				optionalsSelected.setSpacing(5);
+			}
 		}
+	}
+
+	private boolean checkIfDuplicate(String stringFromEvent) {
+		String category = stringFromEvent.split(":", 2)[0];
+		for (String a : optionsSelectedHash.keySet()) {
+			if (a.split(":", 2)[0].equals(category)) {
+				return false;
+			}
+		}
+		return true;
+//		String category = stringFromEvent.split(":", 2)[0];
+//		for (int i = 0; i < ChooseADishController.itemSelected.getOptions().length; i++) {
+//			if (ChooseADishController.itemSelected.getOptions()[i].getOption_category().equals(category)) {
+//				for (String a : optionsSelectedHash.keySet()) {
+//					if(a.split(":", 2)[0].equals(category)) {
+//						if (ChooseADishController.itemSelected.getOptions()[i].isDuplicatable())
+//							return false;
+//					}
+//				}
+//					
+//			}
+//		}
+//		return true;
 	}
 
 	private String buttonRecognize(ActionEvent event) {
@@ -140,22 +169,44 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 	@FXML
 	void submit(ActionEvent event) {
 		int i = 0;
-		Options optionsArr[] = new Options[optionsSelectedHash.size()];
-		for (String a : optionsSelectedHash.keySet()) {
-			String category = a.split(":", 0)[0];
-			String specify = a.split("\n", 0)[1].split("-", 0)[0];
-			double price = Double.valueOf(a.split("-", 0)[1].substring(1, a.split("-", 0)[1].length()));
-			optionsArr[i] = new Options(category, specify, price, ChooseADishController.itemSelected.getItemID(), false);
-			ChooseADishController.itemSelected.setPrice(ChooseADishController.itemSelected.getPrice() + (float) price);
-		}
-		ChooseADishController.itemSelected.setOptions(optionsArr);
-		ChooseADishController.itemSelected.setAmount(Integer.valueOf(quantityOfItem.getText()));
-		ChooseADishController.itemSelected
-				.setPrice(Integer.valueOf(quantityOfItem.getText()) * ChooseADishController.itemSelected.getPrice());
-		ChooseADishController.itemsSelectedArr.add(ChooseADishController.itemSelected);
+		if (optionsSelectedHash != null) {
+			Options optionsArr[] = new Options[optionsSelectedHash.size()];
+			for (String a : optionsSelectedHash.keySet()) {
+				String category = a.split(":", 0)[0];
+				String specify = a.split("\n", 0)[1].split("-", 0)[0];
+				double price = Double.valueOf(a.split("-", 0)[1].substring(1, a.split("-", 0)[1].length()));
+				optionsArr[i] = new Options(category, specify, price, ChooseADishController.itemSelected.getItemID(),
+						false);
+				ChooseADishController.itemSelected
+						.setPrice(ChooseADishController.itemSelected.getPrice() + (float) price);
+			}
+			ChooseADishController.itemSelected.setOptions(optionsArr);
+			ChooseADishController.itemSelected.setAmount(Integer.valueOf(quantityOfItem.getText()));
+			ChooseADishController.itemSelected.setPrice(
+					Integer.valueOf(quantityOfItem.getText()) * ChooseADishController.itemSelected.getPrice());
 
-		ChooseADishController.chooseADishController.getPaneForSelections().setCenter(null);
-		ChooseADishController.chooseADishController.setVisibleItemContainer(true);
+			addItemToCart();
+		}
+			ChooseADishController.chooseADishController.getPaneForSelections().setCenter(null);
+			ChooseADishController.chooseADishController.setVisibleItemContainer(true);
+		
+	}
+
+	private void addItemToCart() {
+		// is the user didn't chose amount then the item doesn't add to the cart
+		if (ChooseADishController.itemSelected.getAmount() == 0)
+			return;
+
+		boolean flag = true;
+
+		for (Item item : ChooseADishController.itemsSelectedArr)
+			if (item.getName().equals(ChooseADishController.itemSelected.getName())) {
+				item.setAmount(item.getAmount() + ChooseADishController.itemSelected.getAmount());
+				flag = false;
+			}
+
+		if (flag) // if the item isn't already in the cart then we add him.
+			ChooseADishController.itemsSelectedArr.add(ChooseADishController.itemSelected);
 	}
 
 	@FXML

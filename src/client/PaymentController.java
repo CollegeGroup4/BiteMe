@@ -27,7 +27,7 @@ import logic.Shippment;
 
 public class PaymentController implements Initializable {
 
-	public static PaymentSaved payment;
+	public static PaymentSaved payment; //
 	public float priceOfShippment = 0;
 	private boolean errorOccurred = false;
 	public boolean isOpen = false;
@@ -284,13 +284,12 @@ public class PaymentController implements Initializable {
 		float discount = DeliveryAndTimeController.orderToSend.discount_for_early_order / (float) 100;
 		float sumAfterDiscount = DeliveryAndTimeController.orderToSend.check_out_price;
 		float sumBeforeDiscount = sumAfterDiscount / (1 - discount);
-		lblSubTotalPrice.setText("$" + sumBeforeDiscount);
+		lblSubTotalPrice.setText(String.format(" $ %.2f", sumBeforeDiscount));
 		checkShippmentPrice();
-		lblShippmentPrice.setText("$" + priceOfShippment);
-		lblDiscountPrice.setText("$" + discount * sumBeforeDiscount);
+		lblShippmentPrice.setText(String.format(" $ %.2f", priceOfShippment));
+		lblDiscountPrice.setText(String.format(" $ %.2f", discount * sumBeforeDiscount));
 		sumAfterDiscount += priceOfShippment;
-		totalPrice.setText("$" + sumAfterDiscount);
-
+		totalPrice.setText(String.format(" $ %.2f", sumAfterDiscount));
 	}
 
 	private void errorLabelFunc(String errorMsg) {

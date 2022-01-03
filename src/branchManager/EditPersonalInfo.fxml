@@ -84,11 +84,6 @@
                   <Font name="Berlin Sans FB Demi Bold" size="19.0" />
                </font>
             </Label>
-            <Button layoutX="388.0" layoutY="600.0" mnemonicParsing="false" onAction="#editTable" prefHeight="31.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="52.0" />
-               </font>
-            </Button>
             <Button layoutX="50.0" layoutY="616.0" mnemonicParsing="false" onAction="#homeAndback" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />

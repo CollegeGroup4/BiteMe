@@ -134,7 +134,7 @@ public class OpenBusinessAccountController implements Initializable {
 				String businessName = textFieldBusinessName.getText();
 				float monthBillingCeiling = Integer.parseInt(textFieldMonthBlling.getText());
 				BusinessAccount businessAccount = new BusinessAccount(personalID, personalUsename, null, null, null,
-						null, null, null, status, true, BranchManagerController.branchManager.getUserID(),
+						null, "Not Assigned", null, status, true, BranchManagerController.branchManager.getUserID(),
 						BranchManagerController.branchManager.getArea(), 0, null, monthBillingCeiling, false,
 						businessName, 0);
 				sentToJson(businessAccount);
@@ -144,11 +144,11 @@ public class OpenBusinessAccountController implements Initializable {
 	}
 
 	void sentToJson(BusinessAccount businessAccount) {
+		Gson gson = new Gson();
 		Request request = new Request();
 		request.setPath("/accounts/businessAccount");
 		request.setMethod("POST");
-		request.setBody(businessAccount);
-		Gson gson = new Gson();
+		request.setBody(gson.toJson(businessAccount));
 		String jsonUser = gson.toJson(request);
 		try {
 			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
@@ -159,7 +159,7 @@ public class OpenBusinessAccountController implements Initializable {
 
 	void response() {
 		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201)
+//		if (response.getCode() != 200 && response.getCode() != 201)
 			lableErrorMag.setText(response.getDescription());// error massage
 	}
 

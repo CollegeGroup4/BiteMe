@@ -21,6 +21,7 @@ import logic.Account;
 
 public class CustomerPageController implements Initializable {
 	public static Account client;
+	CustomerFunctions customerFunctions=new CustomerFunctions();
 
 	@FXML
 	private HBox Nav;
@@ -102,5 +103,11 @@ public class CustomerPageController implements Initializable {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	
+    @FXML
+    void logout(ActionEvent event) {
+    	customerFunctions.logout(event);
+
+    }
 
 }

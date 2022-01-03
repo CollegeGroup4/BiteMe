@@ -137,7 +137,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		File selectedFile = fc.showOpenDialog(null);
 
 		if (selectedFile != null) {
-			photo = selectedFile.getAbsolutePath();
+			photo = selectedFile.getName();
 			listView.getItems().add(selectedFile.getName());
 //			listView.getItems().add(selectedFile.getAbsolutePath());
 //			Image imageForFile = new Image(file.toURI().toURL().toExternalForm());
@@ -165,8 +165,10 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		}
 
 		if (flag) {
+			int supplierID = Integer.parseInt(textFieldsupplierID.getText());
 			String supplierUserame = textFieldSupplierUserame.getText();
 			String moderatorUsername = textFieldModeratorUsername.getText();
+			int moderatorID = Integer.parseInt(textFieldModeratorID.getText());
 			String restaurantName = textFieldRestaurantName.getText();
 			String restaurantType = textFieldRestaurantType.getText();
 			String restaurantAddress = textFieldRestaurantAddress.getText();
@@ -174,10 +176,10 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			Restaurant restaurant = new Restaurant(0, false, BranchManagerController.branchManager.getUserID(),
 					restaurantName, BranchManagerController.branchManager.getArea(), restaurantType, supplierUserame,
 					photo, restaurantAddress, "");
-			Account supplier = new Account(0, supplierUserame, null, null, null, null, "Supplier", null, "status",
+			Account supplier = new Account(supplierID, supplierUserame, null, null, null, null, "Supplier", null, "status",
 					false, BranchManagerController.branchManager.getUserID(),
 					BranchManagerController.branchManager.getArea(), 0);
-			Account supplierModorator = new Account(0, moderatorUsername, null, null, null, null, "SupplierModorator",
+			Account supplierModorator = new Account(moderatorID, moderatorUsername, null, null, null, null, "Modorator",
 					null, "status", false, BranchManagerController.branchManager.getUserID(),
 					BranchManagerController.branchManager.getArea(), 0);
 
@@ -190,20 +192,20 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	void sentToJson(Restaurant restaurant, Account supplier, Account supplierModorator) {
 		;
 		Gson gson = new Gson();
-		JsonElement jsonElem = gson.toJsonTree(new Object());
+		JsonElement body = gson.toJsonTree(new Object());
 		JsonElement jsonElemModorator = gson.toJsonTree(new Object());
 		JsonElement jsonElemSupplier = gson.toJsonTree(new Object());
 
 		jsonElemModorator.getAsJsonObject().addProperty("userName", supplierModorator.getUserName());
-//		jsonElemModorator.getAsJsonObject().addProperty("userID", supplierModorator.getUserID());
+		jsonElemModorator.getAsJsonObject().addProperty("userID", supplierModorator.getUserID());
 		jsonElemSupplier.getAsJsonObject().addProperty("userName", supplier.getUserName());
-//		jsonElemSupplier.getAsJsonObject().addProperty("userID", supplier.getUserID());
+		jsonElemSupplier.getAsJsonObject().addProperty("userID", supplier.getUserID());
 
 		
-		jsonElem.getAsJsonObject().add("moderator", jsonElemModorator);
-		jsonElem.getAsJsonObject().add("supplier",jsonElemSupplier);
-		jsonElem.getAsJsonObject().add("restaurant", gson.toJsonTree(restaurant));
-		branchManagerFunctions.sentToJson("/branch_managers/restaurants", "POST", jsonElem,
+		body.getAsJsonObject().add("moderator", jsonElemModorator);
+		body.getAsJsonObject().add("supplier",jsonElemSupplier);
+		body.getAsJsonObject().add("restaurant", gson.toJsonTree(restaurant));
+		branchManagerFunctions.sentToJson("/branch_managers/restaurants", "POST", body,
 				"Open Business account - new ClientController didn't work");
 	}
 

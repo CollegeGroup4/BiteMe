@@ -3,7 +3,10 @@ package Server;
 public class QueryConsts {
     private QueryConsts(){}
 	//photos path
-	public static final String LOCAL_FILE_PATH = "d:\\projectImages\\";
+	public static final String FILE_PATH = "projectImages";
+	public static final String FILE_PATH_ITEMS = "projectImages\\Items\\";
+	public static final String FILE_PATH_RESTAURANTS = "projectImages\\Restaurants\\";
+	public static final String FILE_PATH_REPORTS = "projectImages\\REPORTS\\";
 	
 	//for orders
     public static final int ORDER_ORDER_NUM = 1;

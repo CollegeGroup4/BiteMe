@@ -42,6 +42,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import logic.Account;
 import logic.BusinessAccount;
+import logic.PrivateAccount;
+import logic.Restaurant;
 
 public class EditPersonalInfoController implements Initializable {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
@@ -179,16 +181,6 @@ public class EditPersonalInfoController implements Initializable {
 	}
 
 	@FXML
-	void editTable(ActionEvent event) {
-		int id = userEditSelect.get(0).getUserID();
-		Account selecteduser = allUsres.get(id);
-		System.out.println(selecteduser.getFirstName());
-		branchManagerFunctions.sentToJson("/account/getAccount", "GET", selecteduser,
-				"Edit personal info - new ClientController didn't work");
-//		responseGetAccountID();
-	}
-
-	@FXML
 	void onChengedRole(ActionEvent event) {
 		String status = coboBoxStatus.getValue();
 		String role = coboBoxRole.getValue();
@@ -230,6 +222,29 @@ public class EditPersonalInfoController implements Initializable {
 		tableViewUsers.setItems(usersFilter);
 	}
 
+	/*
+	 * Edit the account, when given account from the table
+	 * 
+	 * @param event
+	 */
+	@FXML
+	void editTable(ActionEvent event) {
+		int id = userEditSelect.get(0).getUserID();
+		Account selecteduser = allUsres.get(id);
+		if (selecteduser.getRole().equals("Supplier")) {
+
+		}
+		if (selecteduser.getRole().equals("Client"))
+			branchManagerFunctions.sentToJson("/account/getAccount", "GET", selecteduser,
+					"Edit personal info - new ClientController didn't work");
+//		responseGetAccountID();
+	}
+
+	/**
+	 * select id and edit the account. (businesses, private or supplier)
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void editByID(ActionEvent event) {
 		int id;
@@ -237,9 +252,10 @@ public class EditPersonalInfoController implements Initializable {
 			try {
 				id = Integer.parseInt(textFiledSearchID.getText());
 				Account selecteduser = allUsres.get(id);
-				System.out.println(selecteduser.getFirstName());
-				branchManagerFunctions.sentToJson("/accounts/getAccountType", "GET", selecteduser,
+				System.out.println("selecteduser" + selecteduser);
+				branchManagerFunctions.sentToJson("/accounts/getAccount", "GET", selecteduser,
 						"Edit personal info - new ClientController didn't work");
+
 				responseGetAccountID();
 			} catch (NumberFormatException e) {
 				lblrequiredEnterid.setText("Enter only numbers");
@@ -257,7 +273,24 @@ public class EditPersonalInfoController implements Initializable {
 			System.out.println("-->>" + response.getDescription()); // Description from server
 //			JsonElement jsonFile = gson.toJsonTree(response.getBody());
 //			jsonFile.getAsJsonObject().get("id");
-			Account account = EchoServer.gson.fromJson((String) response.getBody(), Account.class);
+
+			JsonElement j = gson.fromJson((String) response.getBody(), JsonElement.class);
+			Account account = gson.fromJson(j.getAsJsonObject().get("account"), Account.class);
+			Restaurant restaurant = gson.fromJson(j.getAsJsonObject().get("restaurant"), Restaurant.class);
+			BusinessAccount businessAccount = gson.fromJson(j.getAsJsonObject().get("businessAccount"),
+					BusinessAccount.class);
+			PrivateAccount privateAccount = gson.fromJson(j.getAsJsonObject().get("privateAccount"),
+					PrivateAccount.class);
+
+			System.out.println("response.getBody(): "+response.getBody());
+			System.out.println("name: "+businessAccount.getBusinessName());
+
+			System.out.println("account: " + account);
+			System.out.println("restaurant: " + restaurant);
+			System.out.println("businessAccount: " + businessAccount);
+			System.out.println("privateAccount: " + privateAccount);
+
+//			Account account = EchoServer.gson.fromJson((String) response.getBody(), Account.class);
 			// ?!?!?! what they are return a 1 account or 2 ? or both?
 		}
 	}

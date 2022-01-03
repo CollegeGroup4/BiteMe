@@ -2,8 +2,16 @@ package client;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
+import Server.EchoServer;
+import Server.Response;
+import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +26,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import logic.Item;
+import logic.Menu;
 
 public class FinalApproveController implements Initializable {
 
@@ -77,6 +87,8 @@ public class FinalApproveController implements Initializable {
 
 	@FXML
 	private Button btnLogout;
+	 @FXML
+	    private Label lableErrorMag;
 
 	public void start(Stage primaryStage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource("/client/FinalApprove.fxml"));
@@ -90,6 +102,7 @@ public class FinalApproveController implements Initializable {
 	void confirmOrder(ActionEvent event) {
 		orderDetails.setVisible(false);
 		confirmation.setVisible(true);
+		
 
 	}
 
@@ -125,7 +138,7 @@ public class FinalApproveController implements Initializable {
 		// lblName.setText(lblName.getText() + " " +
 		// CustomerPageController.user.getName()); *** Implement when connect to the DB
 		lblPhone.setText(lblPhone.getText() + " " + DeliveryAndTimeController.shippment.getPhone());
-		if (PaymentController.payment.cardNum != "")
+		if (! PaymentController.payment.cardNum.equals(""))
 			lblCardNum.setText("***" + PaymentController.payment.cardNum.substring(
 					PaymentController.payment.cardNum.length() - 4, PaymentController.payment.cardNum.length()));
 		if (PaymentController.payment.expMonth != null && PaymentController.payment.expYear != null)
@@ -134,5 +147,41 @@ public class FinalApproveController implements Initializable {
 		if (PaymentController.payment.cardType != null)
 			lblTypeOfCard.setText(lblTypeOfCard.getText() + " " + PaymentController.payment.cardType);
 	}
+	
+	void sentToServer() {
+		Item[] itemsToSend;
+		Gson gson = new Gson();
+		Request request = new Request();
+		request.setPath("/orders");
+		request.setMethod("POST");
+		JsonElement body = gson.toJsonTree(new Object());
+// TODO - need to sent the order, it is in the delivery and paymant class   
+		body.getAsJsonObject().addProperty("items", CustomerPageController.client.isBusiness());
+		
+		request.setBody(gson.toJson(body));
+		String jsonUser = gson.toJson(request);
+		try {
+			System.out.println(jsonUser);
+			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+		} catch (NullPointerException e) {
+			System.out.println("get menus by restaurand ID didn't work");
+		}
+	}
+
+	private void response() {
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) // if there was an error then need to print an ERORR!
+			 lableErrorMag.setText(response.getDescription()); // TODO- error massage
+//			System.out.println(response.getDescription());
+		else {
+			JsonElement a= EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
+			Menu[] menuList = EchoServer.gson.fromJson(a.getAsJsonObject().get("menues"), Menu[].class);
+			Item[] itemList = EchoServer.gson.fromJson(a.getAsJsonObject().get("items"), Item[].class);
+			System.out.println("restaurantList " + menuList);
+
+			}
+
+		}
+	
 
 }

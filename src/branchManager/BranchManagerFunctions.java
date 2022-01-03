@@ -119,7 +119,7 @@ public class BranchManagerFunctions {
 	public void logout(ActionEvent event) {
 		logoutSentToJson();
 		logoutResponse();
-		reload(event, "/guiNew/HomePage.fxml", "Branch manager - home");
+		reload(event, "/guiNew/HomePage.fxml", "Home page");
 	}
 
 	public void logoutSentToJson() {
@@ -130,10 +130,9 @@ public class BranchManagerFunctions {
 		Request request = new Request();
 		request.setPath("/users/logout");
 		request.setMethod("GET");
-		request.setBody(jsonElem);
-		String jsonUser = gson.toJson(request);
+		request.setBody(gson.toJson(jsonElem));
 		try {
-			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+			ClientUI.chat.accept(gson.toJson(request)); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
 			System.out.println("new ClientController didn't work");
 		}
