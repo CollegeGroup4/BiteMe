@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 public class ViewReportsController implements Initializable {
 private String typeReport;
+private CEOFunctions ceoFunctions = new CEOFunctions();
     @FXML
     private HBox Nav;
 
@@ -65,6 +66,8 @@ private String typeReport;
     	
     	comboBoxFQuarter.getItems().setAll("I", "II", "III", "IV");
     	comboBoxSQuarter.getItems().setAll("I", "II", "III", "IV");
+    	
+    	ceoFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
     
     @FXML
@@ -85,6 +88,7 @@ private String typeReport;
     void ViewOneRoport(ActionEvent event) { //button view
     	String branch = comboBoxbranch.getValue();
     	branch = branch == null ? "North" : branch;
+    	ceoFunctions.reload(event, "/CEO/DisplayReport.fxml", "CEO- Dispaly report");
     	//type of report is in 'typeReport'
     }
 
@@ -100,6 +104,7 @@ private String typeReport;
     	typeReport = "ViewReportsTwoQuarters";
     	twoReportNext.setVisible(true);
     	oneReportNext.setVisible(false);
+    	ceoFunctions.reload(event, "/CEO/DisplayReport.fxml", "CEO- Dispaly report");
     }
 
     @FXML
