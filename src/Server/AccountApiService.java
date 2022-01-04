@@ -382,7 +382,7 @@ public class AccountApiService {
 			} else {
 				throw new SQLException("Account " + userName + " not found", "402", 402);
 			}
-			if (account.getStatus().equals("blocked")) {
+			if (account.getStatus().equals("Blocked")) {
 				throw new SQLException("Account" + account.getUserID() + "is blocked", "403", 403);
 			}
 			if (account.getRole().equals("Not Assigned")) {
@@ -528,13 +528,14 @@ public class AccountApiService {
 		int updatedRows;
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"UPDATE biteme.private_account SET (CreditCardNumber = ?, CreditCardCVV = ?, CreditCardExp = ?)"
+					"UPDATE biteme.private_account SET CreditCardNumber = ?, CreditCardCVV = ?, CreditCardExp = ?"
 							+ " WHERE UserName = ?;");
 			// Its the first userName that he had so the test is in users table on login
-			postAccount.setString(1, account.getUserName());
-			postAccount.setString(2, account.getCreditCardNumber());
-			postAccount.setString(3, account.getCreditCardCVV());
-			postAccount.setString(4, account.getCreditCardExpDate());
+
+			postAccount.setString(1, account.getCreditCardNumber());
+			postAccount.setString(2, account.getCreditCardCVV());
+			postAccount.setString(3, account.getCreditCardExpDate());
+			postAccount.setString(4, account.getUserName());
 			updatedRows = postAccount.executeUpdate();
 			if (updatedRows == 0) {
 				throw new SQLException("Couldn't update private account: -> UserName: " + account.getUserName(), "401",

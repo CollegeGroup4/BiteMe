@@ -73,7 +73,7 @@ ChartPanel panel;
     panel.addOverlay(crosshairOverlay);
     add(panel);
     try {
-		ChartUtils.saveChartAsPNG(new File("C://Users/talye/Desktop/histogram.png"), chart, 1000, 600);
+		ChartUtils.saveChartAsPNG(new File("C://Users/MoshPe/Desktop/histogram.png"), chart, 1000, 600);
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

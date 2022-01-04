@@ -422,7 +422,7 @@ public class EchoServer extends AbstractServer {
 			case PUT:
 				body = gson.fromJson((String) m.getBody(), JsonElement.class);
 				userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
-				AccountApiService.updateStatus(userName, response);
+				AccountApiService.updateStatus(userName, "active",response);
 				break;
 			}
 			break;
