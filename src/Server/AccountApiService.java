@@ -29,12 +29,12 @@ public class AccountApiService {
 	 *
 	 * This can only be done by the logged in Account.
 	 *
-	 */
+	 *///TODO
 	public static void importSuper(Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con
 					.prepareStatement("INSERT INTO biteme.account"
-							+ "SELECT * FROM biteme.user_management;");
+							+ " SELECT * FROM biteme.user_management;");
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
 				response.setCode(400);

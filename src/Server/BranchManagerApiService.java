@@ -118,12 +118,11 @@ public class BranchManagerApiService {
 		ResultSet rs;
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM "
-					+ "biteme.restaurant WHERE UserName = ? AND RestaurantName = ?;");
+					+ "biteme.restaurant WHERE UserName = ?;");
 			stmt.setString(1, userName);
-			stmt.setString(2, userName);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				throw new SQLException("Restaurant " + restaurant.getName() + " is already exist", "400", 400);
+				throw new SQLException("UserName " + userName + " already has a restaurant", "400", 400);
 			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
@@ -188,12 +187,12 @@ public class BranchManagerApiService {
 		ResultSet rs;
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM "
-					+ "biteme.restaurant WHERE UserName = ? AND RestaurantName = ?;");
-			stmt.setString(1, userName);
+					+ "biteme.restaurant WHERE UserName = ? AND ModeratorUserName = ?;");
+			stmt.setString(1, supplierUserName);
 			stmt.setString(2, userName);
 			rs = stmt.executeQuery();
-			if (!rs.next()) {
-				throw new SQLException("Restaurant " + restaurant.getName() + " doesn't exist", "400", 400);
+			if (rs.next()) {
+				throw new SQLException("UserName " + userName + " already has a restaurant", "400", 400);
 			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
@@ -203,7 +202,6 @@ public class BranchManagerApiService {
 		try {
 			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ?, BranchManagerID = ?, Area = ? WHERE "
 					+ "UserName = ? AND UserID = ?;");
-			stmt.setString(1, role);
 			stmt.setInt(2, restaurant.getBranchManagerID());
 			stmt.setString(3, restaurant.getArea());
 			stmt.setString(4, userName);
