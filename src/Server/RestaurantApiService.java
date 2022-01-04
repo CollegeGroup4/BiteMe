@@ -518,16 +518,17 @@ public class RestaurantApiService {
 			rs.next();
 			itemID = rs.getInt(1);
 			if (item.getOptions() != null) {
-				String sufix = item.getItemImage().getFileName().substring(item.getItemImage().getFileName().length()-4);
-				String imageFileName = "item_" + itemID + sufix;
-				item.getItemImage().setFileName(imageFileName);
-				imageUtils.receiver(item.getItemImage(), QueryConsts.FILE_PATH_ITEMS);
-				postItem = EchoServer.con.prepareStatement(
-						"UPDATE biteme.item SET Image = ? WHERE ItemID = ?;");
-				postItem.setString(1, imageFileName);
-				postItem.setInt(2, itemID);
-				postItem.executeUpdate();
-				
+				if (item.getItemImage() != null) {
+					String sufix = item.getItemImage().getFileName()
+							.substring(item.getItemImage().getFileName().length() - 4);
+					String imageFileName = "item_" + itemID + sufix;
+					item.getItemImage().setFileName(imageFileName);
+					imageUtils.receiver(item.getItemImage(), QueryConsts.FILE_PATH_ITEMS);
+					postItem = EchoServer.con.prepareStatement("UPDATE biteme.item SET Image = ? WHERE ItemID = ?;");
+					postItem.setString(1, imageFileName);
+					postItem.setInt(2, itemID);
+					postItem.executeUpdate();
+				}				
 				for (Options temp : item.getOptions()) {
 					try { // just in case
 						postOptions = EchoServer.con.prepareStatement(
