@@ -244,7 +244,7 @@ public class AccountApiService {
 		ArrayList<Account> accounts = new ArrayList<Account>();
 		try {
 			PreparedStatement getAllAccounts = EchoServer.con.prepareStatement(
-					"SELECT * FROM biteme.account WHERE BranchManagerID = ? AND Role != 'Branch Manager';");
+					"SELECT * FROM biteme.account WHERE BranchManagerID = ? AND Role != 'Branch Manager' AND Role != 'Moderator';");
 			getAllAccounts.setInt(1, branch_manager_id);
 			rs = getAllAccounts.executeQuery();
 			while (rs.next()) {
@@ -313,6 +313,22 @@ public class AccountApiService {
 				}
 				if (account.getRole().equals("Supplier")) {
 					getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE UserName = ?;");
+					getAccount.setString(1, account.getUserName());
+					rs = getAccount.executeQuery();
+					if (rs.next()) {
+						temp = EchoServer.gson.toJsonTree(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
+								rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
+								rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),
+								rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.RESTAURANT_AREA),
+								rs.getString(QueryConsts.RESTAURANT_TYPE), account.getUserName(),
+								rs.getString(QueryConsts.RESTAURANT_PHOTO),
+								rs.getString(QueryConsts.RESTAURANT_ADDRESS),
+								rs.getString(QueryConsts.RESTAURANT_DESCRIPTION)));
+						body.getAsJsonObject().add("restaurant", temp);
+					}
+				}
+				if (account.getRole().equals("Moderator")) {
+					getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE ModeratorUserName = ?;");
 					getAccount.setString(1, account.getUserName());
 					rs = getAccount.executeQuery();
 					if (rs.next()) {
