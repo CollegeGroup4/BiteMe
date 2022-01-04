@@ -443,7 +443,7 @@ public class EchoServer extends AbstractServer {
 				break;
 			}
 			break;
-		case "/hrBusinessAccount":
+		case "/hr/businessAccount":
 			switch (method) {
 			case GET:
 				body = gson.fromJson((String) m.getBody(), JsonElement.class);
