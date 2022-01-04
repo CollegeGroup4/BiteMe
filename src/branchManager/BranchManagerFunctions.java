@@ -33,7 +33,7 @@ public class BranchManagerFunctions {
 	 * 
 	 * @param event
 	 * @param resource
-	 * @param title
+	 * @param title - title of the page
 	 */
 	public void reload(ActionEvent event, String resource, String title) {
 		try {
@@ -51,12 +51,12 @@ public class BranchManagerFunctions {
 		}
 	}
 
-	public void sentToJson(String path, String method, Object object, String errorMsg) {
+	public void sentToJson(String path, String method, Object body, String errorMsg) {
 		Gson gson = new Gson();
 		Request request = new Request();
 		request.setPath(path);
 		request.setMethod(method);
-		request.setBody(gson.toJson(object));
+		request.setBody(gson.toJson(body));
 		String jsonUser = gson.toJson(request);
 		try {
 			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id

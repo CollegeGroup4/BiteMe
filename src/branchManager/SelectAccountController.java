@@ -45,7 +45,7 @@ import logic.BusinessAccount;
 import logic.PrivateAccount;
 import logic.Restaurant;
 
-public class EditPersonalInfoController implements Initializable {
+public class SelectAccountController implements Initializable {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 
 	@FXML

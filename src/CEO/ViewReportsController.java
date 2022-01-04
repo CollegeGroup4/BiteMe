@@ -59,9 +59,9 @@ private String typeReport;
     	oneReportNext.setVisible(false);
     	twoReportNext.setVisible(false);
     	
-    	comboBoxbranch.getItems().setAll("North", "South", "Coordinator");
-    	comboBoxFBranch.getItems().setAll("North", "South", "Coordinator");
-    	comboBoxSBranch.getItems().setAll("North", "South", "Coordinator");
+    	comboBoxbranch.getItems().setAll("North", "South", "Center");
+    	comboBoxFBranch.getItems().setAll("North", "South", "Center");
+    	comboBoxSBranch.getItems().setAll("North", "South", "Center");
     	
     	comboBoxFQuarter.getItems().setAll("I", "II", "III", "IV");
     	comboBoxSQuarter.getItems().setAll("I", "II", "III", "IV");

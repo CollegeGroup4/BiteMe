@@ -69,7 +69,11 @@ public class BranchManagerController implements Initializable {
 
 	@FXML
 	private Label lableHello;
-
+	
+/**
+ * Get the Approvals of the BM
+ * @param event
+ */
 	@FXML
 	void Approvals(ActionEvent event) {
 		branchManagerFunctions.reload(event, "/branchManager/ApprovalsPage.fxml", "Branch manager - Approvals Page");
@@ -92,7 +96,7 @@ public class BranchManagerController implements Initializable {
 
 	@FXML
 	void openAccount(ActionEvent event) {
-		branchManagerFunctions.reload(event, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+		branchManagerFunctions.reload(event, "/branchManager/SelectAccount.fxml", "Branch manager - open account");
 	}
 
 	@FXML

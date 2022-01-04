@@ -172,22 +172,22 @@ public class DeliveryAndTimeController implements Initializable {
 			errorLabelFunc("Please insert type of order");
 			return;
 		}
-		if (workplace.getText().equals("")) {
-			errorLabelFunc("Please insert workplace");
-			return;
-		}
-		if (address.getText().equals("")) {
-			errorLabelFunc("Please insert address");
-			return;
-		}
-		if (name.getText().equals("")) {
-			errorLabelFunc("Please insert name");
-			return;
-		}
-		if (phoneNumber.getText().equals("")) {
-			errorLabelFunc("Please insert phone number");
-			return;
-		}
+//		if (workplace.getText().equals("")) {
+//			errorLabelFunc("Please insert workplace");
+//			return;
+//		}
+//		if (address.getText().equals("")) {
+//			errorLabelFunc("Please insert address");
+//			return;
+//		}
+//		if (name.getText().equals("")) {
+//			errorLabelFunc("Please insert name");
+//			return;
+//		}
+//		if (phoneNumber.getText().equals("")) {
+//			errorLabelFunc("Please insert phone number");
+//			return;
+//		}
 	}
 
 	private void errorLabelFunc(String errorMsg) {

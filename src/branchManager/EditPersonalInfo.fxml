@@ -130,6 +130,11 @@
                   <Font name="System Bold Italic" size="12.0" />
                </font>
             </Label>
+            <Button layoutX="411.0" layoutY="603.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="52.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
       <JFXHamburger fx:id="myHamburger" layoutX="858.0" layoutY="40.0" />

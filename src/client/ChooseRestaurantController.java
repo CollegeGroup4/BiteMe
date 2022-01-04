@@ -96,7 +96,7 @@ public class ChooseRestaurantController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
 		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
-		
+
 		areas.getItems().addAll("north", "south", "East", "West");
 		areas.setValue(CustomerPageController.client.getArea()); // TODO
 		System.out.println("client: " + CustomerPageController.client);
@@ -209,19 +209,11 @@ public class ChooseRestaurantController implements Initializable {
 
 	void sentToServer() {
 		Gson gson = new Gson();
-		Request request = new Request();
-		request.setPath("/restaurants/areas");
-		request.setMethod("GET");
-
 		JsonElement body = gson.toJsonTree(new Object());
 		body.getAsJsonObject().addProperty("area", areas.getValue());
-		request.setBody(gson.toJson(body));
-		String jsonUser = gson.toJson(request);
-		try {
-			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
-		} catch (NullPointerException e) {
-			System.out.println("get restaurants by area didn't work");
-		}
+		
+		customerFunctions.sentToJson("/restaurants/areas", "GET", body, "get restaurants by area didn't work");
+	
 	}
 
 	private void response() {
@@ -229,7 +221,7 @@ public class ChooseRestaurantController implements Initializable {
 		restaurantsFromData = new ArrayList<Restaurant>();
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201) // if there was an error then need to print an error
-			 lableErrorMag.setText(response.getDescription()); // TODO- error massage
+			lableErrorMag.setText(response.getDescription()); // TODO- error massage
 		else {
 			Restaurant[] restaurantList = EchoServer.gson.fromJson((String) response.getBody(), Restaurant[].class);
 			types.getItems().add("All");
