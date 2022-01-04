@@ -426,6 +426,32 @@ public class EchoServer extends AbstractServer {
 				break;
 			}
 			break;
+				case "/hr":
+			switch (method) {
+			case POST:
+				Employer employer = gson.fromJson((String) m.getBody(), Employer.class);
+				HrApiService.registerEmployer(employer, response);
+				break;
+			}
+			break;
+		case "/hr/approveBusinessAccount":
+			switch (method) {
+			case POST:
+				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
+				HrApiService.approveBusinessAccount(userName, response);
+				break;
+			}
+			break;
+		case "/hrBusinessAccount":
+			switch (method) {
+			case GET:
+				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				int branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
+				HrApiService.getAllUnapprovedBusinessAccount(branchManagerID, response);
+				break;
+			}
+			break;
 		default:
 			response.setCode(500);
 			response.setDescription("Bad request");
