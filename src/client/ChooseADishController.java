@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTextArea;
 
 import Server.EchoServer;
@@ -27,6 +29,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -83,11 +86,17 @@ public class ChooseADishController implements Initializable {
 
 	@FXML
 	private HBox Nav;
+	@FXML
+	private JFXHamburger myHamburger;
+
+	@FXML
+	private JFXDrawer drawer;
 
 	@FXML
 	private Label welcomeLabel;
-    @FXML
-    private Label lableErrorMag;
+	@FXML
+	private Label lableErrorMag;
+
 
 	public void start(Stage primaryStage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource("/client/ChooseADish.fxml"));
@@ -100,6 +109,8 @@ public class ChooseADishController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+
 		/// ---------------------------------------------
 		System.out.println("path:" + System.getProperty("user.dir"));
 		/// ---------------------------------------------
@@ -107,8 +118,8 @@ public class ChooseADishController implements Initializable {
 		menusArr = new ArrayList<Menu>(); // for test only
 		allItems = new HashMap<>(); // for test only
 //		setTempDatabase(); // for test only
-		 sentToServer();
-		 response();
+		sentToServer();
+		response();
 		if (itemsSelectedArr == null)
 			itemsSelectedArr = new ArrayList<>();
 		paneForSelections.setVisible(false);
@@ -120,7 +131,7 @@ public class ChooseADishController implements Initializable {
 //		setItemsInCategory();// --create item in category list--
 		comboBoxCategory.setDisable(true);
 		shoppingCart.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClickShoppingCart(e));
-
+		SummaryController.withRemoveBtn = true;
 		try {
 			setItemContainer();
 		} catch (FileNotFoundException e1) {
@@ -174,7 +185,6 @@ public class ChooseADishController implements Initializable {
 			item_in_menu itemInMenu = menuSelected.getItems()[i];
 			if (selectedCourse == null || (itemInMenu.getCourse()).equals(selectedCourse)) {
 				Item item = allItems.get(itemInMenu.getItemID());
-
 
 				if (selectedCategory == null || (item.getCategory()).equals(selectedCategory)) {
 					// ---get the img of the dish---//
@@ -303,12 +313,10 @@ public class ChooseADishController implements Initializable {
 		request.setMethod("GET");
 
 		JsonElement body = gson.toJsonTree(new Object());
-		System.out.println("ChooseRestaurantController.restaurantSelected.getId(): "+ ChooseRestaurantController.restaurantSelected.getId());
 		body.getAsJsonObject().addProperty("restaurantID", ChooseRestaurantController.restaurantSelected.getId());
 		request.setBody(gson.toJson(body));
 		String jsonUser = gson.toJson(request);
 		try {
-			System.out.println(jsonUser);
 			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
 			System.out.println("get menus by restaurand ID didn't work");
@@ -321,16 +329,14 @@ public class ChooseADishController implements Initializable {
 		allItems = new HashMap<>();
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201) // if there was an error then need to print an error
-			 lableErrorMag.setText(response.getDescription()); // TODO- error massage
-//			System.out.println(response.getDescription());
+			lableErrorMag.setText(response.getDescription()); // TODO- error massage
 		else {
 			JsonElement a = gson.fromJson((String) response.getBody(), JsonElement.class);
 			Menu[] menuList = gson.fromJson(a.getAsJsonObject().get("menues"), Menu[].class);
 			Item[] itemList = gson.fromJson(a.getAsJsonObject().get("items"), Item[].class);
-			System.out.println("restaurantList " + menuList.length);
 			for (Menu r : menuList) // update the list of restaurant to be the response from the DB
 				menusArr.add(r);
-			
+
 			for (Item i : itemList) {
 				allItems.put(i.getItemID(), i);
 			}
@@ -358,6 +364,8 @@ public class ChooseADishController implements Initializable {
 
 	@FXML
 	void next(ActionEvent event) {
+		SummaryController.withRemoveBtn = false;
+
 		((Node) event.getSource()).getScene().getWindow().hide();
 		DeliveryAndTimeController aFrame = new DeliveryAndTimeController();
 		try {

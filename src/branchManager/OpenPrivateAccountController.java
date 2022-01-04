@@ -23,6 +23,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -82,10 +83,16 @@ public class OpenPrivateAccountController implements Initializable {
 
 	@FXML
 	private JFXComboBox<String> comboBoxStatus;
+	
+    @FXML
+    private JFXComboBox<String> comboBoxRole;
 
 	@FXML
-	private Label lableErrorMag;
-
+	private Label lableErrorMsg;
+	
+	@FXML
+	private Label lableSuccessMsg;
+	
 	@FXML
 	private AnchorPane componentExplain;
 
@@ -100,11 +107,16 @@ public class OpenPrivateAccountController implements Initializable {
 
 	@FXML
 	private JFXDrawer drawer;
+	
+    @FXML
+    private Button btnReturnHome;
+	
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
 		comboBoxStatus.getItems().setAll("Active", "Frozen", "Blocked");
+		comboBoxStatus.setValue("Active");
 		componentExplain.setVisible(false);
 		String[] listMonth = new String[12];
 		for (int i = 0; i < 12; i++) {
@@ -114,12 +126,17 @@ public class OpenPrivateAccountController implements Initializable {
 				listMonth[i] = "" + (i + 1);
 		}
 		comboBoxMonth.getItems().setAll(listMonth);
+		comboBoxMonth.setValue("01");
 		String[] listYear = new String[20];
 		for (int i = 0; i < 20; i++)
 			listYear[i] = "20" + (i + 21);
 		comboBoxYear.getItems().setAll(listYear);
+		comboBoxYear.setValue("2021");
 		componnentDebt.setVisible(isEdit);
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer); 
+		
+		comboBoxRole.getItems().setAll("Not Assigned","CEO","Branch Manager","Supplier","HR","Client");
+		comboBoxRole.setValue("Not Assigned");
 	}
 
 	@FXML
@@ -176,7 +193,7 @@ public class OpenPrivateAccountController implements Initializable {
 					}
 
 				}
-				PrivateAccount privateAccount = new PrivateAccount(id, username, null, null, null, null, null, "Not Assigned",
+				PrivateAccount privateAccount = new PrivateAccount(id, username, null, null, null, null,  comboBoxRole.getValue(),null,
 						status, false, BranchManagerController.branchManager.getUserID(),
 						BranchManagerController.branchManager.getArea(), 0, null, cardNum, cvv, expDate);
 				sentToJson(privateAccount);
@@ -200,8 +217,15 @@ public class OpenPrivateAccountController implements Initializable {
 
 	void response() {
 		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201)
-			lableErrorMag.setText(response.getDescription());// error massage
+		if (response.getCode() != 200 && response.getCode() != 201) {
+			lableSuccessMsg.setText("");
+			lableErrorMsg.setText(response.getDescription());// error massage
+		}
+		else {
+			btnReturnHome.setVisible(true);
+			lableErrorMsg.setText("");
+			lableSuccessMsg.setText(response.getDescription());// error massage
+		}
 	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {

@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTextArea;
 
 import Server.EchoServer;
@@ -62,12 +64,9 @@ public class ChooseRestaurantController implements Initializable {
 
 	String projectPath = System.getProperty("user.dir") + "\\src\\images\\"; // locate the Path of the current project
 																				// directory
- 
-	@FXML
-	private VBox restaurantsContainer;
 
 	@FXML
-	private Button backBtn;
+	private VBox restaurantsContainer;
 
 	@FXML
 	private JFXComboBox<String> areas;
@@ -82,17 +81,24 @@ public class ChooseRestaurantController implements Initializable {
 	private Label welcomeLabel;
 
 	@FXML
-	private Hyperlink btnHome;
+	private Button btnLogout;
 
 	@FXML
-	private Button btnLogout;
+	private JFXHamburger myHamburger;
+
+	@FXML
+	private JFXDrawer drawer;
+
+	@FXML
+	private Label lableErrorMag;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 		
-		areas.getItems().addAll("North", "South", "East", "West");
-		areas.setValue(CustomerPageController.client.getArea());
+		areas.getItems().addAll("north", "south", "East", "West");
+		areas.setValue(CustomerPageController.client.getArea()); // TODO
 		System.out.println("client: " + CustomerPageController.client);
 		System.out.println("area: " + CustomerPageController.client.getArea());
 		sentToServer();
@@ -102,10 +108,6 @@ public class ChooseRestaurantController implements Initializable {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
-//		BackgroundFill background_fill = new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY);
-//		Background background = new Background(background_fill);
-//		restaurantsContainer.setBackground(background);
 	}
 
 	@FXML
@@ -127,7 +129,6 @@ public class ChooseRestaurantController implements Initializable {
 	}
 
 	void reSetContainer() throws FileNotFoundException {
-		// getInformation(areas.getValue(), types.getValue());
 		ArrayList<HBox> restaurantList = new ArrayList<>();
 		String areaSelected = areas.getValue();
 		String typeSelected = types.getValue();
@@ -227,23 +228,16 @@ public class ChooseRestaurantController implements Initializable {
 
 		restaurantsFromData = new ArrayList<Restaurant>();
 		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201) // TODO- if there was an error then need to print an
-																	// ERORR!
-			// lableErrorMag.setText(response.getDescription()); // TODO- error massage
-			System.out.println(response.getDescription());
+		if (response.getCode() != 200 && response.getCode() != 201) // if there was an error then need to print an error
+			 lableErrorMag.setText(response.getDescription()); // TODO- error massage
 		else {
-//			System.out.println("-->>" + response.getDescription()); // Description from server
-//			JsonElement body = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
-//			restaurantList = EchoServer.gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant[].class);
 			Restaurant[] restaurantList = EchoServer.gson.fromJson((String) response.getBody(), Restaurant[].class);
-			System.out.println("restaurantList " + restaurantList);
 			types.getItems().add("All");
 			for (Restaurant r : restaurantList) { // update the list of restaurant to be the response from the DB
 				restaurantsFromData.add(r);
 				types.getItems().add(r.getType());
 			}
 			types.setValue("All");
-
 		}
 	}
 

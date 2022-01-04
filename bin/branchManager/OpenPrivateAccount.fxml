@@ -64,8 +64,8 @@
                               <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Text>
-                        <JFXComboBox fx:id="comboBoxMonth" layoutX="144.0" layoutY="11.0" prefHeight="25.0" prefWidth="56.0" promptText="01" />
-                        <JFXComboBox fx:id="comboBoxYear" layoutX="231.0" layoutY="12.0" prefHeight="25.0" prefWidth="72.0" promptText="2021" />
+                        <JFXComboBox fx:id="comboBoxMonth" layoutX="144.0" layoutY="11.0" prefHeight="25.0" prefWidth="56.0" />
+                        <JFXComboBox fx:id="comboBoxYear" layoutX="231.0" layoutY="12.0" prefHeight="25.0" prefWidth="72.0" />
                         <Label layoutX="212.0" layoutY="14.0" text="/">
                            <font>
                               <Font name="System Bold" size="18.0" />
@@ -144,9 +144,19 @@
                         <TextField fx:id="textFieldID" layoutX="152.0" layoutY="21.0" promptText="id" />
                      </children>
                   </AnchorPane>
+                  <AnchorPane prefHeight="38.0" prefWidth="304.0">
+                     <children>
+                        <Label contentDisplay="CENTER" layoutX="41.0" layoutY="19.0" prefHeight="35.0" prefWidth="110.0" text="Role:" textAlignment="CENTER">
+                           <font>
+                              <Font name="Berlin Sans FB Demi Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <JFXComboBox fx:id="comboBoxRole" layoutX="153.0" layoutY="24.0" prefHeight="26.0" prefWidth="150.0" />
+                     </children>
+                  </AnchorPane>
                   <AnchorPane fx:id="componnentDebt" prefHeight="38.0" prefWidth="304.0">
                      <children>
-                        <Label fx:id="lblrequiredDebt" alignment="CENTER" layoutX="156.0" layoutY="6.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
+                        <Label fx:id="lblrequiredDebt1" alignment="CENTER" layoutX="156.0" layoutY="6.0" prefHeight="18.0" prefWidth="142.0" textFill="RED">
                            <font>
                               <Font name="System Bold Italic" size="12.0" />
                            </font>
@@ -156,7 +166,7 @@
                               <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textFieldDebt" layoutX="152.0" layoutY="24.0" promptText="debt" />
+                        <TextField fx:id="textFieldDebt1" layoutX="152.0" layoutY="24.0" promptText="debt" />
                      </children>
                   </AnchorPane>
                </children>
@@ -171,7 +181,7 @@
                         <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                      </font>
                   </Label>
-                  <JFXComboBox fx:id="comboBoxStatus" layoutX="60.0" layoutY="16.0" prefHeight="28.0" prefWidth="94.0" promptText=" Active" />
+                  <JFXComboBox fx:id="comboBoxStatus" layoutX="60.0" layoutY="16.0" prefHeight="28.0" prefWidth="94.0" />
                </children>
             </AnchorPane>
             <Button layoutX="71.0" layoutY="603.0" mnemonicParsing="false" onAction="#backOpenAccount" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
@@ -179,9 +189,9 @@
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Button>
-            <Label fx:id="lableErrorMag" alignment="CENTER" layoutX="9.0" layoutY="498.0" prefHeight="18.0" prefWidth="862.0" textFill="RED">
+            <Label fx:id="lableErrorMsg" alignment="CENTER" layoutX="9.0" layoutY="490.0" prefHeight="18.0" prefWidth="862.0" textFill="RED">
                <font>
-                  <Font name="System Bold Italic" size="12.0" />
+                  <Font name="System Bold Italic" size="17.0" />
                </font>
             </Label>
             <Button layoutX="814.0" layoutY="379.0" mnemonicParsing="false" onAction="#onClickHelp" prefHeight="18.0" prefWidth="14.0" style="-fx-background-radius: 100;" text="?" />
@@ -195,6 +205,16 @@
                   <Line endX="-70.0" endY="-29.0" layoutX="293.0" layoutY="41.0" startX="-86.0" startY="1.0" />
                </children>
             </AnchorPane>
+            <Button fx:id="btnReturnHome" layoutX="364.0" layoutY="517.0" mnemonicParsing="false" onAction="#home" prefHeight="38.0" prefWidth="153.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Return Home" textFill="WHITE" visible="false">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
+            <Label fx:id="lableSuccessMsg" alignment="CENTER" layoutX="13.0" layoutY="490.0" prefHeight="18.0" prefWidth="862.0" textFill="#39ee07">
+               <font>
+                  <Font name="System Bold Italic" size="17.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="8.0" prefHeight="102.0" prefWidth="784.0" spacing="50.0" style="-fx-background-radius: 50px;">

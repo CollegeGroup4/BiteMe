@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -12,6 +13,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,6 +37,7 @@ import logic.Item;
 import logic.Shippment;
 
 public class DeliveryAndTimeController implements Initializable {
+	private CustomerFunctions customerFunctions = new CustomerFunctions();
 
 	public static Shippment shippment;
 
@@ -104,6 +108,12 @@ public class DeliveryAndTimeController implements Initializable {
 
 	@FXML
 	private Label errorLabel;
+	
+    @FXML
+    private JFXHamburger myHamburger;
+
+    @FXML
+    private JFXDrawer drawer;
 
 	@FXML
 	void goBack(ActionEvent event) throws IOException {
@@ -134,7 +144,24 @@ public class DeliveryAndTimeController implements Initializable {
 
 	private void checkValidInputes() {
 		if (dpDate.getValue() == null) {
-			errorLabelFunc("Please insert  date");
+			errorLabelFunc("Please insert date");
+			return;
+		}
+		int yearSelected = dpDate.getValue().getYear();
+		int monthSelected = dpDate.getValue().getMonthValue();
+		int daySelected = dpDate.getValue().getDayOfMonth();
+
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		LocalDateTime now = LocalDateTime.now();
+		int yearNow = now.getYear();
+		int monthNow = now.getMonthValue();
+		int dayNow = now.getDayOfMonth();
+		
+
+		if (yearSelected - yearNow < 0 || (yearSelected - yearNow >= 0 && monthSelected - monthNow < 0)
+				|| (yearSelected - yearNow >= 0 && monthSelected - monthNow >= 0 && daySelected - dayNow < 0)) {
+
+			errorLabelFunc("Please insert  valid  date");
 			return;
 		}
 		if (cbTime.getValue() == null) {
@@ -231,6 +258,9 @@ public class DeliveryAndTimeController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+
 		errorLabel.setVisible(false);
 		cbTime.getItems().addAll("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00",
 				"04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30",
@@ -252,4 +282,13 @@ public class DeliveryAndTimeController implements Initializable {
 
 	}
 
+	@FXML
+	void home(ActionEvent event) {
+		customerFunctions.home(event);
+	}
+
+	@FXML
+	void logout(ActionEvent event) {
+		customerFunctions.logout(event);
+	}
 }

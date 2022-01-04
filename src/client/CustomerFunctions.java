@@ -51,36 +51,36 @@ public class CustomerFunctions {
 		}
 	}
 
-//	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
-//
-//		try {
-//			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-//
-//			drawer.setSidePane(anchorPane);
-//		} catch (IOException e) {
-//			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
-//		}
-//
-//		// transition animation of hamburger icon
-//		HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(myHamburger);
-//		drawer.setVisible(false);
-//		transition.setRate(-1);
-//
-//		// click event - mouse click
-//		myHamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
-//
-//			transition.setRate(transition.getRate() * -1);
-//			transition.play();
-//
-//			if (drawer.isOpened()) {
-//				drawer.setVisible(false);
-//				drawer.close(); // this will close slide pane
-//			} else {
-//				drawer.open(); // this will open slide pane
-//				drawer.setVisible(true);
-//			}
-//		});
-//	}
+	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
+
+		try {
+			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
+
+			drawer.setSidePane(anchorPane);
+		} catch (IOException e) {
+			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
+		}
+
+		// transition animation of hamburger icon
+		HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(myHamburger);
+		drawer.setVisible(false);
+		transition.setRate(-1);
+
+		// click event - mouse click
+		myHamburger.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
+
+			transition.setRate(transition.getRate() * -1);
+			transition.play();
+
+			if (drawer.isOpened()) {
+				drawer.setVisible(false);
+				drawer.close(); // this will close slide pane
+			} else {
+				drawer.open(); // this will open slide pane
+				drawer.setVisible(true);
+			}
+		});
+	}
 
 	public void sentToJson(String path, String method, Object object, String errorMsg) {
 		Gson gson = new Gson();

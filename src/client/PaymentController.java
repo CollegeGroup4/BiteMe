@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,6 +34,7 @@ public class PaymentController implements Initializable {
 	public float priceOfShippment = 0;
 	private boolean errorOccurred = false;
 	public boolean isOpen = false;
+	private CustomerFunctions customerFunctions = new CustomerFunctions();
 
 	class PaymentSaved {
 		String cardType;
@@ -140,6 +144,11 @@ public class PaymentController implements Initializable {
 
 	@FXML
 	private Button btnLogout;
+	@FXML
+	private JFXHamburger myHamburger;
+
+	@FXML
+	private JFXDrawer drawer;
 
 	public void start(Stage primaryStage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource("/client/Payment.fxml"));
@@ -207,6 +216,9 @@ public class PaymentController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+
 		payment = new PaymentSaved();
 		errorLabel.setVisible(false);
 		setPrices();
@@ -327,6 +339,16 @@ public class PaymentController implements Initializable {
 		expMonth.setDisable(b);
 		expYear.setDisable(b);
 
+	}
+
+	@FXML
+	void home(ActionEvent event) {
+		customerFunctions.home(event);
+	}
+
+	@FXML
+	void logout(ActionEvent event) {
+		customerFunctions.logout(event);
 	}
 
 }

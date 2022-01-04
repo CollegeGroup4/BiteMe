@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 
 import Server.EchoServer;
 import Server.Response;
@@ -26,10 +28,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import logic.Account;
 import logic.Item;
 import logic.Menu;
+import logic.Order;
+import logic.Shippment;
 
 public class FinalApproveController implements Initializable {
+	private CustomerFunctions customerFunctions = new CustomerFunctions();
 
 	@FXML
 	private Button btnBack;
@@ -87,8 +93,18 @@ public class FinalApproveController implements Initializable {
 
 	@FXML
 	private Button btnLogout;
-	 @FXML
-	    private Label lableErrorMag;
+	@FXML
+	private Label lableErrorMag;
+	@FXML
+	private Label orderNum;
+
+	@FXML
+	private Button returnHome;
+	@FXML
+	private JFXHamburger myHamburger;
+
+	@FXML
+	private JFXDrawer drawer;
 
 	public void start(Stage primaryStage) throws IOException {
 		Parent root = FXMLLoader.load(getClass().getResource("/client/FinalApprove.fxml"));
@@ -101,9 +117,11 @@ public class FinalApproveController implements Initializable {
 	@FXML
 	void confirmOrder(ActionEvent event) {
 		orderDetails.setVisible(false);
+		btnConfirm.setVisible(false);
+		returnHome.setVisible(true);
 		confirmation.setVisible(true);
-		
-
+		sentToServer();
+		response();
 	}
 
 	@FXML
@@ -117,6 +135,9 @@ public class FinalApproveController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+
 		setOrderDetailsLabels();
 		Parent root = null;
 		try {
@@ -138,7 +159,7 @@ public class FinalApproveController implements Initializable {
 		// lblName.setText(lblName.getText() + " " +
 		// CustomerPageController.user.getName()); *** Implement when connect to the DB
 		lblPhone.setText(lblPhone.getText() + " " + DeliveryAndTimeController.shippment.getPhone());
-		if (! PaymentController.payment.cardNum.equals(""))
+		if (!PaymentController.payment.cardNum.equals(""))
 			lblCardNum.setText("***" + PaymentController.payment.cardNum.substring(
 					PaymentController.payment.cardNum.length() - 4, PaymentController.payment.cardNum.length()));
 		if (PaymentController.payment.expMonth != null && PaymentController.payment.expYear != null)
@@ -147,41 +168,59 @@ public class FinalApproveController implements Initializable {
 		if (PaymentController.payment.cardType != null)
 			lblTypeOfCard.setText(lblTypeOfCard.getText() + " " + PaymentController.payment.cardType);
 	}
-	
+
 	void sentToServer() {
-		Item[] itemsToSend;
 		Gson gson = new Gson();
 		Request request = new Request();
 		request.setPath("/orders");
 		request.setMethod("POST");
-		JsonElement body = gson.toJsonTree(new Object());
+
+//		PaymentController.payment.
+
+		Order order = new Order(DeliveryAndTimeController.orderToSend.orderId,
+				DeliveryAndTimeController.orderToSend.restaurantId,
+				ChooseRestaurantController.restaurantSelected.getName(),
+				DeliveryAndTimeController.orderToSend.time_taken, DeliveryAndTimeController.orderToSend.check_out_price,
+				DeliveryAndTimeController.orderToSend.required_time,
+				DeliveryAndTimeController.orderToSend.type_of_order, CustomerPageController.client.getUserName(),
+				CustomerPageController.client.getPhone(),
+				DeliveryAndTimeController.orderToSend.discount_for_early_order,
+				DeliveryAndTimeController.orderToSend.items, DeliveryAndTimeController.shippment, null, false, false);
 // TODO - need to sent the order, it is in the delivery and paymant class   
-		body.getAsJsonObject().addProperty("items", CustomerPageController.client.isBusiness());
-		
-		request.setBody(gson.toJson(body));
-		String jsonUser = gson.toJson(request);
+//		JsonElement body = gson.toJsonTree(order);
+//		body.getAsJsonObject().addProperty("items", CustomerPageController.client.isBusiness());
+
+		request.setBody(gson.toJson(order));
 		try {
-			System.out.println(jsonUser);
-			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+			ClientUI.chat.accept(gson.toJson(request)); // in here will be DB ask for restaurant id
 		} catch (NullPointerException e) {
 			System.out.println("get menus by restaurand ID didn't work");
 		}
 	}
 
 	private void response() {
+		Gson gson = new Gson();
 		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201) // if there was an error then need to print an ERORR!
-			 lableErrorMag.setText(response.getDescription()); // TODO- error massage
-//			System.out.println(response.getDescription());
+		if (response.getCode() != 200 && response.getCode() != 201) // if there was an error then need to print an
+																	// ERORR!
+			lableErrorMag.setText(response.getDescription()); // TODO- error massage
 		else {
-			JsonElement a= EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
-			Menu[] menuList = EchoServer.gson.fromJson(a.getAsJsonObject().get("menues"), Menu[].class);
-			Item[] itemList = EchoServer.gson.fromJson(a.getAsJsonObject().get("items"), Item[].class);
-			System.out.println("restaurantList " + menuList);
-
-			}
-
+			JsonElement body = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
+			int orderID = gson.fromJson(body.getAsJsonObject().get("orderID"), int.class);
+			System.out.println("orderID: " + orderID);
+			orderNum.setText(" " + orderID);
 		}
-	
+
+	}
+
+	@FXML
+	void home(ActionEvent event) {
+		customerFunctions.home(event);
+	}
+
+	@FXML
+	void logout(ActionEvent event) {
+		customerFunctions.logout(event);
+	}
 
 }

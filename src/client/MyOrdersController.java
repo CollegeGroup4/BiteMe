@@ -5,6 +5,14 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+
+import Server.EchoServer;
+import Server.Response;
+import branchManager.BranchManagerController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,23 +27,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import logic.Account;
 import logic.Order;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class MyOrdersController implements Initializable {
+	private CustomerFunctions customerFunctions = new CustomerFunctions();
 
 	@FXML
 	private HBox Nav;
 
-    @FXML
-    private Label welcomeLabel;
-    
 	@FXML
-	private Button btnLogout;
-
-	@FXML
-	private Hyperlink BtnHome;
+	private Label welcomeLabel;
 
 	@FXML
 	private ImageView imageBiteme1;
@@ -75,8 +79,51 @@ public class MyOrdersController implements Initializable {
 
 	@FXML
 	private TableColumn<Order, String> OrderAddress;
+	@FXML
+	private JFXHamburger myHamburger;
+
+	@FXML
+	private JFXDrawer drawer;
+	
+    @FXML
+    private Label lableErrorMag;
 
 	private ObservableList<Order> orderList = FXCollections.observableArrayList();
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+
+//		orderList.clear();
+//		Gson gson = new Gson();
+//		JsonElement jsonElem = gson.toJsonTree(new Object());
+//		jsonElem.getAsJsonObject().addProperty("userName", CustomerPageController.client.getUserName());
+//		customerFunctions.sentToJson("/accounts", "GET", jsonElem,
+//				"Edit personal info - new ClientController didn't work");
+		response();
+
+		OrderNum.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderNum"));
+		Restaurant.setCellValueFactory(new PropertyValueFactory<Order, String>("resturant"));
+		OrderTime.setCellValueFactory(new PropertyValueFactory<Order, Time>("orderTime"));
+		OrderType.setCellValueFactory(new PropertyValueFactory<Order, String>("orderType"));
+		OrderAddress.setCellValueFactory(new PropertyValueFactory<Order, String>("orderAddress"));
+		tblID.setItems(orderList);
+
+	}
+
+	void response() {
+//		Response response = ChatClient.serverAns;
+//		if (response.getCode() != 200 && response.getCode() != 201)
+//			lableErrorMag.setText(response.getDescription());// error massage
+//		else {
+//			Account[] account = EchoServer.gson.fromJson((String) response.getBody(), Account[].class);
+//			for (Account a : account) { // update the list of users to be the response from the DB
+//				orderList.add(a);
+//			}
+//		}
+
+	}
 
 	@FXML
 	void goBack(ActionEvent event) {
@@ -111,18 +158,13 @@ public class MyOrdersController implements Initializable {
 //		}
 	}
 
-
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
-
-		OrderNum.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderNum"));
-		Restaurant.setCellValueFactory(new PropertyValueFactory<Order, String>("resturant"));
-		OrderTime.setCellValueFactory(new PropertyValueFactory<Order, Time>("orderTime"));
-		OrderType.setCellValueFactory(new PropertyValueFactory<Order, String>("orderType"));
-		OrderAddress.setCellValueFactory(new PropertyValueFactory<Order, String>("orderAddress"));
-		tblID.setItems(orderList);
-
+	@FXML
+	void home(ActionEvent event) {
+		customerFunctions.home(event);
 	}
 
+	@FXML
+	void logout(ActionEvent event) {
+		customerFunctions.logout(event);
+	}
 }

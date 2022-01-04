@@ -59,7 +59,7 @@ public class EditPersonalInfoController implements Initializable {
 	@FXML
 	private TableColumn<Account, String> tableColRole;
 	@FXML
-	private TableColumn<Account, Integer> tableColID;
+	private TableColumn<Account, String> tableColID;
 	@FXML
 	private TableColumn<Account, String> tableColFirstname;
 	@FXML
@@ -71,7 +71,7 @@ public class EditPersonalInfoController implements Initializable {
 	@FXML
 	private TableColumn<Account, String> tableColStatus;
 	@FXML
-	private TextField textFiledSearchID;
+	private TextField textFiledSearchUsername;
 
 	@FXML
 	private JFXComboBox<String> coboBoxRole;
@@ -99,7 +99,7 @@ public class EditPersonalInfoController implements Initializable {
 	private ObservableList<Account> usersFilter = FXCollections.observableArrayList();
 
 	private ObservableList<Account> userEditSelect;
-	private HashMap<Integer, Account> allUsres = new HashMap<>();
+	private HashMap<String, Account> allUsres = new HashMap<>();
 
 //	void sentToJson() {
 //		Request request = new Request();
@@ -125,7 +125,7 @@ public class EditPersonalInfoController implements Initializable {
 			Account[] account = EchoServer.gson.fromJson((String) response.getBody(), Account[].class);
 			for (Account a : account) { // update the list of users to be the response from the DB
 				userList.add(a);
-				allUsres.put(a.getUserID(), a);
+				allUsres.put(a.getUserName(), a);
 			}
 		}
 
@@ -144,7 +144,7 @@ public class EditPersonalInfoController implements Initializable {
 
 		// create the table
 		tableColRole.setCellValueFactory(new PropertyValueFactory<Account, String>("role"));
-		tableColID.setCellValueFactory(new PropertyValueFactory<Account, Integer>("userID"));
+		tableColID.setCellValueFactory(new PropertyValueFactory<Account, String>("userName"));
 		tableColFirstname.setCellValueFactory(new PropertyValueFactory<Account, String>("firstName"));
 		tableColLastName.setCellValueFactory(new PropertyValueFactory<Account, String>("lastName"));
 		tableColArea.setCellValueFactory(new PropertyValueFactory<Account, String>("area"));
@@ -229,8 +229,8 @@ public class EditPersonalInfoController implements Initializable {
 	 */
 	@FXML
 	void editTable(ActionEvent event) {
-		int id = userEditSelect.get(0).getUserID();
-		Account selecteduser = allUsres.get(id);
+		String username = userEditSelect.get(0).getUserName();
+		Account selecteduser = allUsres.get(username);
 		if (selecteduser.getRole().equals("Supplier")) {
 
 		}
@@ -246,17 +246,18 @@ public class EditPersonalInfoController implements Initializable {
 	 * @param event
 	 */
 	@FXML
-	void editByID(ActionEvent event) {
-		int id;
-		if (textFiledSearchID.getText() != null) {
+	void editByUsername(ActionEvent event) {
+		String username;
+		if (!textFiledSearchUsername.getText().equals("")) {
 			try {
-				id = Integer.parseInt(textFiledSearchID.getText());
-				Account selecteduser = allUsres.get(id);
-				System.out.println("selecteduser" + selecteduser);
+				username=textFiledSearchUsername.getText();
+//				System.out.println("username: "+username);
+				Account selecteduser = allUsres.get(username);
+//				System.out.println("selecteduser: " + selecteduser);
 				branchManagerFunctions.sentToJson("/accounts/getAccount", "GET", selecteduser,
 						"Edit personal info - new ClientController didn't work");
 
-				responseGetAccountID();
+				responseGetAccountUsername();
 			} catch (NumberFormatException e) {
 				lblrequiredEnterid.setText("Enter only numbers");
 			}
@@ -264,7 +265,7 @@ public class EditPersonalInfoController implements Initializable {
 		}
 	}
 
-	void responseGetAccountID() {
+	void responseGetAccountUsername() {
 		Gson gson = new Gson();
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201)

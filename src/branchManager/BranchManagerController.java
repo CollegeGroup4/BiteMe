@@ -97,7 +97,7 @@ public class BranchManagerController implements Initializable {
 	@FXML
 	void orderFood(ActionEvent event) {
 		System.out.println("Order food - Branch manager");
-		branchManagerFunctions.reload(event, "/gui/MainScreen.fxml", "Branch manager- Order food");
+		branchManagerFunctions.reload(event, "/client/MainScreen.fxml", "Branch manager- Order food");
 	}
 
 	@FXML

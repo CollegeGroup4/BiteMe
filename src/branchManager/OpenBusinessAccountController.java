@@ -23,6 +23,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -74,7 +75,10 @@ public class OpenBusinessAccountController implements Initializable {
 	private JFXComboBox<String> comboBoxStatus;
 
 	@FXML
-	private Label lableErrorMag;
+	private Label lableErrorMsg;
+	
+	@FXML
+	private Label lableSuccessMsg;
 
 	@FXML
 	private HBox Nav;
@@ -87,11 +91,15 @@ public class OpenBusinessAccountController implements Initializable {
 
 	@FXML
 	private JFXDrawer drawer;
+	
+    @FXML
+    private Button btnReturnHome;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
 		comboBoxStatus.getItems().setAll("Active", "Frozen", "Blocked");
+		comboBoxStatus.setValue("Active");
 		componnentDebt.setVisible(isEdit);
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
@@ -159,8 +167,15 @@ public class OpenBusinessAccountController implements Initializable {
 
 	void response() {
 		Response response = ChatClient.serverAns;
-//		if (response.getCode() != 200 && response.getCode() != 201)
-			lableErrorMag.setText(response.getDescription());// error massage
+		if (response.getCode() != 200 && response.getCode() != 201) {
+			lableSuccessMsg.setText("");
+			lableErrorMsg.setText(response.getDescription());// error massage
+		}
+		else {
+			btnReturnHome.setVisible(true);
+			lableErrorMsg.setText("");
+			lableSuccessMsg.setText(response.getDescription());// error massage
+		}
 	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {
