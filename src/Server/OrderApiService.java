@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -21,7 +21,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.google.gson.JsonElement;
-import com.mysql.cj.xdevapi.Result;
 
 import common.Response;
 import logic.Account;
@@ -44,11 +43,14 @@ public class OrderApiService {
 	 *
 	 */
 	public static void addOrder(Order order, Response response) {
-		ResultSet rs;
+		ResultSet rs, rs1;
 		int orderID = 0, shipmentID, price;
 		Options options = null;
+		boolean flag;
 
+		// add to order table
 		try {
+
 			PreparedStatement postOrder = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.order (RestaurantID, RestaurantName, UserName, OrderTime, PhoneNumber, TypeOfOrder, Discount_for_early_order,"
 							+ "Check_out_price, isApproved, required_time, hasArrived)"
@@ -69,94 +71,130 @@ public class OrderApiService {
 			rs = postOrder.getGeneratedKeys();
 			rs.next();
 			orderID = rs.getInt(1);
+			order.setOrderID(orderID);
+
 		} catch (SQLException e) {
 			response.setCode(405);
 			response.setDescription("Invalid input");
 			return;
 		}
+
 		try {
+			// add to item_in_order_in_menu table
 			PreparedStatement postItem = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.item_in_menu_in_order (OrderNum, ItemID, OptionalType, OptionalSpecify,"
 							+ "Amount) VALUES (?,?,?,?,?);");
 
 			for (Item temp : order.getItems()) {
-				for (Options opt : temp.getOptions()) {
-					postItem.setInt(1, orderID);
-					postItem.setInt(2, temp.getItemID());
-					postItem.setString(3, opt.getOption_category());
-					postItem.setString(4, opt.getSpecify_option());
-					postItem.setInt(5, temp.getAmount());
-					options = opt;
-					try {
-						postItem.executeUpdate();
-					} catch (SQLException e) {
-						PreparedStatement getAmount = EchoServer.con.prepareStatement(
-								"SELECT amount from biteme.item_in_menu_in_order WHRER OrderNum =? AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?;");
-						getAmount.setInt(1, orderID);
-						getAmount.setInt(2, temp.getItemID());
-						getAmount.setString(3, options.getOption_category());
-						getAmount.setString(4, options.getSpecify_option());
-						rs = getAmount.executeQuery();
+				if (temp.getOptions() != null)
+					for (Options opt : temp.getOptions()) {
+						postItem.setInt(1, orderID);
+						postItem.setInt(2, temp.getItemID());
+						postItem.setString(3, opt.getOption_category());
+						postItem.setString(4, opt.getSpecify_option());
+						postItem.setInt(5, temp.getAmount());
+						options = opt;
+						try {
+							postItem.executeUpdate();
+						} catch (SQLException e) {
+							PreparedStatement getAmount = EchoServer.con.prepareStatement(
+									"SELECT amount from biteme.item_in_menu_in_order WHRER OrderNum =? AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?;");
+							getAmount.setInt(1, orderID);
+							getAmount.setInt(2, temp.getItemID());
+							getAmount.setString(3, options.getOption_category());
+							getAmount.setString(4, options.getSpecify_option());
+							rs = getAmount.executeQuery();
 
-						PreparedStatement updateOrder = EchoServer.con.prepareStatement(
-								"UPDATE biteme.item_in_menu_in_order SET Amount = ? WHERE OrderNum = ?"
-										+ "AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?;");
+							PreparedStatement updateOrder = EchoServer.con.prepareStatement(
+									"UPDATE biteme.item_in_menu_in_order SET Amount = ? WHERE OrderNum = ?"
+											+ "AND ItemID = ? AND OptionalType = ? AND OptionalSpecify = ?;");
 
-						updateOrder.setInt(1, rs.getInt(1) + temp.getAmount());
-						updateOrder.setInt(2, orderID);
-						updateOrder.setInt(3, options.getItemID());
-						updateOrder.setString(4, options.getOption_category());
-						updateOrder.setString(4, options.getSpecify_option());
-						updateOrder.executeUpdate();
+							updateOrder.setInt(1, rs.getInt(1) + temp.getAmount());
+							updateOrder.setInt(2, orderID);
+							updateOrder.setInt(3, options.getItemID());
+							updateOrder.setString(4, options.getOption_category());
+							updateOrder.setString(4, options.getSpecify_option());
+							updateOrder.executeUpdate();
+						}
 					}
-				}
 			}
 		} catch (SQLException e) {
 			response.setBody(null);
 			response.setCode(400);
 			response.setDescription("Could not add item's to the order");
-			try {
-				PreparedStatement deleteOrder = EchoServer.con
-						.prepareStatement("DELETE biteme.order WHERE OrderNum = ?;");
-				deleteOrder.setInt(1, orderID);
-				deleteOrder.executeUpdate();
-			} catch (SQLException ex) {
-				e.printStackTrace();
-			}
+			deleteItemsFromOrder(orderID);
+			deleteOrder(orderID);
 			return;
 		}
-		if (order.getShippment() != null) {
+		// check if the order have shipment
+		if (order.getShippment() != null && order.getShippment().getDelivery().equals("Shared delivery")) {
 			try {
-				PreparedStatement setShipment = EchoServer.con.prepareStatement(
-						"INSERT INTO biteme.shipment (WorkPlace, Address, reciever_name, reciever_phone_number"
-								+ ", deliveryType, OrderNum) VALUES (?,?,?,?,?,?);");
-				if (order.getShippment().getWork_place() == null)
-					setShipment.setString(1, "");
-				else
-					setShipment.setString(1, order.getShippment().getWork_place());
-				if (order.getShippment().getAddress() == null)
-					setShipment.setString(2, "");
-				else
-					setShipment.setString(2, order.getShippment().getAddress());
-				setShipment.setString(3, order.getShippment().getReceiver_name());
-				setShipment.setString(4, order.getShippment().getPhone());
-				setShipment.setString(5, order.getShippment().getDelivery());
-				setShipment.setInt(6, orderID);
-				setShipment.executeUpdate();
+				PreparedStatement getShipID = EchoServer.con
+						.prepareStatement("SELECT ShipmentID FROM biteme.shipment WHERE "
+								+ "workPlace = ? AND Address = ? AND receiver_name = ? AND receiver_phone_number = ? "
+								+ "AND deliveryType = ?;");
+				getShipID.setString(1, order.getShippment().getWork_place());
+				getShipID.setString(2, order.getShippment().getAddress());
+				getShipID.setString(3, order.getShippment().getReceiver_name());
+				getShipID.setString(4, order.getShippment().getPhone());
+				getShipID.setString(5, order.getShippment().getDelivery());
+				try {
+					rs = getShipID.executeQuery();
+					// if we found shipments to the same place, we check if we can add
+					// shipment to the same location
+					flag = false;
+					while (rs.next() && !flag) {
+						shipmentID = rs.getInt(1);
 
-			} catch (SQLException e) {
+						// check if the shipment isn't close
+						PreparedStatement getOrdersFromShipment = EchoServer.con.prepareStatement(
+								"SELECT ois.OrderNum FROM biteme.orders_in_shipment AS ois, biteme.order AS o WHERE ois.ShipmentID = ?"
+										+ " AND ois.OrderNum = o.OrderNum AND o.prep_time is null;");
+
+						getOrdersFromShipment.setInt(1, shipmentID);
+						rs1 = getOrdersFromShipment.executeQuery();
+						if (rs1.next()) {
+							flag = true;
+							addOrderInShipment(shipmentID, order.getOrderID(), order.getUserName());
+							PreparedStatement getCount = EchoServer.con.prepareStatement(
+									"SELECT COUNT(*) FROM biteme.orders_in_shipment WHERE ShipmentID = ?");
+							getCount.setInt(1, shipmentID);
+							rs.close();
+							rs = getCount.executeQuery();
+							rs.next();
+							if (rs.getInt(1) >= 3)
+								price = 15;
+							else if (rs.getInt(1) == 2)
+								price = 20;
+							else
+								price = 25;
+							PreparedStatement updatePriceOrderInShipment = EchoServer.con.prepareStatement(
+									"UPDATE biteme.orders_in_shipment " + "SET Price = ? WHERE ShipmentID = ?;");
+							updatePriceOrderInShipment.setInt(1, price);
+							updatePriceOrderInShipment.setInt(2, shipmentID);
+							updatePriceOrderInShipment.executeUpdate();
+							PreparedStatement getMails = EchoServer.con.prepareStatement(
+									"SELECT a.FirstName, a.Email FROM biteme.orders_in_shipment AS ois, biteme.account AS a"
+											+ " WHERE ois.ShipmentID = ? AND ois.UserName = a.UserName;");
+							getMails.setInt(1, shipmentID);
+							rs.close();
+							rs = getMails.executeQuery();
+							// TODO sending email with update shipping price
+						}
+					}
+					if (!flag) {
+						insertShipment(order, orderID);
+					}
+				} catch (SQLException e) { // if we didn't find shipment to the same place, make new shipment
+					insertShipment(order, orderID);
+				}
+
+			} catch (SQLException ex) {
 				response.setBody(null);
 				response.setCode(400);
-				response.setDescription("Could not add shipment information to the order");
-				try {
-					PreparedStatement deleteOrder = EchoServer.con.prepareStatement(
-							"DELETE biteme.order WHERE OrderNum = ?;DELETE biteme.item_in_menu_in_order WHERE OrderNum = ?;");
-					deleteOrder.setInt(1, orderID);
-					deleteOrder.setInt(1, orderID);
-					deleteOrder.executeUpdate();
-				} catch (SQLException ex) {
-					e.printStackTrace();
-				}
+				response.setDescription("Could not add shipment to the order");
+				deleteItemsFromOrder(orderID);
+				deleteOrder(orderID);
 				return;
 			}
 		}
@@ -165,6 +203,66 @@ public class OrderApiService {
 		JsonElement body = EchoServer.gson.toJsonTree(new Object());
 		body.getAsJsonObject().addProperty("orderID", orderID);
 		response.setBody(EchoServer.gson.toJson(body));
+		invoiceSender(order, orderID);
+	}
+
+	private static void insertShipment(Order order, int orderID) throws SQLException {
+		PreparedStatement setShipment = EchoServer.con.prepareStatement(
+				"INSERT INTO biteme.shipment (workPlace, Address, receiver_name, receiver_phone_number"
+						+ ", deliveryType) VALUES (?,?,?,?,?);",
+				Statement.RETURN_GENERATED_KEYS);
+
+		setShipment.setString(1, order.getShippment().getWork_place());
+		setShipment.setString(2, order.getShippment().getAddress());
+		setShipment.setString(3, order.getShippment().getReceiver_name());
+		setShipment.setString(4, order.getShippment().getPhone());
+		setShipment.setString(5, order.getShippment().getDelivery());
+		setShipment.executeUpdate();
+		ResultSet rs = setShipment.getGeneratedKeys();
+		rs.next();
+		addOrderInShipment(rs.getInt(1), order.getOrderID(), order.getUserName());
+	}
+
+	private static void addOrderInShipment(int Shipmentid, int orderid, String username) {
+		PreparedStatement setInShipment;
+		try {
+			setInShipment = EchoServer.con
+					.prepareStatement("INSERT INTO biteme.orders_in_shipment (ShipmentID, orderNum, UserName, Price)"
+							+ "VALUES (?,?,?,?);");
+
+			setInShipment.setInt(1, Shipmentid);
+			setInShipment.setInt(2, orderid);
+			setInShipment.setString(3, username);
+			setInShipment.setFloat(4, 25);
+			setInShipment.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void deleteOrder(int orderID) {
+		try {
+			PreparedStatement deleteOrder = EchoServer.con
+					.prepareStatement("DELETE FROM biteme.order WHERE OrderNum = ?;");
+			deleteOrder.setInt(1, orderID);
+			deleteOrder.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void deleteItemsFromOrder(int orderID) {
+		try {
+			PreparedStatement deleteIIMIO = EchoServer.con
+					.prepareStatement("DELETE FROM biteme.item_in_menu_in_order WHERE OrderNum = ?;");
+			deleteIIMIO.setInt(1, orderID);
+			deleteIIMIO.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -314,6 +412,35 @@ public class OrderApiService {
 	 *
 	 */
 	// TODO Is there anything to update in order as client??
+	public static void getOrderByUserName(String userName, Response response) {
+		ResultSet rs;
+		int orderID;
+		ArrayList<Order> orders = new ArrayList<>();
+		try {
+			PreparedStatement orderByUserName = EchoServer.con
+					.prepareStatement("SELECT OrderNum FROM biteme.order WHERE UserName = ?;");
+			orderByUserName.setString(1, userName);
+			rs = orderByUserName.executeQuery();
+			while (rs.next()) {
+				orderID = rs.getInt(1);
+				getOrderById(orderID, response);
+				orders.add(EchoServer.gson.fromJson((String) response.getBody(), Order.class));
+			}
+		} catch (SQLException e) {
+			response.setCode(405);
+			response.setDescription("Invalid input");
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success fetching all orders -> userName: " + userName);
+		response.setBody(EchoServer.gson.toJson(orders.toArray()));
+	}
+
+	/**
+	 * Updates a order in the DB with form data
+	 *
+	 */
+	// TODO Is there anything to update in order as client??
 	public static void updateOrder(Order order, Response response) {
 		ResultSet rs;
 		int orderID = 0, shipmentID, price;
@@ -390,9 +517,10 @@ public class OrderApiService {
 		Item itemTemp;
 		Options optionsTemp;
 		try {
-			PreparedStatement getItems = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.items AS items WHERE EXISTS("
-							+ "SELECT * FROM biteme.item_in_menu_in_order AS itemsOrder WHERE items.ItemID = itemsOrder.ItemID AND itemsOrder.OrderNum = ?;");
+			PreparedStatement getItems = EchoServer.con.prepareStatement(
+					"SELECT item.ItemID,item.Category,item.SubCategory,item.Name,item.Price,item.Ingredients,item.RestaurantID,"
+							+ "item.Image,item.Description, iimio.Amount FROM biteme.item AS item INNER JOIN "
+							+ "biteme.item_in_menu_in_order AS iimio ON item.ItemID = iimio.ItemID AND iimio.OrderNum = ?;");
 
 			getItems.setInt(1, orderID);
 			rs1 = getItems.executeQuery();
@@ -404,18 +532,19 @@ public class OrderApiService {
 						rs1.getString(QueryConsts.ITEM_INGREDIENTS), null, rs1.getString(QueryConsts.ITEM_IMAGE),
 						rs1.getInt(10));
 				items.add(itemTemp);
-				PreparedStatement getOptions = EchoServer.con
-						.prepareStatement("SELECT * FROM biteme.optional_category WHERE ItemID = ?");
-				getOptions.setInt(1, itemTemp.getItemID());
+				PreparedStatement getOptions = EchoServer.con.prepareStatement(
+						"SELECT iimio.OptionalType,iimio.OptionalSpecify, oc.price FROM biteme.item_in_menu_in_order AS iimio INNER JOIN "
+								+ "biteme.optional_category AS oc ON oc.ItemID = iimio.ItemID AND iimio.OptionalType = oc.OptionalType AND iimio.OptionalSpecify = oc.Specify AND iimio.OrderNum = ?"
+								+ " AND iimio.ItemID = ?;");
+				getOptions.setInt(1, orderID);
+				getOptions.setInt(2, itemTemp.getItemID());
 				rs2 = getOptions.executeQuery();
 				while (rs2.next()) {
-					optionsTemp = new Options(rs2.getString(QueryConsts.OPTIONAL_TYPE),
-							rs2.getString(QueryConsts.OPTIONAL_SPECIFY), rs2.getDouble(QueryConsts.OPTIONAL_PRICE),
-							itemTemp.getItemID(), rs2.getBoolean(QueryConsts.OPTIONAL_IS_DUPLICATABLE));
-
+					optionsTemp = new Options(rs2.getString(1), rs2.getString(2), rs2.getDouble(3),
+							itemTemp.getItemID(), false);
 					options.add(optionsTemp);
 				}
-				itemTemp.setOptions((Options[]) options.toArray());
+				itemTemp.setOptions(options.toArray(new Options[0]));
 				options.clear();
 				rs2.close();
 			}
@@ -437,38 +566,46 @@ public class OrderApiService {
 		PreparedStatement deliveredOrder;
 		Duration timeElapsed;
 		ResultSet rs;
+		long timeBetweenTakenToReq, timeBetweenNowAndApproved;
 		try {
-			deliveredOrder = EchoServer.con.prepareStatement("UPDATE biteme.order AS orders SET hasArrived = 1"
-					+ " WHERE orders.OrderNum = ? AND orders.UserName = ?;");
+			deliveredOrder = EchoServer.con.prepareStatement(
+					"UPDATE biteme.order SET hasArrived = 1" + " WHERE OrderNum = ? AND UserName = ?;");
 			deliveredOrder.setInt(1, order.getOrderID());
 			deliveredOrder.setString(2, order.getUserName());
-			deliveredOrder.setInt(3, order.getOrderID());
-			deliveredOrder.setString(4, order.getUserName());
-			deliveredOrder.execute();
-			rs = deliveredOrder.getResultSet();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			// deliveredOrder.setInt(3, order.getOrderID());
+			// deliveredOrder.setString(4, order.getUserName());
+			deliveredOrder.executeUpdate();
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
+
 			PreparedStatement insertToDelivery = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.delivery (OrderNum, RestaurantID, Date, isLate) VALUES(?,?,?,?);");
 			insertToDelivery.setInt(1, order.getOrderID());
 			insertToDelivery.setInt(2, order.getRestaurantID());
 			insertToDelivery.setString(3, now.format(formatter));
-			timeElapsed = Duration.between(LocalTime.parse(order.getRequired_time(), formatter),
-					LocalTime.parse(order.getTime_taken(), formatter));
-			if (timeElapsed.toMinutes() < 120) {
 
-				if (Duration.between(now, LocalDateTime.parse(order.getApproved_time())).toMinutes() > 60) {
+			timeBetweenTakenToReq = LocalDateTime.parse(order.getTime_taken(), formatter)
+					.until(LocalDateTime.parse(order.getRequired_time(), formatter), ChronoUnit.MINUTES);
+			timeBetweenNowAndApproved = LocalDateTime.parse(order.getApproved_time(), formatter)
+					.until(LocalDateTime.parse(now.format(formatter), formatter), ChronoUnit.MINUTES);
+
+			if (timeBetweenTakenToReq < 120) {
+
+				if (timeBetweenNowAndApproved > 60) {
 					insertCredit(order, response);
 					insertToDelivery.setBoolean(4, true);
-					insertToDelivery.execute();
+					insertToDelivery.executeUpdate();
 					return;
 				}
-			} else if (Duration.between(now, LocalDateTime.parse(order.getApproved_time())).toMinutes() > 20) {
+
+			} else if (timeBetweenNowAndApproved > 20) {
 				insertCredit(order, response);
 				insertToDelivery.setBoolean(4, true);
-				insertToDelivery.execute();
+				insertToDelivery.executeUpdate();
 				return;
 			}
+
 			insertToDelivery.setBoolean(4, false);
 			insertToDelivery.execute();
 		} catch (SQLException e) {
@@ -483,9 +620,7 @@ public class OrderApiService {
 	}
 
 	private static void insertCredit(Order order, Response response) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime now = LocalDateTime.now();
-		PreparedStatement insertCredit, insertToLateDelivery;
+		PreparedStatement insertCredit;
 		try {
 			insertCredit = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.credit (UserName , AmountInCredit, RestaurantID) VALUES (?,?,?);");
@@ -494,13 +629,6 @@ public class OrderApiService {
 			insertCredit.setInt(3, order.getRestaurantID());
 			insertCredit.executeUpdate();
 
-			insertToLateDelivery = EchoServer.con.prepareStatement(
-					"INSERT INTO biteme.late_delivery (OrderNum, UserName, RestaurantID, Date) VALUES(?,?,?,?)");
-			insertToLateDelivery.setInt(1, order.getOrderID());
-			insertToLateDelivery.setString(2, order.getUserName());
-			insertToLateDelivery.setInt(3, order.getRestaurantID());
-			insertToLateDelivery.setString(4, now.format(formatter));
-			insertToLateDelivery.executeUpdate();
 		} catch (SQLException e) {
 			response.setCode(405);
 			response.setDescription("Couldn't insert credit to a late delivered order -> orderID: "
@@ -521,14 +649,14 @@ public class OrderApiService {
 						.prepareStatement("DELETE FROM biteme.credit WHERE UserName = ? AND RestaurantID = ?;");
 				updateCredit.setString(1, UserName);
 				updateCredit.setInt(2, restaurantID);
-				updateCredit.execute();
+				updateCredit.executeUpdate();
 			} else {
 				updateCredit = EchoServer.con.prepareStatement(
 						"UPDATE biteme.credit SET AmountInCredit = ? WHERE UserName = ? AND RestaurantID = ?;");
 				updateCredit.setDouble(1, AmountInCredit);
 				updateCredit.setString(2, UserName);
 				updateCredit.setInt(3, restaurantID);
-				updateCredit.execute();
+				updateCredit.executeUpdate();
 			}
 		} catch (SQLException e) {
 			response.setCode(400);
@@ -544,13 +672,11 @@ public class OrderApiService {
 		PreparedStatement getAccount;
 		ResultSet rs;
 		StringBuilder invoice = new StringBuilder();
-		String temp;
 		Account account = null;
 		try {
 			getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ?;");
 			getAccount.setString(1, order.getUserName());
-			getAccount.execute();
-			rs = getAccount.getResultSet();
+			rs = getAccount.executeQuery();
 			if (rs.next()) {
 				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID),
 						rs.getString(QueryConsts.ACCOUNT_USER_NAME), rs.getString(QueryConsts.ACCOUNT_PASSWORD),
@@ -565,33 +691,35 @@ public class OrderApiService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// TODO Use the item toString for it
-		temp = "Hi!" + account.getFirstName() + "\n\n\n Thank you for your purchase from BiteMe\n INVOICE ID: "
-				+ Integer.toString(orderID);
-		invoice.append(temp);
-		invoice.append("\n\nYour Order inforamation:\n\n");
-		invoice.append("Bill To: " + account.getEmail() + "\nOrder ID: " + Integer.toString(orderID));
-		invoice.append("\n\nRestaurant Name: " + order.getRestaurantName() + "\nOrder Date: " + order.getTime_taken()
-				+ "\nType of Order: " + order.getType_of_order());
-		invoice.append("Here is what you ordered: \n\n");
-		invoice.append("Name\t\tprice\t\tQuantity\t\tOptions");
+
+		String test = fixParser(account.getFirstName(), account.getLastName(),account.getEmail(),account.getRole(),
+				account.getPhone(),order.getTime_taken(),Integer.toString(orderID),Double.toString(order.getCheck_out_price()),null);
 		for (Item item : order.getItems()) {
-			invoice.append(item.toString());
+			addItem(item.getName());
+			addItem(item.getCategory());
+			addItem(order.getRestaurantName());
+			addItem(item.getOptions()[0].getOption_category() + ": "+item.getOptions()[0].getSpecify_option());
+			addItem(Integer.toString(item.getAmount()));						
+			for (int i = 1; i < item.getOptions().length; i++) {
+				addOption(item.getOptions()[i].getOption_category() + ": "+item.getOptions()[i].getSpecify_option());
+			}
 		}
-		invoice.append("Total ->: " + Double.toString(order.getCheck_out_price()));
-		if (order.getShippment() != null) {
-			invoice.append("\nShipment information: \n\n");
-			invoice.append("\nwork place / address: " + order.getShippment().getWork_place()
-					+ order.getShippment().getAddress());
-			invoice.append("\ndelivery type: " + order.getShippment().getDelivery());
-			invoice.append("\nreceiver name: " + order.getShippment().getReceiver_name());
-			invoice.append("\nreceiver phone number: " + order.getShippment().getPhone());
-		}
+		
 		try {
-			sendMail(account.getEmail(), "BiteMe Order ID:" + Integer.toString(orderID), invoice.toString());
+			sendMail(account.getEmail(), "BiteMe Order ID: " + Integer.toString(orderID), test);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void addItem(String itemColVal) {
+		QueryConsts.itemCol = itemColVal;
+		QueryConsts.items += QueryConsts.item;
+	}
+	
+	private static void addOption(String optionColVal) {
+		QueryConsts.option = optionColVal;
+		QueryConsts.items += QueryConsts.option;
 	}
 
 	public static void sendMail(String recepient, String subject, String message) throws Exception {
@@ -623,10 +751,116 @@ public class OrderApiService {
 			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient));
 			msg.setSubject(subject);
 			msg.setText(message);
+            msg.setContent(message,"text/html");
 			return msg;
 		} catch (Exception e) {
 			Logger.getLogger(OrderApiService.class.getName()).log(Level.SEVERE, null, e);
 		}
 		return null;
+	}
+	
+	private static String fixParser(String firstName, String lastName,String email,String role,
+			String  phone,String orderDate,String orderID,String checkOutPrice,String items) {
+		String INVOICE_HEADER= "<div>\r\n"
+				+ "<div class=\"m_1113311250331273147receipt-ctn-wrapper\">\r\n"
+				+ "    <div style=\"text-align:center;line-height:24px\">\r\n"
+				+ "    		<div style=\"align:center;line-height:24px\">\r\n"
+				+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange\"></span><br>\r\n"
+				+ "                <span style=\"font-size:35px;line-height:40px\"><strong>Thank You.<br><br><br></strong></span><br>\r\n"
+				+ "\r\n"
+				+ "        <div class=\"m_1113311250331273147receipt-body\">\r\n"
+				+ "            <div style=\"text-align:center;line-height:14px\">&nbsp;</div>\r\n"
+				+ "            <div style=\"text-align:center;line-height:24px\">\r\n"
+				+ "                <span style=\"font-size:18px;font-weight:bold\">\r\n"
+				+ "                    Hi "+firstName+"!\r\n"
+				+ "                </span>\r\n"
+				+ "                <br>\r\n"
+				+ "                Thanks for your purchase from <strong>BiteMe</strong><br><br>\r\n"
+				+ "                <span style=\"font-size:35px;line-height:40px\"><strong>INVOICE ID: <br>"+orderID+"</strong></span><br>\r\n"
+				+ "\r\n"
+				+ "                <span style=\"font-size:14px;color:#b2b2b2;line-height:40px\">( Please keep a copy of this receipt for your records. )</span><br><br><br>\r\n"
+				+ "            </div>\r\n"
+				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left\">\r\n"
+				+ "                <strong>YOUR ORDER INFORMATION:</strong>\r\n"
+				+ "            </div>\r\n"
+				+ "            <table class=\"m_1113311250331273147order-info\">\r\n"
+				+ "                <tbody><tr>\r\n"
+				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
+				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
+				+ "                </tr>\r\n"
+				+ "                <tr>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>First Name:</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Last Name:</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top\"><strong>Bill To:</strong></td>\r\n"
+				+ "                </tr>\r\n"
+				+ "                <tr>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"+firstName+"</td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"+lastName+"</td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value m_1113311250331273147email\"><a href=\"mailto:fghghf98@gmail.com\" target=\"_blank\">"+email+"</a></td>\r\n"
+				+ "                </tr>\r\n"
+				+ "                <tr>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Role:</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Phone:</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top\"><strong>Order Date:</strong></td>\r\n"
+				+ "                </tr>\r\n"
+				+ "                <tr>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"+role+"</td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"+phone+"</td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"+orderDate+"</td>\r\n"
+				+ "                </tr>\r\n"
+				+ "            </tbody></table>\r\n"
+				+ "\r\n"
+				+ "\r\n"
+				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left;margin-top:10px\">\r\n"
+				+ "                <strong>HERE'S WHAT YOU ORDERED:</strong>\r\n"
+				+ "            </div>\r\n"
+				+ "            <table class=\"m_1113311250331273147order-item\">\r\n"
+				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
+				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
+				+ "                <tbody><tr>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Item Name:</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Item Category:</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Restaurant Name:</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Options</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Quantity:</strong></td>\r\n"
+				+ "					<tr>\r\n"
+				+ "						"+items+""	
+				+ "                </tr>\r\n"
+				+ "            </tbody></table>\r\n"
+				+ "            <table class=\"m_1113311250331273147payment-info\">\r\n"
+				+ "                <tbody><tr>\r\n"
+				+ "                    <th></th>\r\n"
+				+ "                    <th style=\"width:1%\"></th>\r\n"
+				+ "                </tr>\r\n"
+				+ "                <tr>\r\n"
+				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">TOTAL: <span style=\"color:#313131\" class=\"m_1113311250331273147email\"> [USD]: $ "+checkOutPrice+"</span></td>\r\n"
+				+ "                <tr>\r\n"
+				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-size:14px;color:#313131;text-align:center;line-height:26px\" colspan=\"2\">\r\n"
+				+ "\r\n"
+				+ "\r\n"
+				+ "                    </td>\r\n"
+				+ "                </tr>\r\n"
+				+ "            </tbody></table>\r\n"
+				+ "\r\n"
+				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left\">\r\n"
+				+ " <tr>\r\n"
+				+ "                    <th style=\"height:1px;width:50%\"></th>\r\n"
+				+ "                    <th style=\"height:1px;width:50%\"></th>\r\n"
+				+ "                </tr>\r\n"
+				+ "                <strong>PAYMENT DETAILS:</strong>\r\n"
+				+ "            </div>\r\n"
+				+ "            <table class=\"m_1113311250331273147order-info\">\r\n"
+				+ "                <tbody><tr>\r\n"
+				+ "                    <th style=\"height:2px;width:60%\"></th>\r\n"
+				+ "                    <th style=\"height:2px;width:60%\"></th>\r\n"
+				+ "                </tr>\r\n"
+				+ "                <tr>\r\n"
+				+ "                </tr>\r\n"
+				+ "            </tbody></table>\r\n"
+				+ "                <tbody><tr>\r\n"
+				+ "                    <th></th>\r\n"
+				+ "                </tr>\r\n"
+				+ "                <tr>\r\n";
+		return INVOICE_HEADER;
 	}
 }

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.google.gson.JsonElement;
-import com.mysql.cj.xdevapi.Result;
 
 import common.Response;
 import common.imageUtils;
@@ -134,7 +133,7 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void getItemsByCategory(int restaurantID, String menuName, String itemCategory, Response response) {
+	public static void getItemsByCategory(int restaurantID, String itemCategory, Response response) {
 		PreparedStatement stmt;
 		ResultSet rs, rs2;
 		Item item = null;
@@ -142,11 +141,9 @@ public class RestaurantApiService {
 		ArrayList<Options> options = new ArrayList<>();
 		try {
 			stmt = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ? AND Category = ? AND ItemID IN "
-							+ "(SELECT ItemID FROM biteme.item_in_menu WHERE MenuName = ?);");
+					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ? AND Category = ?;");
 			stmt.setInt(1, restaurantID);
 			stmt.setString(2, itemCategory);
-			stmt.setString(3, menuName);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				item = new Item(rs.getString(QueryConsts.ITEM_CATEGORY), rs.getString(QueryConsts.ITEM_SUB_CATEGORY),
@@ -182,7 +179,7 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier.
 	 *
 	 */
-	public static void getItemsBySubCategory(int restaurantID, String menuName, String itemCategory, String itemSubCategory, Response response) {
+	public static void getItemsBySubCategory(int restaurantID, String itemCategory, String itemSubCategory, Response response) {
 		PreparedStatement stmt;
 		ResultSet rs, rs2;
 		Item item = null;
@@ -190,12 +187,10 @@ public class RestaurantApiService {
 		ArrayList<Options> options = new ArrayList<>();
 		try {
 			stmt = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ? AND Category = ? AND SubCategory = ? AND ItemID IN "
-							+ "(SELECT ItemID FROM biteme.item_in_menu WHERE MenuName = ?);");
+					.prepareStatement("SELECT * FROM biteme.item WHERE RestaurantID = ? AND Category = ? AND SubCategory = ?;");
 			stmt.setInt(1, restaurantID);
 			stmt.setString(2, itemCategory);
 			stmt.setString(3, itemSubCategory);			
-			stmt.setString(4, menuName);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				item = new Item(rs.getString(QueryConsts.ITEM_CATEGORY), rs.getString(QueryConsts.ITEM_SUB_CATEGORY),
@@ -471,7 +466,7 @@ public class RestaurantApiService {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
 			PreparedStatement updateApprovalTime = EchoServer.con
-					.prepareStatement("UPDATE biteme.order SET prep_time = ? WHERE OrderNum = ?;");
+					.prepareStatement("UPDATE biteme.order SET prep_time = ? WHERE OrderNum = ? AND isApproved = 1 AND approve_time is not null;");
 			updateApprovalTime.setString(1, dtf.format(now));
 			updateApprovalTime.setInt(2, orderId);
 			if (updateApprovalTime.executeUpdate() == 0) {

@@ -57,7 +57,7 @@ public class AccountApiService {
 			postAccount = EchoServer.con
 					.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active', "
 							+ "BranchManagerID = ?, Area = ? WHERE UserName = ?;");
-			if (account.getRole().equals("Not Assigned"))
+			if (!account.getRole().equals("Not Assigned"))
 				postAccount.setString(1, account.getRole());
 			else
 				postAccount.setString(1, "Client");
@@ -120,7 +120,7 @@ public class AccountApiService {
 			postAccount = EchoServer.con
 					.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active',"
 							+ "BranchManagerID = ? , Area = ? , isBusiness = ? WHERE UserName = ?;");
-			if (account.getRole().equals("Not Assigned"))
+			if (!account.getRole().equals("Not Assigned"))
 				postAccount.setString(1, account.getRole());
 			else
 				postAccount.setString(1, "Client");
@@ -474,6 +474,32 @@ public class AccountApiService {
 		response.setCode(200);
 		response.setDescription("Success in updating account: accountID -> " + account.getUserID());
 	}
+	
+	/**
+	 * Updated Account
+	 *
+	 * This can only be done by the master / branch manager / CEO
+	 *
+	 */
+	public static void updateStatus(String userName, Response response) {
+		int updatedRows;
+		try {
+			PreparedStatement postAccount = EchoServer.con.prepareStatement(
+					"UPDATE biteme.account SET Status = ? WHERE UserName = ? AND Role != 'Branch Manager';");
+			// Its the first userName that he had so the test is in users table on login
+			postAccount.setString(1, userName);
+			updatedRows = postAccount.executeUpdate();
+			if (updatedRows == 0) {
+				throw new SQLException("Couldn't update account: -> UserName: " + userName, "401", 401);
+			}
+		} catch (SQLException e) {
+			response.setCode(e.getErrorCode());
+			response.setDescription(e.getMessage());
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in updating account: userName -> " + userName);
+	}
 
 	/**
 	 * Updated Private Account
@@ -482,9 +508,7 @@ public class AccountApiService {
 	 *
 	 */
 	public static void updatePrivateAccount(PrivateAccount account, Response response) {
-		Account account1 = account;
 		int updatedRows;
-		updateAccount(account1, response);
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
 					"UPDATE biteme.private_account SET (CreditCardNumber = ?, CreditCardCVV = ?, CreditCardExp = ?)"
@@ -516,9 +540,7 @@ public class AccountApiService {
 	 *
 	 */
 	public static void updateBusinessAccount(BusinessAccount account, Response response) {
-		Account account1 = account;
 		int updatedRows;
-		updateAccount(account1, response);
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
 					"UPDATE biteme.business_account SET (UserName = ?, MonthlyBillingCeling = ?, isApproved = ?, BusinessName = ?, CurrentSpent = ?)"

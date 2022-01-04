@@ -2,11 +2,14 @@ package Server;
 
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import common.DBController;
 import common.Response;
+import logic.Order;
 
 public class OrderApiServiceTest {
 	private Response response;
@@ -66,7 +69,15 @@ public class OrderApiServiceTest {
 	public void testGetPaymentApproval() {
 		fail("Not yet implemented");
 	}
-
+	
+	@Test
+	public void testGetOredersByUserName() {
+		String userName = "b";
+		OrderApiService.getOrderByUserName(userName, response);
+		Order[] orders = EchoServer.gson.fromJson((String)response.getBody(), Order[].class);
+		System.out.println(Arrays.toString(orders));
+		
+	}
 	@Test
 	public void testUpdateOrder() {
 		fail("Not yet implemented");

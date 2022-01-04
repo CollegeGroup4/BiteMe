@@ -27,7 +27,7 @@ public class RestaurantApiServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		EchoServer.con = DBController.getMySQLConnection("jdbc:mysql://localhost/biteme?serverTimezone=IST", "root",
-				"Tal4EvEr");
+				"MoshPe2969999");
 		response = new Response();
 	}
 
@@ -141,6 +141,25 @@ public class RestaurantApiServiceTest {
 //		Menu menu = new Menu("Night", 10, items);
 //		RestaurantApiService.createMenu(menu, response);
 //		assertEquals("Success in creating menu -> menuName:  Night", response.getDescription());	
+//	}
+	
+	@Test
+	public void testGetItemsByCategory() {
+		int restaurantID = 10;
+		String itemCategory = "italian";
+		RestaurantApiService.getItemsByCategory(restaurantID, itemCategory, response);
+		Item[] items = EchoServer.gson.fromJson((String) response.getBody(), Item[].class);
+		System.out.println(Arrays.toString(items));
+	}
+//	
+//	@Test
+//	public void testGetItemsBySubCategory() {
+//		int restaurantID = 10;
+//		String itemCategory = "italian";
+//		String itemSubCategory = "pizza";		
+//		RestaurantApiService.getItemsBySubCategory(restaurantID, itemCategory, itemSubCategory, response);
+//		Item[] items = EchoServer.gson.fromJson((String) response.getBody(), Item[].class);
+//		System.out.println(Arrays.toString(items));
 //	}
 
 	@Test
