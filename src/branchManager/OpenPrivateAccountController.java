@@ -30,11 +30,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import logic.Account;
+import logic.BusinessAccount;
 import logic.PrivateAccount;
 
 public class OpenPrivateAccountController implements Initializable {
 	public static Boolean isEdit = false;
+	public static PrivateAccount privateAccount;
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+	public static Account account;
 
 	@FXML
 	private Label lblrequiredCardNum;
@@ -52,6 +56,12 @@ public class OpenPrivateAccountController implements Initializable {
 	private JFXComboBox<String> comboBoxYear;
 
 	@FXML
+	private JFXComboBox<String> comboBoxStatus;
+
+	@FXML
+	private JFXComboBox<String> comboBoxRole;
+
+	@FXML
 	private Label lblrequiredCVV;
 
 	@FXML
@@ -61,10 +71,16 @@ public class OpenPrivateAccountController implements Initializable {
 	private Label labelTitle;
 
 	@FXML
-	private TextField textFieldUserNameUser;
+	private TextField textFieldFirstName;
 
 	@FXML
 	private Label lblrequiredUsername;
+
+	@FXML
+	private TextField textFieldLastName;
+
+	@FXML
+	private Label lblrequiredLastName;
 
 	@FXML
 	private Label lblrequiredID;
@@ -80,21 +96,17 @@ public class OpenPrivateAccountController implements Initializable {
 
 	@FXML
 	private TextField textFieldDebt;
-
-	@FXML
-	private JFXComboBox<String> comboBoxStatus;
-	
-    @FXML
-    private JFXComboBox<String> comboBoxRole;
-
 	@FXML
 	private Label lableErrorMsg;
-	
-	@FXML
-	private Label lableSuccessMsg;
-	
+
 	@FXML
 	private AnchorPane componentExplain;
+
+	@FXML
+	private Button btnReturnHome;
+
+	@FXML
+	private Label lableSuccessMsg;
 
 	@FXML
 	private HBox Nav;
@@ -107,16 +119,16 @@ public class OpenPrivateAccountController implements Initializable {
 
 	@FXML
 	private JFXDrawer drawer;
-	
-    @FXML
-    private Button btnReturnHome;
-	
+	@FXML
+	private Button btnUpdate;
+	@FXML
+	private Button btnCreateAccount;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
 		comboBoxStatus.getItems().setAll("Active", "Frozen", "Blocked");
-		comboBoxStatus.setValue("Active");
+
 		componentExplain.setVisible(false);
 		String[] listMonth = new String[12];
 		for (int i = 0; i < 12; i++) {
@@ -132,11 +144,68 @@ public class OpenPrivateAccountController implements Initializable {
 			listYear[i] = "20" + (i + 21);
 		comboBoxYear.getItems().setAll(listYear);
 		comboBoxYear.setValue("2021");
-		componnentDebt.setVisible(isEdit);
-		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer); 
-		
-		comboBoxRole.getItems().setAll("Not Assigned","CEO","Branch Manager","Supplier","HR","Client");
-		comboBoxRole.setValue("Not Assigned");
+//		componnentDebt.setVisible(isEdit);
+		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+
+		comboBoxRole.getItems().setAll("Not Assigned", "CEO", "Branch Manager", "Supplier", "HR", "Client");
+
+		if (isEdit) {
+			btnUpdate.setVisible(true);
+			btnCreateAccount.setVisible(false);
+			labelTitle.setText("Edit Private Account");
+
+			// ----set the initialize value of the credit card
+			textFieldCardNum.setText(privateAccount.getCreditCardNumber());
+			String expDate = privateAccount.getCreditCardExpDate();
+			comboBoxMonth.setValue(expDate.substring(0, 2));
+			comboBoxYear.setValue(expDate.substring(5, 9));
+		}
+		// ----set the initialize value of the user
+		System.out.println("set account: " + account);
+		comboBoxStatus.setValue(account.getStatus() + "");
+		textFieldFirstName.setText(account.getFirstName());
+		textFieldLastName.setText(account.getLastName());
+		textFieldID.setText(account.getUserID() + "");
+		comboBoxRole.setValue(account.getRole());
+		textFieldDebt.setText(account.getDebt() + "");
+
+	}
+
+	@FXML
+	void update(ActionEvent event) {
+//		checkTextFiled(textFieldCardNum, lblrequiredCardNum);
+		checkValidFields(textFieldCardNum, lblrequiredCardNum);
+//		checkTextFiled(textFieldCVV, lblrequiredCVV);
+		checkValidFields(textFieldCVV, lblrequiredCVV);
+		String expDate = null, cardNum = null, cvv = null;
+		String month = comboBoxMonth.getValue();
+		String year = comboBoxYear.getValue();
+		expDate = month + " / " + year;
+		cardNum = textFieldCardNum.getText();
+		cvv = textFieldCVV.getText();
+		cvv = cvv.equals("") ? privateAccount.getCreditCardCVV() : cvv;
+
+		String status = comboBoxStatus.getValue();
+
+		PrivateAccount body = new PrivateAccount(privateAccount.getUserID(), privateAccount.getUserName(),
+				privateAccount.getPassword(), privateAccount.getFirstName(), privateAccount.getLastName(),
+				privateAccount.getEmail(), privateAccount.getRole(), privateAccount.getPhone(), status, false,
+				BranchManagerController.branchManager.getUserID(), BranchManagerController.branchManager.getArea(),
+				privateAccount.getDebt(), privateAccount.getW4C(), cardNum, cvv, expDate);
+
+		branchManagerFunctions.sentToJson("/accounts/privateAccount", "PUT", body,
+				"Edit Private account - new ClientController didn't work");
+
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) {
+			lableSuccessMsg.setText("");
+			lableErrorMsg.setText(response.getDescription());// error massage
+		} else {
+			btnReturnHome.setVisible(true);
+			lableErrorMsg.setText("");
+			lableSuccessMsg.setText(response.getDescription());// error massage
+		}
+
 	}
 
 	@FXML
@@ -150,8 +219,12 @@ public class OpenPrivateAccountController implements Initializable {
 	}
 
 	@FXML
-	void backOpenAccount(ActionEvent event) {
-		branchManagerFunctions.reload(event, "/branchManager/OpenAccountPage.fxml", "Branch manager- Open account");
+	void back(ActionEvent event) {
+		if (isEdit)
+			branchManagerFunctions.reload(event, "/branchManager/EditPersonalInfo.fxml",
+					"Branch manager - Edit Personal Info");
+		else
+			branchManagerFunctions.reload(event, "/branchManager/OpenAccountPage.fxml", "Branch manager- Open account");
 	}
 
 	@FXML
@@ -164,43 +237,31 @@ public class OpenPrivateAccountController implements Initializable {
 	@FXML
 	void createAccount(ActionEvent event) {
 		flag = true;
-		checkTextFiled(textFieldUserNameUser, lblrequiredUsername);
-		checkTextFiled(textFieldID, lblrequiredID);
-		if (isEdit)
-			checkTextFiled(textFieldDebt, lblrequiredID);
-
-		if (flag) {
+		String cardNum = null, cvv = null, expDate = null;
+		if (!textFieldCardNum.getText().equals("")) {
 			validField = true;
-			checkValidFields(textFieldID, lblrequiredID);
-			if (validField) {
-
-				String username = textFieldUserNameUser.getText();
-				int id = Integer.parseInt(textFieldID.getText());
-				String status = comboBoxStatus.getValue() == null ? "Active" : comboBoxStatus.getValue();
-
-				String cardNum = null, cvv = null, expDate = null;
-				if (!textFieldCardNum.getText().equals("")) {
-					validField = true;
-					flag = true;
-					checkTextFiled(textFieldCardNum, lblrequiredCardNum);
-					checkValidFields(textFieldCardNum, lblrequiredCardNum);
-					checkTextFiled(textFieldCVV, lblrequiredCVV);
-					checkValidFields(textFieldCVV, lblrequiredCVV);
-					if (validField && flag) {
-						String month = comboBoxMonth.getValue() == null ? "01" : comboBoxStatus.getValue();
-						String year = comboBoxYear.getValue() == null ? "21" : comboBoxStatus.getValue();
-						expDate = month + " / " + year;
-					}
-
-				}
-				PrivateAccount privateAccount = new PrivateAccount(id, username, null, null, null, null,  comboBoxRole.getValue(),null,
-						status, false, BranchManagerController.branchManager.getUserID(),
-						BranchManagerController.branchManager.getArea(), 0, null, cardNum, cvv, expDate);
-				sentToJson(privateAccount);
-				response();
+			flag = true;
+			checkTextFiled(textFieldCardNum, lblrequiredCardNum);
+			checkValidFields(textFieldCardNum, lblrequiredCardNum);
+			checkTextFiled(textFieldCVV, lblrequiredCVV);
+			checkValidFields(textFieldCVV, lblrequiredCVV);
+			if (validField && flag) {
+				String month = comboBoxMonth.getValue();
+				String year = comboBoxYear.getValue();
+				expDate = month + " / " + year;
 			}
+			cardNum = textFieldCardNum.getText();
+			cvv = textFieldCVV.getText();
 		}
+		PrivateAccount privateAccount = new PrivateAccount(account.getUserID(), account.getUserName(), null, null, null,
+				null, account.getRole(), null, account.getStatus(), false,
+				BranchManagerController.branchManager.getUserID(), BranchManagerController.branchManager.getArea(),
+				account.getDebt(), null, cardNum, cvv, expDate);
+		sentToJson(privateAccount);
+		response();
 	}
+//		}
+//	}
 
 	void sentToJson(PrivateAccount privateAccount) {
 		Gson gson = new Gson();
@@ -220,8 +281,7 @@ public class OpenPrivateAccountController implements Initializable {
 		if (response.getCode() != 200 && response.getCode() != 201) {
 			lableSuccessMsg.setText("");
 			lableErrorMsg.setText(response.getDescription());// error massage
-		}
-		else {
+		} else {
 			btnReturnHome.setVisible(true);
 			lableErrorMsg.setText("");
 			lableSuccessMsg.setText(response.getDescription());// error massage
@@ -238,12 +298,13 @@ public class OpenPrivateAccountController implements Initializable {
 	}
 
 	void checkValidFields(TextField textField, Label lblrequired) {
-		try {
-			Integer.parseInt(textField.getText());
-		} catch (NumberFormatException e) {
-			lblrequired.setText("Enter only numbers");
-			validField = false;
-		}
+		if (!textField.getText().equals(""))
+			try {
+				Integer.parseInt(textField.getText());
+			} catch (NumberFormatException e) {
+				lblrequired.setText("Enter only numbers");
+				validField = false;
+			}
 	}
 
 }

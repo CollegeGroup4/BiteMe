@@ -30,34 +30,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import logic.Account;
 import logic.BusinessAccount;
 
 public class OpenBusinessAccountController implements Initializable {
 	public static Boolean isEdit = false;
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+	public static Account account;
+	public static BusinessAccount businessAccount;
+
 	@FXML
 	private Label labelTitle;
-
-	@FXML
-	private TextField textFieldUsernamePersonal;
-
-	@FXML
-	private Label lblrequiredUsername;
-
-	@FXML
-	private Label lblrequiredIDPersonal;
-
-	@FXML
-	private TextField textFieldIDPersonal;
-
-	@FXML
-	private AnchorPane componnentDebt;
-
-	@FXML
-	private Label lblrequiredDebt;
-
-	@FXML
-	private TextField textFieldDebt;
 
 	@FXML
 	private TextField textFieldBusinessName;
@@ -73,12 +56,43 @@ public class OpenBusinessAccountController implements Initializable {
 
 	@FXML
 	private JFXComboBox<String> comboBoxStatus;
-
+	@FXML
+	private JFXComboBox<String> comboBoxRole;
 	@FXML
 	private Label lableErrorMsg;
-	
+
+	@FXML
+	private Button btnReturnHome;
+
 	@FXML
 	private Label lableSuccessMsg;
+
+	@FXML
+	private TextField textFieldFirstName;
+
+	@FXML
+	private Label lblrequiredFirstName;
+
+	@FXML
+	private TextField textFieldLastName;
+
+	@FXML
+	private Label lblrequiredLastName;
+
+	@FXML
+	private Label lblrequiredID;
+
+	@FXML
+	private TextField textFieldID;
+
+	@FXML
+	private AnchorPane componnentDebt;
+
+	@FXML
+	private Label lblrequiredDebt;
+
+	@FXML
+	private TextField textFieldDebt;
 
 	@FXML
 	private HBox Nav;
@@ -91,17 +105,37 @@ public class OpenBusinessAccountController implements Initializable {
 
 	@FXML
 	private JFXDrawer drawer;
-	
-    @FXML
-    private Button btnReturnHome;
+
+	@FXML
+	private Button btnUpdate;
+	@FXML
+	private Button btnCreateAccount;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
 		comboBoxStatus.getItems().setAll("Active", "Frozen", "Blocked");
-		comboBoxStatus.setValue("Active");
+//		comboBoxStatus.setValue("Active");
 		componnentDebt.setVisible(isEdit);
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+		comboBoxRole.getItems().setAll("Not Assigned", "CEO", "Branch Manager", "Supplier", "HR", "Client");
+		labelTitle.setText("Edit Business Account");
+		if (isEdit) {
+			btnUpdate.setVisible(true);
+			btnCreateAccount.setVisible(false);
+			labelTitle.setText("Edit Business Account");
+			textFieldBusinessName.setText(businessAccount.getBusinessName());
+			textFieldMonthBlling.setText(businessAccount.getMonthlyBillingCeiling() + "");
+		}	
+
+			// ----set the initialize value of the user
+			System.out.println("set account: " + account);
+			comboBoxStatus.setValue(account.getStatus() + "");
+			textFieldFirstName.setText(account.getFirstName());
+			textFieldLastName.setText(account.getLastName());
+			textFieldID.setText(account.getUserID() + "");
+			comboBoxRole.setValue(account.getRole());			
+			textFieldDebt.setText(account.getDebt() + "");
 	}
 
 	@FXML
@@ -119,36 +153,46 @@ public class OpenBusinessAccountController implements Initializable {
 		branchManagerFunctions.reload(event, "/branchManager/OpenAccountPage.fxml", "Branch manager- Open account");
 	}
 
+	@FXML
+	void update(ActionEvent event) {
+		String businessName = textFieldBusinessName.getText();
+		float monthBillingCeiling = Integer.parseInt(textFieldMonthBlling.getText());
+		String status = comboBoxStatus.getValue();
+		BusinessAccount body = new BusinessAccount(businessAccount.getUserID(), businessAccount.getUserName(),
+				businessAccount.getPassword(), businessAccount.getFirstName(), businessAccount.getLastName(), businessAccount.getEmail(),
+				businessAccount.getRole(), businessAccount.getPhone(), status, true, BranchManagerController.branchManager.getUserID(),
+				BranchManagerController.branchManager.getArea(), businessAccount.getDebt(), businessAccount.getW4c_card(), monthBillingCeiling, businessAccount.getIsApproved(),
+				businessName, businessAccount.getCurrentSpent());
+		
+		
+		branchManagerFunctions.sentToJson("/accounts/businessAccount", "PUT", body,
+				"Edit Business account - new ClientController didn't work");
+		
+		
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) {
+			lableSuccessMsg.setText("");
+			lableErrorMsg.setText(response.getDescription());// error massage
+		} else {
+			btnReturnHome.setVisible(true);
+			lableErrorMsg.setText("");
+			lableSuccessMsg.setText(response.getDescription());// error massage
+		}
+		
+	}
+
 	private boolean flag, validField;
 
 	@FXML
 	void createAccount(ActionEvent event) {
-		flag = true;
-		checkTextFiled(textFieldUsernamePersonal, lblrequiredUsername);
-		checkTextFiled(textFieldIDPersonal, lblrequiredIDPersonal);
-
-		checkTextFiled(textFieldBusinessName, lblrequiredBusinessName);
-		checkTextFiled(textFieldMonthBlling, lblrequiredMonthBlling);
-
-		if (flag) {
-			validField = true;
-			checkValidFields(textFieldIDPersonal, lblrequiredIDPersonal);
-			checkValidFields(textFieldMonthBlling, lblrequiredMonthBlling);
-			if (validField) {
-
-				String personalUsename = textFieldUsernamePersonal.getText();
-				int personalID = Integer.parseInt(textFieldIDPersonal.getText());
-				String status = comboBoxStatus.getValue() == null ? "Active" : comboBoxStatus.getValue();
-				String businessName = textFieldBusinessName.getText();
-				float monthBillingCeiling = Integer.parseInt(textFieldMonthBlling.getText());
-				BusinessAccount businessAccount = new BusinessAccount(personalID, personalUsename, null, null, null,
-						null, "Not Assigned", null, status, true, BranchManagerController.branchManager.getUserID(),
-						BranchManagerController.branchManager.getArea(), 0, null, monthBillingCeiling, false,
-						businessName, 0);
-				sentToJson(businessAccount);
-				response();
-			}
-		}
+		String businessName = textFieldBusinessName.getText();
+		float monthBillingCeiling = Integer.parseInt(textFieldMonthBlling.getText());
+		BusinessAccount businessAccount = new BusinessAccount(account.getUserID(), account.getUserName(), null, null,
+				null, null, "Not Assigned", null, account.getStatus(), true,
+				BranchManagerController.branchManager.getUserID(), BranchManagerController.branchManager.getArea(), 0,
+				null, monthBillingCeiling, false, businessName, 0);
+		sentToJson(businessAccount);
+		response();
 	}
 
 	void sentToJson(BusinessAccount businessAccount) {
@@ -170,8 +214,7 @@ public class OpenBusinessAccountController implements Initializable {
 		if (response.getCode() != 200 && response.getCode() != 201) {
 			lableSuccessMsg.setText("");
 			lableErrorMsg.setText(response.getDescription());// error massage
-		}
-		else {
+		} else {
 			btnReturnHome.setVisible(true);
 			lableErrorMsg.setText("");
 			lableSuccessMsg.setText(response.getDescription());// error massage

@@ -122,6 +122,15 @@ public class EchoServer extends AbstractServer {
 				break;
 			}
 			break;
+		case "/orders/getOrderByUserName":
+			switch (method) {
+			case GET:
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
+				String userName  = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
+				OrderApiService.getOrderByUserName(userName, response);
+				break;
+			}
+			break;
 		case "/orders/getOrderById":
 			switch (method) {
 			case GET:

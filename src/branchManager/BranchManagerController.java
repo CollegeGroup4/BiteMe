@@ -96,7 +96,7 @@ public class BranchManagerController implements Initializable {
 
 	@FXML
 	void openAccount(ActionEvent event) {
-		branchManagerFunctions.reload(event, "/branchManager/SelectAccount.fxml", "Branch manager - open account");
+		branchManagerFunctions.reload(event, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
 	}
 
 	@FXML
@@ -109,6 +109,7 @@ public class BranchManagerController implements Initializable {
 	@FXML
 	void RegisterationRestaurant(ActionEvent event) {
 		System.out.println("registeration & Approval Supplier - Branch manager");
+		RegisterationApprovalSupplierController.isEdit = false;
 		branchManagerFunctions.reload(event, "/branchManager/RegisterationApprovalSupplier.fxml", "Branch manager - registeration & Approval Supplier");
 	}
 

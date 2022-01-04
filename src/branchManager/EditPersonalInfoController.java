@@ -53,7 +53,18 @@ public class EditPersonalInfoController implements Initializable {
 
 	@FXML
 	private Label lableHello;
+	@FXML
+	private AnchorPane anchorPaneEditUsers;
+	@FXML
+	private AnchorPane anchorPaneChooseAccount;
+	@FXML
+	private Button btnEditPrivateAccount;
 
+	@FXML
+	private Button btnEditRestaurant;
+
+	@FXML
+	private Button btnEditBusinessAccount;
 	@FXML
 	private TableView<Account> tableViewUsers;
 	@FXML
@@ -156,9 +167,11 @@ public class EditPersonalInfoController implements Initializable {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
 		coboBoxStatus.getItems().setAll("All", "active", "frozen", "blocked");
 		coboBoxStatus.setValue("All");
-		coboBoxRole.getItems().setAll("All", "Client", "Supplier");
+		coboBoxRole.getItems().setAll("All", "HR", "Supplier", "Client", "Not Assigned");
 		coboBoxRole.setValue("All");
 
+		anchorPaneChooseAccount.setVisible(false);
+		anchorPaneEditUsers.setVisible(true);
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
@@ -231,13 +244,13 @@ public class EditPersonalInfoController implements Initializable {
 	void editTable(ActionEvent event) {
 		String username = userEditSelect.get(0).getUserName();
 		Account selecteduser = allUsres.get(username);
-		if (selecteduser.getRole().equals("Supplier")) {
+		lableErrorMsg.setText("");
 
-		}
-		if (selecteduser.getRole().equals("Client"))
-			branchManagerFunctions.sentToJson("/account/getAccount", "GET", selecteduser,
+		if (selecteduser != null) {
+			branchManagerFunctions.sentToJson("/accounts/getAccount", "GET", selecteduser,
 					"Edit personal info - new ClientController didn't work");
-//		responseGetAccountID();
+			responseGetAccountUsername(event, lableErrorMsg);
+		}
 	}
 
 	/**
@@ -250,14 +263,12 @@ public class EditPersonalInfoController implements Initializable {
 		String username;
 		if (!textFiledSearchUsername.getText().equals("")) {
 			try {
-				username=textFiledSearchUsername.getText();
-//				System.out.println("username: "+username);
+				username = textFiledSearchUsername.getText();
 				Account selecteduser = allUsres.get(username);
-//				System.out.println("selecteduser: " + selecteduser);
 				branchManagerFunctions.sentToJson("/accounts/getAccount", "GET", selecteduser,
 						"Edit personal info - new ClientController didn't work");
 
-				responseGetAccountUsername();
+				responseGetAccountUsername(event, lableErrorMsgID);
 			} catch (NumberFormatException e) {
 				lblrequiredEnterid.setText("Enter only numbers");
 			}
@@ -265,34 +276,87 @@ public class EditPersonalInfoController implements Initializable {
 		}
 	}
 
-	void responseGetAccountUsername() {
+	void responseGetAccountUsername(ActionEvent event, Label lableError) {
 		Gson gson = new Gson();
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201)
-			lableErrorMsgID.setText(response.getDescription());
+			lableError.setText(response.getDescription());
 		else {
 			System.out.println("-->>" + response.getDescription()); // Description from server
-//			JsonElement jsonFile = gson.toJsonTree(response.getBody());
-//			jsonFile.getAsJsonObject().get("id");
 
-			JsonElement j = gson.fromJson((String) response.getBody(), JsonElement.class);
-			Account account = gson.fromJson(j.getAsJsonObject().get("account"), Account.class);
-			Restaurant restaurant = gson.fromJson(j.getAsJsonObject().get("restaurant"), Restaurant.class);
-			BusinessAccount businessAccount = gson.fromJson(j.getAsJsonObject().get("businessAccount"),
-					BusinessAccount.class);
-			PrivateAccount privateAccount = gson.fromJson(j.getAsJsonObject().get("privateAccount"),
-					PrivateAccount.class);
+			JsonElement body = gson.fromJson((String) response.getBody(), JsonElement.class);
+			account = gson.fromJson(body.getAsJsonObject().get("account"), Account.class);
+			restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
+			businessAccount = gson.fromJson(body.getAsJsonObject().get("businessAccount"), BusinessAccount.class);
+			privateAccount = gson.fromJson(body.getAsJsonObject().get("privateAccount"), PrivateAccount.class);
 
-			System.out.println("response.getBody(): "+response.getBody());
-			System.out.println("name: "+businessAccount.getBusinessName());
+			int amoutOfAccount = (businessAccount != null) ? 1 : 0;
+			amoutOfAccount += (privateAccount != null) ? 1 : 0;
+			amoutOfAccount += (restaurant != null) ? 1 : 0;
 
-			System.out.println("account: " + account);
-			System.out.println("restaurant: " + restaurant);
+			if (amoutOfAccount == 0)
+				lableErrorMsg.setText("This user has no account to edit");
+			else{
+				if (amoutOfAccount == 1) {
+					if (businessAccount != null)
+						editBusinessAccount(event);
+					else
+						OpenBusinessAccountController.isEdit = false;
+
+					if (privateAccount != null)
+						editPrivateAccount(event);
+					else
+						OpenPrivateAccountController.isEdit = false;
+
+					if (restaurant != null)
+						editRestaurant(event);
+					else
+						RegisterationApprovalSupplierController.isEdit = false;
+				} else {
+					anchorPaneChooseAccount.setVisible(true);
+					anchorPaneEditUsers.setVisible(false);
+
+				}
+			}
 			System.out.println("businessAccount: " + businessAccount);
 			System.out.println("privateAccount: " + privateAccount);
-
-//			Account account = EchoServer.gson.fromJson((String) response.getBody(), Account.class);
-			// ?!?!?! what they are return a 1 account or 2 ? or both?
+			System.out.println("restaurant: " + restaurant);
+			btnEditBusinessAccount.setDisable(OpenBusinessAccountController.isEdit);
+			btnEditPrivateAccount.setDisable(OpenPrivateAccountController.isEdit);
+			btnEditRestaurant.setDisable(RegisterationApprovalSupplierController.isEdit);
 		}
+	}
+
+	private BusinessAccount businessAccount;
+	private PrivateAccount privateAccount;
+	private Restaurant restaurant;
+	private Account account;
+
+	@FXML
+	void editBusinessAccount(ActionEvent event) {
+		OpenBusinessAccountController.isEdit = true;
+		OpenBusinessAccountController.businessAccount = businessAccount;
+		OpenBusinessAccountController.account = account;
+		branchManagerFunctions.reload(event, "/branchManager/OpenBusinessAccount.fxml",
+				"Branch manager - Edit business account");
+	}
+
+	@FXML
+	void editPrivateAccount(ActionEvent event) {
+		OpenPrivateAccountController.isEdit = true;
+		OpenPrivateAccountController.privateAccount = privateAccount;
+		OpenPrivateAccountController.account = account;
+		branchManagerFunctions.reload(event, "/branchManager/OpenPrivateAccount.fxml",
+				"Branch manager - Edit private account");
+	}
+
+	@FXML
+	void editRestaurant(ActionEvent event) {
+		RegisterationApprovalSupplierController.isEdit = true;
+		RegisterationApprovalSupplierController.restaurant = restaurant;
+		RegisterationApprovalSupplierController.supplierAccount = account;
+		branchManagerFunctions.reload(event, "/branchManager/RegisterationApprovalSupplier.fxml",
+				"Branch manager - Edit restaurant Supplier");
+
 	}
 }

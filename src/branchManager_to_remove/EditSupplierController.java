@@ -1,4 +1,4 @@
-package branchManager;
+package branchManager_to_remove;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,8 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
+import branchManager.BranchManagerController;
+import branchManager.BranchManagerFunctions;
 import common.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;

@@ -66,7 +66,6 @@ public class BranchManagerFunctions {
 	}
 
 	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
-		
 		try {
 			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
 			

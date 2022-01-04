@@ -1,4 +1,4 @@
-package branchManager;
+package branchManager_to_remove;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +14,7 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.Response;
+import branchManager.BranchManagerController;
 import client.ChatClient;
 import client.ClientUI;
 import common.Request;
@@ -32,10 +33,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import logic.Account;
 import logic.BusinessAccount;
 
 public class EditBusinessAccountController implements Initializable {
 	public static Boolean isEdit = false;
+	
+
 	@FXML
 	private Button btnUpdateAccount;
 

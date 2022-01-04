@@ -91,6 +91,7 @@ public class LoginController {
 					case "Supplier":
 						System.out.println("go to supplier");
 						Navigation_SidePanelController.role = "Supplier";
+						
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
 						break;

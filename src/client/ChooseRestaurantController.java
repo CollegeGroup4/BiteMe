@@ -257,7 +257,6 @@ public class ChooseRestaurantController implements Initializable {
 		primaryStage.setTitle("Restaurants Page");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
 	}
 
 	@FXML

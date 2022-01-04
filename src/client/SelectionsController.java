@@ -185,11 +185,11 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 			ChooseADishController.itemSelected.setPrice(
 					Integer.valueOf(quantityOfItem.getText()) * ChooseADishController.itemSelected.getPrice());
 
-			addItemToCart();
 		}
-			ChooseADishController.chooseADishController.getPaneForSelections().setCenter(null);
-			ChooseADishController.chooseADishController.setVisibleItemContainer(true);
-		
+		addItemToCart();
+		ChooseADishController.chooseADishController.getPaneForSelections().setCenter(null);
+		ChooseADishController.chooseADishController.setVisibleItemContainer(true);
+
 	}
 
 	private void addItemToCart() {
@@ -202,6 +202,8 @@ public class SelectionsController implements Initializable, EventHandler<ActionE
 		for (Item item : ChooseADishController.itemsSelectedArr)
 			if (item.getName().equals(ChooseADishController.itemSelected.getName())) {
 				item.setAmount(item.getAmount() + ChooseADishController.itemSelected.getAmount());
+				item.setPrice(item.getPrice() + ChooseADishController.itemSelected.getPrice());
+
 				flag = false;
 			}
 

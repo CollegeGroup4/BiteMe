@@ -1,4 +1,4 @@
-package branchManager;
+package branchManager_to_remove;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +14,8 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.Response;
+import branchManager.BranchManagerController;
+import branchManager.BranchManagerFunctions;
 import client.ChatClient;
 import common.Request;
 import guiNew.Navigation_SidePanelController;
