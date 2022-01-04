@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="supplier.BusinessApproveController">
+   <children>
+      <AnchorPane layoutX="10.0" layoutY="96.0" prefHeight="665.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="251.0" layoutY="57.0" prefHeight="43.0" prefWidth="378.0" text="Messages" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="36.0" />
+               </font>
+            </Label>
+            <TableView fx:id="tableViewMsg" layoutX="409.0" layoutY="149.0" onMouseClicked="#ClickOnTable" prefHeight="434.0" prefWidth="456.0">
+               <columns>
+                  <TableColumn fx:id="tableColFrom" prefWidth="100.0" text="From" />
+                  <TableColumn fx:id="tableColRole" prefWidth="250.0" text="Role" />
+                  <TableColumn fx:id="tableColStatus" minWidth="0.0" prefWidth="110.0" text="status" />
+               </columns>
+            </TableView>
+            <Button fx:id="btnBackBM" layoutX="26.0" layoutY="603.0" mnemonicParsing="false" onAction="#backHM" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <VBox fx:id="vBoxMail" layoutX="27.0" layoutY="176.0" prefHeight="401.0" prefWidth="355.0" style="-fx-border-color: black;">
+               <children>
+                  <AnchorPane prefHeight="64.0" prefWidth="359.0" style="-fx-border-color: black;">
+                     <children>
+                        <Label layoutX="11.0" layoutY="10.0" prefHeight="24.0" prefWidth="72.0" text="Topic:">
+                           <font>
+                              <Font name="Berlin Sans FB Demi Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="49.0" layoutY="32.0" prefHeight="25.0" prefWidth="291.0" text="Registration of Account as Bussines">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="45.0" prefWidth="359.0" style="-fx-border-color: black;">
+                     <children>
+                        <Label layoutX="15.0" layoutY="13.0" text="Status:">
+                           <font>
+                              <Font name="Berlin Sans FB Demi Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="labelStatus" layoutX="99.0" layoutY="13.0" text="waiting">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="46.0" prefWidth="353.0" style="-fx-border-color: black;">
+                     <children>
+                        <Label fx:id="labelFrom" layoutX="93.0" layoutY="16.0" text="from">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="16.0" layoutY="15.0" prefHeight="24.0" prefWidth="59.0" text="From:">
+                           <font>
+                              <Font name="Berlin Sans FB Demi Bold" size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="246.0" prefWidth="369.0" style="-fx-border-color: black;">
+                     <children>
+                        <Label layoutX="4.0" layoutY="14.0" prefHeight="27.0" prefWidth="353.0" text="Need the certificate for">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="23.0" layoutY="68.0" prefHeight="27.0" prefWidth="165.0" text="Account User Name:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="labelUserName" layoutX="183.0" layoutY="68.0" prefHeight="27.0" prefWidth="100.0" text="User name:" />
+                        <Label layoutX="22.0" layoutY="95.0" prefHeight="27.0" prefWidth="66.0" text="User ID:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="labelUserID" layoutX="97.0" layoutY="95.0" prefHeight="27.0" prefWidth="100.0" text="ID:" />
+                        <Label layoutX="24.0" layoutY="123.0" prefHeight="27.0" prefWidth="127.0" text="business name:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="13.0" layoutY="156.0" prefHeight="27.0" prefWidth="202.0" text="Do you want to confirm?">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnDecline" layoutX="201.0" layoutY="189.0" mnemonicParsing="false" onAction="#decline" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="Decline">
+                           <font>
+                              <Font name="Berlin Sans FB Demi Bold" size="13.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btnApprove" layoutX="61.0" layoutY="189.0" mnemonicParsing="false" onAction="#approve" prefHeight="25.0" prefWidth="72.0" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="Approve">
+                           <font>
+                              <Font name="Berlin Sans FB Demi Bold" size="13.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="1.0" layoutY="41.0" prefHeight="27.0" prefWidth="342.0" text="registration of the Bussines Account as licensed:">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="newnametext" layoutX="149.0" layoutY="124.0" prefHeight="26.0" prefWidth="150.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+            <Label fx:id="lableSlectedUser" alignment="CENTER" contentDisplay="CENTER" layoutX="251.0" layoutY="597.0" prefHeight="24.0" prefWidth="378.0" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="36.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="8.0" prefHeight="102.0" prefWidth="880.0" spacing="50.0" style="-fx-background-radius: 50px;">
+         <children>
+            <Label prefHeight="88.0" prefWidth="234.0" styleClass="f" text="Hello, H.R Manager">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" top="50.0" />
+               </padding>
+            </Label>
+            <Hyperlink prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="102.0" fitWidth="301.0">
+               <image>
+                  <Image url="file:/C:/Users/orbit/eclipse-workspace/BiteMeold/img/biteMe.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

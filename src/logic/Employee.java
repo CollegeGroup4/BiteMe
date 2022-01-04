@@ -1,22 +1,59 @@
 package logic;
 
 public class Employee {
-	private String name;
-	private int w4c_card;
-	public Employee(String name, int w4c_card) {
-		this.name = name;
-		this.w4c_card = w4c_card;
+	private String businessName;
+	private boolean isApproved;
+	private String hrName;
+	private String hrUserName;
+	private String branchManagerUserName;
+
+	public Employee(String businessName, boolean isApproved, String hrName, String hrUserName,
+			String branchManagerUserName) {
+		this.businessName = businessName;
+		this.isApproved = isApproved;
+		this.hrName = hrName;
+		this.hrUserName = hrUserName;
+		this.branchManagerUserName = branchManagerUserName;
 	}
-	public String getName() {
-		return name;
+
+	public String getBusinessName() {
+		return businessName;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public void setBusinessName(String businessName) {
+		this.businessName = businessName;
 	}
-	public int getW4c_card() {
-		return w4c_card;
+
+	public boolean isApproved() {
+		return isApproved;
 	}
-	public void setW4c_card(int w4c_card) {
-		this.w4c_card = w4c_card;
+
+	public void setApproved(boolean isApproved) {
+		this.isApproved = isApproved;
 	}
+
+	public String getHrName() {
+		return hrName;
+	}
+
+	public void setHrName(String hrName) {
+		this.hrName = hrName;
+	}
+
+	public String getHrUserName() {
+		return hrUserName;
+	}
+
+	public void setHrUserName(String hrUserName) {
+		this.hrUserName = hrUserName;
+	}
+
+	public String getBranchManagerUserName() {
+		return branchManagerUserName;
+	}
+
+	public void setBranchManagerUserName(String branchManagerUserName) {
+		this.branchManagerUserName = branchManagerUserName;
+	}
+
 }

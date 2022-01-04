@@ -4,6 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.sun.tools.javac.jvm.Items;
+
+import client.ChatClient;
+import client.ClientController;
+import client.ClientUI;
+import common.Request;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +27,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logic.Category;
 import logic.Item;
 import logic.Options;
 
@@ -97,9 +106,13 @@ public class AllItemController implements Initializable{
 
 	
 	public void initialize(URL url, ResourceBundle db) {
-	    ItemList.add(new Item("Cordi","sdd", 0, 3, "Kobana", 4, null, "dan", null, null, 0));
-    	ItemList.add(new Item("Askanzi", "s", 2, 0, "Poyka", 7, "taim", null, null, null, 0));
-    	ItemList.add(new Item("Irqy", null, 7, 4,"Sabic", 2, null, "pita", null, null, 1));
+		FromJson();
+		
+		//insert the items from json to table ****
+		
+//	    ItemList.add(new Item("Cordi","sdd", 0, 3, "Kobana", 4, null, "dan", null, null, 0));
+//    	ItemList.add(new Item("Askanzi", "s", 2, 0, "Poyka", 7, "taim", null, null, null, 0));
+//    	ItemList.add(new Item("Irqy", null, 7, 4,"Sabic", 2, null, "pita", null, null, 1));
 		
     	
     	name.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
@@ -109,39 +122,38 @@ public class AllItemController implements Initializable{
     	subcategory.setCellValueFactory(new PropertyValueFactory<Item, String>("Subcategory"));
     	Description.setCellValueFactory(new PropertyValueFactory<Item, String>("Description"));
     	Price.setCellValueFactory(new PropertyValueFactory<Item, Double>("Price"));
-    	resturantid.setCellValueFactory(new PropertyValueFactory<Item, Integer>("resturantid"));
+    	resturantid.setCellValueFactory(new PropertyValueFactory<Item, Integer>("restaurantID"));
     	ItemID.setCellValueFactory(new PropertyValueFactory<Item,Integer>("ItemID"));
     	Table.setItems(ItemList);
 	
 
 	
 	}
+	void FromJson() {
+		
+		///ask moshe on items of restaurant !!
+		/// change to get items from this restaurant ***////
+		
+		Request request=new Request();
+		request.setPath("/restaurants/getItemsByMenu");
+		request.setMethod("GET");
+		Gson gson=new Gson();
+		JsonElement body=gson.toJsonTree(new Object());
+		
+		body.getAsJsonObject().addProperty("restaurantID",2 );// String 2 is the current restaurant ID (!!!)
+		
+		
+		request.setBody(gson.toJson(body));
+		ClientUI.chat.accept(gson.toJson(request));
+		Item [] items=gson.fromJson((String)ChatClient.serverAns.getBody(),Item[].class);
+		
+		for(int i=0;i<items.length;i++) {
+			ItemList.add(items[i]);
+		}
+		
+		
+	}
 
-	public void insertItemsToTbl(ObservableList<Item> itemList2) {
-	}}
-//ItemList.addAll(item,item2);
-		
-		
-		
-//		Gson gson = new Gson();
-//		menuInRes y = new menuInRes();
-		//JsonElement v = gson.toJsonTree(c);
-		
-//		j.getAsJsonObject().addProperty("path", "/returants/menus");
-//		j.getAsJsonObject().addProperty("method", "POST");
-//		j.getAsJsonObject().add("body",v);
-//		String p = gson.toJson(j);
-//		
-//		JsonElement j = gson.toJsonTree(new Object());
-//		String p = gson.toJson(j);
-//		Response k = gson.fromJson(p, Response.class);
-//		JsonElement h = gson.toJsonTree(k.getBody());
-//		
-//		String[] id = new String[2];
-//		id[0] = new String("GETALL");
-//		id[1] = new String("Item");
-//		ClientUI.chat.accept(id);
-
-
-		
 	
+	
+}

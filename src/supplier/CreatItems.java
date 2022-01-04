@@ -5,8 +5,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import com.jfoenix.controls.JFXComboBox;
+import com.google.gson.Gson;
 
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+
+import supplier.SupplierFunction;
+import client.ChatClient;
+import client.ClientController;
+import client.ClientUI;
+import common.Request;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,12 +39,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import javafx.stage.Stage;
+import logic.Category;
 import logic.Item;
 import logic.Options;
 import logic.item_in_menu;
 
 public class CreatItems implements Initializable {
+	@FXML
+    private JFXHamburger myHamburger;
 
+    @FXML
+    private JFXDrawer drawer;
 	@FXML
 	private Label dishname;
 
@@ -56,6 +70,8 @@ public class CreatItems implements Initializable {
 
 	@FXML
 	private TextField specifytext;
+	@FXML
+	private TextField pricetextop;
 
 	@FXML
 	private Button Optionaladd;
@@ -80,15 +96,14 @@ public class CreatItems implements Initializable {
 	@FXML
 	private TableColumn<IngrediantRow, TextField> namecol;
 
-	@FXML
-	private TableColumn<IngrediantRow, Button> addincol;
+	
 	@FXML
 	private TableView<IngrediantRow> ingrediantsTable;
-	@FXML
-	private TableColumn<IngrediantRow, Button> removeincol;
+	
 	@FXML
 	private JFXComboBox<String> categorycombo;
-
+	@FXML
+    private TableColumn<OptionRow, TextField> pricecol;
 	@FXML
 	private JFXComboBox<String> subcombo;
 	@FXML
@@ -111,7 +126,7 @@ public class CreatItems implements Initializable {
 
 	@FXML
 	private Button LogOut;
-
+	private SupplierFunction supplierfunction = new SupplierFunction();
 	// in next values put item_in_menu values you get
 
 	item_in_menu iteminmenu;
@@ -122,16 +137,39 @@ public class CreatItems implements Initializable {
     private Options [] optionalarry;
 	private ObservableList<String> categorylist = FXCollections.observableArrayList();
 	private ObservableList<String> subcategorylist = FXCollections.observableArrayList();
-	IngrediantRow inrow = new IngrediantRow(ingrediantsText, ingrediantsadd, removeinbutton);
-	OptionRow oprow = new OptionRow(categorytext, specifytext);
+	IngrediantRow inrow = new IngrediantRow(ingrediantsText);
+	OptionRow oprow = new OptionRow(categorytext, specifytext,pricetextop);
 	Item itemtosave = new Item(null, null, 0, 0, null, 0, null, null, null, null, 0);
 
 	ObservableList<IngrediantRow> ingrediantRow = FXCollections.observableArrayList();
 	ObservableList<OptionRow> optionrow = FXCollections.observableArrayList();
 
+	void sendtoserver() {
+	
+		Request request=new Request();
+		request.setPath("/restaurants/items");
+		request.setMethod("POST");
+		Gson gson=new Gson();
+	
+		request.setBody(gson.toJson(itemtosave));
+		ClientUI.chat.accept(gson.toJson(request));
+		
+		if(ChatClient.serverAns.getCode()!= 200 && ChatClient.serverAns.getCode()!= 201 ) {
+			
+			//Warning
+		}
+		
+		//Category [] categories=gson.fromJson((String)ChatClient.serverAns.getBody(),Category[].class );
+		
+		
+	}
+	
+	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 //		**** Category and sub part*****
 		categorycombo.setPromptText("pick a category");
 		categorylist.add("Brazilian");
@@ -145,20 +183,21 @@ public class CreatItems implements Initializable {
 		subcategorylist.add("Other");
 		subcombo.setItems(subcategorylist);
 
+		
+		
+		
 //		***** Ingredients part*******
 
 		ingrediantsadd.setVisible(true);
 		removeinbutton.setVisible(true);
 		ingrediantsText = new TextField();
 		ingrediantsText.setPrefWidth(namecol.getPrefWidth());
-		ingrediantsadd.setPrefWidth(addincol.getPrefWidth());
-		removeinbutton.setPrefWidth(removeincol.getPrefWidth());
+		
 		ingrediantsText.setPrefHeight(ingrediantsadd.getPrefHeight());
-		ingrediantRow.add(new IngrediantRow(ingrediantsText, ingrediantsadd, removeinbutton));
+		ingrediantRow.add(new IngrediantRow(ingrediantsText));
 
 		namecol.setCellValueFactory(new PropertyValueFactory<IngrediantRow, TextField>("text"));
-		addincol.setCellValueFactory(new PropertyValueFactory<IngrediantRow, Button>("addb"));
-		removeincol.setCellValueFactory(new PropertyValueFactory<IngrediantRow, Button>("remb"));
+
 		ingrediantsTable.setItems(ingrediantRow);
 
 //		***** Option part*******		
@@ -166,9 +205,9 @@ public class CreatItems implements Initializable {
 		specifytext = new TextField();
 		categorytext.setPrefWidth(CategoryCol.getPrefWidth());
 		specifytext.setPrefWidth(spcifyCOL.getPrefWidth());
-		optionrow.add(new OptionRow(categorytext, specifytext));
 		CategoryCol.setCellValueFactory(new PropertyValueFactory<OptionRow, TextField>("catetext"));
 		spcifyCOL.setCellValueFactory(new PropertyValueFactory<OptionRow, TextField>("spcitext2"));
+		pricecol.setCellValueFactory(new PropertyValueFactory<OptionRow, TextField>("pricetextop"));
 
 		OptionTable.setItems(optionrow);
 
@@ -177,40 +216,42 @@ public class CreatItems implements Initializable {
 	public class OptionRow {
 		TextField catetext;
 		TextField spcitext2;
-
-		public OptionRow(TextField catetext, TextField spcitext2) {
-
+		TextField pricetextop;
+		public OptionRow(TextField catetext, TextField spcitext2, TextField pricetextop) {
+			
 			this.catetext = catetext;
 			this.spcitext2 = spcitext2;
+			this.pricetextop = pricetextop;
 		}
-
 		public TextField getCatetext() {
 			return catetext;
 		}
-
 		public void setCatetext(TextField catetext) {
 			this.catetext = catetext;
 		}
-
 		public TextField getSpcitext2() {
 			return spcitext2;
 		}
-
 		public void setSpcitext2(TextField spcitext2) {
 			this.spcitext2 = spcitext2;
 		}
+		public TextField getPricetextop() {
+			return pricetextop;
+		}
+		public void setPricetextop(TextField pricetextop) {
+			this.pricetextop = pricetextop;
+		}
+	
 
 	}
 
 	public class IngrediantRow {
 
 		TextField text;
-		Button addb;
-		Button remb;
+		
 
-		public IngrediantRow(TextField text, Button addb, Button remb) {
-			this.addb = addb;
-			this.remb = remb;
+		public IngrediantRow(TextField text) {
+			
 			this.text = text;
 		}
 
@@ -218,25 +259,7 @@ public class CreatItems implements Initializable {
 			return text;
 		}
 
-		public void setText(TextField text) {
-			this.text = text;
-		}
-
-		public Button getAddb() {
-			return addb;
-		}
-
-		public void setAddb(Button addb) {
-			this.addb = addb;
-		}
-
-		public Button getRemb() {
-			return remb;
-		}
-
-		public void setRemb(Button remb) {
-			this.remb = remb;
-		}
+		
 	}
 
 	@FXML
@@ -259,7 +282,7 @@ public class CreatItems implements Initializable {
 		optionalarry=(Options[]) optionslist.toArray();
 		
 		itemtosave.setOptions(optionalarry);
-
+		sendtoserver();
 		//and send to database//
 
 	}
@@ -289,36 +312,17 @@ public class CreatItems implements Initializable {
 		for (IngrediantRow row : allrows) {
 			if (row.text.getText() != "") {
 				row.text.setDisable(true);
-				row.addb.setDisable(true);
+				
 			}
 		}
 
 		TextField newingr = new TextField();
 		newingr.setPrefWidth(ingrediantsText.getPrefWidth());
 		newingr.setPrefHeight(ingrediantsText.getPrefHeight());
-
-		Button plus = new Button("+");
-		plus.setPrefWidth(ingrediantsadd.getPrefWidth());
-		plus.setPrefHeight(ingrediantsadd.getPrefHeight());
-		plus.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> AddIngrediants(action));
-		Button minus = new Button("-");
-		;
-		minus.setPrefWidth(removeinbutton.getPrefWidth());
-		minus.setPrefHeight(removeinbutton.getPrefHeight());
-		minus.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> RemoveIngrediants(action));
-//    	HBox newhbox=new HBox();
-//    	newhbox.setPrefWidth(ingrediantsHbox.getPrefWidth());
-//    	newhbox.setPrefHeight(ingrediantsHbox.getPrefHeight());
-//    	newhbox.getChildren().addAll(newingr,plus,minus);
-		IngrediantRow row = new IngrediantRow(newingr, plus, minus);
-//    	Ingrenianttoadd.add(row);
+		IngrediantRow row = new IngrediantRow(newingr);
 		ingrediantsTable.getItems().add(row);
-//    	ingrediantsTable.setItems(Ingrenianttoadd);
 
-//    	ingrediantsVbox.getChildren().add(newhbox);
-//    	ingrediantsadd.setVisible(true);
-//    	removeinbutton.setVisible(true);
-//    	ingrediantsText.setVisible(true);
+
 
 	}
 
@@ -327,14 +331,15 @@ public class CreatItems implements Initializable {
 
 		// to add item id in the new option
 
-		Options option = new Options(categorytext.getText(), specifytext.getText(), 8);
+		Options option = new Options(categorytext.getText(), specifytext.getText(),6.6, 8, false);
 		optionslist.add(option);
 
 		ObservableList<OptionRow> allrows = OptionTable.getItems();
 		for (OptionRow row : allrows) {
-			if (row.catetext.getText() != "" && row.spcitext2.getText() != "") {
+			if (row.catetext.getText() != "" && row.spcitext2.getText() != "" && row.pricetextop.getText()!="") {
 				row.catetext.setDisable(true);
 				row.spcitext2.setDisable(true);
+				row.pricetextop.setDisable(true);
 			}
 		}
 
@@ -345,8 +350,13 @@ public class CreatItems implements Initializable {
 		TextField newspec = new TextField();
 		newspec.setPrefWidth(specifytext.getPrefWidth());
 		newspec.setPrefHeight(specifytext.getPrefHeight());
-
-		OptionRow row = new OptionRow(newcat, newspec);
+		
+		TextField newprice = new TextField();
+		newprice.setPrefWidth(specifytext.getPrefWidth());
+		newprice.setPrefHeight(specifytext.getPrefHeight());
+		
+		
+		OptionRow row = new OptionRow(newcat, newspec,newprice);
 
 		OptionTable.getItems().add(row);
 

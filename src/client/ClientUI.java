@@ -2,7 +2,6 @@ package client;
 import gui.ClientMainScreenController;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import supplier.SupplierController;
 
 public class ClientUI extends Application {
 	public static ClientController chat; //only one instance
@@ -14,7 +13,7 @@ public class ClientUI extends Application {
 	 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		SupplierController aFrame = new SupplierController();
+		ClientMainScreenController aFrame = new ClientMainScreenController();
 		aFrame.start(primaryStage);
 	}
 }

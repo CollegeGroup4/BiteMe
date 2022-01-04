@@ -13,7 +13,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="portText" layoutX="177.0" layoutY="115.0" prefHeight="26.0" prefWidth="121.0" promptText="5555" />
+      <TextField fx:id="portText" layoutX="177.0" layoutY="115.0" prefHeight="26.0" prefWidth="121.0" promptText="5555" text="5555" />
       <Label layoutX="125.0" layoutY="117.0" text="port: ">
          <font>
             <Font size="15.0" />
@@ -31,6 +31,6 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="serverId" layoutX="177.0" layoutY="84.0" prefHeight="25.0" prefWidth="121.0" />
+      <TextField fx:id="serverId" layoutX="177.0" layoutY="84.0" prefHeight="25.0" prefWidth="121.0" promptText="192.168.56.1" text="192.168.14.27" />
    </children>
 </AnchorPane>

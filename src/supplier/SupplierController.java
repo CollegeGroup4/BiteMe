@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import Server.Response;
 import client.ChatClient;
 import client.ClientController;
-import client.Request;
+import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,15 +23,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import logic.Resturant;
-import logic.User;
+import logic.Restaurant;
+
 
 public class SupplierController {
 
-	public static Resturant supplier;
+	public static Restaurant supplier;
 	@FXML
     private HBox Nav;
-
+	@FXML
+    private Button UpdateItem;
     @FXML
     private Button LogOut;
 
@@ -70,44 +71,49 @@ public class SupplierController {
 	    
 	    void sentToJson(String username, String password) {
 	    	
-//			 Resturant user = new Resturant(0, true, 0, username, password, null);
-//			Request request = new Request();
-//			request.setPath("/users/login");
-//			request.setMethod("GET");
-//			
-//			Gson gson = new Gson();
-//			JsonElement jsonUser = gson.toJsonTree(new Object());
-//			jsonUser.getAsJsonObject().addProperty("MenuName",spcefic menu);	//******get by menu name**********
-//			jsonUser.getAsJsonObject().addProperty("ResturantID",spcefic Number);	//******get by resturantID*****
-//	    	String jsonFile = gson.toJson(jsonUser);
-//	    	request.setBody(jsonFile);
-//	    	System.out.println("jsonFile : "+jsonFile);
-//	    	client.accept(jsonFile); // in here will be DB ask for restaurant id
-//			Response k = gson.fromJson(ChatClient.serverAns, Response.class);
-//			if(k.getCode()!=200 && k.getCode()!=201) {
-//				//error massage
-//			}
-//			
-//			JsonElement h = gson.toJsonTree(k.getBody());
+			Restaurant user = new Restaurant(0, true, 0, username, password, null, password, password, password, password);
+			Request request = new Request();
+			request.setPath("/users/login");
+			request.setMethod("GET");
+			
+			Gson gson = new Gson();
+			JsonElement jsonUser = gson.toJsonTree(new Object());
+			jsonUser.getAsJsonObject().addProperty("MenuName","");	//******get by menu name**********
+			jsonUser.getAsJsonObject().addProperty("ResturantID","");	//******get by resturantID*****
+	    	String jsonFile = gson.toJson(jsonUser);
+	    	request.setBody(jsonFile);
+	    	System.out.println("jsonFile : "+jsonFile);
+	    	client.accept(jsonFile); // in here will be DB ask for restaurant id
+			Response k = gson.fromJson((String)ChatClient.serverAns.getBody(), Response.class);
+			if(k.getCode()!=200 && k.getCode()!=201) {
+				//error massage
+			}
+			
+			JsonElement h = gson.toJsonTree(k.getBody());
 			
 		}
 	    
     public void start(Stage primaryStage) throws Exception {
     	
-//    	req.setPath("/resturants/menus");
-//    	req.setMethod("GET");
-//    	
-//    	
-//    
-//    	JsonElement j = gson.toJsonTree(req);
-//    	String p = gson.toJson(j);
-//    	client.accept(p); // in here will be DB ask for restaurant id
-//    	
-//    	
-//    	
-
-//		 this.resid=gson.fromJson(h.getAsJsonObject().get("restaurantName"), String.class);// you can do it by h and class
-		
+//		gson to get restaurant ID 
+    	
+//    	and check if account is moderator and change button disability
+    	
+    	
+    	
+    	
+    	
+//    	if(this.account.getInctnce==moderator) {
+//    		
+//    		orderbutton.setDisable(true);
+//    		approveorder.setDisable(true);
+//    		creatitem.setDisable(true);
+//    		allitems.setDisable(true);
+//    		creatandeditmenu.setDisable(true);
+//    		
+//    	}
+    	
+    	
 		
 		Parent root = FXMLLoader.load(getClass().getResource("/supplier/SupplierPage.fxml"));
 		Scene scene = new Scene(root);
@@ -117,7 +123,27 @@ public class SupplierController {
 		primaryStage.show();
 	
     }
-	
+    @FXML
+    void UpdateItem(ActionEvent event) {
+    	System.out.println("Update Item Table");
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+		Stage primaryStage = new Stage();
+		Pane root;
+		try {
+			root = loader.load(getClass().getResource("/supplier/UpdateItemTable.fxml").openStream());
+			
+
+			Scene scene = new Scene(root);
+
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			System.out.println("Erorr: Could not open Update Item  Tablepage");
+			e.printStackTrace();
+			
+		}
+    }
 	
     @FXML
     void LogOut(ActionEvent event) {
@@ -232,7 +258,23 @@ public class SupplierController {
 
     @FXML
     void ApproveOrder(ActionEvent event) {
-    	
+ 	   System.out.println("Approve");
+ 			FXMLLoader loader = new FXMLLoader();
+ 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+ 			Stage primaryStage = new Stage();
+ 			Pane root;
+ 			try {
+ 				root = loader.load(getClass().getResource("/supplier/ApproveOrder.fxml").openStream());
+ 			
+ 				Scene scene = new Scene(root);
+
+ 				primaryStage.setScene(scene);
+ 				primaryStage.show();
+ 			} catch (IOException e) {
+ 				System.out.println("Erorr: Could not open ApproveOrder  page");
+ 				e.printStackTrace();
+ 				
+ 			}
     }
     @FXML
     void Back(ActionEvent event) {

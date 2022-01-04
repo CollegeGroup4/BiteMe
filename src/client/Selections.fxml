@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="359.0" prefWidth="432.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.SelectionsController">
+   <children>
+      <HBox alignment="TOP_CENTER" prefHeight="42.0" prefWidth="180.0">
+         <children>
+            <Label fx:id="itemName" alignment="CENTER" prefHeight="30.0" prefWidth="414.0" text="Label">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="25.0" />
+               </font></Label>
+         </children>
+      </HBox>
+      <VBox prefHeight="305.0" prefWidth="408.0" spacing="5.0">
+         <children>
+            <HBox prefHeight="29.0" prefWidth="180.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="22.0" prefWidth="62.0" text="Price:">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="17.0" />
+                     </font></Label>
+                  <Label fx:id="priceOfItem" alignment="CENTER" prefHeight="22.0" prefWidth="39.0" text="price">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="15.0" />
+                     </font></Label>
+                  <Label fx:id="priceOfItem1" alignment="CENTER" prefHeight="22.0" prefWidth="18.0" text="\$">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="18.0" prefWidth="104.0" />
+                  <Label alignment="CENTER" prefHeight="22.0" prefWidth="104.0" text="Quantity:">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="17.0" />
+                     </font></Label>
+                  <TextField fx:id="quantityOfItem" prefWidth="41.0" text="0" />
+                  <Button fx:id="btnIncrease" mnemonicParsing="false" onAction="#increase" text="+">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnDecrease" mnemonicParsing="false" onAction="#decrease" text="-" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="3.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="27.0" prefWidth="180.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="22.0" prefWidth="135.0" text="Select optional:">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="17.0" />
+                     </font></Label>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="3.0" />
+               </VBox.margin>
+            </HBox>
+            <ScrollPane prefHeight="50.0" prefWidth="410.0">
+               <content>
+                  <HBox fx:id="allOptionals" />
+               </content>
+               <VBox.margin>
+                  <Insets bottom="3.0" />
+               </VBox.margin></ScrollPane>
+            <HBox prefHeight="24.0" prefWidth="287.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="164.0" text="Optional  selected :">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="17.0" />
+                     </font></Label>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="3.0" />
+               </VBox.margin>
+            </HBox>
+            <ScrollPane prefHeight="50.0" prefWidth="410.0">
+               <content>
+                  <HBox fx:id="optionalsSelected" />
+               </content>
+               <VBox.margin>
+                  <Insets bottom="7.0" />
+               </VBox.margin>
+            </ScrollPane>
+            <HBox prefHeight="24.0" prefWidth="407.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="210.0" text="Any additional intructios?" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="17.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <TextArea fx:id="additionalInstructions" prefHeight="50.0" prefWidth="386.0" />
+            <HBox alignment="CENTER" prefHeight="28.0" prefWidth="407.0" spacing="20.0">
+               <children>
+                  <JFXButton fx:id="clearBtn" onAction="#clear" style="-fx-border-color: orange; -fx-border-radius: 30;" text="Clear" />
+                  <JFXButton fx:id="submitBtn" onAction="#submit" style="-fx-border-color: orange; -fx-border-radius: 30;" text="Submit" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>

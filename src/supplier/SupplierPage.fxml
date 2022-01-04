@@ -86,6 +86,11 @@
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
             </Button>
+            <Button fx:id="UpdateItem" layoutX="580.0" layoutY="236.0" mnemonicParsing="false" onAction="#UpdateItem" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Update Item">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>

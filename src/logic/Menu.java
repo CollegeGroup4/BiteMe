@@ -1,22 +1,18 @@
-
-
 package logic;
+
+import java.util.Arrays;
 
 public class Menu {
 	private String name;
 	private int restaurantID;
-	private Item[] items;
+	private item_in_menu[] items;
 	
-	public Item[] getItems() {
-		return items;
-	}
-	public void setItems(Item[] items) {
-		this.items = items;
-	}
-	public Menu(String name, int restaurantID) {
+	public Menu(String name, int restaurantID, item_in_menu[] items) {
 		this.name = name;
 		this.restaurantID = restaurantID;
+		this.items = items;
 	}
+	
 	public String getName() {
 		return name;
 	}
@@ -28,6 +24,17 @@ public class Menu {
 	}
 	public void setRestaurantID(int restaurantID) {
 		this.restaurantID = restaurantID;
-	}	
-}
+	}
+	public item_in_menu[] getItems() {
+		return items;
+	}
+	public void setItems(item_in_menu[] items) {
+		this.items = items;
+	}
 
+	@Override
+	public String toString() {
+		return "Menu [name=" + name + ", restaurantID=" + restaurantID + ", items=" + Arrays.toString(items) + "]";
+	}
+	
+}
