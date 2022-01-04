@@ -3,21 +3,14 @@ package Server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.JsonElement;
 
-import Server.AccountApiService;
-import Server.EchoServer;
 import common.DBController;
-import common.Request;
 import common.Response;
-import logic.Account;
-import logic.BusinessAccount;
-import logic.PrivateAccount;
+import logic.Restaurant;
 
 public class AccountApiServiceTest {
 	private Response response;
@@ -29,23 +22,23 @@ public class AccountApiServiceTest {
 		response = new Response();
 	}
 
-	@Test
-	public void testCreatePrivateAccount() {
-		String userName = "c";
-		Request r = new Request();
-		AccountApiService.getAccountByUserName(userName, response);
-		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
-		PrivateAccount acc = new PrivateAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
-				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
-				 account.getDebt(), null,"1234567891234567", "123", "12-2026");
-		AccountApiService.createPrivateAccount(acc, response);
-	r.setPath("/accounts/privateAccount");
-	r.setMethod("POST");
-	r.setBody(EchoServer.gson.toJson(account));
-	EchoServer i = new EchoServer(5555);
-	i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
-		assertEquals("Success in registering private account: 2", response.getDescription());
-	}
+//	@Test
+//	public void testCreatePrivateAccount() {
+//		String userName = "c";
+//		Request r = new Request();
+//		AccountApiService.getAccountByUserName(userName, response);
+//		Account account = EchoServer.gson.fromJson((String)response.getBody(), Account.class);
+//		PrivateAccount acc = new PrivateAccount(account.getUserID(), account.getUserName(), account.getPassword(), account.getFirstName(), account.getLastName(),
+//				account.getEmail(), account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(), account.getBranch_manager_ID(), account.getArea(),
+//				 account.getDebt(), null,"1234567891234567", "123", "12-2026");
+//		AccountApiService.createPrivateAccount(acc, response);
+//	r.setPath("/accounts/privateAccount");
+//	r.setMethod("POST");
+//	r.setBody(EchoServer.gson.toJson(account));
+//	EchoServer i = new EchoServer(5555);
+//	i.handleMessageFromClient(EchoServer.gson.toJson(r), null);
+//		assertEquals("Success in registering private account: 2", response.getDescription());
+//	}
 //
 //	@Test
 //	public void testCreateBusinessAccount() {
@@ -108,19 +101,20 @@ public class AccountApiServiceTest {
 //		assertEquals("Success in fetching UserID: -> 2", response.getDescription());
 //	}
 //
-//	@Test
-//	public void testLoginAccount() {
-//		String userName = "b";
-//		String password = "b";
-//		AccountApiService.loginAccount(userName, password, response);
-//		try {
-//			JsonElement j = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
-//			System.out.println(EchoServer.gson.fromJson(j.getAsJsonObject().get("privateAccount"), PrivateAccount.class));
-//		} catch (Exception e) {
-//			fail(response.getDescription());
-//		}
-//		assertEquals("Success in login 1", response.getDescription());		
-//	}
+	@Test
+	public void testLoginAccount() {
+		String userName = "d";
+		String password = "d";
+		AccountApiService.loginAccount(userName, password, response);
+		try {
+			JsonElement j = EchoServer.gson.fromJson((String) response.getBody(), JsonElement.class);
+			Restaurant a = EchoServer.gson.fromJson(j.getAsJsonObject().get("restaurant"), Restaurant.class);
+			System.out.println(a.toString());
+		} catch (Exception e) {
+			fail(response.getDescription());
+		}
+		assertEquals("Success in login 1", response.getDescription());		
+	}
 //
 //	@Test
 //	public void testLoginAccountW4C() {

@@ -40,10 +40,14 @@ public class OrderApiServiceTest {
 //		assertEquals("A new order has been successfuly added -> orderID: 16", response.getDescription());
 //	}
  
-	@Test
-	public void testAllOrders() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	public void testAllOrders() {
+//		int restaurantID = 10;
+//		OrderApiService.AllOrdersByRestaurantID(restaurantID, response);
+//		for (Order order : EchoServer.gson.fromJson((String)response.getBody(), Order[].class)) {
+//			System.out.println(order.toString());
+//		}
+//	}
 
 	@Test
 	public void testAllOrdersByRestaurantID() {
@@ -52,7 +56,11 @@ public class OrderApiServiceTest {
 
 	@Test
 	public void testAllOrdersByUserName() {
-		fail("Not yet implemented");
+		String userName = "b";
+		OrderApiService.getOrderByUserName(userName, response);
+		for (Order order : EchoServer.gson.fromJson((String)response.getBody(), Order[].class)) {
+			System.out.println(order.getOrderID());
+		}
 	}
 
 	@Test
@@ -70,14 +78,13 @@ public class OrderApiServiceTest {
 		fail("Not yet implemented");
 	}
 	
-	@Test
-	public void testGetOredersByUserName() {
-		String userName = "b";
-		OrderApiService.getOrderByUserName(userName, response);
-		Order[] orders = EchoServer.gson.fromJson((String)response.getBody(), Order[].class);
-		System.out.println(Arrays.toString(orders));
-		
-	}
+//	@Test
+//	public void testGetOredersByUserName() {
+//		String userName = "b";
+//		OrderApiService.getOrderByUserName(userName, response);
+//		Order[] orders = EchoServer.gson.fromJson((String)response.getBody(), Order[].class);
+//		System.out.println(Arrays.toString(orders));		
+//	}
 	@Test
 	public void testUpdateOrder() {
 		fail("Not yet implemented");

@@ -33,8 +33,8 @@ public class AccountApiService {
 	public static void importSuper(Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con
-					.prepareStatement("INSERT INTO biteme.account"
-							+ " SELECT * FROM biteme.user_management;");
+					.prepareStatement("INSERT INTO biteme.account "
+							+ "SELECT * FROM users.account WHERE UserName not in (SELECT UserName FROM biteme.account);");
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
 				response.setCode(400);
@@ -244,7 +244,7 @@ public class AccountApiService {
 		ArrayList<Account> accounts = new ArrayList<Account>();
 		try {
 			PreparedStatement getAllAccounts = EchoServer.con.prepareStatement(
-					"SELECT * FROM biteme.account WHERE BranchManagerID = ? AND Role != 'Branch Manager' AND Role != 'Moderator';");
+					"SELECT * FROM biteme.account WHERE BranchManagerID = ? AND Role != 'Branch Manager' AND Role != 'Moderator'  OR (BranchManagerID = 0 AND Role != 'CEO');");
 			getAllAccounts.setInt(1, branch_manager_id);
 			rs = getAllAccounts.executeQuery();
 			while (rs.next()) {
@@ -296,6 +296,7 @@ public class AccountApiService {
 							rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT)));
 					body.getAsJsonObject().add("businessAccount", temp);
 				}
+			}
 				getAccount = EchoServer.con
 						.prepareStatement("SELECT * FROM biteme.private_account WHERE UserName = ?;");
 				getAccount.setString(1, account.getUserName());
@@ -343,7 +344,6 @@ public class AccountApiService {
 						body.getAsJsonObject().add("restaurant", temp);
 					}
 				}
-			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
@@ -497,13 +497,14 @@ public class AccountApiService {
 	 * This can only be done by the master / branch manager / CEO
 	 *
 	 */
-	public static void updateStatus(String userName, Response response) {
+	public static void updateStatus(String userName, String status, Response response) {
 		int updatedRows;
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
 					"UPDATE biteme.account SET Status = ? WHERE UserName = ? AND Role != 'Branch Manager';");
 			// Its the first userName that he had so the test is in users table on login
-			postAccount.setString(1, userName);
+			postAccount.setString(1, status);
+			postAccount.setString(2, userName);
 			updatedRows = postAccount.executeUpdate();
 			if (updatedRows == 0) {
 				throw new SQLException("Couldn't update account: -> UserName: " + userName, "401", 401);
@@ -539,6 +540,7 @@ public class AccountApiService {
 				throw new SQLException("Couldn't update private account: -> UserName: " + account.getUserName(), "401",
 						401);
 			}
+			updateStatus(account.getUserName(), account.getStatus(), response);
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
@@ -557,24 +559,32 @@ public class AccountApiService {
 	 */
 	public static void updateBusinessAccount(BusinessAccount account, Response response) {
 		int updatedRows;
+		PreparedStatement postAccount;
+		ResultSet rs;
 		try {
-			PreparedStatement postAccount = EchoServer.con.prepareStatement(
-					"UPDATE biteme.business_account SET (UserName = ?, MonthlyBillingCeling = ?, isApproved = ?, BusinessName = ?, CurrentSpent = ?)"
-							+ "WHERE UserName = ?;");
-			postAccount.setString(1, account.getUserName());
-			postAccount.setFloat(2, account.getMonthlyBillingCeiling());
-			postAccount.setBoolean(3, account.getIsApproved());
-			postAccount.setString(4, account.getBusinessName());
-			postAccount.setFloat(5, account.getCurrentSpent());
+			postAccount = EchoServer.con.prepareStatement(
+					"SELECT * FROM biteme.employer WHERE businessName = ?;");
+			postAccount.setString(1, account.getBusinessName());
+			rs = postAccount.executeQuery();
+			if(!rs.next())
+				throw new SQLException("Business doesn't exist: -> BusinessName: " + account.getBusinessName(), "401",
+						401);
+			postAccount = EchoServer.con.prepareStatement(
+					"UPDATE biteme.business_account SET MonthlyBillingCeling = ? ,isApproved = ? , BusinessName = ? ,CurrentSpent = ? WHERE UserName = ?;");
+			postAccount.setFloat(1, account.getMonthlyBillingCeiling());
+			postAccount.setBoolean(2, account.getIsApproved());
+			postAccount.setString(3, account.getBusinessName());
+			postAccount.setFloat(4, account.getCurrentSpent());
+			postAccount.setString(5, account.getUserName());
 			updatedRows = postAccount.executeUpdate();
 			if (updatedRows == 0) {
 				throw new SQLException("Couldn't update business account: -> UserName: " + account.getUserName(), "401",
 						401);
 			}
+			updateStatus(account.getUserName(), account.getStatus(), response);
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
-			response.setBody(null);
 			return;
 		}
 		response.setCode(200);

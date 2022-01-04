@@ -180,7 +180,29 @@ public class OrderApiService {
 							getMails.setInt(1, shipmentID);
 							rs.close();
 							rs = getMails.executeQuery();
-							// TODO sending email with update shipping price
+							while(rs.next()) {
+								try {
+									sendMail(rs.getString(2), "BiteMe Order ID Shipment Update: " + Integer.toString(orderID), ""
+											+ "    		<div style=\"align:center;line-height:24px\">\r\n"
+											+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange\"></span><br>\r\n"
+											+ "                <span style=\"font-size:35px;line-height:40px\"><strongShipment Price Update<br><br><br></strong></span><br>\r\n"
+											+ "\r\n"
+											+ "        <div class=\"m_1113311250331273147receipt-body\">\r\n"
+											+ "            <div style=\"text-align:center;line-height:14px\">&nbsp;</div>\r\n"
+											+ "            <div style=\"text-align:center;line-height:24px\">\r\n"
+											+ "                <span style=\"font-size:18px;font-weight:bold\">\r\n"
+											+ "                    Hi "+rs.getString(1)+"!\r\n"
+											+ "                </span>\r\n"
+											+ "                <br>\r\n"
+											+ "                <span style=\"font-size:16px;\">\r\n"
+											+ "                   You shipment price has been update to "+price+" due to increase of orders via Shared Shipment at "+order.getShippment().getWork_place()+"\r\n"
+											+ "                </span>\r\n<br><br>\r\n"
+											+ "            </div>\r\n");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+
 						}
 					}
 					if (!flag) {
@@ -274,10 +296,10 @@ public class OrderApiService {
 		PreparedStatement stmt;
 		ArrayList<Order> orders = new ArrayList<>();
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE " + condition + ";");
+			stmt = EchoServer.con.prepareStatement("SELECT OrderNum FROM biteme.order WHERE " + condition + ";");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				getOrderById(rs.getInt(QueryConsts.ORDER_ORDER_NUM), response);
+				getOrderById(rs.getInt(1), response);
 				orders.add(EchoServer.gson.fromJson((String) response.getBody(), Order.class));
 			}
 		} catch (SQLException e) {
@@ -293,7 +315,7 @@ public class OrderApiService {
 	}
 
 	public static void AllOrdersByUserName(String UserName, Response response) {
-		allOrders("UserName = " + UserName, response);
+		allOrders("UserName = "  + "'" + UserName+ "'", response);
 	}
 
 	/**
@@ -669,6 +691,7 @@ public class OrderApiService {
 		return;
 	}
 
+
 	private static void invoiceSender(Order order, int orderID) {
 		PreparedStatement getAccount;
 		ResultSet rs;
@@ -693,19 +716,23 @@ public class OrderApiService {
 			e.printStackTrace();
 		}
 
-		String test = fixParser(account.getFirstName(), account.getLastName(),account.getEmail(),account.getRole(),
-				account.getPhone(),order.getTime_taken(),Integer.toString(orderID),Double.toString(order.getCheck_out_price()),null);
+		String items = "";
 		for (Item item : order.getItems()) {
-			addItem(item.getName());
-			addItem(item.getCategory());
-			addItem(order.getRestaurantName());
-			addItem(item.getOptions()[0].getOption_category() + ": "+item.getOptions()[0].getSpecify_option());
-			addItem(Integer.toString(item.getAmount()));						
-			for (int i = 1; i < item.getOptions().length; i++) {
-				addOption(item.getOptions()[i].getOption_category() + ": "+item.getOptions()[i].getSpecify_option());
+			items += "<tr>";
+			items += addItem(item.getName());
+			items += addItem(item.getCategory());
+			items += addItem(order.getRestaurantName());
+			items += addItem(Float.toString(item.getPrice()));			
+			items += addItem(Integer.toString(item.getAmount()));
+			String options = "";
+			for (Options option : item.getOptions()) {
+				options += option.toString();
 			}
+			items += addItem(options) + "</tr>";
 		}
-		
+		String test = fixParser(account.getFirstName(), account.getLastName(),account.getEmail(),account.getRole(),
+				account.getPhone(),order.getTime_taken(),Integer.toString(orderID),Double.toString(order.getCheck_out_price()),items,
+				Integer.toString(order.getDiscount_for_early_order()), String.format("%.2f", order.getCheck_out_price() * (1 + order.getDiscount_for_early_order()/100.0)));		
 		try {
 			sendMail(account.getEmail(), "BiteMe Order ID: " + Integer.toString(orderID), test);
 		} catch (Exception e) {
@@ -713,14 +740,9 @@ public class OrderApiService {
 		}
 	}
 	
-	private static void addItem(String itemColVal) {
-		QueryConsts.itemCol = itemColVal;
-		QueryConsts.items += QueryConsts.item;
-	}
-	
-	private static void addOption(String optionColVal) {
-		QueryConsts.option = optionColVal;
-		QueryConsts.items += QueryConsts.option;
+	private static String addItem(String itemColVal) {
+	    return "<td class=\"m_1113311250331273147amount-field m_1113311250331273147last-column\">"+itemColVal+"</td>\r\n";
+
 	}
 
 	public static void sendMail(String recepient, String subject, String message) throws Exception {
@@ -761,12 +783,12 @@ public class OrderApiService {
 	}
 	
 	private static String fixParser(String firstName, String lastName,String email,String role,
-			String  phone,String orderDate,String orderID,String checkOutPrice,String items) {
+			String  phone,String orderDate,String orderID,String checkOutPrice,String items, String discount, String listPrice) {
 		String INVOICE_HEADER= "<div>\r\n"
 				+ "<div class=\"m_1113311250331273147receipt-ctn-wrapper\">\r\n"
 				+ "    <div style=\"text-align:center;line-height:24px\">\r\n"
 				+ "    		<div style=\"align:center;line-height:24px\">\r\n"
-				+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange\"></span><br>\r\n"
+				+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange;height:120px;width:360px\"></span><br>\r\n"
 				+ "                <span style=\"font-size:35px;line-height:40px\"><strong>Thank You.<br><br><br></strong></span><br>\r\n"
 				+ "\r\n"
 				+ "        <div class=\"m_1113311250331273147receipt-body\">\r\n"
@@ -811,7 +833,7 @@ public class OrderApiService {
 				+ "                </tr>\r\n"
 				+ "            </tbody></table>\r\n"
 				+ "\r\n"
-				+ "\r\n"
+				+ "\r\n <tr><td><hr style=\"border-top:2px solid #bbb\"></td></tr>"
 				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left;margin-top:10px\">\r\n"
 				+ "                <strong>HERE'S WHAT YOU ORDERED:</strong>\r\n"
 				+ "            </div>\r\n"
@@ -822,19 +844,27 @@ public class OrderApiService {
 				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Item Name:</strong></td>\r\n"
 				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Item Category:</strong></td>\r\n"
 				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Restaurant Name:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Options</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Price:</strong></td>\r\n"
 				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Quantity:</strong></td>\r\n"
+				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Options</strong></td>\r\n"
 				+ "					<tr>\r\n"
-				+ "						"+items+""	
+				+ "						"+items+""
 				+ "                </tr>\r\n"
 				+ "            </tbody></table>\r\n"
+				+ " 			<tr></tr><tr><td><hr style=\"border-top:2px solid #bbb\"></td></tr>\r\n"	
 				+ "            <table class=\"m_1113311250331273147payment-info\">\r\n"
 				+ "                <tbody><tr>\r\n"
 				+ "                    <th></th>\r\n"
 				+ "                    <th style=\"width:1%\"></th>\r\n"
 				+ "                </tr>\r\n"
 				+ "                <tr>\r\n"
-				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">TOTAL: <span style=\"color:#313131\" class=\"m_1113311250331273147email\"> [USD]: $ "+checkOutPrice+"</span></td>\r\n"
+				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">List Price: <span style=\"color:#313131\"> [USD]: $ "+listPrice+"</span></td>\r\n"
+				+ "                <tr>\r\n"
+				+ "                <tr>\r\n"
+				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">DISCOUNT FOR EARLY ORDER: <span style=\"color:#313131\"> %"+discount+"</span></td>\r\n"
+				+ "                <tr>\r\n"
+				+ "                <tr>\r\n"
+				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">TOTAL: <span style=\"color:#313131\"> [USD]: $ "+checkOutPrice+"</span></td>\r\n"
 				+ "                <tr>\r\n"
 				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-size:14px;color:#313131;text-align:center;line-height:26px\" colspan=\"2\">\r\n"
 				+ "\r\n"
@@ -842,26 +872,12 @@ public class OrderApiService {
 				+ "                    </td>\r\n"
 				+ "                </tr>\r\n"
 				+ "            </tbody></table>\r\n"
-				+ "\r\n"
-				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left\">\r\n"
-				+ " <tr>\r\n"
-				+ "                    <th style=\"height:1px;width:50%\"></th>\r\n"
-				+ "                    <th style=\"height:1px;width:50%\"></th>\r\n"
-				+ "                </tr>\r\n"
-				+ "                <strong>PAYMENT DETAILS:</strong>\r\n"
-				+ "            </div>\r\n"
-				+ "            <table class=\"m_1113311250331273147order-info\">\r\n"
-				+ "                <tbody><tr>\r\n"
-				+ "                    <th style=\"height:2px;width:60%\"></th>\r\n"
-				+ "                    <th style=\"height:2px;width:60%\"></th>\r\n"
-				+ "                </tr>\r\n"
-				+ "                <tr>\r\n"
-				+ "                </tr>\r\n"
-				+ "            </tbody></table>\r\n"
-				+ "                <tbody><tr>\r\n"
-				+ "                    <th></th>\r\n"
-				+ "                </tr>\r\n"
-				+ "                <tr>\r\n";
+				+ "			</div><div style=\"text-align:center;line-height:24px\">\r\n"
+				+ "    		<div style=\"line-height:24px\">\r\n"
+				+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://ci3.googleusercontent.com/proxy/btfRiFqNXnB0loMFpxgDbN6yueB3sFMLF0jI47Q7hbkLmWD96pxDQzu9huo1v_lO3IQ43gJL=s0-d-e1-ft#https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange\" class=\"CToWUd a6T\" tabindex=\"0\"><div class=\"a6S\" dir=\"ltr\" style=\"opacity: 0.01; left: 696.511px; top: 1193.21px;\"><div id=\":1eb\" class=\"T-I J-J5-Ji aQv T-I-ax7 L3 a5q\" role=\"button\" tabindex=\"0\" aria-label=\"Download attachment \" data-tooltip-class=\"a1V\" data-tooltip=\"Download\"><div class=\"akn\"><div class=\"aSK J-J5-Ji aYr\"></div></div></div></div></span><div class=\"yj6qo\"></div><div class=\"adL\"><br>\r\n"
+				+ "            </div></div><div class=\"adL\">\r\n"
+				+ "</div></div>";
+
 		return INVOICE_HEADER;
 	}
 }
