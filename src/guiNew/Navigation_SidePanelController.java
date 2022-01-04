@@ -113,7 +113,7 @@ public class Navigation_SidePanelController extends Application implements Initi
 	private void initSidePanelBranchManager() {
 		JFXButton[] buttons = new JFXButton[7];
 		buttons[0] = new JFXButton("Order food");
-		createButtonBranchManager(buttons[0], "/gui/MainScreen.fxml", "Branch manager - Order food");
+		createButtonBranchManager(buttons[0], "/client/ChooseRestaurant.fxml", "Branch manager - Order food");
 
 		buttons[1] = new JFXButton("Edit personal info");
 		createButtonBranchManager(buttons[1], "/branchManager/EditPersonalInfo.fxml", "Branch manager - Edit Personal Info");

@@ -12,6 +12,7 @@ import Server.EchoServer;
 import Server.Response;
 import client.ChatClient;
 import client.ClientUI;
+import client.CustomerPageController;
 import common.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
@@ -97,7 +98,8 @@ public class BranchManagerController implements Initializable {
 	@FXML
 	void orderFood(ActionEvent event) {
 		System.out.println("Order food - Branch manager");
-		branchManagerFunctions.reload(event, "/client/MainScreen.fxml", "Branch manager- Order food");
+		CustomerPageController.client = branchManager;
+		branchManagerFunctions.reload(event, "/client/ChooseRestaurant.fxml", "Branch manager- Order food");
 	}
 
 	@FXML

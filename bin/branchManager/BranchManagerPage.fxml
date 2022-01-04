@@ -23,11 +23,7 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink prefHeight="27.0" prefWidth="53.0" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
-               </font>
-            </Hyperlink>
+            <Label prefHeight="18.0" prefWidth="113.0" text=" " />
             <Button mnemonicParsing="false" onAction="#logout" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />

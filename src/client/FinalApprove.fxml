@@ -17,7 +17,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.FinalApproveController">
    <children>
-      <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+      <AnchorPane layoutX="8.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
             <Button fx:id="btnBack" layoutX="48.0" layoutY="586.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">
                <font>
@@ -158,7 +158,7 @@
                   </VBox>
                </left>
             </BorderPane>
-            <BorderPane fx:id="confirmation" layoutX="173.0" layoutY="164.0" prefHeight="381.0" prefWidth="535.0" visible="false">
+            <BorderPane fx:id="confirmation" layoutX="179.0" layoutY="164.0" prefHeight="381.0" prefWidth="535.0" visible="false">
                <center>
                   <ImageView fx:id="imageV" fitHeight="160.0" fitWidth="168.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                      <image>
@@ -241,7 +241,7 @@
                   <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <Button fx:id="returnHome" layoutX="340.0" layoutY="545.0" mnemonicParsing="false" onAction="#home" prefHeight="41.0" prefWidth="222.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Return to Home page" textFill="WHITE" visible="false">
+            <Button fx:id="returnHome" layoutX="334.0" layoutY="545.0" mnemonicParsing="false" onAction="#home" prefHeight="41.0" prefWidth="222.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Return to Home page" textFill="WHITE" visible="false">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>

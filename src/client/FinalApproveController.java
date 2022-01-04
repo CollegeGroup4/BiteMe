@@ -215,6 +215,7 @@ public class FinalApproveController implements Initializable {
 
 	@FXML
 	void home(ActionEvent event) {
+		//check the role of the account and with that we  go to the home page
 		customerFunctions.home(event);
 	}
 
