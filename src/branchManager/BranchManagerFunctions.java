@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
@@ -20,15 +19,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import logic.Account;
 
 /**
- * This class is for the branch manager main page. From here you can get to all
- * the functionality of the branch manager
+ * This class is for the branch manager generic functions.
  *
  * @author Or Biton
  * @author Einan Choen
@@ -65,10 +61,11 @@ public class BranchManagerFunctions {
 	}
 
 	/**
-	 * A generic method that sends to a server based on the information it receives
+	 * A generic method that sends to a server based on the information it receives,
+	 * Convert to json and send to server
 	 * 
 	 * @param String path
-	 * @param String method 
+	 * @param String method
 	 * @param Object body
 	 * @param String errorMsg
 	 */
@@ -86,6 +83,13 @@ public class BranchManagerFunctions {
 		}
 	}
 
+	/**
+	 * A method that loads the initializeNavigation_SidePanel and inserts an event
+	 * on each click on myHamburger
+	 * 
+	 * @param myHamburger
+	 * @param drawer
+	 */
 	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
 		try {
 			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
@@ -116,10 +120,20 @@ public class BranchManagerFunctions {
 		});
 	}
 
+	/**
+	 * A method that returns to the branch manager's home screen
+	 * 
+	 * @param event
+	 */
 	public void home(ActionEvent event) {
 		reload(event, "/branchManager/BranchManagerPage.fxml", "Branch manager - home");
 	}
 
+	/**
+	 * A method that logout and exit the application
+	 * 
+	 * @param event
+	 */
 	public void exit(ActionEvent event) {
 		System.out.println("exit client Tool");
 		logoutSentToJson();
@@ -136,12 +150,22 @@ public class BranchManagerFunctions {
 		System.exit(0);
 	}
 
+	/**
+	 * A method Allows the user to logout from the system.
+	 * 
+	 * @param event
+	 */
 	public void logout(ActionEvent event) {
 		logoutSentToJson();
 		logoutResponse();
 		reload(event, "/guiNew/HomePage.fxml", "Home page");
 	}
 
+	/**
+	 * A method that Sends to serve the username of the branch manager in order to
+	 * logout from the application
+	 * 
+	 */
 	public void logoutSentToJson() {
 		Gson gson = new Gson();
 		JsonElement jsonElem = gson.toJsonTree(new Object());
@@ -158,6 +182,9 @@ public class BranchManagerFunctions {
 		}
 	}
 
+	/**
+	 * A method that gets the response from server for logout
+	 */
 	public void logoutResponse() {
 		Response response = ChatClient.serverAns;
 		System.out.println("-->>" + response.getDescription()); // Description from server

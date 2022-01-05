@@ -28,7 +28,7 @@ import logic.Employer;
 
 /**
  * This class is for receiving notifications for the branch manager.
- * Automatically updated by thread.
+ * Automatically updated with thread.
  *
  * @author Or Biton
  * @author Einan Choen

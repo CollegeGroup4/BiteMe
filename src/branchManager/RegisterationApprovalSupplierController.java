@@ -1,36 +1,25 @@
 package branchManager;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.EchoServer;
 import Server.Response;
 import client.ChatClient;
-import client.ClientUI;
-import common.Request;
-import guiNew.Navigation_SidePanelController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
@@ -41,15 +30,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import logic.Account;
-import logic.BusinessAccount;
-import logic.PrivateAccount;
 import logic.Restaurant;
 
 /**
- * This class is for the branch manager main page. From here you can get to all
- * the functionality of the branch manager
+ * This class is for the branch manager to Registration Supplier page. From here
+ * you can open or edit restaurant Only if the supplier and moderator are
+ * registered in the database of the user management system then the restaurant
+ * can be opened OR if the supplier has a open restaurant for edit
  *
  * @author Or Biton
  * @author Einan Choen
@@ -61,59 +49,43 @@ import logic.Restaurant;
  */
 
 public class RegisterationApprovalSupplierController implements Initializable {
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 	public static Boolean isEdit = false;
 	public static Restaurant restaurant;
 	public static Account supplierAccount;
-
-	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
-
 	private String photo;
+	private boolean flag, validField, moderator;
 
 	@FXML
 	private Label labelTitle;
-
 	@FXML
 	private Button btnUpdate;
-
 	@FXML
 	private AnchorPane anchorPaneRestaurantInfo;
-
 	@FXML
 	private TextField textFieldSupplierUserame;
-
 	@FXML
 	private Label lblrequiredSupplierUsername;
-
 	@FXML
 	private Label lblrequiredSupplierID;
-
 	@FXML
 	private TextField textFieldsupplierID;
-
 	@FXML
 	private Label lblrequiredRestName;
-
 	@FXML
 	private TextField textFieldRestaurantName;
-
 	@FXML
 	private Label lblrequiredRestType;
-
 	@FXML
 	private TextField textFieldRestaurantType;
-
 	@FXML
 	private Label lblrequiredRestAdderss;
-
 	@FXML
 	private TextField textFieldRestaurantAddress;
-
 	@FXML
 	private Label lblrequiredRestDescription;
-
 	@FXML
 	private TextField textFieldRestaurantDescription;
-
 	@FXML
 	private Button btnSelectFile;
 	@FXML
@@ -136,60 +108,55 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	private TableColumn<Account, String> tableColStatus;
 	@FXML
 	private JFXComboBox<String> coboBoxStatus;
-
 	@FXML
 	private Label lblrequiredModeratorUsername;
-
 	@FXML
 	private TextField textFieldModeratorUsername;
-
 	@FXML
 	private Label lblrequiredModeratorID;
-
 	@FXML
 	private TextField textFieldModeratorID;
-
 	@FXML
 	private Button btnCceateRestaurant;
-
 	@FXML
 	private Label lableSuccessMsg;
-
 	@FXML
 	private Label lableErrorMsg;
-
 	@FXML
 	private AnchorPane chooseAccount;
 	@FXML
 	private Label lableSlectedUser;
-
 	@FXML
 	private Button btnReturnHome;
-
 	@FXML
 	private HBox Nav;
-
 	@FXML
 	private Label lableHello;
-
 	@FXML
 	private JFXHamburger myHamburger;
-
 	@FXML
 	private JFXDrawer drawer;
 
 	private ObservableList<Account> userList = FXCollections.observableArrayList();
 	private ObservableList<Account> usersFilter = FXCollections.observableArrayList();
-
 	private ObservableList<Account> userEditSelect;
 	private HashMap<String, Account> allUsres = new HashMap<>();
 
+	/**
+	 * initialize the Registration Supplier-restaurant page - initialize the
+	 * navigation side panel - initialize the personal info - initialize the
+	 * restaurant info if this is edit restaurant
+	 * 
+	 * @param URL            location
+	 * @param ResourceBundle resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getUserName());
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 		btnReturnHome.setVisible(false);
 		if (isEdit) {
+			// if we are editing an account then
 			btnUpdate.setVisible(true);
 			chooseAccount.setVisible(false);
 			anchorPaneRestaurantInfo.setVisible(true);
@@ -215,6 +182,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			chooseAccount.setVisible(true);
 			anchorPaneRestaurantInfo.setVisible(false);
 			userList.clear();
+			// sent to server
 			Gson gson = new Gson();
 			JsonElement jsonElem = gson.toJsonTree(new Object());
 			jsonElem.getAsJsonObject().addProperty("branchManagerID",
@@ -242,6 +210,11 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 	}
 
+	/**
+	 * A method that receives from the serve the list of all accounts that the
+	 * branch manager can edit
+	 * 
+	 */
 	void responseAccounts() {
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201)
@@ -258,6 +231,12 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 	}
 
+	/**
+	 * A method that updates the selected user - userEditSelect by clicking on the
+	 * table
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void ClickOnTable(MouseEvent event) {
 		userEditSelect = tableViewUsers.getSelectionModel().getSelectedItems();
@@ -267,6 +246,12 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 	}
 
+	/**
+	 * A method that updates the table of all users according to the selected status
+	 * in the combo box
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onChengedStatus(ActionEvent event) {
 		String status = coboBoxStatus.getValue();
@@ -285,6 +270,12 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		tableViewUsers.setItems(usersFilter);
 	}
 
+	/**
+	 * A method that sends the account to the server to get all the accounts for the
+	 * selected user , when clicking on account from the table
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onClickcontinue(ActionEvent event) {
 		chooseAccount.setVisible(false);
@@ -298,6 +289,12 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * A method that receives all the accounts from the server of the selected user
+	 * and upload the choice of account type to open
+	 * 
+	 * @param event
+	 */
 	void responseGetAccountUsername() {
 		Gson gson = new Gson();
 		Response response = ChatClient.serverAns;
@@ -315,16 +312,31 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * A method Allows the user to logout from the system.
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void logout(ActionEvent event) {
 		branchManagerFunctions.logout(event);
 	}
 
+	/**
+	 * A method that returns to the branch manager's home screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void home(ActionEvent event) {
 		branchManagerFunctions.home(event);
 	}
 
+	/**
+	 * A method for selecting an image and uploading from the user's computer
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void selectFile(ActionEvent event) {
 		FileChooser fc = new FileChooser();
@@ -333,14 +345,9 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		if (selectedFile != null) {
 			photo = selectedFile.getName();
 			listView.getItems().add(selectedFile.getName());
-//			listView.getItems().add(selectedFile.getAbsolutePath());
-//			Image imageForFile = new Image(file.toURI().toURL().toExternalForm());
-//			listView.getItems().add(photo)
 		} else
 			System.out.println("File is not valid");
 	}
-
-	private boolean flag, validField, moderator;
 
 	@FXML
 	void createRestaurant(ActionEvent event) {
@@ -383,7 +390,54 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			response();
 		}
 	}
+	/**
+	 * A method for create restaurant by sending it to the server that it will save
+	 * the restaurant in DB
+	 * 
+	 * @param restaurant
+	 * @param supplier
+	 * @param supplierModorator
+	 */
+	void sentToJson(Restaurant restaurant, Account supplier, Account supplierModorator) {
+		Gson gson = new Gson();
+		JsonElement body = gson.toJsonTree(new Object());
+		JsonElement jsonElemModorator = gson.toJsonTree(new Object());
+		JsonElement jsonElemSupplier = gson.toJsonTree(new Object());
 
+		jsonElemModorator.getAsJsonObject().addProperty("userName", supplierModorator.getUserName());
+		jsonElemModorator.getAsJsonObject().addProperty("userID", supplierModorator.getUserID());
+		jsonElemModorator.getAsJsonObject().addProperty("supplierUserName", supplier.getUserName());
+		jsonElemSupplier.getAsJsonObject().addProperty("userName", supplier.getUserName());
+		jsonElemSupplier.getAsJsonObject().addProperty("userID", supplier.getUserID());
+
+		body.getAsJsonObject().add("moderator", jsonElemModorator);
+		body.getAsJsonObject().add("supplier", jsonElemSupplier);
+		body.getAsJsonObject().add("restaurant", gson.toJsonTree(restaurant));
+		branchManagerFunctions.sentToJson("/branch_managers/restaurants", "POST", body,
+				"Open Business account - new ClientController didn't work");
+	}
+	/**
+	 * A method that receive a response from the server to confirm that the
+	 * restaurant information has indeed been created
+	 * 
+	 */
+	void response() {
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) {
+			lableErrorMsg.setText(response.getDescription());// error massage
+			lableSuccessMsg.setText("");
+		} else {
+			lableSuccessMsg.setText(response.getDescription());
+			btnReturnHome.setVisible(true);
+		}
+	}
+	/**
+	 * ** If we are in a state of edit restaurant: ** We will update the restaurant
+	 * by sending it to a server that will update in DB and receive a response from
+	 * the server to confirm that the information has indeed been updated
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void update(ActionEvent event) {
 		String restaurantName = textFieldRestaurantName.getText();
@@ -415,36 +469,13 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		}
 	}
 
-	void sentToJson(Restaurant restaurant, Account supplier, Account supplierModorator) {
-		Gson gson = new Gson();
-		JsonElement body = gson.toJsonTree(new Object());
-		JsonElement jsonElemModorator = gson.toJsonTree(new Object());
-		JsonElement jsonElemSupplier = gson.toJsonTree(new Object());
-
-		jsonElemModorator.getAsJsonObject().addProperty("userName", supplierModorator.getUserName());
-		jsonElemModorator.getAsJsonObject().addProperty("userID", supplierModorator.getUserID());
-		jsonElemModorator.getAsJsonObject().addProperty("supplierUserName", supplier.getUserName());
-		jsonElemSupplier.getAsJsonObject().addProperty("userName", supplier.getUserName());
-		jsonElemSupplier.getAsJsonObject().addProperty("userID", supplier.getUserID());
-
-		body.getAsJsonObject().add("moderator", jsonElemModorator);
-		body.getAsJsonObject().add("supplier", jsonElemSupplier);
-		body.getAsJsonObject().add("restaurant", gson.toJsonTree(restaurant));
-		branchManagerFunctions.sentToJson("/branch_managers/restaurants", "POST", body,
-				"Open Business account - new ClientController didn't work");
-	}
-
-	void response() {
-		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201) {
-			lableErrorMsg.setText(response.getDescription());// error massage
-			lableSuccessMsg.setText("");
-		} else {
-			lableSuccessMsg.setText(response.getDescription());
-			btnReturnHome.setVisible(true);
-		}
-	}
-
+	/**
+	 * A method that checks that we got in a text field string if not then prints
+	 * 'required'
+	 * 
+	 * @param textField
+	 * @param lblrequired
+	 */
 	void checkTextFiled(TextField textField, Label lblrequired) {
 		if (textField.getText().equals("")) {
 			lblrequired.setText("required");
@@ -454,6 +485,13 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * A method that checks that we got in a text field a number if not then prints
+	 * 'Enter only numbers'
+	 * 
+	 * @param textField
+	 * @param lblrequired
+	 */
 	void checkValidFields(TextField textField, Label lblrequired) {
 		try {
 			Integer.parseInt(textField.getText());

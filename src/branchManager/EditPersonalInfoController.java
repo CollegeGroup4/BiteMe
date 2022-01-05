@@ -1,36 +1,24 @@
 package branchManager;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.EchoServer;
 import Server.Response;
 import client.ChatClient;
-import client.ClientUI;
-import common.Request;
-import guiNew.Navigation_SidePanelController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -39,15 +27,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import logic.Account;
 import logic.BusinessAccount;
 import logic.PrivateAccount;
 import logic.Restaurant;
 
 /**
- * This class is for the branch manager main page.
- * From here you can get to all the functionality of the branch manager
+ * This class is for the branch manager edit personal info main page. Here the
+ * branch manager can change any existing personal information detail related to
+ * the operation of the system
  *
  * @author Or Biton
  * @author Einan Choen
@@ -60,24 +48,11 @@ import logic.Restaurant;
 
 public class EditPersonalInfoController implements Initializable {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+	private BusinessAccount businessAccount;
+	private PrivateAccount privateAccount;
+	private Restaurant restaurant;
+	private Account account;
 
-	@FXML
-	private HBox Nav;
-
-	@FXML
-	private Label lableHello;
-	@FXML
-	private AnchorPane anchorPaneEditUsers;
-	@FXML
-	private AnchorPane anchorPaneChooseAccount;
-	@FXML
-	private Button btnEditPrivateAccount;
-
-	@FXML
-	private Button btnEditRestaurant;
-
-	@FXML
-	private Button btnEditBusinessAccount;
 	@FXML
 	private TableView<Account> tableViewUsers;
 	@FXML
@@ -95,27 +70,35 @@ public class EditPersonalInfoController implements Initializable {
 	@FXML
 	private TableColumn<Account, String> tableColStatus;
 	@FXML
-	private TextField textFiledSearchUsername;
-
-	@FXML
 	private JFXComboBox<String> coboBoxRole;
 	@FXML
 	private JFXComboBox<String> coboBoxStatus;
 	@FXML
+	private HBox Nav;
+	@FXML
+	private Label lableHello;
+	@FXML
+	private AnchorPane anchorPaneEditUsers;
+	@FXML
+	private TextField textFiledSearchUsername;
+	@FXML
 	private Label lableSlectedUser;
-
 	@FXML
 	private Label lblrequiredEnterid;
-
 	@FXML
 	private Label lableErrorMsg;
-
 	@FXML
 	private Label lableErrorMsgID;
-
+	@FXML
+	private AnchorPane anchorPaneChooseAccount;
+	@FXML
+	private Button btnEditPrivateAccount;
+	@FXML
+	private Button btnEditRestaurant;
+	@FXML
+	private Button btnEditBusinessAccount;
 	@FXML
 	private JFXHamburger myHamburger;
-
 	@FXML
 	private JFXDrawer drawer;
 
@@ -125,45 +108,17 @@ public class EditPersonalInfoController implements Initializable {
 	private ObservableList<Account> userEditSelect;
 	private HashMap<String, Account> allUsres = new HashMap<>();
 
-//	void sentToJson() {
-//		Request request = new Request();
-//		request.setPath("/accounts");
-//		request.setMethod("GET");
-//		Gson gson = new Gson();
-//		JsonElement jsonElem = gson.toJsonTree(new Object());
-//		jsonElem.getAsJsonObject().addProperty("branchManagerID", BranchManagerController.branchManager.getUserID());
-//		request.setBody(jsonElem);
-//		String jsonUser = gson.toJson(request);
-//		try {
-//			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
-//		} catch (NullPointerException e) {
-//			System.out.println("Open Business account - new ClientController didn't work");
-//		}
-//	}
-
-	void response() {
-		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201)
-			lableErrorMsg.setText(response.getDescription());// error massage
-		else {
-			Account[] account = EchoServer.gson.fromJson((String) response.getBody(), Account[].class);
-			for (Account a : account) { // update the list of users to be the response from the DB
-				userList.add(a);
-				allUsres.put(a.getUserName(), a);
-			}
-		}
-
-	}
-
+	/**
+	 * initialize the Approval page- initialize the table for the account list and
+	 * initialize the navigation side panel
+	 * 
+	 * @param URL            location
+	 * @param ResourceBundle resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		userList.clear();
-		Gson gson = new Gson();
-		JsonElement jsonElem = gson.toJsonTree(new Object());
-		jsonElem.getAsJsonObject().addProperty("branchManagerID", BranchManagerController.branchManager.getUserID());
-		branchManagerFunctions.sentToJson("/accounts", "GET", jsonElem,
-				"Edit personal info - new ClientController didn't work");
-
+		sentToJson();
 		response();
 
 		// create the table
@@ -188,16 +143,62 @@ public class EditPersonalInfoController implements Initializable {
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
+	/**
+	 * A method that Sends to serve the id of the branch manager in order to receive
+	 * from it the list of all accounts that the branch manager can edit
+	 */
+	void sentToJson() {
+		Gson gson = new Gson();
+		JsonElement jsonElem = gson.toJsonTree(new Object());
+		jsonElem.getAsJsonObject().addProperty("branchManagerID", BranchManagerController.branchManager.getUserID());
+		branchManagerFunctions.sentToJson("/accounts", "GET", jsonElem,
+				"Edit personal info - new ClientController didn't work");
+	}
+
+	/**
+	 * A method that receives from the serve the list of all accounts that the
+	 * branch manager can edit
+	 */
+	void response() {
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201)
+			lableErrorMsg.setText(response.getDescription());// error massage
+		else {
+			Account[] account = EchoServer.gson.fromJson((String) response.getBody(), Account[].class);
+			for (Account a : account) { // update the list of users to be the response from the DB
+				userList.add(a);
+				allUsres.put(a.getUserName(), a);
+			}
+		}
+
+	}
+
+	/**
+	 * A method Allows the user to logout from the system.
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void logout(ActionEvent event) {
 		branchManagerFunctions.logout(event);
 	}
 
+	/**
+	 * A method that returns to the branch manager's home screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void homeAndback(ActionEvent event) {
 		branchManagerFunctions.home(event);
 	}
 
+	/**
+	 * A method that updates the selected user - userEditSelect by clicking on the
+	 * table
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void ClickOnTable(MouseEvent event) {
 		userEditSelect = tableViewUsers.getSelectionModel().getSelectedItems();
@@ -206,6 +207,12 @@ public class EditPersonalInfoController implements Initializable {
 				+ userEditSelect.get(0).getStatus());
 	}
 
+	/**
+	 * A method that updates the table of all users according to the selected role
+	 * in the combo box
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onChengedRole(ActionEvent event) {
 		String status = coboBoxStatus.getValue();
@@ -227,6 +234,12 @@ public class EditPersonalInfoController implements Initializable {
 		tableViewUsers.setItems(usersFilter);
 	}
 
+	/**
+	 * A method that updates the table of all users according to the selected status
+	 * in the combo box
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onChengedStatus(ActionEvent event) {
 		String status = coboBoxStatus.getValue();
@@ -248,8 +261,8 @@ public class EditPersonalInfoController implements Initializable {
 		tableViewUsers.setItems(usersFilter);
 	}
 
-	/*
-	 * Edit the account, when given account from the table
+	/**
+	 * A method that edit the account, when clicking on account from the table
 	 * 
 	 * @param event
 	 */
@@ -267,7 +280,8 @@ public class EditPersonalInfoController implements Initializable {
 	}
 
 	/**
-	 * select id and edit the account. (businesses, private or supplier)
+	 * A method that edit the account, when insert user name of a user and edit the
+	 * account. (businesses, private or supplier)
 	 * 
 	 * @param event
 	 */
@@ -289,6 +303,14 @@ public class EditPersonalInfoController implements Initializable {
 		}
 	}
 
+	/**
+	 * A method that receives the server's response ïf the user has an account
+	 * (private, business or restaurant) then the server will return it else it will
+	 * return null in these fields
+	 * 
+	 * @param event
+	 * @param lableError
+	 */
 	void responseGetAccountUsername(ActionEvent event, Label lableError) {
 		Gson gson = new Gson();
 		Response response = ChatClient.serverAns;
@@ -309,7 +331,7 @@ public class EditPersonalInfoController implements Initializable {
 
 			if (amoutOfAccount == 0)
 				lableErrorMsg.setText("This user has no account to edit");
-			else{
+			else {
 				if (amoutOfAccount == 1) {
 					if (businessAccount != null)
 						editBusinessAccount(event);
@@ -340,11 +362,11 @@ public class EditPersonalInfoController implements Initializable {
 		}
 	}
 
-	private BusinessAccount businessAccount;
-	private PrivateAccount privateAccount;
-	private Restaurant restaurant;
-	private Account account;
-
+	/**
+	 * A method for edit the business account
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void editBusinessAccount(ActionEvent event) {
 		OpenBusinessAccountController.isEdit = true;
@@ -354,6 +376,11 @@ public class EditPersonalInfoController implements Initializable {
 				"Branch manager - Edit business account");
 	}
 
+	/**
+	 * A method for edit the private account
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void editPrivateAccount(ActionEvent event) {
 		OpenPrivateAccountController.isEdit = true;
@@ -363,6 +390,11 @@ public class EditPersonalInfoController implements Initializable {
 				"Branch manager - Edit private account");
 	}
 
+	/**
+	 * A method for edit the restaurant
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void editRestaurant(ActionEvent event) {
 		RegisterationApprovalSupplierController.isEdit = true;

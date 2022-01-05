@@ -1,33 +1,25 @@
 package branchManager;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.EchoServer;
 import Server.Response;
 import client.ChatClient;
-import guiNew.Navigation_SidePanelController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -36,15 +28,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import logic.Account;
 import logic.BusinessAccount;
 import logic.PrivateAccount;
 import logic.Restaurant;
 
 /**
- * This class is for the branch manager main page.
- * From here you can get to all the functionality of the branch manager
+ * This class is for the branch manager to select the type of account to open
+ * for a user. From here you can open account Only if the user is registered in
+ * the database of the user management system then an account can be opened for
+ * him
  *
  * @author Or Biton
  * @author Einan Choen
@@ -62,22 +55,18 @@ public class OpenAccountController implements Initializable {
 	private HBox Nav;
 	@FXML
 	private Button btnPrivateAccount;
-
 	@FXML
 	private Button btnBusinessAccount;
 	@FXML
 	private Label lableHello;
-
 	@FXML
 	private JFXHamburger myHamburger;
-
 	@FXML
 	private JFXDrawer drawer;
 	@FXML
 	private BorderPane borderPane;
 	@FXML
 	private AnchorPane chooseTypeAccount;
-
 	@FXML
 	private AnchorPane chooseAccount;
 	@FXML
@@ -96,7 +85,6 @@ public class OpenAccountController implements Initializable {
 	private TableColumn<Account, String> tableColPhonenum;
 	@FXML
 	private TableColumn<Account, String> tableColStatus;
-
 	@FXML
 	private JFXComboBox<String> coboBoxRole;
 	@FXML
@@ -112,20 +100,13 @@ public class OpenAccountController implements Initializable {
 	private ObservableList<Account> userEditSelect;
 	private HashMap<String, Account> allUsres = new HashMap<>();
 
-	void response() {
-		Response response = ChatClient.serverAns;
-		if (response.getCode() != 200 && response.getCode() != 201)
-			lableErrorMsg.setText(response.getDescription());// error massage
-		else {
-			Account[] account = EchoServer.gson.fromJson((String) response.getBody(), Account[].class);
-			for (Account a : account) { // update the list of users to be the response from the DB
-				userList.add(a);
-				allUsres.put(a.getUserName(), a);
-			}
-		}
-
-	}
-
+	/**
+	 * initialize the open account page- initialize the table for the account list and
+	 * initialize the navigation side panel
+	 * 
+	 * @param URL            location
+	 * @param ResourceBundle resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
@@ -160,6 +141,29 @@ public class OpenAccountController implements Initializable {
 		coboBoxRole.setValue("All");
 	}
 
+	/**
+	 * A method that receives from the serve the list of all accounts that the
+	 * branch manager can edit
+	 */
+	void response() {
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201)
+			lableErrorMsg.setText(response.getDescription());// error massage
+		else {
+			Account[] account = EchoServer.gson.fromJson((String) response.getBody(), Account[].class);
+			for (Account a : account) { // update the list of users to be the response from the DB
+				userList.add(a);
+				allUsres.put(a.getUserName(), a);
+			}
+		}
+	}
+
+	/**
+	 * A method that updates the selected user - userEditSelect by clicking on the
+	 * table
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void ClickOnTable(MouseEvent event) {
 		userEditSelect = tableViewUsers.getSelectionModel().getSelectedItems();
@@ -169,6 +173,12 @@ public class OpenAccountController implements Initializable {
 
 	}
 
+	/**
+	 * A method that updates the table of all users according to the selected role
+	 * in the combo box
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onChengedRole(ActionEvent event) {
 		String status = coboBoxStatus.getValue();
@@ -190,6 +200,12 @@ public class OpenAccountController implements Initializable {
 		tableViewUsers.setItems(usersFilter);
 	}
 
+	/**
+	 * A method that updates the table of all users according to the selected status
+	 * in the combo box
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onChengedStatus(ActionEvent event) {
 		String status = coboBoxStatus.getValue();
@@ -211,6 +227,12 @@ public class OpenAccountController implements Initializable {
 		tableViewUsers.setItems(usersFilter);
 	}
 
+	/**
+	 * A method that sends the account to the server to get all the accounts for the
+	 * selected user , when clicking on account from the table
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onClickcontinue(ActionEvent event) {
 		chooseAccount.setVisible(false);
@@ -224,6 +246,12 @@ public class OpenAccountController implements Initializable {
 		}
 	}
 
+	/**
+	 * A method that receives all the accounts from the server of the selected user
+	 * and upload the choice of account type to open
+	 * 
+	 * @param event
+	 */
 	void responseGetAccountUsername() {
 		Gson gson = new Gson();
 		Response response = ChatClient.serverAns;
@@ -238,43 +266,46 @@ public class OpenAccountController implements Initializable {
 			PrivateAccount privateAccount = gson.fromJson(j.getAsJsonObject().get("privateAccount"),
 					PrivateAccount.class);
 
-			System.out.println("response.getBody(): " + response.getBody());
-//			System.out.println("name: " + businessAccount.getBusinessName());
-			System.out.println("account: " + account);
-			System.out.println("restaurant: " + restaurant);
-			System.out.println("businessAccount: " + businessAccount);
-			System.out.println("privateAccount: " + privateAccount);
-			
 			if (privateAccount != null)
 				btnPrivateAccount.setDisable(true);
 			else
 				btnPrivateAccount.setDisable(false);
-			
+
 			if (businessAccount != null)
 				btnBusinessAccount.setDisable(true);
 			else
 				btnBusinessAccount.setDisable(false);
-			
 
 			OpenPrivateAccountController.account = account;
 			OpenBusinessAccountController.account = account;
-			
-
-//			Account account = EchoServer.gson.fromJson((String) response.getBody(), Account.class);
-			// ?!?!?! what they are return a 1 account or 2 ? or both?
 		}
 	}
 
+	/**
+	 * A method Allows the user to logout from the system.
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void logout(ActionEvent event) {
 		branchManagerFunctions.logout(event);
 	}
 
+	/**
+	 * A method that returns to the branch manager's home screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void homeANDback(ActionEvent event) {
 		branchManagerFunctions.home(event);
 	}
 
+	/**
+	 * A method that loads the window to open a business account
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void openBusinessAccount(ActionEvent event) {
 		OpenBusinessAccountController.isEdit = false;
@@ -283,6 +314,11 @@ public class OpenAccountController implements Initializable {
 				"Branch manager - open business account");
 	}
 
+	/**
+	 * A method that loads the window to open a private account
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void openPrivateAccount(ActionEvent event) {
 		OpenPrivateAccountController.isEdit = false;

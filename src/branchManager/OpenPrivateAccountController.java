@@ -1,42 +1,33 @@
 package branchManager;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.Response;
 import client.ChatClient;
 import client.ClientUI;
 import common.Request;
-import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import logic.Account;
-import logic.BusinessAccount;
 import logic.PrivateAccount;
 
 /**
- * This class is for the branch manager main page.
- * From here you can get to all the functionality of the branch manager
+ * This class is for the branch manager to open and edit private account for a
+ * user. From here you can open or edit account Only if the user is registered
+ * in the database of the user management system then an account can be opened
+ * for him for open OR if the user has an open private account for edit
  *
  * @author Or Biton
  * @author Einan Choen
@@ -46,90 +37,65 @@ import logic.PrivateAccount;
  * @version January 2022
  * 
  */
-
 public class OpenPrivateAccountController implements Initializable {
 	public static Boolean isEdit = false;
 	public static PrivateAccount privateAccount;
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 	public static Account account;
+	private boolean flag, validField;
 
 	@FXML
 	private Label lblrequiredCardNum;
-
 	@FXML
 	private TextField textFieldCardNum;
-
 	@FXML
 	private Label lblrequiredExpDate;
-
 	@FXML
 	private JFXComboBox<String> comboBoxMonth;
-
 	@FXML
 	private JFXComboBox<String> comboBoxYear;
-
 	@FXML
 	private JFXComboBox<String> comboBoxStatus;
-
 	@FXML
 	private JFXComboBox<String> comboBoxRole;
-
 	@FXML
 	private Label lblrequiredCVV;
-
 	@FXML
 	private TextField textFieldCVV;
-
 	@FXML
 	private Label labelTitle;
-
 	@FXML
 	private TextField textFieldFirstName;
-
 	@FXML
 	private Label lblrequiredUsername;
-
 	@FXML
 	private TextField textFieldLastName;
-
 	@FXML
 	private Label lblrequiredLastName;
-
 	@FXML
 	private Label lblrequiredID;
-
 	@FXML
 	private TextField textFieldID;
-
 	@FXML
 	private AnchorPane componnentDebt;
-
 	@FXML
 	private Label lblrequiredDebt;
-
 	@FXML
 	private TextField textFieldDebt;
 	@FXML
 	private Label lableErrorMsg;
-
 	@FXML
 	private AnchorPane componentExplain;
-
 	@FXML
 	private Button btnReturnHome;
-
 	@FXML
 	private Label lableSuccessMsg;
-
 	@FXML
 	private HBox Nav;
-
 	@FXML
 	private Label lableHello;
-
 	@FXML
 	private JFXHamburger myHamburger;
-
 	@FXML
 	private JFXDrawer drawer;
 	@FXML
@@ -137,6 +103,14 @@ public class OpenPrivateAccountController implements Initializable {
 	@FXML
 	private Button btnCreateAccount;
 
+	/**
+	 * initialize the open private account page - initialize the navigation side
+	 * panel - initialize the personal info - initialize the private info if this is
+	 * edit account
+	 * 
+	 * @param URL            location
+	 * @param ResourceBundle resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getFirstName());
@@ -157,12 +131,12 @@ public class OpenPrivateAccountController implements Initializable {
 			listYear[i] = "20" + (i + 21);
 		comboBoxYear.getItems().setAll(listYear);
 		comboBoxYear.setValue("2021");
-//		componnentDebt.setVisible(isEdit);
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 
 		comboBoxRole.getItems().setAll("Not Assigned", "CEO", "Branch Manager", "Supplier", "HR", "Client");
 
 		if (isEdit) {
+			// if we are editing an account then
 			btnUpdate.setVisible(true);
 			btnCreateAccount.setVisible(false);
 			labelTitle.setText("Edit Private Account");
@@ -184,11 +158,17 @@ public class OpenPrivateAccountController implements Initializable {
 
 	}
 
+	/**
+	 * ** If we are in a state of edit private account: ** We will update the
+	 * account by sending it to a server that will update in DB and receive a
+	 * response from the server to confirm that the information has indeed been
+	 * updated
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void update(ActionEvent event) {
-//		checkTextFiled(textFieldCardNum, lblrequiredCardNum);
 		checkValidFields(textFieldCardNum, lblrequiredCardNum);
-//		checkTextFiled(textFieldCVV, lblrequiredCVV);
 		checkValidFields(textFieldCVV, lblrequiredCVV);
 		String expDate = null, cardNum = null, cvv = null;
 		String month = comboBoxMonth.getValue();
@@ -205,10 +185,10 @@ public class OpenPrivateAccountController implements Initializable {
 				privateAccount.getEmail(), privateAccount.getRole(), privateAccount.getPhone(), status, false,
 				BranchManagerController.branchManager.getUserID(), BranchManagerController.branchManager.getArea(),
 				privateAccount.getDebt(), privateAccount.getW4C(), cardNum, cvv, expDate);
-
+		// sent to the server
 		branchManagerFunctions.sentToJson("/accounts/privateAccount", "PUT", body,
 				"Edit Private account - new ClientController didn't work");
-
+		// get the response from the server
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201) {
 			lableSuccessMsg.setText("");
@@ -221,16 +201,31 @@ public class OpenPrivateAccountController implements Initializable {
 
 	}
 
+	/**
+	 * A method Allows the user to logout from the system.
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void logout(ActionEvent event) {
 		branchManagerFunctions.logout(event);
 	}
 
+	/**
+	 * A method that returns to the branch manager's home screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void home(ActionEvent event) {
 		branchManagerFunctions.home(event);
 	}
 
+	/**
+	 * A method that returns to choose type of account to open - open account screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void back(ActionEvent event) {
 		if (isEdit)
@@ -240,13 +235,25 @@ public class OpenPrivateAccountController implements Initializable {
 			branchManagerFunctions.reload(event, "/branchManager/OpenAccountPage.fxml", "Branch manager- Open account");
 	}
 
+	/**
+	 * A method that shows what CVV number means by clicking on it will open an
+	 * explanation window Clicking on it again will close this window
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onClickHelp(ActionEvent event) {
 		componentExplain.setVisible(!componentExplain.isVisible());
 	}
 
-	private boolean flag, validField;
-
+	/**
+	 * ** If we are in a state of open private account : ** We will create the
+	 * account by sending it to the server that will create the account in DB and
+	 * then receive a response from the server to confirm that the information has
+	 * indeed been created
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void createAccount(ActionEvent event) {
 		flag = true;
@@ -254,6 +261,7 @@ public class OpenPrivateAccountController implements Initializable {
 		if (!textFieldCardNum.getText().equals("")) {
 			validField = true;
 			flag = true;
+			// check if the fields are valid
 			checkTextFiled(textFieldCardNum, lblrequiredCardNum);
 			checkValidFields(textFieldCardNum, lblrequiredCardNum);
 			checkTextFiled(textFieldCVV, lblrequiredCVV);
@@ -273,9 +281,13 @@ public class OpenPrivateAccountController implements Initializable {
 		sentToJson(privateAccount);
 		response();
 	}
-//		}
-//	}
 
+	/**
+	 * A method for create an private account by sending it to the server that will
+	 * create the account in DB
+	 * 
+	 * @param PrivateAccount privateAccount
+	 */
 	void sentToJson(PrivateAccount privateAccount) {
 		Gson gson = new Gson();
 		Request request = new Request();
@@ -289,6 +301,11 @@ public class OpenPrivateAccountController implements Initializable {
 		}
 	}
 
+	/**
+	 * A method that receive a response from the server to confirm that the
+	 * information has indeed been created
+	 * 
+	 */
 	void response() {
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201) {
@@ -310,6 +327,13 @@ public class OpenPrivateAccountController implements Initializable {
 		}
 	}
 
+	/**
+	 * A method that checks that we got in a text field a number if not then prints
+	 * 'Enter only numbers'
+	 * 
+	 * @param textField
+	 * @param lblrequired
+	 */
 	void checkValidFields(TextField textField, Label lblrequired) {
 		if (!textField.getText().equals(""))
 			try {

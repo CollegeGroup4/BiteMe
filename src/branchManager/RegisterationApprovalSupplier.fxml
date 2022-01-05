@@ -261,7 +261,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <Button fx:id="btnReturnHome" layoutX="346.0" layoutY="590.0" mnemonicParsing="false" onAction="#home" prefHeight="41.0" prefWidth="200.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Return Home" textFill="WHITE">
+            <Button fx:id="btnReturnHome" layoutX="346.0" layoutY="590.0" mnemonicParsing="false" onAction="#home" prefHeight="41.0" prefWidth="200.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Return Home" textFill="WHITE" visible="false">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>

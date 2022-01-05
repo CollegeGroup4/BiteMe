@@ -104,7 +104,7 @@ private CEOFunctions ceoFunctions = new CEOFunctions();
     	typeReport = "ViewReportsTwoQuarters";
     	twoReportNext.setVisible(true);
     	oneReportNext.setVisible(false);
-    	ceoFunctions.reload(event, "/CEO/DisplayReport.fxml", "CEO- Dispaly report");
+    	
     }
 
     @FXML
@@ -117,6 +117,7 @@ private CEOFunctions ceoFunctions = new CEOFunctions();
     	firstBranch = firstBranch == null ? "North" : firstBranch;
     	String secondBranch = comboBoxbranch.getValue(); // it myte be null because the second branch is optional
     	//type of report is in 'typeReport'
+    	ceoFunctions.reload(event, "/CEO/DisplayReport.fxml", "CEO- Dispaly report");
     }
 
     @FXML
