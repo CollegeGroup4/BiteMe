@@ -34,6 +34,17 @@ import logic.Item;
 import logic.Options;
 
 public class UpdateItemTable implements Initializable {
+	/**
+	 * This class made for the Items Update process
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 
 	@FXML
 	private AnchorPane Na1;
@@ -88,6 +99,12 @@ public class UpdateItemTable implements Initializable {
 	private SupplierFunction supplierfunction = new SupplierFunction();
 	static Item updateItem = new Item(null, null, 0, 0, null, 0, null, null, null, null, 0);
 
+	/**
+	 * This Method made to give us the option to get back to supplier screen
+	 * 
+	 * @param event
+	 */
+
 	@FXML
 
 	void Back(ActionEvent event) {
@@ -111,6 +128,10 @@ public class UpdateItemTable implements Initializable {
 
 	}
 
+	/**
+	 * This Method made to save the chosen item to update and to go to the next update screen
+	 * @param event
+	 */
 	@FXML
 	void GoToUpdate(ActionEvent event) {
 
@@ -147,15 +168,26 @@ public class UpdateItemTable implements Initializable {
 		}
 
 	}
+/**
+ * This Method made to allow us to get back to the home screen
+ * @param action
+ */
 	@FXML
 	void Home(ActionEvent action) {
 		supplierfunction.home(action);
 	}
+	/**
+	 * This Method made to logout from system
+	 * @param event
+	 */
 	@FXML
 	void LogOut(ActionEvent event) {
 		supplierfunction.logout(event);
 	}
-
+	/**
+	 * This Method made to remove items from table and send the item to DB remove
+	 * @param event
+	 */
 	@FXML
 	void removefrommenu(ActionEvent event) {
 		ObservableList<Item> ItemLremoveselect, Allitems;
@@ -167,13 +199,13 @@ public class UpdateItemTable implements Initializable {
 			Allitems.remove(allitems);
 		}
 
-
-
 	}
-
+	/**
+	 * This Method made to remove the chosen item from DB
+	 * @param allitems
+	 */
 	private void JsonRemove(Item allitems) {
-		
-		
+
 		Request request = new Request();
 		request.setPath("/restaurants/items");
 		request.setMethod("DELETE");
@@ -186,17 +218,18 @@ public class UpdateItemTable implements Initializable {
 
 			// Warning
 		}
-		
-	}
 
+	}
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 *@param location resources
+	 */
 	ObservableList<Item> ItemList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
-		
-		
-		
+
 		FromJson();
 		name.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		category.setCellValueFactory(new PropertyValueFactory<Item, String>("Category"));
@@ -210,8 +243,11 @@ public class UpdateItemTable implements Initializable {
 		Table.setItems(ItemList);
 
 	}
-
-		void FromJson() {
+	/**
+	 * This Method made to get all the restaurant items from DB
+	 * 
+	 */
+	void FromJson() {
 
 		Request request = new Request();
 		request.setPath("/restaurants/menus");

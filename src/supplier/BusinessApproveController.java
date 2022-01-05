@@ -41,7 +41,17 @@ import logic.Category;
 import logic.Order;
 
 public class BusinessApproveController implements Initializable {
-
+	/**
+	 * This class made for H.R to approve Business account process
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 	@FXML
 	private TableView<Account> tableViewMsg;
 
@@ -89,12 +99,14 @@ public class BusinessApproveController implements Initializable {
 	private HBox Nav;
 	private HRFunction HRF = new HRFunction();
 	private ObservableList<Account> messagesList = FXCollections.observableArrayList();
-//	private Respone respone=new Respone();
-
 	private ObservableList<Account> messagesEditSelect;
+	private BusinessAccount[] businessaccount;
 
-	private BusinessAccount[] businessaccount = new BusinessAccount[8];
-
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 * 
+	 * @param location resources
+	 */
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -102,12 +114,11 @@ public class BusinessApproveController implements Initializable {
 
 		FromJson();
 
-		
 		for (BusinessAccount busac : businessaccount) {
 
 			messagesList.add(busac);
 		}
-		
+
 		tableColFrom.setCellValueFactory(new PropertyValueFactory<Account, String>("userName"));
 		tableColRole.setCellValueFactory(new PropertyValueFactory<Account, String>("role"));
 		tableColStatus.setCellValueFactory(new PropertyValueFactory<Account, String>("status"));
@@ -115,6 +126,11 @@ public class BusinessApproveController implements Initializable {
 
 	}
 
+	/**
+	 * When clicked on table we will show additional information
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void ClickOnTable(MouseEvent event) {
 		messagesEditSelect = tableViewMsg.getSelectionModel().getSelectedItems();
@@ -123,6 +139,11 @@ public class BusinessApproveController implements Initializable {
 				+ ",  Status: " + messagesEditSelect.get(0).getStatus());
 	}
 
+	/**
+	 * When clicked on approve we will send to server the chosen account
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void approve(ActionEvent event) {
 		labelStatus.setText("Approved");
@@ -135,18 +156,21 @@ public class BusinessApproveController implements Initializable {
 				messagesEditSelect.get(0).getPhone(), messagesEditSelect.get(0).getStatus(),
 				messagesEditSelect.get(0).isBusiness(), messagesEditSelect.get(0).getBranch_manager_ID(),
 				messagesEditSelect.get(0).getArea(), messagesEditSelect.get(0).getDebt(), null, 0, null, null, 0);
-		
+
 		newbus.setBusiness(true);
 		newbus.setBusinessName(newnametext.getText());
 		newbus.setIsApproved(true);
 		sentoserver(newbus);
 
-
 	}
 
+	/**
+	 * This method send and update the account approval
+	 * 
+	 * @param newbus
+	 */
 	private void sentoserver(BusinessAccount newbus) {
-		
-		
+
 		Request request = new Request();
 		request.setPath("/hr/approveBusinessAccount");
 		request.setMethod("POST");
@@ -159,16 +183,25 @@ public class BusinessApproveController implements Initializable {
 
 			// Warning
 		}
-		
+
 	}
 
+	/**
+	 * This method set the label to decline
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void decline(ActionEvent event) {
 		labelStatus.setText("Decline");
-		// sentToJson(false);
-//			response();
+
 	}
 
+	/**
+	 * This method send back to H.R main screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void backHM(ActionEvent event) {
 		try {
@@ -187,14 +220,14 @@ public class BusinessApproveController implements Initializable {
 
 	}
 
-
-
+	/**
+	 * This Method made to get all theBusines sAccounts that not approved from DB
+	 * 
+	 */
 	void FromJson() {
 
-
-		
 		Request request = new Request();
-		request.setPath("/hr/businessAccount"); 
+		request.setPath("/hr/businessAccount");
 		request.setMethod("GET");
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());

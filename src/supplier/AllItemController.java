@@ -35,7 +35,17 @@ import logic.Menu;
 import logic.Options;
 
 public class AllItemController implements Initializable {
-
+	/**
+	 * This class made to show all of the restaurant items in table
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 	ObservableList<Item> ItemList = FXCollections.observableArrayList();
 
 	@FXML
@@ -85,6 +95,11 @@ public class AllItemController implements Initializable {
 
 	private SupplierFunction supplierfunction = new SupplierFunction();
 
+	/**
+	 * This Method made to give us the option to get back to supplier screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void Back(ActionEvent event) {
 		System.out.println("Supplier Page");
@@ -106,25 +121,38 @@ public class AllItemController implements Initializable {
 		}
 	}
 
+	/**
+	 * This Method made to allow us to get back to the home screen
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void Home(ActionEvent action) {
 		supplierfunction.home(action);
 	}
 
+	/**
+	 * This Method made to logout from system
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void LogOut(ActionEvent event) {
 		supplierfunction.logout(event);
 	}
 
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 *
+	 */
 	public void initialize(URL url, ResourceBundle db) {
 		FromJson();
-		
 
 		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 		name.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		category.setCellValueFactory(new PropertyValueFactory<Item, String>("Category"));
 		Ingrediants.setCellValueFactory(new PropertyValueFactory<Item, String>("Ingrediants"));
-		
+
 		subcategory.setCellValueFactory(new PropertyValueFactory<Item, String>("Subcategory"));
 		Description.setCellValueFactory(new PropertyValueFactory<Item, String>("Description"));
 		Price.setCellValueFactory(new PropertyValueFactory<Item, Double>("Price"));
@@ -134,6 +162,10 @@ public class AllItemController implements Initializable {
 
 	}
 
+	/**
+	 * This Method made to get all the restaurant items from DB
+	 * 
+	 */
 	void FromJson() {
 
 		Request request = new Request();
@@ -142,7 +174,10 @@ public class AllItemController implements Initializable {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());// String 2 is the
+																									// current
+																									// restaurant ID
+																									// (!!!)
 
 		request.setBody(gson.toJson(body));
 		ClientUI.chat.accept(gson.toJson(request));

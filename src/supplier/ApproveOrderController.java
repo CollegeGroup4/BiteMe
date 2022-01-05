@@ -36,7 +36,17 @@ import logic.Item;
 import logic.Order;
 
 public class ApproveOrderController implements Initializable {
-
+	/**
+	 * This class made for supplier order approve process
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 	@FXML
 	private AnchorPane Na1;
 
@@ -75,6 +85,12 @@ public class ApproveOrderController implements Initializable {
 	private JFXDrawer drawer;
 	private SupplierFunction supplierfunction = new SupplierFunction();
 	ObservableList<Order> OrderList = FXCollections.observableArrayList();
+	
+	/**
+	 * This Method made to give us the option to get back to supplier screen
+	 * 
+	 * @param event
+	 */
 
 	@FXML
 	void Back(ActionEvent event) {
@@ -97,7 +113,10 @@ public class ApproveOrderController implements Initializable {
 
 		}
 	}
-
+	/**
+	 * This Method made to get all the restaurant orders that not approved from DB
+	 * 
+	 */
 	void FromJson() {
 
 		Request request = new Request();
@@ -107,13 +126,11 @@ public class ApproveOrderController implements Initializable {
 		JsonElement body = gson.toJsonTree(new Object());
 
 		body.getAsJsonObject().addProperty("restaurantID",SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
-		// body.getAsJsonObject().addProperty("userName",SupplierController.resturant.getUserName());
-
-		//System.out.println(SupplierController.resturant.getId());
+		
 
 		request.setBody(gson.toJson(body));
 		ClientUI.chat.accept(gson.toJson(request));
-//		body = gson.fromJson((String) ChatClient.serverAns.getBody(), JsonElement.class);
+
 		Order[] orders = (gson.fromJson((String) ChatClient.serverAns.getBody(), Order[].class));
 
 		for (Order approve : orders) {
@@ -123,25 +140,32 @@ public class ApproveOrderController implements Initializable {
 		}
 
 	}
-
+	/**
+	 * This Method made to allow us to get back to the home screen
+	 * @param action
+	 */
 	@FXML
 	void Home(ActionEvent action) {
 		supplierfunction.home(action);
 	}
-
+	/**
+	 * This Method made to logout from system
+	 * @param event
+	 */
 	@FXML
 	void LogOut(ActionEvent event) {
 		supplierfunction.logout(event);
 	}
-
+/**
+ * This Method made to make the chosen order approve in the DB  
+ * @param approve
+ */
 	void sendtoserver(Order approve) {
 
 		Request request = new Request();
 		request.setPath("/restaurants/approveOrder");
 		request.setMethod("POST");
 		Gson gson = new Gson();
-		
-		//System.out.println("this is in json" + approve.getOrderID());
 		
 		JsonElement j=gson.toJsonTree(new Object());
 		
@@ -155,7 +179,10 @@ public class ApproveOrderController implements Initializable {
 		}
 
 	}
-
+/**
+ * This Method made to allow us when approve button is pressed to change it and send to DB
+ * @param event
+ */
 	@FXML
 	void onapprove(ActionEvent event) {
 
@@ -164,22 +191,19 @@ public class ApproveOrderController implements Initializable {
 		sendtoserver(orderstoapprove.get(0));
 		OrdersTable.getItems().remove(orderstoapprove.get(0));
 
-//		for (Order approve : orderstoapprove) {
-//			System.out.println("this is approve" + approve.getUserName());
-//			approve.setIsApproved(true);
-//			sendtoserver(approve);
-//			
-//		}
-		/// ******** need to save update into DB
+
 
 	}
-
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 *@param location resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
 		/// here i will enter all orders that not approved for this supplier ///
 
-		// OrderList.addAll(order,order2);
+	
 		FromJson();
 
 		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);

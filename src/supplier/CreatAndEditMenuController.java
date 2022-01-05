@@ -48,8 +48,17 @@ import logic.Order;
 import logic.item_in_menu;
 
 public class CreatAndEditMenuController implements Initializable {
-
-	
+	/**
+	 * This class made for supplier menu create process
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 
 	@FXML
 	private TableView<Item> TableCourse;
@@ -112,10 +121,11 @@ public class CreatAndEditMenuController implements Initializable {
 	private JFXDrawer drawer;
 	@FXML
 	private Button LogOut;
-	
+
 	private SupplierFunction supplierfunction = new SupplierFunction();
 	@FXML
 	private Button back;
+
 	private ObservableList<Item> ItemList = FXCollections.observableArrayList();
 	private ObservableList<String> ItemList1 = FXCollections.observableArrayList();
 	private ObservableList<String> Courselist = FXCollections.observableArrayList();
@@ -123,38 +133,47 @@ public class CreatAndEditMenuController implements Initializable {
 	private ObservableList<String> subcombolist1 = FXCollections.observableArrayList();
 	private ObservableList<Item> Courselist2 = FXCollections.observableArrayList();
 	private Menu[] resturantmenu;
-	private item_in_menu tosave=new item_in_menu(0, 0, null, null);
+	private item_in_menu tosave = new item_in_menu(0, 0, null, null);
 	private ArrayList<item_in_menu> itemstosave = new ArrayList<item_in_menu>();
 
-	private Menu menu=new Menu(null, 0, null);
+	private Menu menu = new Menu(null, 0, null);
+
+	/**
+	 * In this method we get the new menu name
+	 * 
+	 * @param event
+	 */
 
 	@FXML
 	void editname(ActionEvent event) {
-		
+
 		menuchosentext.setText(menutext.getText());
 		menu.setName(menutext.getText());
 		menu.setRestaurantID(SupplierController.resturant.getId());
 	}
 
+	/**
+	 * In this method we get all of the items by category from DB to insert them to
+	 * table
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void TypeList1(ActionEvent action) {
-	
+
 		System.out.println(TypeList.getValue());
-		
+
 		Request request = new Request();
 		request.setPath("/restaurants/menus/getItemsByCategory");
 		request.setMethod("GET");
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
-		
-		
-		
-		body.getAsJsonObject().addProperty("restaurantID",SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
-	
+
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());
+
 		body.getAsJsonObject().addProperty("itemCategory", TypeList.getValue());
 		request.setBody(gson.toJson(body));
-		
-	
+
 		ClientUI.chat.accept(gson.toJson(request));
 		Item[] ItemsByCataegory = gson.fromJson((String) ChatClient.serverAns.getBody(), Item[].class);
 
@@ -166,17 +185,22 @@ public class CreatAndEditMenuController implements Initializable {
 
 	}
 
+	/**
+	 * This Method get all of items sorted by subcategory of the restaurant from DB
+	 * to insert to table
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void subcomboclick(ActionEvent event) {
-	
+
 		Request request = new Request();
 		request.setPath("/restaurants/menus/category/getItemsBySubCategory");
 		request.setMethod("GET");
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
-		
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());
 		body.getAsJsonObject().addProperty("itemCategory", TypeList.getValue());
 		body.getAsJsonObject().addProperty("itemSubCategory", subcombo.getValue());
 		request.setBody(gson.toJson(body));
@@ -186,61 +210,66 @@ public class CreatAndEditMenuController implements Initializable {
 		for (int i = 0; i < ItemsBySubCataegory.length; i++) {
 			ItemList.add(ItemsBySubCataegory[i]);
 		}
-		
+
 		TypeTable.setItems(ItemList);
 
 	}
 
+	/**
+	 * This method insert sub category values to the new menu
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void coursefromiteminmenu(ActionEvent event) {
 
-	
-		
 		for (Item additem : Courselist1) {
-			
-			if(additem.getSubcategory()==CourseList.getValue()) {
-			Courselist2.add(additem);
+
+			if (additem.getSubcategory() == CourseList.getValue()) {
+				Courselist2.add(additem);
 			}
 		}
-		 TableCourse.setItems(Courselist2);
-		
+		TableCourse.setItems(Courselist2);
+
 	}
 
-
+	/**
+	 * This method set the sub category and category comboboxs from DB
+	 */
 	void categoryset() {
 		TypeList.setPromptText("enter");
 		CourseList.setPromptText("pick a Course");
 		subcombo.setPromptText("Choose Subcategory");
 
-		
 		Request request = new Request();
 		request.setPath("/restaurants/items/categories");
 		request.setMethod("GET");
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantNum",SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantNum", SupplierController.resturant.getId());
 
 		request.setBody(gson.toJson(body));
 
 		ClientUI.chat.accept(gson.toJson(request));
 		Category[] categories = gson.fromJson((String) ChatClient.serverAns.getBody(), Category[].class);
-		
-		for (int i =0; i < categories.length; i++) {
-			
-			
+
+		for (int i = 0; i < categories.length; i++) {
+
 			ItemList1.add(categories[i].getCategory());
-			
+
 			subcombolist1.addAll(categories[i].getSubCategory());
-			
+
 		}
-		
-	
+
 		TypeList.setItems(ItemList1);
 		subcombo.setItems(subcombolist1);
 		CourseList.setItems(subcombolist1);
 	}
 
+	/**
+	 * This method get all of the restaurant items and menus
+	 */
 	public void getmenus() {
 
 		Request request = new Request();
@@ -249,43 +278,45 @@ public class CreatAndEditMenuController implements Initializable {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID",SupplierController.resturant.getId());
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());
 
 		request.setBody(gson.toJson(body));
 		ClientUI.chat.accept(gson.toJson(request));
 
 		body = gson.fromJson((String) ChatClient.serverAns.getBody(), JsonElement.class);
-		resturantmenu=gson.fromJson(body.getAsJsonObject().get("menues"), Menu[].class);
-		Item [] items= gson.fromJson(body.getAsJsonObject().get("items"), Item[].class);///All items from restaurant 
+		resturantmenu = gson.fromJson(body.getAsJsonObject().get("menues"), Menu[].class);
+		Item[] items = gson.fromJson(body.getAsJsonObject().get("items"), Item[].class);/// All items from restaurant
 	}
 
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 * 
+	 * @param location resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
 		menutext.setPromptText("Enter menu name");
-	
 
 		categoryset();
 		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 
-
-	
-
 		getmenus();
-	
-	
 
 		NameTableColum1.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		TypeColum1.setCellValueFactory(new PropertyValueFactory<Item, String>("category"));
 
-
-
 		NameTableColum2.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		TypeColum2.setCellValueFactory(new PropertyValueFactory<Item, String>("category"));
 
-
 	}
 
+	/**
+	 * In this method we insert chosen item from left table to the new table in the
+	 * right
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void addtomenu(ActionEvent action) {
 		ObservableList<Item> Itemtoadd;
@@ -294,12 +325,17 @@ public class CreatAndEditMenuController implements Initializable {
 
 		for (Item additem : Itemtoadd) {
 			Courselist1.add(additem);
-		
+
 			Itemadd(additem);
 		}
 		TableCourse.setItems(Courselist1);
 	}
 
+	/**
+	 * setting items to save in the new menu
+	 * 
+	 * @param itemadd
+	 */
 	void Itemadd(Item itemadd) {
 
 		tosave.setItemID(itemadd.getItemID());
@@ -310,6 +346,11 @@ public class CreatAndEditMenuController implements Initializable {
 
 	}
 
+	/**
+	 * Remove from the right table and list
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void removefrommenu(ActionEvent action) {
 		ObservableList<Item> ItemLremoveselect, Allitems;
@@ -329,6 +370,11 @@ public class CreatAndEditMenuController implements Initializable {
 
 	}
 
+	/**
+	 * This Method made to give us the option to get back to supplier screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void Back(ActionEvent event) {
 		System.out.println("Supplier Page");
@@ -350,23 +396,27 @@ public class CreatAndEditMenuController implements Initializable {
 		}
 	}
 
+	/**
+	 * when pressed arrange the items to save and call send to DB
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void savemenu(ActionEvent event) {
-	
 
 		item_in_menu[] it = new item_in_menu[itemstosave.size()];
 		itemstosave.toArray(it);
-		
-		
-		
+
 		menu.setItems(it);
 
 		sendtoserver();
 	}
 
+	/**
+	 * Save the new menu in DB
+	 */
 	void sendtoserver() {
 
-	
 		Request request = new Request();
 		request.setPath("/restaurants/menus");
 		request.setMethod("POST");
@@ -380,9 +430,13 @@ public class CreatAndEditMenuController implements Initializable {
 			// Warning
 		}
 
-	
 	}
 
+	/**
+	 * anchor pane to add more of the table chosen item details
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void SetAnchor(ActionEvent event) {
 
@@ -412,13 +466,25 @@ public class CreatAndEditMenuController implements Initializable {
 		}
 
 	}
+
+	/**
+	 * This Method made to allow us to get back to the home screen
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void Home(ActionEvent action) {
 		supplierfunction.home(action);
 	}
+
+	/**
+	 * This Method made to logout from system
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void LogOut(ActionEvent action) {
-		supplierfunction.logout( action);
+		supplierfunction.logout(action);
 	}
 
 }

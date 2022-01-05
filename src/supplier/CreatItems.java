@@ -48,6 +48,17 @@ import logic.Options;
 import logic.item_in_menu;
 
 public class CreatItems implements Initializable {
+	/**
+	 * This class made for supplier create item process
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 	@FXML
 	private JFXHamburger myHamburger;
 
@@ -131,23 +142,21 @@ public class CreatItems implements Initializable {
 	@FXML
 	private Button LogOut;
 	private SupplierFunction supplierfunction = new SupplierFunction();
-	// in next values put item_in_menu values you get
 	String photo;
 	item_in_menu iteminmenu;
-
 	private ArrayList<String> ingrediantslist = new ArrayList<String>();
 	private ArrayList<Options> optionslist = new ArrayList<Options>();
-
-	private Options[] optionalarry = new Options[6];
 	private ObservableList<String> categorylist = FXCollections.observableArrayList();
 	private ObservableList<String> subcategorylist = FXCollections.observableArrayList();
 	IngrediantRow inrow = new IngrediantRow(ingrediantsText);
 	OptionRow oprow = new OptionRow(categorytext, specifytext, pricetextop);
 	Item itemtosave = new Item(null, null, 0, 0, null, 0, null, null, null, null, 0);
-
 	ObservableList<IngrediantRow> ingrediantRow = FXCollections.observableArrayList();
 	ObservableList<OptionRow> optionrow = FXCollections.observableArrayList();
 
+	/**
+	 * Method to send the new item in the DB
+	 */
 	void sendtoserver() {
 
 		Request request = new Request();
@@ -163,10 +172,13 @@ public class CreatItems implements Initializable {
 			// Warning
 		}
 
-	
-
 	}
 
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 * 
+	 * @param location resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -211,6 +223,11 @@ public class CreatItems implements Initializable {
 
 	}
 
+	/**
+	 * Inner Class to insert rows into Option Table
+	 * 
+	 *
+	 */
 	public class OptionRow {
 		TextField catetext;
 		TextField spcitext2;
@@ -249,6 +266,11 @@ public class CreatItems implements Initializable {
 
 	}
 
+	/**
+	 * Inner Class to insert rows into Ingredient Table
+	 * 
+	 *
+	 */
 	public class IngrediantRow {
 
 		TextField text;
@@ -264,11 +286,15 @@ public class CreatItems implements Initializable {
 
 	}
 
-	@FXML
+	/**
+	 * Set all reaming parameters from the new item and call to save function
+	 * 
+	 * @param creatitem
+	 */
 
+	@FXML
 	void CreatNewItem(ActionEvent creatitem) {
 
-		
 		itemtosave.setRestaurantID(SupplierController.resturant.getId());
 		itemtosave.setName(dishtext.getText());
 		itemtosave.setDescription(DescriptionText.getText());
@@ -279,7 +305,7 @@ public class CreatItems implements Initializable {
 
 		if (categorycombo.getValue().equals("Other"))
 			itemtosave.setCategory(AddDiff.getText());
-		
+
 		String ingrediant = null;
 
 		for (int i = 0; i < ingrediantslist.size(); i++) {
@@ -297,9 +323,13 @@ public class CreatItems implements Initializable {
 
 	}
 
+	/**
+	 * remove row from Ingredient table action button
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void RemoveIngrediants(ActionEvent action) {
-
 
 		ObservableList<IngrediantRow> allrows, selectedrow;
 		allrows = ingrediantsTable.getItems();
@@ -313,6 +343,11 @@ public class CreatItems implements Initializable {
 
 	}
 
+	/**
+	 * add row to Ingredient table action button
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void AddIngrediants(ActionEvent action) {
 
@@ -334,12 +369,13 @@ public class CreatItems implements Initializable {
 
 	}
 
+	/**
+	 * add row to Option table action button
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void AddOptional(ActionEvent action) {
-
-		// to add item id in the new option
-
-	
 
 		ObservableList<OptionRow> allrows = OptionTable.getItems();
 		for (OptionRow row : allrows) {
@@ -368,6 +404,11 @@ public class CreatItems implements Initializable {
 
 	}
 
+	/**
+	 * remove row from Option table action button
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void RemoveOptional(ActionEvent action) {
 		ObservableList<OptionRow> allrows, selectedrow;
@@ -382,6 +423,11 @@ public class CreatItems implements Initializable {
 
 	}
 
+	/**
+	 * Set the chosen category to the new item
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void categorypress(ActionEvent event) {
 		System.out.println(categorycombo.getValue());
@@ -396,6 +442,11 @@ public class CreatItems implements Initializable {
 		}
 	}
 
+	/**
+	 * Set the chosen sub category to the new item
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void subcategorypress(ActionEvent event) {
 		System.out.println(subcombo.getValue());
@@ -410,18 +461,33 @@ public class CreatItems implements Initializable {
 		}
 	}
 
+	/**
+	 * This Method made to logout from system
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void LogOut(ActionEvent action) {
 		supplierfunction.logout(action);
 	}
 
+	/**
+	 * This Method made to allow us to get back to the home screen
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void Home(ActionEvent action) {
 		supplierfunction.home(action);
 	}
 
-	@FXML
+	/**
+	 * This Method made to give us the option to get back to supplier screen
+	 * 
+	 * @param event
+	 */
 
+	@FXML
 	void Back(ActionEvent event) {
 
 		System.out.println("Supplier Page");
@@ -431,7 +497,6 @@ public class CreatItems implements Initializable {
 		Pane root;
 		try {
 			root = loader.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
-	
 
 			Scene scene = new Scene(root);
 
@@ -447,6 +512,10 @@ public class CreatItems implements Initializable {
 	@FXML
 	private ListView<String> listView = new ListView<String>();
 
+	/**
+	 * Method to upload an item image
+	 * @param event
+	 */
 	@FXML
 	void selectFile(ActionEvent event) {
 

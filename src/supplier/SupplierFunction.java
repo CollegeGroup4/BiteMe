@@ -25,9 +25,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class SupplierFunction {
-	
-	
-	
+
+	/**
+	 * This class made for Supplier functions
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
+
 	/**
 	 * function that replace the pages
 	 * 
@@ -51,6 +61,14 @@ public class SupplierFunction {
 		}
 	}
 
+	/**
+	 * to get values from DB
+	 * 
+	 * @param path
+	 * @param method
+	 * @param object
+	 * @param errorMsg
+	 */
 	public void sentToJson(String path, String method, Object object, String errorMsg) {
 		Gson gson = new Gson();
 		Request request = new Request();
@@ -65,11 +83,17 @@ public class SupplierFunction {
 		}
 	}
 
+	/**
+	 * Method to set button and help panel to move from screens
+	 * 
+	 * @param myHamburger
+	 * @param drawer
+	 */
 	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
-		
+
 		try {
 			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-			
+
 			drawer.setSidePane(anchorPane);
 		} catch (IOException e) {
 			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
@@ -96,10 +120,20 @@ public class SupplierFunction {
 		});
 	}
 
+	/**
+	 * method to send back to home screen
+	 * 
+	 * @param event
+	 */
 	public void home(ActionEvent event) {
 		reload(event, "/supplier/SupplierPage.fxml", "Supplier - home");
 	}
 
+	/**
+	 * method to exit
+	 * 
+	 * @param event
+	 */
 	public void exit(ActionEvent event) {
 		System.out.println("exit client Tool");
 		logoutSentToJson();
@@ -116,12 +150,20 @@ public class SupplierFunction {
 		System.exit(0);
 	}
 
+	/**
+	 * method to logout from application
+	 * 
+	 * @param event
+	 */
 	public void logout(ActionEvent event) {
 		logoutSentToJson();
 		logoutResponse();
 		reload(event, "/guiNew/HomePage.fxml", "Home page");
 	}
 
+	/**
+	 * set to logout from DB
+	 */
 	public void logoutSentToJson() {
 		Gson gson = new Gson();
 		JsonElement jsonElem = gson.toJsonTree(new Object());
@@ -138,10 +180,12 @@ public class SupplierFunction {
 		}
 	}
 
+	/**
+	 * Method to get the answer to logout
+	 */
 	public void logoutResponse() {
 		Response response = ChatClient.serverAns;
 		System.out.println("-->>" + response.getDescription()); // Description from server
 	}
-
 
 }

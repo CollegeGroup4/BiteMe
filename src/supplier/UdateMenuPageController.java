@@ -43,6 +43,17 @@ import logic.Options;
 import logic.item_in_menu;
 
 public class UdateMenuPageController implements Initializable {
+	/**
+	 * This class made for supplier update menu process
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 
 	@FXML
 	private TableView<Item> TableCourse;
@@ -105,10 +116,8 @@ public class UdateMenuPageController implements Initializable {
 	@FXML
 	private Button LogOut;
 
-	///// **** in menu and items put restaurant staff in pick menu function****
 	private SupplierFunction supplierfunction = new SupplierFunction();
 	private Menu menu = new Menu(null, 0, null);
-
 	private ObservableList<Item> ItemList = FXCollections.observableArrayList();
 	private ObservableList<String> ItemList1 = FXCollections.observableArrayList();
 	private ObservableList<String> Courselist = FXCollections.observableArrayList();
@@ -116,9 +125,14 @@ public class UdateMenuPageController implements Initializable {
 	private ObservableList<String> Menulist = FXCollections.observableArrayList();
 	private ObservableList<String> subcombolist1 = FXCollections.observableArrayList();
 	private Menu[] resturantmenu;
-	private item_in_menu tosave=new item_in_menu(0, 0, null, null) ;
+	private item_in_menu tosave = new item_in_menu(0, 0, null, null);
 	private ArrayList<item_in_menu> itemstosave = new ArrayList<item_in_menu>();
 
+	/**
+	 * This Method made to give us the option to get back to supplier screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void Back(ActionEvent event) {
 		System.out.println("Supplier Page");
@@ -128,7 +142,6 @@ public class UdateMenuPageController implements Initializable {
 		Pane root;
 		try {
 			root = loader.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
-			
 
 			Scene scene = new Scene(root);
 
@@ -141,16 +154,31 @@ public class UdateMenuPageController implements Initializable {
 		}
 	}
 
+	/**
+	 * This Method made to allow us to get back to the home screen
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void Home(ActionEvent action) {
 		supplierfunction.home(action);
 	}
 
+	/**
+	 * This Method made to logout from system
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void LogOut(ActionEvent event) {
 		supplierfunction.logout(event);
 	}
 
+	/**
+	 * Method to pick menu from combobox
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void PickMenu(ActionEvent event) {
 
@@ -158,14 +186,15 @@ public class UdateMenuPageController implements Initializable {
 
 		menu.setName(menulist.getValue());
 
-		
-
 	}
 
+	/**
+	 * Method to enter right table items from chosen menu from DB
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void coursefromiteminmenu(ActionEvent event) {
-
-		/// enter values to TableCourse from course string in item_in_menu (DB) /////
 
 		Request request = new Request();
 		request.setPath("/restaurants/menus/categories/getItemsBySubCategory");
@@ -173,7 +202,7 @@ public class UdateMenuPageController implements Initializable {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());
 
 		body.getAsJsonObject().addProperty("itemCategory", TypeList.getValue());
 		body.getAsJsonObject().addProperty("itemSubCategory", CourseList.getValue());
@@ -188,6 +217,13 @@ public class UdateMenuPageController implements Initializable {
 		TableCourse.setItems(ItemList);
 	}
 
+	/**
+	 * In this method we get all of the items by category from DB to insert them to
+	 * table
+	 * 
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void TypeList1(ActionEvent action) {
 
@@ -215,6 +251,12 @@ public class UdateMenuPageController implements Initializable {
 
 	}
 
+	/**
+	 * This Method get all of items sorted by sub category of the restaurant from DB
+	 * to insert to table
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void subcomboclick(ActionEvent event) {
 
@@ -239,6 +281,9 @@ public class UdateMenuPageController implements Initializable {
 		TypeTable.setItems(ItemList);
 	}
 
+	/**
+	 * This method get all of the restaurant items and menus
+	 */
 	public void getmenus() {
 
 		Request request = new Request();
@@ -247,7 +292,7 @@ public class UdateMenuPageController implements Initializable {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID",SupplierController.resturant.getId());
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());
 
 		request.setBody(gson.toJson(body));
 		ClientUI.chat.accept(gson.toJson(request));
@@ -257,6 +302,12 @@ public class UdateMenuPageController implements Initializable {
 		Item[] items = gson.fromJson(body.getAsJsonObject().get("items"), Item[].class);/// All items from restaurant
 	}
 
+	/**
+	 * In this method we insert chosen item from left table to the new table in the
+	 * right
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void addtomenu(ActionEvent action) {
 		ObservableList<Item> Itemtoadd;
@@ -265,12 +316,17 @@ public class UdateMenuPageController implements Initializable {
 
 		for (Item additem : Itemtoadd) {
 			Courselist1.add(additem);
-			
+
 			Itemadd(additem);
 		}
 
 	}
 
+	/**
+	 * setting items to save in the new menu
+	 * 
+	 * @param itemadd
+	 */
 	void Itemadd(Item itemadd) {
 
 		tosave.setItemID(itemadd.getItemID());
@@ -281,6 +337,11 @@ public class UdateMenuPageController implements Initializable {
 
 	}
 
+	/**
+	 * Remove from the right table and list
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void removefrommenu(ActionEvent action) {
 		ObservableList<Item> ItemLremoveselect, Allitems;
@@ -300,6 +361,11 @@ public class UdateMenuPageController implements Initializable {
 
 	}
 
+	/**
+	 * In this method we get the new menu name
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void editname(ActionEvent event) {
 		menutext.setVisible(true);
@@ -309,6 +375,11 @@ public class UdateMenuPageController implements Initializable {
 
 	}
 
+	/**
+	 * anchor pane to add more of the table chosen item details
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void SetAnchor(ActionEvent event) {
 
@@ -339,9 +410,13 @@ public class UdateMenuPageController implements Initializable {
 
 	}
 
+	/**
+	 * when pressed arrange the items to save and call send to DB
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void savemenu(ActionEvent event) {
-	
 
 		item_in_menu[] it = new item_in_menu[itemstosave.size()];
 		itemstosave.toArray(it);
@@ -350,9 +425,11 @@ public class UdateMenuPageController implements Initializable {
 		sendtoserver();
 	}
 
+	/**
+	 * Save the new menu in DB
+	 */
 	void sendtoserver() {
 
-	
 		Request request = new Request();
 		request.setPath("/restaurants/menus");
 		request.setMethod("PUT");
@@ -366,11 +443,11 @@ public class UdateMenuPageController implements Initializable {
 			// Warning
 		}
 
-		
-
 	}
 
-
+	/**
+	 * This method set the sub category and category comboboxs from DB
+	 */
 
 	void categoryset() {
 		TypeList.setPromptText("enter");
@@ -385,7 +462,10 @@ public class UdateMenuPageController implements Initializable {
 
 		/// if i want to send to DB
 
-		body.getAsJsonObject().addProperty("restaurantNum", SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantNum", SupplierController.resturant.getId());// String 2 is the
+																									// current
+																									// restaurant ID
+																									// (!!!)
 
 		request.setBody(gson.toJson(body));
 		System.out.println(gson.toJson(body));
@@ -405,33 +485,36 @@ public class UdateMenuPageController implements Initializable {
 		CourseList.setItems(subcombolist1);
 	}
 
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 * 
+	 * @param location resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		getmenus();
-		
+
 		for (Menu menu : resturantmenu) {
 
 			Menulist.add(menu.getName());
 		}
 
 		menulist.setItems(Menulist);
-		
+
 		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
-		if(SupplierController.supplier.getRole().equals("Moderator")) {
+		if (SupplierController.supplier.getRole().equals("Moderator")) {
 			myHamburger.setDisable(true);
 			drawer.setDisable(true);
 		}
-	
 
-		categoryset(); 
-		
+		categoryset();
 
 		NameTableColum1.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		TypeColum1.setCellValueFactory(new PropertyValueFactory<Item, String>("category"));
 		TypeTable.setItems(ItemList);
 
 		CourseList.setPromptText("pick a Course");
-		
+
 		CourseList.setItems(Courselist);
 
 		Courselist1.add(new Item("italina", null, 0, 0, "pizza", 0, null, null, null, null, 0));

@@ -9,8 +9,6 @@ import com.google.gson.JsonElement;
 
 import Server.Response;
 import client.ChatClient;
-import client.ClientUI;
-import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +24,17 @@ import logic.Account;
 import logic.Restaurant;
 
 public class SupplierController implements Initializable {
-
+	/**
+	 * This class made for Supplier main page
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 	@FXML
 	private HBox Nav;
 	@FXML
@@ -51,12 +59,17 @@ public class SupplierController implements Initializable {
 
 	@FXML
 	private Button UpdateButton;
+
 	public static Account supplier;
 	public static Restaurant resturant;
-
 	Gson gson = new Gson();
 	private SupplierFunction supplierfunction = new SupplierFunction();
 
+	/**
+	 * Method to move into update item page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void UpdateItem(ActionEvent event) {
 		System.out.println("Update Item Table");
@@ -78,19 +91,34 @@ public class SupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * This Method made to allow us to get back to the home screen
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void Home(ActionEvent action) {
 		supplierfunction.home(action);
 	}
 
+	/**
+	 * This Method made to logout from system
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void LogOut(ActionEvent event) {
 		supplierfunction.logout(event);
 	}
 
+	/**
+	 * Method to move into All items page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void AllItems(ActionEvent event) {
-		
+
 		System.out.println("All Items");
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -98,7 +126,6 @@ public class SupplierController implements Initializable {
 		Pane root;
 		try {
 			root = loader.load(getClass().getResource("/supplier/ALL_Items.fxml").openStream());
-			
 
 			Scene scene = new Scene(root);
 
@@ -111,11 +138,21 @@ public class SupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * Method to move into Order page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void Order(ActionEvent event) {
-		
+
 	}
 
+	/**
+	 * Method to move into create menu page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void CreatMenu(ActionEvent event) {
 		System.out.println("Create and edit");
@@ -125,7 +162,6 @@ public class SupplierController implements Initializable {
 		Pane root;
 		try {
 			root = loader.load(getClass().getResource("/supplier/CreatAndEditMenu.fxml").openStream());
-			
 
 			Scene scene = new Scene(root);
 
@@ -138,9 +174,14 @@ public class SupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * Method to move into create item page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void CreatItem(ActionEvent event) {
-		
+
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
@@ -149,7 +190,6 @@ public class SupplierController implements Initializable {
 			AnchorPane root;
 
 			root = loader.load(getClass().getResource("/supplier/CreatItem.fxml").openStream());
-			
 
 			Scene scene = new Scene(root);
 
@@ -164,6 +204,11 @@ public class SupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * Method to move into update menu page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void UpdateMenu(ActionEvent event) {
 		System.out.println("Uapdate");
@@ -185,6 +230,11 @@ public class SupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * Method to move into approve orders page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void ApproveOrder(ActionEvent event) {
 		System.out.println("Approve");
@@ -206,15 +256,23 @@ public class SupplierController implements Initializable {
 		}
 	}
 
+	/**
+	 * This Method made to get back and exit
+	 **/
 	@FXML
 	void Back(ActionEvent event) {
-
+		return;
 	}
 
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 * 
+	 * @param location
+	 * @param resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		
 		if (supplier.getRole().equals("Moderator")) {
 			orderbutton.setDisable(true);
 			approveorder.setDisable(true);
@@ -223,10 +281,11 @@ public class SupplierController implements Initializable {
 			creatandeditmenu.setDisable(true);
 			UpdateItem.setDisable(true);
 		}
-		
-		
 
 	}
+/**
+ * Method to get the current restaurant information from DB
+ */
 	public void callrespone() {
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201) {
@@ -239,19 +298,6 @@ public class SupplierController implements Initializable {
 			System.out.println("resturant Is Null");
 		}
 		System.out.println(resturant);
-		
-	}
-	void sentToJson() {
-
-		System.out.println(supplier.getUserID());
-
-		Request request = new Request();
-		request.setPath("/accounts/getAccount");
-		request.setMethod("GET");
-
-		request.setBody(gson.toJson(supplier));
-
-		ClientUI.chat.accept(gson.toJson(request));
 
 	}
 

@@ -25,7 +25,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class HRFunction {
-	
+
+	/**
+	 * This class made for H.R functions
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
+
 	/**
 	 * function that replace the pages
 	 * 
@@ -49,6 +61,14 @@ public class HRFunction {
 		}
 	}
 
+	/**
+	 * to get values from DB
+	 * 
+	 * @param path
+	 * @param method
+	 * @param object
+	 * @param errorMsg
+	 */
 	public void sentToJson(String path, String method, Object object, String errorMsg) {
 		Gson gson = new Gson();
 		Request request = new Request();
@@ -57,17 +77,23 @@ public class HRFunction {
 		request.setBody(gson.toJson(object));
 		String jsonUser = gson.toJson(request);
 		try {
-			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+			ClientUI.chat.accept(jsonUser);
 		} catch (NullPointerException e) {
 			System.out.println(errorMsg);
 		}
 	}
 
+	/**
+	 * Method to set button and help panel to move from screens
+	 * 
+	 * @param myHamburger
+	 * @param drawer
+	 */
 	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
-		
+
 		try {
 			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-			
+
 			drawer.setSidePane(anchorPane);
 		} catch (IOException e) {
 			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
@@ -94,10 +120,20 @@ public class HRFunction {
 		});
 	}
 
+	/**
+	 * method to send back to home screen
+	 * 
+	 * @param event
+	 */
 	public void home(ActionEvent event) {
-		reload(event, "/supplier/H.R.fxml", "Supplier - home");
+		reload(event, "/supplier/H.R.fxml", "H.R - home");
 	}
 
+	/**
+	 * method to exit
+	 * 
+	 * @param event
+	 */
 	public void exit(ActionEvent event) {
 		System.out.println("exit client Tool");
 		logoutSentToJson();
@@ -114,12 +150,20 @@ public class HRFunction {
 		System.exit(0);
 	}
 
+	/**
+	 * method to logout from application
+	 * 
+	 * @param event
+	 */
 	public void logout(ActionEvent event) {
 		logoutSentToJson();
 		logoutResponse();
 		reload(event, "/guiNew/HomePage.fxml", "Home page");
 	}
 
+	/**
+	 * set to logout from DB
+	 */
 	public void logoutSentToJson() {
 		Gson gson = new Gson();
 		JsonElement jsonElem = gson.toJsonTree(new Object());
@@ -130,16 +174,18 @@ public class HRFunction {
 		request.setMethod("GET");
 		request.setBody(gson.toJson(jsonElem));
 		try {
-			ClientUI.chat.accept(gson.toJson(request)); // in here will be DB ask for restaurant id
+			ClientUI.chat.accept(gson.toJson(request));
 		} catch (NullPointerException e) {
 			System.out.println("new ClientController didn't work");
 		}
 	}
 
+	/**
+	 * Method to get the answer to logout
+	 */
 	public void logoutResponse() {
 		Response response = ChatClient.serverAns;
-		System.out.println("-->>" + response.getDescription()); // Description from server
+		System.out.println("-->>" + response.getDescription());
 	}
-
 
 }

@@ -48,7 +48,17 @@ import logic.Options;
 import logic.item_in_menu;
 
 public class UpdateItem implements Initializable {
-
+	/**
+	 * This class made for supplier update item process
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 	@FXML
 	private Label dishname;
 
@@ -127,23 +137,19 @@ public class UpdateItem implements Initializable {
 	private Button uploadi;
 	@FXML
 	private JFXDrawer drawer;
+	
 	private SupplierFunction supplierfunction = new SupplierFunction();
-	// in next values put item_in_menu values you get
-
 	item_in_menu iteminmenu;
-
 	private ArrayList<String> ingrediantslist = new ArrayList<String>();
 	private ArrayList<Options> optionslist = new ArrayList<Options>();
-
-	private Options[] optionalarry;
-
 	IngrediantRow inrow = new IngrediantRow(ingrediantsText);
 	OptionRow oprow = new OptionRow(categorytext, specifytext, pricetextop);
 	Item itemtosave = new Item(null, null, 0, 0, null, 0, null, null, null, null, 0);
-
 	ObservableList<IngrediantRow> ingrediantRow = FXCollections.observableArrayList();
 	ObservableList<OptionRow> optionrow = FXCollections.observableArrayList();
-
+	/**
+	 * Method to send the new item in the DB
+	 */
 	void sendtoserver() {
 
 		Request request = new Request();
@@ -161,7 +167,11 @@ public class UpdateItem implements Initializable {
 
 		
 	}
-
+	/**
+	 * This Method made to initialize all the buttons and table requirements
+	 * 
+	 * @param location resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -230,7 +240,11 @@ public class UpdateItem implements Initializable {
 		OptionTable.setItems(optionrow);
 
 	}
-
+	/**
+	 * Inner Class to insert rows into Option Table
+	 * 
+	 *
+	 */
 	public class OptionRow {
 		TextField catetext;
 		TextField spcitext2;
@@ -268,7 +282,11 @@ public class UpdateItem implements Initializable {
 		}
 
 	}
-
+	/**
+	 * Inner Class to insert rows into Ingredient Table
+	 * 
+	 *
+	 */
 	public class IngrediantRow {
 
 		TextField text;
@@ -284,8 +302,13 @@ public class UpdateItem implements Initializable {
 
 	}
 
+	
+	/**
+	 * Set all reaming parameters from the new item and call to save function
+	 * 
+	 * @param creatitem
+	 */
 	@FXML
-
 	void CreatNewItem(ActionEvent creatitem) {
 
 		
@@ -309,7 +332,11 @@ public class UpdateItem implements Initializable {
 		// and send to database//
 
 	}
-
+	/**
+	 * remove row from Ingredient table action button
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void RemoveIngrediants(ActionEvent action) {
 	
@@ -325,7 +352,11 @@ public class UpdateItem implements Initializable {
 		ingrediantsTable.setItems(allrows);
 
 	}
-
+	/**
+	 * add row to Ingredient table action button
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void AddIngrediants(ActionEvent action) {
 
@@ -346,7 +377,11 @@ public class UpdateItem implements Initializable {
 		ingrediantsTable.getItems().add(row);
 
 	}
-
+	/**
+	 * add row to Option table action button
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void AddOptional(ActionEvent action) {
 
@@ -378,7 +413,11 @@ public class UpdateItem implements Initializable {
 		OptionTable.getItems().add(row);
 
 	}
-
+	/**
+	 * remove row from Option table action button
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void RemoveOptional(ActionEvent action) {
 		ObservableList<OptionRow> allrows, selectedrow;
@@ -392,12 +431,21 @@ public class UpdateItem implements Initializable {
 		OptionTable.setItems(allrows);
 
 	}
-
+	/**
+	 * This Method made to logout from system
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void LogOut(ActionEvent action) {
 		supplierfunction.logout(action);
 	}
 
+	/**
+	 * This Method made to allow us to get back to the home screen
+	 * 
+	 * @param action
+	 */
 	@FXML
 	void Home(ActionEvent action) {
 		supplierfunction.home(action);
@@ -407,6 +455,10 @@ public class UpdateItem implements Initializable {
 	@FXML
 	private ListView<String> listView;
 
+	/**
+	 * Method to upload an item image
+	 * @param event
+	 */
 	@FXML
 	void selectFile(ActionEvent event) {
 
@@ -425,7 +477,11 @@ public class UpdateItem implements Initializable {
 		} else
 			System.out.println("File is not valid");
 	}
-
+	/**
+	 * This Method made to give us the option to get back to supplier screen
+	 * 
+	 * @param event
+	 */
 	@FXML
 
 	void Back(ActionEvent event) {

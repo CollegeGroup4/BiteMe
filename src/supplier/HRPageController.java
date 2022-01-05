@@ -17,8 +17,21 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Account;
 
-public class HRPageController implements Initializable {
+public class HRPageController  {
 
+	/**
+	 * This class made for H.R main page
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
+	
+	
 	@FXML
 	private HBox Nav;
 
@@ -31,9 +44,13 @@ public class HRPageController implements Initializable {
 	@FXML
 	private Button employeebutton;
 	private HRFunction HRF = new HRFunction();
-
 	public static Account Hmanger;
 
+	
+	/**
+	 * Method to move in approve businesses screen
+	 * @param event
+	 */
 	@FXML
 	void Approveclick(ActionEvent event) {
 		System.out.println("Approve");
@@ -55,12 +72,19 @@ public class HRPageController implements Initializable {
 
 		}
 	}
-
+	/**
+	 * This Method made to logout from system
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void LogOut(ActionEvent event) {
 		HRF.logout(event);
 	}
-
+	/**
+	 * Method to move in employer registration screen
+	 * @param event
+	 */
 	@FXML
 	void employeeclick(ActionEvent event) {
 		System.out.println("EmployeeRegister");
@@ -83,8 +107,5 @@ public class HRPageController implements Initializable {
 		}
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-
-	}
+	
 }
