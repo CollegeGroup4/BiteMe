@@ -14,6 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import logic.Item;
+
 /**
  * This class made for showing summary of the order
  *
@@ -84,10 +85,8 @@ public class SummaryController implements Initializable {
 	 */
 	@FXML
 	void removeItem(ActionEvent event) {
-		if (itemSelect != null) {
+		if (itemSelect != null)
 			itemsList.remove(itemSelect.get(0));
-			ChooseADishController.itemsSelectedArr.remove(itemSelect.get(0));
-		}
-		
+
 	}
 }

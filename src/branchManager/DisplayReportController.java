@@ -1,4 +1,4 @@
-package CEO;
+package branchManager;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,64 +25,54 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class DisplayReportController implements Initializable  {
+public class DisplayReportController implements Initializable {
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 
-    @FXML
-    private HBox Nav;
+	@FXML
+	private HBox Nav;
 
-    @FXML
-    private Label lableHello;
+	@FXML
+	private Label lableHello;
 
-    @FXML
-    private ScrollPane scrolePaneListItems;
+	@FXML
+	private ScrollPane scrolePaneListItems;
 
-    @FXML
-    private VBox ItemContainer;
+	@FXML
+	private VBox ItemContainer;
 
-    @FXML
-    private JFXHamburger myHamburger;
+	@FXML
+	private JFXHamburger myHamburger;
 
-    @FXML
-    private JFXDrawer drawer;
-    @FXML
-    void back(ActionEvent event) {
-    	try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/CEO/ViewReportsCEO.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("CEO - View Report");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
+	@FXML
+	private JFXDrawer drawer;
 
-    @FXML
-    void home(ActionEvent event) {
+	@FXML
+	void back(ActionEvent event) {
+		branchManagerFunctions.reload(event, "/branchManager/ViewReports.fxml", "Branch Manager - View Report");
+	}
 
-    }
+	@FXML
+	void home(ActionEvent event) {
+		branchManagerFunctions.home(event);
+	}
 
-    @FXML
-    void logout(ActionEvent event) {
-
-    }
+	@FXML
+	void logout(ActionEvent event) {
+		branchManagerFunctions.logout(event);
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		for (int i = 0; i < ViewReportsController.reports.length; i++) {
 			HBox itemInLine = new HBox(5);
 			String projectPath = System.getProperty("user.dir");
 			System.out.println(ViewReportsController.reports[i].getFileName());
 			try {
-				System.out.println(projectPath+"\\"+ViewReportsController.reports[i].getFileName());
-				if(i == 0) {
+				System.out.println(projectPath + "\\" + ViewReportsController.reports[i].getFileName());
+				if (i == 0) {
 					InputStream stream;
-					stream = new FileInputStream(projectPath+"\\"+ViewReportsController.reports[i].getFileName());
+					stream = new FileInputStream(projectPath + "\\" + ViewReportsController.reports[i].getFileName());
 					Image logo = new Image(stream);
 					ImageView logoImage = new ImageView();
 					logoImage.setImage(logo);
@@ -90,10 +80,9 @@ public class DisplayReportController implements Initializable  {
 					logoImage.setFitHeight(350);
 					itemInLine.getChildren().addAll(logoImage);
 					itemInLine.setSpacing(30);
-				}
-				else {
+				} else {
 					InputStream stream;
-					stream = new FileInputStream(projectPath+"\\"+ViewReportsController.reports[i].getFileName());
+					stream = new FileInputStream(projectPath + "\\" + ViewReportsController.reports[i].getFileName());
 					Image logo = new Image(stream);
 					ImageView logoImage = new ImageView();
 					logoImage.setImage(logo);

@@ -33,8 +33,10 @@ import javafx.scene.layout.HBox;
  * @version January 2022
  * 
  */
-public class PaymentController implements Initializable {
+import logic.BusinessAccount;
 
+public class PaymentController implements Initializable {
+	public static BusinessAccount businessAccount;
 	public static PaymentSaved payment; //
 	public float priceOfShippment = 0;
 	private boolean errorOccurred = false;
@@ -159,6 +161,18 @@ public class PaymentController implements Initializable {
 	 * Checks for valid inputs or empty fields
 	 */
 	private void checkValidInputes() {
+//		DeliveryAndTimeController.orderToSend.check_out_price
+		if (businessAccount != null)
+			if (CustomerPageController.client.isBusiness() && (businessAccount
+					.getMonthlyBillingCeiling() < DeliveryAndTimeController.orderToSend.check_out_price)) {
+				creditCard.setSelected(true);
+				creditCard.setDisable(true);
+			}
+			else {
+				creditCard.setSelected(false);
+				creditCard.setDisable(false);
+			}
+		
 		if (creditCard.isSelected()) {
 			if (cardNumber.getText().equals("")) {
 				errorLabelFunc("Please insert card number");

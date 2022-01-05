@@ -16,49 +16,60 @@
    <children>
       <AnchorPane layoutX="14.0" layoutY="96.0" prefHeight="534.0" prefWidth="772.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <AnchorPane layoutX="191.0" layoutY="61.0" prefHeight="379.0" prefWidth="420.0">
+            <AnchorPane fx:id="RegularLogin" layoutX="193.0" layoutY="91.0" prefHeight="334.0" prefWidth="420.0">
                <children>
-                  <TextField fx:id="textFieldUsername" layoutX="176.0" layoutY="225.0" prefHeight="25.0" prefWidth="162.0" promptText="Enter Username">
+                  <TextField fx:id="textFieldUsername" layoutX="170.0" layoutY="174.0" prefHeight="25.0" prefWidth="162.0" promptText="Enter Username">
                      <font>
                         <Font name="System Italic" size="12.0" />
                      </font>
                   </TextField>
-                  <Label layoutX="162.0" layoutY="26.0" text="Login">
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="38.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="textFieldPassword" layoutX="179.0" layoutY="264.0" prefHeight="25.0" prefWidth="162.0" promptText="Enter Password">
+                  <TextField fx:id="textFieldPassword" layoutX="173.0" layoutY="213.0" prefHeight="25.0" prefWidth="162.0" promptText="Enter Password">
                      <font>
                         <Font name="System Italic" size="12.0" />
                      </font>
                   </TextField>
-                  <Label layoutX="80.0" layoutY="229.0" text="Username:">
+                  <Label layoutX="74.0" layoutY="178.0" text="Username:">
                      <font>
                         <Font name="Arial Bold Italic" size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="80.0" layoutY="268.0" text="Password:">
+                  <Label layoutX="74.0" layoutY="217.0" text="Password:">
                      <font>
                         <Font name="Arial Bold Italic" size="15.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="102.0" fitWidth="115.0" layoutX="153.0" layoutY="95.0">
+                  <ImageView fitHeight="102.0" fitWidth="115.0" layoutX="147.0" layoutY="51.0">
                      <image>
                         <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/283-2833820_user-icon-orange-png.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="btnLogin" layoutX="159.0" layoutY="341.0" mnemonicParsing="false" onAction="#Login" prefHeight="37.0" prefWidth="104.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Login">
+                  <Button fx:id="btnLogin" layoutX="153.0" layoutY="291.0" mnemonicParsing="false" onAction="#Login" prefHeight="37.0" prefWidth="104.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Login">
                      <font>
                         <Font name="System Bold Italic" size="18.0" />
                      </font>
                   </Button>
-                  <Label fx:id="lableErrorMag" alignment="CENTER" layoutX="78.0" layoutY="314.0" prefHeight="18.0" prefWidth="277.0" textFill="RED">
+                  <Label fx:id="lableErrorMag" alignment="CENTER" layoutX="72.0" layoutY="264.0" prefHeight="18.0" prefWidth="277.0" textFill="RED">
                      <font>
                         <Font name="System Bold Italic" size="13.0" />
                      </font>
                   </Label>
                </children></AnchorPane>
+            <Button fx:id="btnImport" layoutX="34.0" layoutY="474.0" mnemonicParsing="false" onAction="#ImportData" prefHeight="37.0" prefWidth="88.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="import">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnLoginw4c" layoutX="346.0" layoutY="438.0" mnemonicParsing="false" onAction="#loginw4c" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="Login with W4C" />
+            <ImageView fx:id="QRcode" fitHeight="200.0" fitWidth="199.0" layoutX="303.0" layoutY="158.0" visible="false">
+               <image>
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/BiteMe/src/images/QR_code.jpg" />
+               </image>
+            </ImageView>
+            <Label layoutX="355.0" layoutY="60.0" text="Login">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="38.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <HBox fx:id="Nav1" alignment="CENTER" layoutX="-3.0" layoutY="630.0" prefHeight="102.0" prefWidth="806.0" spacing="35.0" style="-fx-background-radius: 50px;">

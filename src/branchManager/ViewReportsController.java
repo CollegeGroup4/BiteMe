@@ -1,4 +1,4 @@
-package CEO;
+package branchManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,7 +32,7 @@ import logic.Account;
 
 public class ViewReportsController implements Initializable {
 	private String typeReport;
-	private CEOFunctions ceoFunctions = new CEOFunctions();
+	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 	public static MyPhoto[] reports = null;
 	@FXML
 	private HBox Nav;
@@ -95,7 +95,7 @@ public class ViewReportsController implements Initializable {
 		comboBoxSBranchYearSecond.getItems().setAll("2022","2021","2020","2019");
 		comboBoxSBranchYearSecond.setValue("2022");
 
-		ceoFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
 	@FXML
@@ -180,9 +180,9 @@ public class ViewReportsController implements Initializable {
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			Stage primaryStage = new Stage();
 			AnchorPane root;
-			root = loader.load(getClass().getResource("/CEO/DisplayReport.fxml").openStream());
+			root = loader.load(getClass().getResource("/branchManager/DisplayReport.fxml").openStream());
 			Scene scene = new Scene(root);
-			primaryStage.setTitle("CEO- Dispaly report");
+			primaryStage.setTitle("branchManager- Dispaly report");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (IOException e) {
@@ -204,53 +204,17 @@ public class ViewReportsController implements Initializable {
 
 	@FXML
 	void backCEO(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/CEO/CEOPage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("CEO main page");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.home(event);
 	}
 
 	@FXML
 	void home(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/CEO/CEOPage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("CEO main page");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.home(event);
 	}
 
 	@FXML
 	void logout(ActionEvent event) {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-			Stage primaryStage = new Stage();
-			AnchorPane root;
-			root = loader.load(getClass().getResource("/guiNew/HomePage.fxml").openStream());
-			Scene scene = new Scene(root);
-			primaryStage.setTitle("Home");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		branchManagerFunctions.logout(event);
 	}
 
 }

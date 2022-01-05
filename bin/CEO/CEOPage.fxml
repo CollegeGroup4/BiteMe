@@ -47,43 +47,17 @@
                   <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <Button fx:id="btnOrderFood" layoutX="81.0" layoutY="219.0" mnemonicParsing="false" onAction="#orderFood" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Order food" textFill="WHITE">
+            <Button fx:id="btnViewReports" layoutX="338.0" layoutY="257.0" mnemonicParsing="false" onAction="#viewReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="View reports" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnViewReports" layoutX="328.0" layoutY="219.0" mnemonicParsing="false" onAction="#viewReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="View reports" textFill="WHITE">
+            <Line endX="-100.0" endY="274.4000244140625" layoutX="678.0" layoutY="-140.0" startX="-376.0" startY="274.4000244140625" stroke="#968b8bbd" />
+            <Hyperlink fx:id="linkApprovals" layoutX="717.0" layoutY="35.0" onAction="#Approvals" text="Approvals">
                <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnOpenAccount" layoutX="577.0" layoutY="219.0" mnemonicParsing="false" onAction="#openAccount" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Open an account" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnEditPersonalInfo" layoutX="81.0" layoutY="398.0" mnemonicParsing="false" onAction="#editPersonalInfo" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Edit personal info" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnCreateReports" layoutX="328.0" layoutY="398.0" mnemonicParsing="false" onAction="#createReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Create new report" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnRegisterationApprovalSupplier" layoutX="577.0" layoutY="398.0" mnemonicParsing="false" onAction="#RegisterationRestaurant" prefHeight="78.0" prefWidth="225.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Registeration Restaurant" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="17.0" />
-               </font>
-            </Button>
-            <Line endX="-100.0" endY="274.4000244140625" layoutX="411.0" layoutY="237.0" startX="-100.0" startY="-44.0" stroke="#968b8bbd" />
-            <Hyperlink fx:id="linkApprovals" layoutX="717.0" layoutY="35.0" onAction="#Approvals" text="Approvals (0)">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="18.0" />
+                  <Font name="Berlin Sans FB Demi Bold" size="25.0" />
                </font>
             </Hyperlink>
-            <Line endX="-100.0" endY="274.4000244140625" layoutX="665.0" layoutY="237.0" startX="-100.0" startY="-44.0" stroke="#968b8bbd" />
          </children>
       </AnchorPane>
    </children>

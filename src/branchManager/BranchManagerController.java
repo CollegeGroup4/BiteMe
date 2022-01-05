@@ -89,7 +89,7 @@ public class BranchManagerController implements Initializable {
 	 */
 	@FXML
 	void createReports(ActionEvent event) {
-//TODO
+//		branchManagerFunctions.reload(event, "/branchManager/ViewReports.fxml", "Branch Manager - View Report");
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class BranchManagerController implements Initializable {
 	 */
 	@FXML
 	void viewReports(ActionEvent event) {
-//TODO
+		branchManagerFunctions.reload(event, "/branchManager/ViewReports.fxml", "Branch Manager - View Report");
 	}
 
 	/**

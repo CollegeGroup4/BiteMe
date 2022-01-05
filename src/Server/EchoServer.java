@@ -98,6 +98,18 @@ public class EchoServer extends AbstractServer {
 			response.setCode(200);
 			response.setDescription("A connaction with the server has been established at port " + DEFAULT_PORT);
 			break;
+		case "/ceo/twoQuarterReports":
+			body = gson.fromJson((String) m.getBody(), JsonElement.class);
+			Integer quarterNumFirst = gson.fromJson(body.getAsJsonObject().get("quarterNumFirst"), Integer.class);
+			String areaFirst = gson.fromJson(body.getAsJsonObject().get("areaFirst"), String.class);
+			Integer yearFirst = gson.fromJson(body.getAsJsonObject().get("yearFirst"), Integer.class);
+			Integer quarterNumSecond = gson.fromJson(body.getAsJsonObject().get("quarterNumSecond"), Integer.class);
+			String areaSecond = gson.fromJson(body.getAsJsonObject().get("areaSecond"), String.class);
+			Integer yearSecond = gson.fromJson(body.getAsJsonObject().get("yearSecond"), Integer.class);
+			CEOApiService.getTwoQuarterReports(quarterNumFirst, areaFirst, quarterNumSecond, areaSecond, yearFirst,
+					yearSecond, response);
+			break;
+
 		case "/orders":
 			switch (method) {
 			case GET:

@@ -119,7 +119,7 @@ public class CEOController implements Initializable {
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 			Stage primaryStage = new Stage();
 			AnchorPane root;
-			root = loader.load(getClass().getResource("/CEO/ViewReportsPage.fxml").openStream());
+			root = loader.load(getClass().getResource("/CEO/ViewReportsCEO.fxml").openStream());
 			Scene scene = new Scene(root);
 			primaryStage.setTitle("CEO - View Report");
 			primaryStage.setScene(scene);
