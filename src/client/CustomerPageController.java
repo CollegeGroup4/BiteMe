@@ -84,7 +84,7 @@ public class CustomerPageController implements Initializable {
  */
 	@FXML
 	void MyOrders(ActionEvent event) throws Exception {
-		customerFunctions.reload(event, "ChooseADish.fxml", "Choose A Dish");
+		customerFunctions.reload(event, "MyOrders.fxml", "My Orders");
 	}
 	/**
 	 * Beginning of the ordering process
@@ -93,7 +93,7 @@ public class CustomerPageController implements Initializable {
 	 */
 	@FXML
 	void OrderFood(ActionEvent event) throws Exception {
-		customerFunctions.reload(event, "CustomerPage.fxml", "Customer Page");
+		customerFunctions.reload(event, "ChooseRestaurant.fxml", "Choose Restaurant");
 	}
 	/**
 	 * Disconnect the user from the system
