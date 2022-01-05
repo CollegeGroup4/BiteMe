@@ -29,12 +29,12 @@ public class AccountApiService {
 	 *
 	 * This can only be done by the logged in Account.
 	 *
-	 */
+	 *///TODO
 	public static void importSuper(Response response) {
 		try {
 			PreparedStatement postAccount = EchoServer.con
-					.prepareStatement("INSERT INTO biteme.account"
-							+ "SELECT * FROM biteme.user_management;");
+					.prepareStatement("INSERT INTO biteme.account "
+							+ "SELECT * FROM users.account WHERE UserName not in (SELECT UserName FROM biteme.account);");
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
 				response.setCode(400);
@@ -52,11 +52,12 @@ public class AccountApiService {
 	 *
 	 */
 	public static void createPrivateAccount(PrivateAccount account, Response response) {
+		PreparedStatement postAccount;
 		try {
-			PreparedStatement postAccount = EchoServer.con
+			postAccount = EchoServer.con
 					.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active', "
 							+ "BranchManagerID = ?, Area = ? WHERE UserName = ?;");
-			if (account.getRole().equals("Not Assigned"))
+			if (!account.getRole().equals("Not Assigned"))
 				postAccount.setString(1, account.getRole());
 			else
 				postAccount.setString(1, "Client");
@@ -64,6 +65,10 @@ public class AccountApiService {
 			postAccount.setString(3, account.getArea());
 			postAccount.setString(4, account.getUserName());
 			postAccount.executeUpdate();
+		}catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
+		}try {
 			postAccount = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.private_account (UserName, CreditCardNumber, CreditCardCVV, CreditCardExp, W4C) "
 							+ "VALUES(?,?,?,?,?)");
@@ -77,6 +82,10 @@ public class AccountApiService {
 			if (e.getErrorCode() == 1062) {
 				response.setCode(400);
 				response.setDescription("Fail! Private account already exist -> userName: " + account.getUserName());
+			}
+			else {
+				response.setCode(400);
+				response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
 			}
 			return;
 		}
@@ -99,8 +108,8 @@ public class AccountApiService {
 			isBusinessApproved.setString(1, account.getBusinessName());
 			rs = isBusinessApproved.executeQuery();
 			if (!rs.next())
-				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employers or is not approved", "400",
-						400);
+				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employers or is not approved", "404",
+						404);
 
 		} catch (SQLException e) {
 			response.setDescription(e.getMessage());
@@ -111,7 +120,7 @@ public class AccountApiService {
 			postAccount = EchoServer.con
 					.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active',"
 							+ "BranchManagerID = ? , Area = ? , isBusiness = ? WHERE UserName = ?;");
-			if (account.getRole().equals("Not Assigned"))
+			if (!account.getRole().equals("Not Assigned"))
 				postAccount.setString(1, account.getRole());
 			else
 				postAccount.setString(1, "Client");
@@ -121,9 +130,14 @@ public class AccountApiService {
 			postAccount.setString(5, account.getUserName());
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
-			response.setBody(null);
-			response.setDescription(e.getMessage());
-			response.setCode(400);
+			if(e.getErrorCode() == 404) {
+				response.setDescription(e.getMessage());
+				response.setCode(404);
+			}
+			else {
+				response.setCode(400);
+				response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
+			}
 			return;
 		}
 		try {
@@ -140,7 +154,7 @@ public class AccountApiService {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
 				response.setCode(400);
-				response.setDescription("Fail! Business account already exist -> userName: " + account.getUserName());
+				response.setDescription("Fail!  Couldn't create Business account -> userName: " + account.getUserName());
 			}
 			return;
 		}
@@ -230,7 +244,7 @@ public class AccountApiService {
 		ArrayList<Account> accounts = new ArrayList<Account>();
 		try {
 			PreparedStatement getAllAccounts = EchoServer.con.prepareStatement(
-					"SELECT * FROM biteme.account WHERE BranchManagerID = ? AND Role != 'Branch Manager';");
+					"SELECT * FROM biteme.account WHERE BranchManagerID = ? AND Role != 'Branch Manager' AND Role != 'Moderator'  OR (BranchManagerID = 0 AND Role != 'CEO');");
 			getAllAccounts.setInt(1, branch_manager_id);
 			rs = getAllAccounts.executeQuery();
 			while (rs.next()) {
@@ -282,6 +296,7 @@ public class AccountApiService {
 							rs.getFloat(QueryConsts.BUSINESS_ACCOUNT_CURRENT_SPENT)));
 					body.getAsJsonObject().add("businessAccount", temp);
 				}
+			}
 				getAccount = EchoServer.con
 						.prepareStatement("SELECT * FROM biteme.private_account WHERE UserName = ?;");
 				getAccount.setString(1, account.getUserName());
@@ -297,12 +312,11 @@ public class AccountApiService {
 							rs.getString(QueryConsts.PRIVATE_ACCOUNT_CREDIT_CARD_EXP)));
 					body.getAsJsonObject().add("privateAccount", temp);
 				}
-				if (account.getRole().equals("Supplier") || account.getRole().equals("Moderator")) {
+				if (account.getRole().equals("Supplier")) {
 					getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE UserName = ?;");
 					getAccount.setString(1, account.getUserName());
 					rs = getAccount.executeQuery();
 					if (rs.next()) {
-
 						temp = EchoServer.gson.toJsonTree(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
 								rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
 								rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),
@@ -314,7 +328,22 @@ public class AccountApiService {
 						body.getAsJsonObject().add("restaurant", temp);
 					}
 				}
-			}
+				if (account.getRole().equals("Moderator")) {
+					getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE ModeratorUserName = ?;");
+					getAccount.setString(1, account.getUserName());
+					rs = getAccount.executeQuery();
+					if (rs.next()) {
+						temp = EchoServer.gson.toJsonTree(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
+								rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
+								rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),
+								rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.RESTAURANT_AREA),
+								rs.getString(QueryConsts.RESTAURANT_TYPE), account.getUserName(),
+								rs.getString(QueryConsts.RESTAURANT_PHOTO),
+								rs.getString(QueryConsts.RESTAURANT_ADDRESS),
+								rs.getString(QueryConsts.RESTAURANT_DESCRIPTION)));
+						body.getAsJsonObject().add("restaurant", temp);
+					}
+				}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
@@ -461,6 +490,32 @@ public class AccountApiService {
 		response.setCode(200);
 		response.setDescription("Success in updating account: accountID -> " + account.getUserID());
 	}
+	
+	/**
+	 * Updated Account
+	 *
+	 * This can only be done by the master / branch manager / CEO
+	 *
+	 */
+	public static void updateStatus(String userName, Response response) {
+		int updatedRows;
+		try {
+			PreparedStatement postAccount = EchoServer.con.prepareStatement(
+					"UPDATE biteme.account SET Status = ? WHERE UserName = ? AND Role != 'Branch Manager';");
+			// Its the first userName that he had so the test is in users table on login
+			postAccount.setString(1, userName);
+			updatedRows = postAccount.executeUpdate();
+			if (updatedRows == 0) {
+				throw new SQLException("Couldn't update account: -> UserName: " + userName, "401", 401);
+			}
+		} catch (SQLException e) {
+			response.setCode(e.getErrorCode());
+			response.setDescription(e.getMessage());
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in updating account: userName -> " + userName);
+	}
 
 	/**
 	 * Updated Private Account
@@ -469,9 +524,7 @@ public class AccountApiService {
 	 *
 	 */
 	public static void updatePrivateAccount(PrivateAccount account, Response response) {
-		Account account1 = account;
 		int updatedRows;
-		updateAccount(account1, response);
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
 					"UPDATE biteme.private_account SET (CreditCardNumber = ?, CreditCardCVV = ?, CreditCardExp = ?)"
@@ -503,9 +556,7 @@ public class AccountApiService {
 	 *
 	 */
 	public static void updateBusinessAccount(BusinessAccount account, Response response) {
-		Account account1 = account;
 		int updatedRows;
-		updateAccount(account1, response);
 		try {
 			PreparedStatement postAccount = EchoServer.con.prepareStatement(
 					"UPDATE biteme.business_account SET (UserName = ?, MonthlyBillingCeling = ?, isApproved = ?, BusinessName = ?, CurrentSpent = ?)"

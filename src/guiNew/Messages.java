@@ -1,14 +1,15 @@
 package guiNew;
 
-import logic.Employee;
+
+import logic.Employer;
 
 public class Messages {
 	private String from;
 	private String topic;
 	private String status;
-	private Employee employee;
+	private Employer employee;
 
-	public Messages(String from, String status, Employee employee) {
+	public Messages(String from, String status, Employer employee) {
 		super();
 		this.from = from;
 		this.status = status;
@@ -40,11 +41,11 @@ public class Messages {
 		this.status = status;
 	}
 
-	public Employee getEmployee() {
+	public Employer getEmployee() {
 		return employee;
 	}
 
-	public void setEmployee(Employee employee) {
+	public void setEmployee(Employer employee) {
 		this.employee = employee;
 	}
 

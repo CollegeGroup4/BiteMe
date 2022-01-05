@@ -3,9 +3,11 @@ package supplier;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
+import supplier.SupplierFunction;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 import com.sun.tools.javac.jvm.Items;
 
 import client.ChatClient;
@@ -29,66 +31,70 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Category;
 import logic.Item;
+import logic.Menu;
 import logic.Options;
 
-public class AllItemController implements Initializable{
-	   
-	 ObservableList<Item> ItemList = FXCollections.observableArrayList();
-					
-	  @FXML
-	    private TableView<Item> Table;
+public class AllItemController implements Initializable {
 
-	    @FXML
-	    private TableColumn<Item, Integer> ItemID;
+	ObservableList<Item> ItemList = FXCollections.observableArrayList();
 
-	    @FXML
-	    private TableColumn<Item, Integer> resturantid;
-	    @FXML
-	    private TableColumn<Item, String> name;
+	@FXML
+	private TableView<Item> Table;
 
-	    @FXML
-	    private TableColumn<Item, Double> Price;
+	@FXML
+	private TableColumn<Item, Integer> ItemID;
 
-	    @FXML
-	    private TableColumn<Item, String> Description;
+	@FXML
+	private TableColumn<Item, Integer> resturantid;
+	@FXML
+	private TableColumn<Item, String> name;
 
-	    @FXML
-	    private TableColumn<Item, String> Ingrediants;
+	@FXML
+	private TableColumn<Item, Double> Price;
 
-	    @FXML
-	    private TableColumn<Item, Options[]> Options;
-	    @FXML
-	    private TableColumn<Item, String> category;
+	@FXML
+	private TableColumn<Item, String> Description;
 
-	    @FXML
-	    private TableColumn<Item, String> subcategory;
+	@FXML
+	private TableColumn<Item, String> Ingrediants;
 
-	    @FXML
-	    private HBox Nav;
+	@FXML
+	private TableColumn<Item, Options[]> Options;
+	@FXML
+	private TableColumn<Item, String> category;
 
-	    @FXML
-	    private Button LogOut;
+	@FXML
+	private TableColumn<Item, String> subcategory;
 
-	    @FXML
-	    private HBox Nav1;
+	@FXML
+	private HBox Nav;
 
-	    @FXML
-	    private Button backbutton;
+	@FXML
+	private Button LogOut;
 
+	@FXML
+	private HBox Nav1;
 
-   
+	@FXML
+	private Button backbutton;
+	@FXML
+	private JFXHamburger myHamburger;
 
-	
-    @FXML
-    void Back(ActionEvent event) {
-    	System.out.println("Supplier Page");
+	@FXML
+	private JFXDrawer drawer;
+
+	private SupplierFunction supplierfunction = new SupplierFunction();
+
+	@FXML
+	void Back(ActionEvent event) {
+		System.out.println("Supplier Page");
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
 		Stage primaryStage = new Stage();
 		Pane root;
 		try {
 			root = loader.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
-			
+
 			Scene scene = new Scene(root);
 
 			primaryStage.setScene(scene);
@@ -96,64 +102,55 @@ public class AllItemController implements Initializable{
 		} catch (IOException e) {
 			System.out.println("Erorr: Could not open Supplier Page");
 			e.printStackTrace();
-			
-		}
-    }
-    @FXML
-    void LogOut(ActionEvent event) {
-    	
-    }
 
-	
+		}
+	}
+
+	@FXML
+	void Home(ActionEvent action) {
+		supplierfunction.home(action);
+	}
+
+	@FXML
+	void LogOut(ActionEvent event) {
+		supplierfunction.logout(event);
+	}
+
 	public void initialize(URL url, ResourceBundle db) {
 		FromJson();
 		
-		//insert the items from json to table ****
-		
-//	    ItemList.add(new Item("Cordi","sdd", 0, 3, "Kobana", 4, null, "dan", null, null, 0));
-//    	ItemList.add(new Item("Askanzi", "s", 2, 0, "Poyka", 7, "taim", null, null, null, 0));
-//    	ItemList.add(new Item("Irqy", null, 7, 4,"Sabic", 2, null, "pita", null, null, 1));
-		
-    	
-    	name.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
-    	category.setCellValueFactory(new PropertyValueFactory<Item, String>("Category"));
-    	Ingrediants.setCellValueFactory(new PropertyValueFactory<Item, String>("Ingrediants"));
-    	Options.setCellValueFactory(new PropertyValueFactory<Item, Options[]>("Options"));
-    	subcategory.setCellValueFactory(new PropertyValueFactory<Item, String>("Subcategory"));
-    	Description.setCellValueFactory(new PropertyValueFactory<Item, String>("Description"));
-    	Price.setCellValueFactory(new PropertyValueFactory<Item, Double>("Price"));
-    	resturantid.setCellValueFactory(new PropertyValueFactory<Item, Integer>("restaurantID"));
-    	ItemID.setCellValueFactory(new PropertyValueFactory<Item,Integer>("ItemID"));
-    	Table.setItems(ItemList);
-	
 
-	
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
+		name.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
+		category.setCellValueFactory(new PropertyValueFactory<Item, String>("Category"));
+		Ingrediants.setCellValueFactory(new PropertyValueFactory<Item, String>("Ingrediants"));
+		
+		subcategory.setCellValueFactory(new PropertyValueFactory<Item, String>("Subcategory"));
+		Description.setCellValueFactory(new PropertyValueFactory<Item, String>("Description"));
+		Price.setCellValueFactory(new PropertyValueFactory<Item, Double>("Price"));
+		resturantid.setCellValueFactory(new PropertyValueFactory<Item, Integer>("restaurantID"));
+		ItemID.setCellValueFactory(new PropertyValueFactory<Item, Integer>("ItemID"));
+		Table.setItems(ItemList);
+
 	}
+
 	void FromJson() {
-		
-		///ask moshe on items of restaurant !!
-		/// change to get items from this restaurant ***////
-		
-		Request request=new Request();
-		request.setPath("/restaurants/getItemsByMenu");
+
+		Request request = new Request();
+		request.setPath("/restaurants/menus");
 		request.setMethod("GET");
-		Gson gson=new Gson();
-		JsonElement body=gson.toJsonTree(new Object());
-		
-		body.getAsJsonObject().addProperty("restaurantID",2 );// String 2 is the current restaurant ID (!!!)
-		
-		
+		Gson gson = new Gson();
+		JsonElement body = gson.toJsonTree(new Object());
+
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
+
 		request.setBody(gson.toJson(body));
 		ClientUI.chat.accept(gson.toJson(request));
-		Item [] items=gson.fromJson((String)ChatClient.serverAns.getBody(),Item[].class);
-		
-		for(int i=0;i<items.length;i++) {
-			ItemList.add(items[i]);
-		}
-		
-		
+
+		body = gson.fromJson((String) ChatClient.serverAns.getBody(), JsonElement.class);
+
+		Item[] items = gson.fromJson(body.getAsJsonObject().get("items"), Item[].class);/// All items from restaurant
+		ItemList.addAll(items);
 	}
 
-	
-	
 }

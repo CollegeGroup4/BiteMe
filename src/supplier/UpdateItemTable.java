@@ -5,9 +5,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import supplier.SupplierFunction;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 
+import client.ChatClient;
+import client.ClientUI;
+import common.Request;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -141,10 +147,13 @@ public class UpdateItemTable implements Initializable {
 		}
 
 	}
-
+	@FXML
+	void Home(ActionEvent action) {
+		supplierfunction.home(action);
+	}
 	@FXML
 	void LogOut(ActionEvent event) {
-
+		supplierfunction.logout(event);
 	}
 
 	@FXML
@@ -154,12 +163,30 @@ public class UpdateItemTable implements Initializable {
 		ItemLremoveselect = Table.getSelectionModel().getSelectedItems();
 
 		for (Item allitems : ItemLremoveselect) {
-
+			JsonRemove(allitems);
 			Allitems.remove(allitems);
 		}
 
-//		removefromDB();
 
+
+	}
+
+	private void JsonRemove(Item allitems) {
+		
+		
+		Request request = new Request();
+		request.setPath("/restaurants/items");
+		request.setMethod("DELETE");
+		Gson gson = new Gson();
+
+		request.setBody(gson.toJson(allitems.getItemID()));
+		ClientUI.chat.accept(gson.toJson(request));
+
+		if (ChatClient.serverAns.getCode() != 200 || ChatClient.serverAns.getCode() != 201) {
+
+			// Warning
+		}
+		
 	}
 
 	ObservableList<Item> ItemList = FXCollections.observableArrayList();
@@ -167,11 +194,10 @@ public class UpdateItemTable implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
-		ArrayList<Options> options = new ArrayList<Options>();
-		options.add(new Options("tomato", "remove", 0.0, 0, false));
-		Options[] options1 = options.toArray(new Options[0]);
-
-		ItemList.add(new Item("Cordi", "Arabi", 0, 0, "Kobana", 0, "not a drink", "soup,tomato", options1, null, 0));
+		
+		
+		
+		FromJson();
 		name.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		category.setCellValueFactory(new PropertyValueFactory<Item, String>("Category"));
 		Ingrediants.setCellValueFactory(new PropertyValueFactory<Item, String>("Ingrediants"));
@@ -183,6 +209,25 @@ public class UpdateItemTable implements Initializable {
 		ItemID.setCellValueFactory(new PropertyValueFactory<Item, Integer>("ItemID"));
 		Table.setItems(ItemList);
 
+	}
+
+		void FromJson() {
+
+		Request request = new Request();
+		request.setPath("/restaurants/menus");
+		request.setMethod("GET");
+		Gson gson = new Gson();
+		JsonElement body = gson.toJsonTree(new Object());
+
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());
+
+		request.setBody(gson.toJson(body));
+		ClientUI.chat.accept(gson.toJson(request));
+
+		body = gson.fromJson((String) ChatClient.serverAns.getBody(), JsonElement.class);
+
+		Item[] items = gson.fromJson(body.getAsJsonObject().get("items"), Item[].class);/// All items from restaurant
+		ItemList.addAll(items);
 	}
 
 }

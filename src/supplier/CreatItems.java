@@ -1,5 +1,6 @@
 package supplier;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ import supplier.SupplierFunction;
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
+import common.MyPhoto;
 import common.Request;
+import common.imageUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,7 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -37,7 +40,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.Category;
 import logic.Item;
@@ -46,10 +49,10 @@ import logic.item_in_menu;
 
 public class CreatItems implements Initializable {
 	@FXML
-    private JFXHamburger myHamburger;
+	private JFXHamburger myHamburger;
 
-    @FXML
-    private JFXDrawer drawer;
+	@FXML
+	private JFXDrawer drawer;
 	@FXML
 	private Label dishname;
 
@@ -96,14 +99,13 @@ public class CreatItems implements Initializable {
 	@FXML
 	private TableColumn<IngrediantRow, TextField> namecol;
 
-	
 	@FXML
 	private TableView<IngrediantRow> ingrediantsTable;
-	
+
 	@FXML
 	private JFXComboBox<String> categorycombo;
 	@FXML
-    private TableColumn<OptionRow, TextField> pricecol;
+	private TableColumn<OptionRow, TextField> pricecol;
 	@FXML
 	private JFXComboBox<String> subcombo;
 	@FXML
@@ -117,6 +119,8 @@ public class CreatItems implements Initializable {
 
 	@FXML
 	private TextField AddDiff2;
+	@FXML
+	private Button uplodi;
 
 	@FXML
 	private Button back;
@@ -128,47 +132,44 @@ public class CreatItems implements Initializable {
 	private Button LogOut;
 	private SupplierFunction supplierfunction = new SupplierFunction();
 	// in next values put item_in_menu values you get
-
+	String photo;
 	item_in_menu iteminmenu;
 
 	private ArrayList<String> ingrediantslist = new ArrayList<String>();
 	private ArrayList<Options> optionslist = new ArrayList<Options>();
 
-    private Options [] optionalarry;
+	private Options[] optionalarry = new Options[6];
 	private ObservableList<String> categorylist = FXCollections.observableArrayList();
 	private ObservableList<String> subcategorylist = FXCollections.observableArrayList();
 	IngrediantRow inrow = new IngrediantRow(ingrediantsText);
-	OptionRow oprow = new OptionRow(categorytext, specifytext,pricetextop);
+	OptionRow oprow = new OptionRow(categorytext, specifytext, pricetextop);
 	Item itemtosave = new Item(null, null, 0, 0, null, 0, null, null, null, null, 0);
 
 	ObservableList<IngrediantRow> ingrediantRow = FXCollections.observableArrayList();
 	ObservableList<OptionRow> optionrow = FXCollections.observableArrayList();
 
 	void sendtoserver() {
-	
-		Request request=new Request();
+
+		Request request = new Request();
 		request.setPath("/restaurants/items");
 		request.setMethod("POST");
-		Gson gson=new Gson();
-	
+		Gson gson = new Gson();
+
 		request.setBody(gson.toJson(itemtosave));
 		ClientUI.chat.accept(gson.toJson(request));
-		
-		if(ChatClient.serverAns.getCode()!= 200 && ChatClient.serverAns.getCode()!= 201 ) {
-			
-			//Warning
+
+		if (ChatClient.serverAns.getCode() != 200 && ChatClient.serverAns.getCode() != 201) {
+
+			// Warning
 		}
-		
-		//Category [] categories=gson.fromJson((String)ChatClient.serverAns.getBody(),Category[].class );
-		
-		
+
+	
+
 	}
-	
-	
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 //		**** Category and sub part*****
 		categorycombo.setPromptText("pick a category");
@@ -183,16 +184,13 @@ public class CreatItems implements Initializable {
 		subcategorylist.add("Other");
 		subcombo.setItems(subcategorylist);
 
-		
-		
-		
 //		***** Ingredients part*******
 
 		ingrediantsadd.setVisible(true);
 		removeinbutton.setVisible(true);
 		ingrediantsText = new TextField();
 		ingrediantsText.setPrefWidth(namecol.getPrefWidth());
-		
+
 		ingrediantsText.setPrefHeight(ingrediantsadd.getPrefHeight());
 		ingrediantRow.add(new IngrediantRow(ingrediantsText));
 
@@ -217,41 +215,46 @@ public class CreatItems implements Initializable {
 		TextField catetext;
 		TextField spcitext2;
 		TextField pricetextop;
+
 		public OptionRow(TextField catetext, TextField spcitext2, TextField pricetextop) {
-			
+
 			this.catetext = catetext;
 			this.spcitext2 = spcitext2;
 			this.pricetextop = pricetextop;
 		}
+
 		public TextField getCatetext() {
 			return catetext;
 		}
+
 		public void setCatetext(TextField catetext) {
 			this.catetext = catetext;
 		}
+
 		public TextField getSpcitext2() {
 			return spcitext2;
 		}
+
 		public void setSpcitext2(TextField spcitext2) {
 			this.spcitext2 = spcitext2;
 		}
+
 		public TextField getPricetextop() {
 			return pricetextop;
 		}
+
 		public void setPricetextop(TextField pricetextop) {
 			this.pricetextop = pricetextop;
 		}
-	
 
 	}
 
 	public class IngrediantRow {
 
 		TextField text;
-		
 
 		public IngrediantRow(TextField text) {
-			
+
 			this.text = text;
 		}
 
@@ -259,37 +262,44 @@ public class CreatItems implements Initializable {
 			return text;
 		}
 
-		
 	}
 
 	@FXML
 
 	void CreatNewItem(ActionEvent creatitem) {
 
-		// until i now how to send to DB it will be in item i send
-
+		
+		itemtosave.setRestaurantID(SupplierController.resturant.getId());
 		itemtosave.setName(dishtext.getText());
 		itemtosave.setDescription(DescriptionText.getText());
 		itemtosave.setPrice(Float.valueOf(PriceText.getText()));
 
+		if (subcombo.getValue().equals("Other"))
+			itemtosave.setSubcategory(AddDiff2.getText());
+
+		if (categorycombo.getValue().equals("Other"))
+			itemtosave.setCategory(AddDiff.getText());
+		
 		String ingrediant = null;
 
 		for (int i = 0; i < ingrediantslist.size(); i++) {
 			ingrediant = ingrediantslist.get(i) + ",";
 		}
 		itemtosave.setIngrediants(ingrediant);
-		
-		optionalarry=(Options[]) optionslist.toArray();
-		
+
+		Options[] optionalarry = new Options[optionslist.size()];
+
+		optionslist.toArray(optionalarry);
+
 		itemtosave.setOptions(optionalarry);
 		sendtoserver();
-		//and send to database//
+		// and send to database//
 
 	}
 
 	@FXML
 	void RemoveIngrediants(ActionEvent action) {
-		// IngrediantRow rowtoremove=new IngrediantRow();
+
 
 		ObservableList<IngrediantRow> allrows, selectedrow;
 		allrows = ingrediantsTable.getItems();
@@ -312,7 +322,7 @@ public class CreatItems implements Initializable {
 		for (IngrediantRow row : allrows) {
 			if (row.text.getText() != "") {
 				row.text.setDisable(true);
-				
+
 			}
 		}
 
@@ -322,8 +332,6 @@ public class CreatItems implements Initializable {
 		IngrediantRow row = new IngrediantRow(newingr);
 		ingrediantsTable.getItems().add(row);
 
-
-
 	}
 
 	@FXML
@@ -331,12 +339,11 @@ public class CreatItems implements Initializable {
 
 		// to add item id in the new option
 
-		Options option = new Options(categorytext.getText(), specifytext.getText(),6.6, 8, false);
-		optionslist.add(option);
+	
 
 		ObservableList<OptionRow> allrows = OptionTable.getItems();
 		for (OptionRow row : allrows) {
-			if (row.catetext.getText() != "" && row.spcitext2.getText() != "" && row.pricetextop.getText()!="") {
+			if (row.catetext.getText() != "" && row.spcitext2.getText() != "" && row.pricetextop.getText() != "") {
 				row.catetext.setDisable(true);
 				row.spcitext2.setDisable(true);
 				row.pricetextop.setDisable(true);
@@ -350,13 +357,12 @@ public class CreatItems implements Initializable {
 		TextField newspec = new TextField();
 		newspec.setPrefWidth(specifytext.getPrefWidth());
 		newspec.setPrefHeight(specifytext.getPrefHeight());
-		
+
 		TextField newprice = new TextField();
 		newprice.setPrefWidth(specifytext.getPrefWidth());
 		newprice.setPrefHeight(specifytext.getPrefHeight());
-		
-		
-		OptionRow row = new OptionRow(newcat, newspec,newprice);
+
+		OptionRow row = new OptionRow(newcat, newspec, newprice);
 
 		OptionTable.getItems().add(row);
 
@@ -379,9 +385,11 @@ public class CreatItems implements Initializable {
 	@FXML
 	void categorypress(ActionEvent event) {
 		System.out.println(categorycombo.getValue());
+
 		if (categorycombo.getValue().equals("Other")) {
 			AddDiff.setVisible(true);
-			itemtosave.setCategory(AddDiff.getText());
+
+			System.out.println(AddDiff.getText());
 		} else {
 			itemtosave.setCategory(categorycombo.getValue());
 
@@ -392,20 +400,24 @@ public class CreatItems implements Initializable {
 	void subcategorypress(ActionEvent event) {
 		System.out.println(subcombo.getValue());
 		if (subcombo.getValue().equals("Other")) {
+
 			AddDiff2.setVisible(true);
-			itemtosave.setCategory(AddDiff2.getText());
+
+			System.out.println(AddDiff2.getText());
 		} else {
-			itemtosave.setCategory(subcombo.getValue());
+			itemtosave.setSubcategory(subcombo.getValue());
 
 		}
 	}
 
 	@FXML
 	void LogOut(ActionEvent action) {
+		supplierfunction.logout(action);
 	}
 
 	@FXML
 	void Home(ActionEvent action) {
+		supplierfunction.home(action);
 	}
 
 	@FXML
@@ -419,7 +431,7 @@ public class CreatItems implements Initializable {
 		Pane root;
 		try {
 			root = loader.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
-			// CreatAndEditMenuController creatitemcontrol=loader.getController();
+	
 
 			Scene scene = new Scene(root);
 
@@ -431,4 +443,27 @@ public class CreatItems implements Initializable {
 
 		}
 	}
+
+	@FXML
+	private ListView<String> listView = new ListView<String>();
+
+	@FXML
+	void selectFile(ActionEvent event) {
+
+		FileChooser fc = new FileChooser();
+		File selectedFile = fc.showOpenDialog(null);
+
+		if (selectedFile != null) {
+			photo = selectedFile.getName();
+			String path = selectedFile.getAbsolutePath();
+			itemtosave.setItemImage(new MyPhoto(path));
+
+			imageUtils.sender(itemtosave.getItemImage());
+
+			listView.getItems().add(selectedFile.getName());
+			itemtosave.setPhoto(photo);
+		} else
+			System.out.println("File is not valid");
+	}
+
 }

@@ -203,35 +203,18 @@ public class Navigation_SidePanelController extends Application implements Initi
 	}
 
 	private void initSidePanelHR() {
-		JFXButton[] buttons = new JFXButton[7];
-		buttons[0] = new JFXButton("Order food");
+		JFXButton[] buttons = new JFXButton[3];
+		buttons[0] = new JFXButton("approve");
 		buttons[0].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/gui/MainScreen.fxml", "Branch manager - Order food");
+			branchManagerFunctions.reload(e, "/supplier/BusinessApprove.fxml", "H.R manager - Approve Business");
 		});
-		buttons[1] = new JFXButton("Edit personal info");
+		buttons[1] = new JFXButton("employeebutton");
 		buttons[1].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/EditPersonalInfo.fxml",
-					"Branch manager - Edit Personal Info");
+			branchManagerFunctions.reload(e, "/supplier/EmployeeRegister.fxml",
+					"H.R manager - Employee Register page");
 		});
-		buttons[2] = new JFXButton("View reports");
+		buttons[2] = new JFXButton("Exit");
 		buttons[2].addEventHandler(ActionEvent.ACTION, (e) -> {
-			///////
-		});
-		buttons[3] = new JFXButton("Create new report");
-		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
-			//////
-		});
-		buttons[4] = new JFXButton("open account");
-		buttons[4].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
-		});
-		buttons[5] = new JFXButton("Registeration Restaurant");
-		buttons[5].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/RegisterationApprovalSupplier.fxml",
-					"Branch manager - registeration & Approval Supplier");
-		});
-		buttons[6] = new JFXButton("Exit");
-		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
 			branchManagerFunctions.exit(e);
 		});
 		vBoxManu.getChildren().addAll(buttons);

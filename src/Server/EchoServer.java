@@ -16,6 +16,7 @@ import common.Request;
 import common.Response;
 import logic.Account;
 import logic.BusinessAccount;
+import logic.Employer;
 import logic.Item;
 import logic.Menu;
 import logic.Order;
@@ -100,12 +101,12 @@ public class EchoServer extends AbstractServer {
 		case "/orders":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				int restaurantID = gson.fromJson(body.getAsJsonObject().get("restaurantID"), Integer.class);
 				OrderApiService.AllOrdersByRestaurantID(restaurantID, response);
 				break;
 			case POST:
-				Order addOrder = gson.fromJson((String) m.getBody(), Order.class);
+				Order addOrder = gson.fromJson((String)m.getBody(), Order.class);
 				OrderApiService.addOrder(addOrder, response);
 				break;
 			}
@@ -113,7 +114,7 @@ public class EchoServer extends AbstractServer {
 		case "/orders/paymentApproval/business":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				Float amountToPay = gson.fromJson(body.getAsJsonObject().get("amountToPay"), Float.class);
 				String businessName = gson.fromJson(body.getAsJsonObject().get("businessName"), String.class);
@@ -125,24 +126,34 @@ public class EchoServer extends AbstractServer {
 		case "/orders/getOrderById":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				int orderID = gson.fromJson(body.getAsJsonObject().get("orderId"), Integer.class);
 				OrderApiService.getOrderById(orderID, response);
 				break;
 			case PUT:
-				Order updateOrder = gson.fromJson((String) m.getBody(), Order.class);
+				Order updateOrder = gson.fromJson((String)m.getBody(), Order.class);
 				OrderApiService.updateOrder(updateOrder, response);
 				break;
 			case DELETE:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				orderID = gson.fromJson(body.getAsJsonObject().get("orderId"), Integer.class);
 				OrderApiService.deleteOrder(orderID, response);
+				break;
+			}
+			break;
+		case "/orders/getOrderByUserName":
+			switch (method) {
+			case GET:
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
+				String userName  = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
+				OrderApiService.getOrderByUserName(userName, response);
+				break;
 			}
 			break;
 		case "/orders/getOrderById/getItems":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				Integer orderID = gson.fromJson(body.getAsJsonObject().get("orderId"), Integer.class);
 				OrderApiService.getItemsByOrderID(orderID, response);
 				break;
@@ -154,56 +165,60 @@ public class EchoServer extends AbstractServer {
 		case "/branch_managers/restaurants/suppliers":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				int userID = gson.fromJson(body.getAsJsonObject().get("userID"), Integer.class);
 				Restaurant restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
-				BranchManagerApiService.registerSupplierModerator(userName, userID, "Supplier", restaurant, response);
+				BranchManagerApiService.registerSupplier(userName, userID, "Supplier", restaurant, response);
 				break;
 			}
 		case "/branch_managers/restaurants/moderators":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				int userID = gson.fromJson(body.getAsJsonObject().get("userID"), Integer.class);
 				Restaurant restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
-				BranchManagerApiService.registerSupplierModerator(userName, userID, "Moderator", restaurant, response);
+				String supplierUserName = gson.fromJson(body.getAsJsonObject().get("supplierUserName"), String.class);
+				BranchManagerApiService.registerModerator(userName, supplierUserName, userID, "Moderator", restaurant, response);
 				break;
 			}
 		case "/branch_managers/restaurants":
 			switch (method) {
 			case POST:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				Restaurant restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
 				JsonElement supplier = gson.fromJson(body.getAsJsonObject().get("supplier"), JsonElement.class);
 				if (supplier != null) {
 					String supplierUserName = gson.fromJson(supplier.getAsJsonObject().get("userName"), String.class);
 					int supplierUserID = gson.fromJson(supplier.getAsJsonObject().get("userID"), Integer.class);
-					BranchManagerApiService.registerSupplierModerator(supplierUserName, supplierUserID, "Supplier",
+					BranchManagerApiService.registerSupplier(supplierUserName, supplierUserID, "Supplier",
 							restaurant, response);
 				}
+				String supAndModResponse = response.getDescription() + "\n";
 				JsonElement moderator = gson.fromJson(body.getAsJsonObject().get("moderator"), JsonElement.class);
 				if (moderator != null) {
 					String moderatorUserName = gson.fromJson(moderator.getAsJsonObject().get("userName"), String.class);
 					int moderatorUserID = gson.fromJson(moderator.getAsJsonObject().get("userID"), Integer.class);
-					BranchManagerApiService.registerSupplierModerator(moderatorUserName, moderatorUserID, "Moderator",
+					String supplierUserName = gson.fromJson(moderator.getAsJsonObject().get("supplierUserName"), String.class);
+					BranchManagerApiService.registerModerator(moderatorUserName, supplierUserName, moderatorUserID,"Moderator", 
 							restaurant, response);
 				}
+				response.setDescription(supAndModResponse + response.getDescription());
 				break;
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				Integer branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
 				BranchManagerApiService.getBranchRestaurants(branchManagerID, response);
 				break;
 			case PUT:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
 				BranchManagerApiService.editRestaurant(userName, restaurant, response);
 				break;
 			case DELETE:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				restaurant = gson.fromJson(body.getAsJsonObject().get("restaurant"), Restaurant.class);
 				BranchManagerApiService.deleteRestaurant(userName, restaurant, response);
@@ -214,10 +229,14 @@ public class EchoServer extends AbstractServer {
 			break;
 		case "/branch_manager/employers":
 			switch (method) {
-			case POST:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
-				String businessName = gson.fromJson(body.getAsJsonObject().get("businessName"), String.class);
+			case GET:
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				int branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
+				BranchManagerApiService.getAllUnapprovedEmployer(branchManagerID, response);
+			case POST:
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
+				String businessName = gson.fromJson(body.getAsJsonObject().get("businessName"), String.class);
+				branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
 				BranchManagerApiService.approveEmployer(businessName, branchManagerID, response);
 				break;
 			}
@@ -225,7 +244,7 @@ public class EchoServer extends AbstractServer {
 		case "/restaurants/getCredit":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				Integer restaurantID = gson.fromJson(body.getAsJsonObject().get("restaurantID"), Integer.class);
 				String userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				RestaurantApiService.getCredit(userName, restaurantID, response);
@@ -235,7 +254,7 @@ public class EchoServer extends AbstractServer {
 		case "/restaurants/areas":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				String area = gson.fromJson(body.getAsJsonObject().get("area"), String.class);
 				RestaurantApiService.getRestaurantsByArea(area, response);
 				break;
@@ -244,7 +263,7 @@ public class EchoServer extends AbstractServer {
 		case "/restaurants/areas/type":
 			switch (method) {
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				String area = gson.fromJson(body.getAsJsonObject().get("area"), String.class);
 				String type = gson.fromJson(body.getAsJsonObject().get("type"), String.class);
 				RestaurantApiService.getRestaurantsByTypeAndArea(area, type, response);
@@ -254,22 +273,22 @@ public class EchoServer extends AbstractServer {
 		case "/restaurants/menus":
 			switch (method) {
 			case POST:
-				Menu menu = gson.fromJson((String) m.getBody(), Menu.class);
+				Menu menu = gson.fromJson((String)m.getBody(), Menu.class);
 				RestaurantApiService.createMenu(menu, response);
 				break;
 			case GET:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				Integer restaurantID = gson.fromJson(body.getAsJsonObject().get("restaurantID"), Integer.class);
 				RestaurantApiService.allMenues(restaurantID, response);
 				break;
 			case PUT:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				Menu oldMenu = gson.fromJson(body.getAsJsonObject().get("oldMenu"), Menu.class);
 				Menu newMenu = gson.fromJson(body.getAsJsonObject().get("newMenu"), Menu.class);
 				RestaurantApiService.editMenu(oldMenu, newMenu, response);
 				break;
 			case DELETE:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				String menuName = gson.fromJson(body.getAsJsonObject().get("menuName"), String.class);
 				restaurantID = gson.fromJson(body.getAsJsonObject().get("restaurantID"), Integer.class);
 				RestaurantApiService.deleteMenu(menuName, DEFAULT_PORT, response);
@@ -279,10 +298,11 @@ public class EchoServer extends AbstractServer {
 		case "/restaurants/items":
 			switch (method) {
 			case PUT:
-				Item item = gson.fromJson((String) m.getBody(), Item.class);
+				Item item = gson.fromJson((String)m.getBody(), Item.class);
 				RestaurantApiService.updateItem(item, response);
+				break;
 			case POST:
-				item = gson.fromJson((String) m.getBody(), Item.class);
+				item = gson.fromJson((String)m.getBody(), Item.class);
 				RestaurantApiService.createItem(item, response);
 				break;
 			case DELETE:
@@ -305,7 +325,7 @@ public class EchoServer extends AbstractServer {
 			body = gson.fromJson((String) m.getBody(), JsonElement.class);
 			int restaurantID = gson.fromJson(body.getAsJsonObject().get("restaurantID"), Integer.class);
 			String menuName = gson.fromJson(body.getAsJsonObject().get("menuName"), String.class);
-			RestaurantApiService.getItemsByMenu(restaurantID, menuName, response);
+			RestaurantApiService.getItemsByMenu(restaurantID, menuName,response);
 			break;
 		case "/restaurants/menus/getItemsByCategory":
 			body = gson.fromJson((String) m.getBody(), JsonElement.class);
@@ -320,7 +340,6 @@ public class EchoServer extends AbstractServer {
 			String itemSubCategory = gson.fromJson(body.getAsJsonObject().get("itemSubCategory "), String.class);
 			RestaurantApiService.getItemsBySubCategory(restaurantID, itemCategory, itemSubCategory, response);
 			break;
-
 		case "/restaurants/approveOrder":
 			switch (method) {
 			case POST:
@@ -390,16 +409,52 @@ public class EchoServer extends AbstractServer {
 		case "/accounts/getAccount":
 			switch (method) {
 			case GET:
-				Account account = gson.fromJson((String) m.getBody(), Account.class);
+				Account account = gson.fromJson((String)m.getBody(), Account.class);
 				AccountApiService.getAccount(account, response);
 				break;
 			case DELETE:
-				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				body = gson.fromJson((String)m.getBody(), JsonElement.class);
 				userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
 				AccountApiService.deleteAccount(userName, response);
 				break;
 			}
 			break;
+		case "/accounts/status":
+			switch (method) {
+			case PUT:
+				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
+				AccountApiService.updateStatus(userName, response);
+				break;
+			}
+			break;
+		case "/hr":
+			switch (method) {
+			case POST:
+				Employer employer = gson.fromJson((String) m.getBody(), Employer.class);
+				HrApiService.registerEmployer(employer, response);
+				break;
+			}
+			break;
+		case "/hr/approveBusinessAccount":
+			switch (method) {
+			case POST:
+				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				userName = gson.fromJson(body.getAsJsonObject().get("userName"), String.class);
+				HrApiService.approveBusinessAccount(userName, response);
+				break;
+			}
+			break;
+		case "/hr/businessAccount":
+			switch (method) {
+			case GET:
+				body = gson.fromJson((String) m.getBody(), JsonElement.class);
+				int branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
+				HrApiService.getAllUnapprovedBusinessAccount(branchManagerID, response);
+				break;
+			}
+			break;
+
 		default:
 			response.setCode(500);
 			response.setDescription("Bad request");

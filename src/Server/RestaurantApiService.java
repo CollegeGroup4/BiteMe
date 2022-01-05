@@ -321,19 +321,18 @@ public class RestaurantApiService {
 		int rowsUpdated;
 		try {
 			stmt = EchoServer.con
-					.prepareStatement("UPDATE biteme.item SET Category = ?, SubCategory = ?, Name = ?, Price = ?,"
+					.prepareStatement("UPDATE biteme.item SET Name = ?, Price = ?,"
 							+ "Ingredients = ?, Image = ?, Description = ?  WHERE ItemID = ?"
-							+ "AND RestaurantID = ?;");
-			stmt.setString(1, item.getCategory());
-			stmt.setString(2, item.getSubcategory());
-			stmt.setString(3, item.getName());
-			stmt.setFloat(4, item.getPrice());
-			stmt.setString(5, item.getIngrediants());
-			stmt.setString(6, item.getPhoto());
-			stmt.setString(7, item.getDescription());
-			stmt.setInt(8, item.getItemID());
-			stmt.setInt(9, item.getRestaurantID());
+							+ " AND RestaurantID = ?;");
+			stmt.setString(1, item.getName());
+			stmt.setFloat(2, item.getPrice());
+			stmt.setString(3, item.getIngrediants());
+			stmt.setString(4, item.getPhoto());
+			stmt.setString(5, item.getDescription());
+			stmt.setInt(6, item.getItemID());
+			stmt.setInt(7, item.getRestaurantID());
 			rowsUpdated = stmt.executeUpdate();
+
 			if (rowsUpdated == 0) {
 				throw new SQLException();
 			}
@@ -521,16 +520,20 @@ public class RestaurantApiService {
 			rs.next();
 			itemID = rs.getInt(1);
 			if (item.getOptions() != null) {
-				String sufix = item.getItemImage().getFileName().substring(item.getItemImage().getFileName().length()-4);
-				String imageFileName = "item_" + itemID + sufix;
+				if(item.getItemImage()!=null) {
+				String[] split = item.getItemImage().getFileName().split("\\.");
+				String sufix = split[split.length-1];
+
+				String imageFileName = "item_" + itemID + "."+ sufix;
 				item.getItemImage().setFileName(imageFileName);
 				imageUtils.receiver(item.getItemImage(), QueryConsts.FILE_PATH_ITEMS);
+				
 				postItem = EchoServer.con.prepareStatement(
 						"UPDATE biteme.item SET Image = ? WHERE ItemID = ?;");
 				postItem.setString(1, imageFileName);
 				postItem.setInt(2, itemID);
 				postItem.executeUpdate();
-				
+				}
 				for (Options temp : item.getOptions()) {
 					try { // just in case
 						postOptions = EchoServer.con.prepareStatement(

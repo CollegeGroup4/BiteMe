@@ -84,7 +84,7 @@
                </font>
             </Label>
             <Line endX="-1.0" layoutX="171.0" layoutY="171.0" startX="-100.0" />
-            <Button fx:id="creatitem" layoutX="666.0" layoutY="591.0" mnemonicParsing="false" onAction="#CreatNewItem" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Create new Item">
+            <Button fx:id="creatitem" layoutX="667.0" layoutY="591.0" mnemonicParsing="false" onAction="#CreatNewItem" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Create new Item">
                <font>
                   <Font name="System Bold Italic" size="18.0" />
                </font>
@@ -120,7 +120,7 @@
                   <Font name="System Bold Italic" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="OptionalRemove" layoutX="658.0" layoutY="525.0" mnemonicParsing="false" onAction="#RemoveOptional" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Remove Option">
+            <Button fx:id="OptionalRemove" layoutX="666.0" layoutY="525.0" mnemonicParsing="false" onAction="#RemoveOptional" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Remove Option">
                <font>
                   <Font name="System Bold Italic" size="18.0" />
                </font>
@@ -130,7 +130,12 @@
                   <Font name="System Bold Italic" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="removeinbutton" layoutX="698.0" layoutY="207.0" mnemonicParsing="false" onAction="#RemoveIngrediants" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Remove Option">
+            <Button fx:id="removeinbutton" layoutX="698.0" layoutY="207.0" mnemonicParsing="false" onAction="#RemoveIngrediants" prefHeight="35.0" prefWidth="158.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Remove Ingrediants">
+               <font>
+                  <Font name="System Bold Italic" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="uplodi" layoutX="483.0" layoutY="591.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Upload Image">
                <font>
                   <Font name="System Bold Italic" size="18.0" />
                </font>

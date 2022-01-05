@@ -54,8 +54,9 @@ public class HrApiService {
 		ArrayList<BusinessAccount> accs = new ArrayList<>();
 		try {
 			getAllBusinessAccount = EchoServer.con.prepareStatement(
-					"SELECT UserName biteme.account AS account WHERE EXISTS"
-					+ "(SELECT * FROM business_account AS business WHERE business.UserName = account.UserName AND account.BranchManagerID = ? AND business.isApproved = 0;");
+					"SELECT UserName FROM biteme.account AS account WHERE EXISTS (SELECT * FROM biteme.business_account"
+							+ " AS business WHERE business.UserName = account.UserName AND account.BranchManagerID = ? AND business.isApproved = 0);"
+);
 			getAllBusinessAccount.setInt(1, branchManagerID);
 			rs = getAllBusinessAccount.executeQuery();
 			while(rs.next()) {
@@ -96,5 +97,6 @@ public class HrApiService {
 		}
 
 		response.setDescription("Success in adding a new employer -> BusinessName: " + body.getBusinessName());
+		response.setCode(200);
 	}
 }

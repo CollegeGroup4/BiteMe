@@ -1,8 +1,12 @@
 package supplier;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import com.google.gson.Gson;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 
 import client.ChatClient;
 import client.ClientController;
@@ -11,6 +15,7 @@ import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,9 +24,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import logic.Employee;
 
-public class EmployeeRegisterController {
+import logic.Employer;
+
+public class EmployeeRegisterController implements Initializable {
 
     @FXML
     private Label dishname;
@@ -52,7 +58,15 @@ public class EmployeeRegisterController {
 
     @FXML
     private Button LogOut;
+    
+    @FXML
+    private JFXHamburger myHamburger;
 
+    @FXML
+    private JFXDrawer drawer;
+    
+    
+    private HRFunction HRF = new HRFunction();
     @FXML
     void Back(ActionEvent event) {
     	try {
@@ -70,17 +84,16 @@ public class EmployeeRegisterController {
 		}
 
     }
-    void sendtoserver(Employee employee) {
+    void sendtoserver(Employer employer) {
     	
-    	
-    	
-    	//// change to employee send
+    	System.out.println(employer.toString());
+    
 		Request request=new Request();
-		request.setPath("/restaurants/items"); ///// should be employee !!!
+		request.setPath("/hr"); 
 		request.setMethod("POST");
 		Gson gson=new Gson();
 	
-		request.setBody(gson.toJson(employee));
+		request.setBody(gson.toJson(employer));
 		ClientUI.chat.accept(gson.toJson(request));
 		
 		if(ChatClient.serverAns.getCode()!= 200 ||ChatClient.serverAns.getCode()!= 201 ) {
@@ -88,25 +101,25 @@ public class EmployeeRegisterController {
 			//Warning
 		}
 		
-		//Category [] categories=gson.fromJson((String)ChatClient.serverAns.getBody(),Category[].class );
+	
 		
 		
 	}
     @FXML
     void LogOut(ActionEvent event) {
-
+    	HRF.logout(event);
     }
 
     @FXML
     void createmployee(ActionEvent event) {
-    	Employee employee=new Employee (null, false, null, null, null);
+    	Employer employee=new Employer(null, false, null, null, 0);
     	
     	
     	employee.setApproved(false);
-    	employee.setBranchManagerUserName(BranchName.getText());
+    	employee.setBranchManagerID(HRPageController.Hmanger.getBranch_manager_ID());
     	employee.setBusinessName(BusinessNmaeText.getText());
-    	employee.setHrName(NameText.getText());
-    	employee.setHrUserName(UserText.getText());
+    	employee.setHrName(HRPageController.Hmanger.getFirstName());
+    	employee.setHrUserName(HRPageController.Hmanger.getUserName());
     	
     	System.out.println(employee.getBusinessName());
     	//*** and send to DB ***///
@@ -115,5 +128,13 @@ public class EmployeeRegisterController {
     	
     	
     }
+    
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		HRF.initializeNavigation_SidePanel(myHamburger, drawer);
+		UserText.setText(HRPageController.Hmanger.getUserName());
+		NameText.setText(HRPageController.Hmanger.getFirstName());
+		BranchName.setText(String.valueOf(HRPageController.Hmanger.getBranch_manager_ID()));
+	}
 
 }

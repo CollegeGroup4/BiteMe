@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
@@ -14,6 +16,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="supplier.ApproveOrderController">
    <children>
+      <JFXHamburger fx:id="myHamburger" layoutX="841.0" layoutY="41.0" />
+      <JFXDrawer fx:id="drawer" prefHeight="770.0" prefWidth="300.0" />
     <AnchorPane fx:id="Na1" layoutX="14.0" layoutY="96.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
             <TableView fx:id="OrdersTable" layoutX="95.0" layoutY="144.0" prefHeight="360.0" prefWidth="766.0">

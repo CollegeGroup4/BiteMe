@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
@@ -24,7 +26,7 @@
                   <TableColumn fx:id="Price" prefWidth="47.199951171875" text="Price" />
                   <TableColumn fx:id="Description" prefWidth="132.0" text="Description" />
                   <TableColumn fx:id="Ingrediants" prefWidth="93.0" text="Ingrediants" />
-                  <TableColumn fx:id="Options" prefWidth="82.0" text="Options" />
+                  
                   <TableColumn fx:id="category" prefWidth="129.0" text="Category" />
                   <TableColumn fx:id="subcategory" prefWidth="132.0" text="Subcategory" />
               </columns>
@@ -62,5 +64,7 @@
             </ImageView>
          </children>
       </HBox>
+      <JFXHamburger fx:id="myHamburger" layoutX="859.0" layoutY="41.0" />
+      <JFXDrawer fx:id="drawer" layoutX="2.0" layoutY="-1.0" prefHeight="770.0" prefWidth="300.0" />
     </children>
 </AnchorPane>

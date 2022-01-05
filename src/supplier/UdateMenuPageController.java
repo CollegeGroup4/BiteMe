@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import supplier.SupplierFunction;
 import java.util.ResourceBundle;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 
 import client.ChatClient;
 
@@ -37,6 +39,7 @@ import javafx.stage.Stage;
 import logic.Category;
 import logic.Item;
 import logic.Menu;
+import logic.Options;
 import logic.item_in_menu;
 
 public class UdateMenuPageController implements Initializable {
@@ -94,13 +97,17 @@ public class UdateMenuPageController implements Initializable {
 	private JFXButton details;
 	@FXML
 	private Label menuchosentext;
+	@FXML
+	private JFXHamburger myHamburger;
 
+	@FXML
+	private JFXDrawer drawer;
 	@FXML
 	private Button LogOut;
 
 	///// **** in menu and items put restaurant staff in pick menu function****
-
-	private Menu menu=new Menu(null, 0, null);
+	private SupplierFunction supplierfunction = new SupplierFunction();
+	private Menu menu = new Menu(null, 0, null);
 
 	private ObservableList<Item> ItemList = FXCollections.observableArrayList();
 	private ObservableList<String> ItemList1 = FXCollections.observableArrayList();
@@ -109,7 +116,7 @@ public class UdateMenuPageController implements Initializable {
 	private ObservableList<String> Menulist = FXCollections.observableArrayList();
 	private ObservableList<String> subcombolist1 = FXCollections.observableArrayList();
 	private Menu[] resturantmenu;
-	private item_in_menu tosave;
+	private item_in_menu tosave=new item_in_menu(0, 0, null, null) ;
 	private ArrayList<item_in_menu> itemstosave = new ArrayList<item_in_menu>();
 
 	@FXML
@@ -121,7 +128,7 @@ public class UdateMenuPageController implements Initializable {
 		Pane root;
 		try {
 			root = loader.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
-			// CreatAndEditMenuController creatitemcontrol=loader.getController();
+			
 
 			Scene scene = new Scene(root);
 
@@ -135,8 +142,13 @@ public class UdateMenuPageController implements Initializable {
 	}
 
 	@FXML
-	void LogOut(ActionEvent event) {
+	void Home(ActionEvent action) {
+		supplierfunction.home(action);
+	}
 
+	@FXML
+	void LogOut(ActionEvent event) {
+		supplierfunction.logout(event);
 	}
 
 	@FXML
@@ -146,7 +158,7 @@ public class UdateMenuPageController implements Initializable {
 
 		menu.setName(menulist.getValue());
 
-		// System.out.print(menu.getName());
+		
 
 	}
 
@@ -161,7 +173,7 @@ public class UdateMenuPageController implements Initializable {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID", 10);// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
 
 		body.getAsJsonObject().addProperty("itemCategory", TypeList.getValue());
 		body.getAsJsonObject().addProperty("itemSubCategory", CourseList.getValue());
@@ -187,7 +199,7 @@ public class UdateMenuPageController implements Initializable {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID", 10);// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());
 
 		body.getAsJsonObject().addProperty("itemCategory", TypeList.getValue());
 		request.setBody(gson.toJson(body));
@@ -212,7 +224,7 @@ public class UdateMenuPageController implements Initializable {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID", 10);// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantID", SupplierController.resturant.getId());
 
 		body.getAsJsonObject().addProperty("itemCategory", TypeList.getValue());
 		body.getAsJsonObject().addProperty("itemSubCategory", subcombo.getValue());
@@ -235,16 +247,15 @@ public class UdateMenuPageController implements Initializable {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 
-		body.getAsJsonObject().addProperty("restaurantID",10);// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantID",SupplierController.resturant.getId());
 
 		request.setBody(gson.toJson(body));
 		ClientUI.chat.accept(gson.toJson(request));
 
 		body = gson.fromJson((String) ChatClient.serverAns.getBody(), JsonElement.class);
-		resturantmenu=gson.fromJson(body.getAsJsonObject().get("menues"), Menu[].class);
-		Item [] items= gson.fromJson(body.getAsJsonObject().get("items"), Item[].class);///All items from restaurant 
+		resturantmenu = gson.fromJson(body.getAsJsonObject().get("menues"), Menu[].class);
+		Item[] items = gson.fromJson(body.getAsJsonObject().get("items"), Item[].class);/// All items from restaurant
 	}
-
 
 	@FXML
 	void addtomenu(ActionEvent action) {
@@ -254,10 +265,10 @@ public class UdateMenuPageController implements Initializable {
 
 		for (Item additem : Itemtoadd) {
 			Courselist1.add(additem);
-			// ItemList.remove(additem) ;///////// not needed
+			
 			Itemadd(additem);
 		}
-//		TableCourse.setItems(Courselist1);
+
 	}
 
 	void Itemadd(Item itemadd) {
@@ -304,7 +315,7 @@ public class UdateMenuPageController implements Initializable {
 		ObservableList<Item> ItemselectType, Itemselectcourse;
 		ItemselectType = TypeTable.getSelectionModel().getSelectedItems();
 		Itemselectcourse = TableCourse.getSelectionModel().getSelectedItems();
-//    	Allitems=TypeTable.getItems();
+
 		for (Item display : ItemselectType) {
 			NameLabel.setText(display.getName());
 
@@ -313,8 +324,7 @@ public class UdateMenuPageController implements Initializable {
 			NameLabel.setVisible(true);
 			descriptiontext.setText(display.getDescription());
 			descriptiontext.setVisible(true);
-//    		imageshow.setImage(display.getPhoto());
-//    		.setVisible(true);.setVisible(true);
+
 		}
 		for (Item display : Itemselectcourse) {
 			NameLabel.setText(display.getName());
@@ -324,28 +334,28 @@ public class UdateMenuPageController implements Initializable {
 			NameLabel.setVisible(true);
 			descriptiontext.setText(display.getDescription());
 			descriptiontext.setVisible(true);
-//    		imageshow.setImage(display.getPhoto());
-//    		.setVisible(true);.setVisible(true);
+
 		}
 
 	}
 
 	@FXML
 	void savemenu(ActionEvent event) {
+	
 
-		item_in_menu[] it = (item_in_menu[]) itemstosave.toArray();
+		item_in_menu[] it = new item_in_menu[itemstosave.size()];
+		itemstosave.toArray(it);
 		menu.setItems(it);
-//    	menu.setRestaurantID(this.resurantID);  !!!!!!  MY Restaurant ID from Nevagitinon controller!!!!!!!!
-		/// ****here i will save menu in DB *****///
+		menu.setRestaurantID(SupplierController.resturant.getId());
 		sendtoserver();
 	}
 
 	void sendtoserver() {
 
-		//// change to menu send
+	
 		Request request = new Request();
-		request.setPath("/restaurants/items");
-		request.setMethod("POST");
+		request.setPath("/restaurants/menus");
+		request.setMethod("PUT");
 		Gson gson = new Gson();
 
 		request.setBody(gson.toJson(menu));
@@ -356,34 +366,11 @@ public class UdateMenuPageController implements Initializable {
 			// Warning
 		}
 
-		// Category []
-		// categories=gson.fromJson((String)ChatClient.serverAns.getBody(),Category[].class
-		// );
+		
 
 	}
 
-//	void subcategoryset() {
-//
-//		Request request = new Request();
-//		request.setPath("/restaurants/items/categories");
-//		request.setMethod("GET");
-//		Gson gson = new Gson();
-//		JsonElement body = gson.toJsonTree(new Object());
-//
-//		/// if i want to send to DB
-//
-//		body.getAsJsonObject().addProperty("restaurantID", 2);// String 2 is the current restaurant ID (!!!)
-//
-//		request.setBody(gson.toJson(body));
-//		ClientController.accept(gson.toJson(request));
-//		Category[] categories = gson.fromJson((String) ChatClient.serverAns.getBody(), Category[].class);
-//		List<String> subcategory = null;
-//
-//		for (int i = 0; i < categories.length; i++) {
-//			subcategory.addAll(categories[i].getSubCategory());
-//		}
-//
-//	}
+
 
 	void categoryset() {
 		TypeList.setPromptText("enter");
@@ -398,7 +385,7 @@ public class UdateMenuPageController implements Initializable {
 
 		/// if i want to send to DB
 
-		body.getAsJsonObject().addProperty("restaurantNum", 10);// String 2 is the current restaurant ID (!!!)
+		body.getAsJsonObject().addProperty("restaurantNum", SupplierController.resturant.getId());// String 2 is the current restaurant ID (!!!)
 
 		request.setBody(gson.toJson(body));
 		System.out.println(gson.toJson(body));
@@ -413,7 +400,6 @@ public class UdateMenuPageController implements Initializable {
 
 		}
 
-		// System.out.println(subcategory);
 		TypeList.setItems(ItemList1);
 		subcombo.setItems(subcombolist1);
 		CourseList.setItems(subcombolist1);
@@ -422,46 +408,30 @@ public class UdateMenuPageController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		getmenus();
-		// in here only insert to TypeList and CourseList by the category from DB //
-		for(Menu menu : resturantmenu) {
 		
-		Menulist.add(menu.getName());
+		for (Menu menu : resturantmenu) {
+
+			Menulist.add(menu.getName());
 		}
-		
-		
+
 		menulist.setItems(Menulist);
-//		menulist.setPromptText("choose menu");
-//		Menulist.add("night menu "); /// here will enter all menu of restaurant from DB
-//		Menulist.add("Lanch");
-//		Menulist.add("Specials");
-//		menulist.setItems(Menulist);
+		
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
+		if(SupplierController.supplier.getRole().equals("Moderator")) {
+			myHamburger.setDisable(true);
+			drawer.setDisable(true);
+		}
+	
 
-//		TypeList.setPromptText("enter");
-//		ItemList.add(new Item("Cordi", null, 0, 0, "Kobana", 0, "not a drink", null, null, null, 0));
-//		ItemList.add(new Item("Askanzi", null, 0, 0, "Poyka", 0, "dont put cola", null, null, null, 0));
-//		ItemList1.add("Cordi");
-//		ItemList1.add("Askanzi");
-//		TypeList.setItems(ItemList1);
-
-//		subcombo.setPromptText("Choose Subcategory");
-//		subcombolist1.add("Pasta");
-//		subcombolist1.add("Salt");
-//		subcombo.setItems(subcombolist1);
-
-		categoryset(); /// here will be the left combo set all the above not needed
-
-		// All of Table stuff will be in on mouse action of the two picks in Combobox
-		// ////
-
-		// in add and remove we will change the table /////////
+		categoryset(); 
+		
 
 		NameTableColum1.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		TypeColum1.setCellValueFactory(new PropertyValueFactory<Item, String>("category"));
 		TypeTable.setItems(ItemList);
 
 		CourseList.setPromptText("pick a Course");
-		Courselist.add("First Course");
-		Courselist.add("Main Course");
+		
 		CourseList.setItems(Courselist);
 
 		Courselist1.add(new Item("italina", null, 0, 0, "pizza", 0, null, null, null, null, 0));

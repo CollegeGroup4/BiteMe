@@ -1,5 +1,6 @@
 package supplier;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ import com.jfoenix.controls.JFXHamburger;
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
+import common.MyPhoto;
 import common.Request;
+import common.imageUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,7 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -37,7 +40,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import logic.Category;
 import logic.Item;
@@ -96,11 +99,8 @@ public class UpdateItem implements Initializable {
 	private TableView<IngrediantRow> ingrediantsTable;
 
 	@FXML
-	private JFXComboBox<String> categorycombo;
-	@FXML
 	private TableColumn<OptionRow, TextField> pricecol;
-	@FXML
-	private JFXComboBox<String> subcombo;
+
 	@FXML
 	private TableView<OptionRow> OptionTable;
 
@@ -123,7 +123,8 @@ public class UpdateItem implements Initializable {
 	private Button LogOut;
 	@FXML
 	private JFXHamburger myHamburger;
-
+	@FXML
+	private Button uploadi;
 	@FXML
 	private JFXDrawer drawer;
 	private SupplierFunction supplierfunction = new SupplierFunction();
@@ -135,8 +136,7 @@ public class UpdateItem implements Initializable {
 	private ArrayList<Options> optionslist = new ArrayList<Options>();
 
 	private Options[] optionalarry;
-	private ObservableList<String> categorylist = FXCollections.observableArrayList();
-	private ObservableList<String> subcategorylist = FXCollections.observableArrayList();
+
 	IngrediantRow inrow = new IngrediantRow(ingrediantsText);
 	OptionRow oprow = new OptionRow(categorytext, specifytext, pricetextop);
 	Item itemtosave = new Item(null, null, 0, 0, null, 0, null, null, null, null, 0);
@@ -148,7 +148,7 @@ public class UpdateItem implements Initializable {
 
 		Request request = new Request();
 		request.setPath("/restaurants/items");
-		request.setMethod("POST");
+		request.setMethod("PUT");
 		Gson gson = new Gson();
 
 		request.setBody(gson.toJson(itemtosave));
@@ -159,44 +159,25 @@ public class UpdateItem implements Initializable {
 			// Warning
 		}
 
-		// Category []
-		// categories=gson.fromJson((String)ChatClient.serverAns.getBody(),Category[].class
-		// );
-
+		
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
-		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
-		System.out.println(UpdateItemTable.updateItem);
-//		**** Category and sub part*****
 
-// will be from DB !!!!!!!!		
-//		categorycombo.setPromptText("pick a category");
-//		categorylist.add("Brazilian");
-//		categorylist.add("French");
-//		categorylist.add("Other");
-//		categorycombo.setItems(categorylist);
-//
-//		subcombo.setPromptText("pick a subcategory");
-//		subcategorylist.add("Pasta");
-//		subcategorylist.add("Salt");
-//		subcategorylist.add("Other");
-//		subcombo.setItems(subcategorylist);
-// UNTIL HERE
+		AddDiff.setText(UpdateItemTable.updateItem.getCategory());
+		AddDiff2.setText(UpdateItemTable.updateItem.getSubcategory());
+
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
+
+		itemtosave.setItemID(UpdateItemTable.updateItem.getItemID());
+
+		itemtosave.setCategory(UpdateItemTable.updateItem.getCategory());
+		itemtosave.setSubcategory(UpdateItemTable.updateItem.getSubcategory());
 
 		DescriptionText.setText(UpdateItemTable.updateItem.getDescription());
 		dishtext.setText(UpdateItemTable.updateItem.getName());
 		PriceText.setText(String.valueOf(UpdateItemTable.updateItem.getName()));
-
-		categorylist.add(UpdateItemTable.updateItem.getCategory());
-		categorylist.add("Other");
-		categorycombo.setItems(categorylist);
-
-		subcategorylist.add(UpdateItemTable.updateItem.getSubcategory());
-		subcategorylist.add("Other");
-		subcombo.setItems(subcategorylist);
 
 //		***** Ingredients part*******
 
@@ -219,7 +200,8 @@ public class UpdateItem implements Initializable {
 
 		ingrediantsTable.setItems(ingrediantRow);
 
-//		***** Option part*******		
+//		***** Option part*******	
+		
 		categorytext = new TextField();
 		specifytext = new TextField();
 		categorytext.setPrefWidth(CategoryCol.getPrefWidth());
@@ -306,8 +288,8 @@ public class UpdateItem implements Initializable {
 
 	void CreatNewItem(ActionEvent creatitem) {
 
-		// until i now how to send to DB it will be in item i send
-
+		
+		itemtosave.setRestaurantID(SupplierController.resturant.getId());
 		itemtosave.setName(dishtext.getText());
 		itemtosave.setDescription(DescriptionText.getText());
 		itemtosave.setPrice(Float.valueOf(PriceText.getText()));
@@ -318,8 +300,9 @@ public class UpdateItem implements Initializable {
 			ingrediant = ingrediantslist.get(i) + ",";
 		}
 		itemtosave.setIngrediants(ingrediant);
+		Options[] optionalarry = new Options[optionslist.size()];
 
-		optionalarry = (Options[]) optionslist.toArray();
+		optionslist.toArray(optionalarry);
 
 		itemtosave.setOptions(optionalarry);
 		sendtoserver();
@@ -329,7 +312,7 @@ public class UpdateItem implements Initializable {
 
 	@FXML
 	void RemoveIngrediants(ActionEvent action) {
-		// IngrediantRow rowtoremove=new IngrediantRow();
+	
 
 		ObservableList<IngrediantRow> allrows, selectedrow;
 		allrows = ingrediantsTable.getItems();
@@ -368,9 +351,6 @@ public class UpdateItem implements Initializable {
 	void AddOptional(ActionEvent action) {
 
 		// to add item id in the new option
-
-		Options option = new Options(categorytext.getText(), specifytext.getText(), 6.6, 8, false);
-		optionslist.add(option);
 
 		ObservableList<OptionRow> allrows = OptionTable.getItems();
 		for (OptionRow row : allrows) {
@@ -414,35 +394,36 @@ public class UpdateItem implements Initializable {
 	}
 
 	@FXML
-	void categorypress(ActionEvent event) {
-		System.out.println(categorycombo.getValue());
-		if (categorycombo.getValue().equals("Other")) {
-			AddDiff.setVisible(true);
-			itemtosave.setCategory(AddDiff.getText());
-		} else {
-			itemtosave.setCategory(categorycombo.getValue());
-
-		}
-	}
-
-	@FXML
-	void subcategorypress(ActionEvent event) {
-		System.out.println(subcombo.getValue());
-		if (subcombo.getValue().equals("Other")) {
-			AddDiff2.setVisible(true);
-			itemtosave.setCategory(AddDiff2.getText());
-		} else {
-			itemtosave.setCategory(subcombo.getValue());
-
-		}
-	}
-
-	@FXML
 	void LogOut(ActionEvent action) {
+		supplierfunction.logout(action);
 	}
 
 	@FXML
 	void Home(ActionEvent action) {
+		supplierfunction.home(action);
+	}
+
+	private String photo;
+	@FXML
+	private ListView<String> listView;
+
+	@FXML
+	void selectFile(ActionEvent event) {
+
+		FileChooser fc = new FileChooser();
+		File selectedFile = fc.showOpenDialog(null);
+
+		if (selectedFile != null) {
+			photo = selectedFile.getName();
+			String path = selectedFile.getAbsolutePath();
+			itemtosave.setItemImage(new MyPhoto(path));
+
+			imageUtils.sender(itemtosave.getItemImage());
+
+			listView.getItems().add(selectedFile.getName());
+			itemtosave.setPhoto(photo);
+		} else
+			System.out.println("File is not valid");
 	}
 
 	@FXML
@@ -456,7 +437,7 @@ public class UpdateItem implements Initializable {
 		Pane root;
 		try {
 			root = loader.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
-			// CreatAndEditMenuController creatitemcontrol=loader.getController();
+			
 
 			Scene scene = new Scene(root);
 
