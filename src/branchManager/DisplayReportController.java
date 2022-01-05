@@ -63,14 +63,12 @@ public class DisplayReportController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		HBox itemInLine = new HBox(5);
 		for (int i = 0; i < ViewReportsController.reports.length; i++) {
-			HBox itemInLine = new HBox(5);
 			String projectPath = System.getProperty("user.dir");
 			System.out.println(ViewReportsController.reports[i].getFileName());
 			try {
 				System.out.println(projectPath + "\\" + ViewReportsController.reports[i].getFileName());
-				if (i == 0) {
 					InputStream stream;
 					stream = new FileInputStream(projectPath + "\\" + ViewReportsController.reports[i].getFileName());
 					Image logo = new Image(stream);
@@ -80,17 +78,6 @@ public class DisplayReportController implements Initializable {
 					logoImage.setFitHeight(350);
 					itemInLine.getChildren().addAll(logoImage);
 					itemInLine.setSpacing(30);
-				} else {
-					InputStream stream;
-					stream = new FileInputStream(projectPath + "\\" + ViewReportsController.reports[i].getFileName());
-					Image logo = new Image(stream);
-					ImageView logoImage = new ImageView();
-					logoImage.setImage(logo);
-					logoImage.setFitWidth(680);
-					logoImage.setFitHeight(350);
-					itemInLine.getChildren().addAll(logoImage);
-					itemInLine.setSpacing(30);
-				}
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

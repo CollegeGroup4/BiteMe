@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -774,5 +775,57 @@ public class RestaurantApiService {
 		JsonElement setCredit = EchoServer.gson.toJsonTree(new Object());
 		setCredit.getAsJsonObject().addProperty("credit", sendCredit);
 		response.setBody(EchoServer.gson.toJson(setCredit));
+	}
+	
+	/**
+	 * Get commission for each restaurant
+	 *
+	 * 
+	 *
+	 */
+	public static void getCommissionForRestaurant() {
+		ResultSet rs;
+		PreparedStatement getRestaurants, getOrders;
+		ArrayList<Integer> res = new ArrayList<>();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter month = DateTimeFormatter.ofPattern("MM");
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime orderTime;
+		double totalIncome;
+		try {
+			getRestaurants = EchoServer.con.prepareStatement("SELECT RestaurantNum FROM biteme.restaurant;");
+			rs = getRestaurants.executeQuery();
+			while (rs.next())
+				res.add(rs.getInt(1));
+			rs.close();
+			for (int i : res) {
+				totalIncome=0;
+				getOrders = EchoServer.con
+						.prepareStatement("SELECT OrderTime, Check_out_price FROM biteme.order WHERE RestaurantID = ?");
+				getOrders.setInt(1, i);
+				rs = getOrders.executeQuery();
+				while(rs.next()) {
+					orderTime = LocalDateTime.parse(rs.getString(1), formatter);
+					if(now.minus(1,ChronoUnit.MONTHS).format(month).equals(orderTime.format(month))) {
+						totalIncome+=rs.getDouble(2);
+					}
+				}
+				totalIncome-=totalIncome*0.93;
+				getOrders = EchoServer.con
+						.prepareStatement("SELECT a.Email biteme.account AS a WHERE a.UserName IN (SELECT UserName FROM bitme.restaurant"
+								+ " WHERE RestaurantNum = ? AND a.UserName = UserName);");
+				getOrders.setInt(1, i);
+				rs = getOrders.executeQuery();
+				try {
+					OrderApiService.sendMail(rs.getString(1), "Fee for order via BiteMe system", "<div><h2>Total sales"
+							+ " "+Double.toString(totalIncome/0.93)+" Fee to pay is " + Double.toString((totalIncome/0.93)- totalIncome)
+							+" Total Income: " +totalIncome+ "</h2></div>");
+				} catch (Exception e) {
+				}
+			}
+		} catch (SQLException e) {
+
+		}
+
 	}
 }

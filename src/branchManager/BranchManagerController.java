@@ -3,7 +3,12 @@ package branchManager;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
+import client.ClientUI;
 import client.CustomerPageController;
+import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -89,7 +94,16 @@ public class BranchManagerController implements Initializable {
 	 */
 	@FXML
 	void createReports(ActionEvent event) {
-//		branchManagerFunctions.reload(event, "/branchManager/ViewReports.fxml", "Branch Manager - View Report");
+		Request req = new Request();
+		req.setPath("/branch_manager/pdf");
+		Gson gson = new Gson();
+		JsonElement j = gson.toJsonTree(new Object());
+		j.getAsJsonObject().addProperty("branchManagerID", branchManager.getUserID());
+		String jsonUser = gson.toJson(req);
+		try {
+			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+		} catch (NullPointerException e) {
+		}
 	}
 
 	/**

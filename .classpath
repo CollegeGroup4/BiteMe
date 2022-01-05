@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="gson-2.8.9.jar"/>
 	<classpathentry kind="lib" path="jfreechart-1.5.3.jar"/>
 	<classpathentry kind="lib" path="javax.mail.jar"/>
+	<classpathentry kind="lib" path="lib/aspose-pdf-21.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

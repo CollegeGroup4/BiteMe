@@ -78,22 +78,8 @@ public class ViewReportsController implements Initializable {
 		oneReportNext.setVisible(false);
 		twoReportNext.setVisible(false);
 
-		comboBoxbranch.getItems().setAll("north", "south", "center");
-		comboBoxbranch.setValue("north");
-		comboBoxFBranch.getItems().setAll("north", "south", "center");
-		comboBoxFBranch.setValue("north");
-		comboBoxSBranch.getItems().setAll("north", "south", "center");
-		comboBoxSBranch.setValue("north");
-		
-		comboBoxFQuarter.getItems().setAll("I", "II", "III", "IV");
-		comboBoxFQuarter.setValue("I");
-		comboBoxSQuarter.getItems().setAll("I", "II", "III", "IV");
-		comboBoxSQuarter.setValue("I");
-		
-		comboBoxSBranchYearFirst.getItems().setAll("2022","2021","2020","2019");
-		comboBoxSBranchYearFirst.setValue("2022");
-		comboBoxSBranchYearSecond.getItems().setAll("2022","2021","2020","2019");
-		comboBoxSBranchYearSecond.setValue("2022");
+		comboBoxbranch.getItems().setAll("Performance", "Items", "Sales");
+		comboBoxbranch.setValue("Performance");
 
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
@@ -121,52 +107,13 @@ public class ViewReportsController implements Initializable {
 
 	@FXML
 	void ViewTwoReport(ActionEvent event) { // button view
-		String firstQuarter = comboBoxFQuarter.getValue();
-		firstQuarter = firstQuarter == null ? "I" : firstQuarter;
-		String secondQuarter = comboBoxSQuarter.getValue();
-		secondQuarter = secondQuarter == null ? "I" : secondQuarter;
-		String firstBranch = comboBoxbranch.getValue();
-		firstBranch = firstBranch == null ? "North" : firstBranch;
 		String secondBranch = comboBoxbranch.getValue(); // it myte be null because the second branch is optional
 		Gson gson = new Gson();
 		JsonElement j = ChatClient.gson.toJsonTree(new Object());
-		int fQuarter = 1, secQuarter = 1;
-		switch (firstQuarter) {
-		case "I":
-			fQuarter = 1;
-			break;
-		case "II":
-			fQuarter = 2;
-			break;
-		case "III":
-			fQuarter = 3;
-			break;
-		case "IV":
-			fQuarter = 4;
-			break;
-		}
-		switch (secondQuarter) {
-		case "I":
-			secQuarter = 1;
-			break;
-		case "II":
-			secQuarter = 2;
-			break;
-		case "III":
-			secQuarter = 3;
-			break;
-		case "IV":
-			secQuarter = 4;
-			break;
-		}
-		j.getAsJsonObject().addProperty("quarterNumFirst", fQuarter);
-		j.getAsJsonObject().addProperty("areaFirst", comboBoxFBranch.getValue());
-		j.getAsJsonObject().addProperty("yearFirst", comboBoxSBranchYearFirst.getValue());
-		j.getAsJsonObject().addProperty("quarterNumSecond", fQuarter);
-		j.getAsJsonObject().addProperty("areaSecond", comboBoxSBranch.getValue());
-		j.getAsJsonObject().addProperty("yearSecond", comboBoxSBranchYearSecond.getValue());
+		j.getAsJsonObject().addProperty("branchManagerID", BranchManagerController.branchManager.getUserID());
+		j.getAsJsonObject().addProperty("type", comboBoxbranch.getValue());
 		Request req = new Request();
-		req.setPath("/ceo/twoQuarterReports");
+		req.setPath("/branch_manager/reports");
 		req.setMethod("GET");
 		req.setBody(gson.toJson(j));
 		try {

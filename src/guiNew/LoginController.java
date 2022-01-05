@@ -209,7 +209,15 @@ public class LoginController {
 
 	@FXML
 	void ImportData(ActionEvent event) {
-//TODO - !
+		Request req = new Request();
+		req.setPath("/import");
+		Gson gson = new Gson();
+		String jsonUser = gson.toJson(req);
+		try {
+			ClientUI.chat.accept(jsonUser); // in here will be DB ask for restaurant id
+		} catch (NullPointerException e) {
+			System.out.println("Exit - new ClientController didn't work");
+		}
 	}
 
 	@FXML
