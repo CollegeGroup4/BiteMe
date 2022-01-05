@@ -45,6 +45,19 @@ import logic.BusinessAccount;
 import logic.PrivateAccount;
 import logic.Restaurant;
 
+/**
+ * This class is for the branch manager main page.
+ * From here you can get to all the functionality of the branch manager
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
+
 public class EditPersonalInfoController implements Initializable {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 

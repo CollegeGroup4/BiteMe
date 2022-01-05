@@ -26,6 +26,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import logic.Account;
 
+/**
+ * This class is for the branch manager main page. From here you can get to all
+ * the functionality of the branch manager
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
+
 public class BranchManagerFunctions {
 
 	/**
@@ -33,7 +46,7 @@ public class BranchManagerFunctions {
 	 * 
 	 * @param event
 	 * @param resource
-	 * @param title - title of the page
+	 * @param title    - title of the page
 	 */
 	public void reload(ActionEvent event, String resource, String title) {
 		try {
@@ -51,6 +64,14 @@ public class BranchManagerFunctions {
 		}
 	}
 
+	/**
+	 * A generic method that sends to a server based on the information it receives
+	 * 
+	 * @param String path
+	 * @param String method 
+	 * @param Object body
+	 * @param String errorMsg
+	 */
 	public void sentToJson(String path, String method, Object body, String errorMsg) {
 		Gson gson = new Gson();
 		Request request = new Request();
@@ -68,7 +89,7 @@ public class BranchManagerFunctions {
 	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
 		try {
 			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-			
+
 			drawer.setSidePane(anchorPane);
 		} catch (IOException e) {
 			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);

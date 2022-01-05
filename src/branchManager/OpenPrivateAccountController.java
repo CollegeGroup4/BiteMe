@@ -34,6 +34,19 @@ import logic.Account;
 import logic.BusinessAccount;
 import logic.PrivateAccount;
 
+/**
+ * This class is for the branch manager main page.
+ * From here you can get to all the functionality of the branch manager
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
+
 public class OpenPrivateAccountController implements Initializable {
 	public static Boolean isEdit = false;
 	public static PrivateAccount privateAccount;

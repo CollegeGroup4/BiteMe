@@ -23,28 +23,27 @@ import logic.Restaurant;
  *
  */
 public class AccountApiService {
-	
+
 	/**
 	 * Create Private Account
 	 *
 	 * This can only be done by the logged in Account.
 	 *
-	 *///TODO
+	 */// TODO
 	public static void importSuper(Response response) {
 		try {
-			PreparedStatement postAccount = EchoServer.con
-					.prepareStatement("INSERT INTO biteme.account "
-							+ "SELECT * FROM users.account WHERE UserName not in (SELECT UserName FROM biteme.account);");
+			PreparedStatement postAccount = EchoServer.con.prepareStatement("INSERT INTO biteme.account "
+					+ "SELECT * FROM users.account WHERE UserName not in (SELECT UserName FROM biteme.account);");
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
-				response.setCode(400);
-				response.setDescription("Fail importing from UsersManagement");
+			response.setCode(400);
+			response.setDescription("Fail importing from UsersManagement");
 			return;
 		}
 		response.setCode(200);
 		response.setDescription("Success in importing from UsersManagement");
 	}
-	
+
 	/**
 	 * Create Private Account
 	 *
@@ -54,9 +53,8 @@ public class AccountApiService {
 	public static void createPrivateAccount(PrivateAccount account, Response response) {
 		PreparedStatement postAccount;
 		try {
-			postAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active', "
-							+ "BranchManagerID = ?, Area = ? WHERE UserName = ?;");
+			postAccount = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active', "
+					+ "BranchManagerID = ?, Area = ? WHERE UserName = ?;");
 			if (!account.getRole().equals("Not Assigned"))
 				postAccount.setString(1, account.getRole());
 			else
@@ -65,10 +63,11 @@ public class AccountApiService {
 			postAccount.setString(3, account.getArea());
 			postAccount.setString(4, account.getUserName());
 			postAccount.executeUpdate();
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			response.setCode(400);
 			response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
-		}try {
+		}
+		try {
 			postAccount = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.private_account (UserName, CreditCardNumber, CreditCardCVV, CreditCardExp, W4C) "
 							+ "VALUES(?,?,?,?,?)");
@@ -82,8 +81,7 @@ public class AccountApiService {
 			if (e.getErrorCode() == 1062) {
 				response.setCode(400);
 				response.setDescription("Fail! Private account already exist -> userName: " + account.getUserName());
-			}
-			else {
+			} else {
 				response.setCode(400);
 				response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
 			}
@@ -108,8 +106,9 @@ public class AccountApiService {
 			isBusinessApproved.setString(1, account.getBusinessName());
 			rs = isBusinessApproved.executeQuery();
 			if (!rs.next())
-				throw new SQLException("Business " + account.getBusinessName() + " is not found in Employers or is not approved", "404",
-						404);
+				throw new SQLException(
+						"Business " + account.getBusinessName() + " is not found in Employers or is not approved",
+						"404", 404);
 
 		} catch (SQLException e) {
 			response.setDescription(e.getMessage());
@@ -117,24 +116,22 @@ public class AccountApiService {
 			return;
 		}
 		try {
-			postAccount = EchoServer.con
-					.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active',"
-							+ "BranchManagerID = ? , Area = ? , isBusiness = ? WHERE UserName = ?;");
-			if (!account.getRole().equals("Not Assigned"))
-				postAccount.setString(1, account.getRole());
-			else
+			postAccount = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ?, Status = 'active',"
+					+ "BranchManagerID = ? , Area = ? , isBusiness = ? WHERE UserName = ?;");
+			if (account.getRole().equals("Not Assigned"))
 				postAccount.setString(1, "Client");
+			else
+				postAccount.setString(1, account.getRole());
 			postAccount.setInt(2, account.getBranch_manager_ID());
 			postAccount.setString(3, account.getArea());
 			postAccount.setBoolean(4, true);
 			postAccount.setString(5, account.getUserName());
 			postAccount.executeUpdate();
 		} catch (SQLException e) {
-			if(e.getErrorCode() == 404) {
+			if (e.getErrorCode() == 404) {
 				response.setDescription(e.getMessage());
 				response.setCode(404);
-			}
-			else {
+			} else {
 				response.setCode(400);
 				response.setDescription("Fail! Couldn't create private account -> userName: " + account.getUserName());
 			}
@@ -154,7 +151,8 @@ public class AccountApiService {
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
 				response.setCode(400);
-				response.setDescription("Fail!  Couldn't create Business account -> userName: " + account.getUserName());
+				response.setDescription(
+						"Fail!  Couldn't create Business account -> userName: " + account.getUserName());
 			}
 			return;
 		}
@@ -201,7 +199,7 @@ public class AccountApiService {
 			if (rs.next()) {
 				if (rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS)) {
 					deleteQuery("biteme.business_account", userName);
- 
+
 				} else {
 					if (rs.getString(QueryConsts.ACCOUNT_ROLE).equals("Supplier")) {
 						// get the supplier restaurant ID
@@ -264,7 +262,8 @@ public class AccountApiService {
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in fetching accounts -> branchManagerID: " + Integer.toString(branch_manager_id));
+		response.setDescription(
+				"Success in fetching accounts -> branchManagerID: " + Integer.toString(branch_manager_id));
 		response.setBody(EchoServer.gson.toJson(accounts.toArray()));
 	}
 
@@ -297,54 +296,55 @@ public class AccountApiService {
 					body.getAsJsonObject().add("businessAccount", temp);
 				}
 			}
-				getAccount = EchoServer.con
-						.prepareStatement("SELECT * FROM biteme.private_account WHERE UserName = ?;");
+			getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.private_account WHERE UserName = ?;");
+			getAccount.setString(1, account.getUserName());
+			rs = getAccount.executeQuery();
+			if (rs.next()) {
+				temp = EchoServer.gson.toJsonTree(new PrivateAccount(account.getUserID(), account.getUserName(),
+						account.getPassword(), account.getFirstName(), account.getLastName(), account.getEmail(),
+						account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(),
+						account.getBranch_manager_ID(), account.getArea(), account.getDebt(),
+						rs.getString(QueryConsts.PRIVATE_ACCOUNT_W4C),
+						rs.getString(QueryConsts.PRIVATE_ACCOUNT_CREDIT_CARD_NUMBER),
+						rs.getString(QueryConsts.PRIVATE_ACCOUNT_CREDIT_CARD_CVV),
+						rs.getString(QueryConsts.PRIVATE_ACCOUNT_CREDIT_CARD_EXP)));
+				body.getAsJsonObject().add("privateAccount", temp);
+			}
+			if (account.getRole().equals("Supplier")) {
+				getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE UserName = ?;");
 				getAccount.setString(1, account.getUserName());
 				rs = getAccount.executeQuery();
 				if (rs.next()) {
-					temp = EchoServer.gson.toJsonTree(new PrivateAccount(account.getUserID(), account.getUserName(),
-							account.getPassword(), account.getFirstName(), account.getLastName(), account.getEmail(),
-							account.getRole(), account.getPhone(), account.getStatus(), account.isBusiness(),
-							account.getBranch_manager_ID(), account.getArea(), account.getDebt(),
-							rs.getString(QueryConsts.PRIVATE_ACCOUNT_W4C),
-							rs.getString(QueryConsts.PRIVATE_ACCOUNT_CREDIT_CARD_NUMBER),
-							rs.getString(QueryConsts.PRIVATE_ACCOUNT_CREDIT_CARD_CVV),
-							rs.getString(QueryConsts.PRIVATE_ACCOUNT_CREDIT_CARD_EXP)));
-					body.getAsJsonObject().add("privateAccount", temp);
+					temp = EchoServer.gson.toJsonTree(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
+							rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
+							rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),
+							rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.RESTAURANT_AREA),
+							rs.getString(QueryConsts.RESTAURANT_TYPE), account.getUserName(),
+							rs.getString(QueryConsts.RESTAURANT_PHOTO), rs.getString(QueryConsts.RESTAURANT_ADDRESS),
+							rs.getString(QueryConsts.RESTAURANT_DESCRIPTION)));
+					body.getAsJsonObject().add("restaurant", temp);
 				}
-				if (account.getRole().equals("Supplier")) {
-					getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE UserName = ?;");
-					getAccount.setString(1, account.getUserName());
-					rs = getAccount.executeQuery();
-					if (rs.next()) {
-						temp = EchoServer.gson.toJsonTree(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
-								rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
-								rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),
-								rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.RESTAURANT_AREA),
-								rs.getString(QueryConsts.RESTAURANT_TYPE), account.getUserName(),
-								rs.getString(QueryConsts.RESTAURANT_PHOTO),
-								rs.getString(QueryConsts.RESTAURANT_ADDRESS),
-								rs.getString(QueryConsts.RESTAURANT_DESCRIPTION)));
-						body.getAsJsonObject().add("restaurant", temp);
-					}
+			}
+			if (account.getRole().equals("Moderator")) {
+				getAccount = EchoServer.con
+						.prepareStatement("SELECT * FROM biteme.restaurant WHERE ModeratorUserName = ?;");
+				getAccount.setString(1, account.getUserName());
+				rs = getAccount.executeQuery();
+				if (rs.next()) {
+					temp = EchoServer.gson.toJsonTree(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
+							rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
+							rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),
+							rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.RESTAURANT_AREA),
+							rs.getString(QueryConsts.RESTAURANT_TYPE), account.getUserName(),
+							rs.getString(QueryConsts.RESTAURANT_PHOTO), rs.getString(QueryConsts.RESTAURANT_ADDRESS),
+							rs.getString(QueryConsts.RESTAURANT_DESCRIPTION)));
+					body.getAsJsonObject().add("restaurant", temp);
 				}
-				if (account.getRole().equals("Moderator")) {
-					getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.restaurant WHERE ModeratorUserName = ?;");
-					getAccount.setString(1, account.getUserName());
-					rs = getAccount.executeQuery();
-					if (rs.next()) {
-						temp = EchoServer.gson.toJsonTree(new Restaurant(rs.getInt(QueryConsts.RESTAURANT_ID),
-								rs.getBoolean(QueryConsts.RESTAURANT_IS_APPROVED),
-								rs.getInt(QueryConsts.RESTAURANT_BRANCH_MANAGER_ID),
-								rs.getString(QueryConsts.RESTAURANT_NAME), rs.getString(QueryConsts.RESTAURANT_AREA),
-								rs.getString(QueryConsts.RESTAURANT_TYPE), account.getUserName(),
-								rs.getString(QueryConsts.RESTAURANT_PHOTO),
-								rs.getString(QueryConsts.RESTAURANT_ADDRESS),
-								rs.getString(QueryConsts.RESTAURANT_DESCRIPTION)));
-						body.getAsJsonObject().add("restaurant", temp);
-					}
-				}
-		} catch (SQLException e) {
+			}
+
+		} catch (
+
+		SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
 		}
@@ -490,7 +490,7 @@ public class AccountApiService {
 		response.setCode(200);
 		response.setDescription("Success in updating account: accountID -> " + account.getUserID());
 	}
-	
+
 	/**
 	 * Updated Account
 	 *
@@ -563,11 +563,10 @@ public class AccountApiService {
 		PreparedStatement postAccount;
 		ResultSet rs;
 		try {
-			postAccount = EchoServer.con.prepareStatement(
-					"SELECT * FROM biteme.employer WHERE businessName = ?;");
+			postAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.employer WHERE businessName = ?;");
 			postAccount.setString(1, account.getBusinessName());
 			rs = postAccount.executeQuery();
-			if(!rs.next())
+			if (!rs.next())
 				throw new SQLException("Business doesn't exist: -> BusinessName: " + account.getBusinessName(), "401",
 						401);
 			postAccount = EchoServer.con.prepareStatement(

@@ -47,6 +47,19 @@ import logic.BusinessAccount;
 import logic.PrivateAccount;
 import logic.Restaurant;
 
+/**
+ * This class is for the branch manager main page. From here you can get to all
+ * the functionality of the branch manager
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
+
 public class RegisterationApprovalSupplierController implements Initializable {
 	public static Boolean isEdit = false;
 	public static Restaurant restaurant;
@@ -58,9 +71,6 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 	@FXML
 	private Label labelTitle;
-
-	@FXML
-	private Label lableErrorMag;
 
 	@FXML
 	private Button btnUpdate;
@@ -99,24 +109,13 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	private TextField textFieldRestaurantAddress;
 
 	@FXML
+	private Label lblrequiredRestDescription;
+
+	@FXML
+	private TextField textFieldRestaurantDescription;
+
+	@FXML
 	private Button btnSelectFile;
-
-	@FXML
-	private Label lblrequiredModeratorUsername;
-
-	@FXML
-	private TextField textFieldModeratorUsername;
-
-	@FXML
-	private Label lblrequiredModeratorID;
-
-	@FXML
-	private TextField textFieldModeratorID;
-
-	@FXML
-	private Button btnCceateRestaurant;
-	@FXML
-	private AnchorPane chooseAccount;
 	@FXML
 	private ListView<String> listView;
 	@FXML
@@ -139,10 +138,33 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	private JFXComboBox<String> coboBoxStatus;
 
 	@FXML
-	private Label lableSlectedUser;
+	private Label lblrequiredModeratorUsername;
+
+	@FXML
+	private TextField textFieldModeratorUsername;
+
+	@FXML
+	private Label lblrequiredModeratorID;
+
+	@FXML
+	private TextField textFieldModeratorID;
+
+	@FXML
+	private Button btnCceateRestaurant;
+
+	@FXML
+	private Label lableSuccessMsg;
 
 	@FXML
 	private Label lableErrorMsg;
+
+	@FXML
+	private AnchorPane chooseAccount;
+	@FXML
+	private Label lableSlectedUser;
+
+	@FXML
+	private Button btnReturnHome;
 
 	@FXML
 	private HBox Nav;
@@ -166,7 +188,9 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		lableHello.setText("Hello, " + BranchManagerController.branchManager.getUserName());
 		branchManagerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+		btnReturnHome.setVisible(false);
 		if (isEdit) {
+			btnUpdate.setVisible(true);
 			chooseAccount.setVisible(false);
 			anchorPaneRestaurantInfo.setVisible(true);
 			btnUpdate.setVisible(true);
@@ -176,11 +200,17 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			textFieldRestaurantName.setText(restaurant.getName());
 			textFieldRestaurantType.setText(restaurant.getType());
 			textFieldRestaurantAddress.setText(restaurant.getAddress());
+			listView.getItems().add(restaurant.getPhoto());
 
 			textFieldSupplierUserame.setText(supplierAccount.getUserName());
 			textFieldsupplierID.setText(supplierAccount.getUserID() + "");
 
+			// TODO- after up date need to unNote them!
+//			textFieldModeratorUsername.setText(restaurant.);
+//			textFieldModeratorID.setText();
+
 		} else {
+			btnUpdate.setVisible(false);
 			// ----set the initialize value of the user
 			chooseAccount.setVisible(true);
 			anchorPaneRestaurantInfo.setVisible(false);
@@ -291,7 +321,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	}
 
 	@FXML
-	void homeANDback(ActionEvent event) {
+	void home(ActionEvent event) {
 		branchManagerFunctions.home(event);
 	}
 
@@ -321,10 +351,11 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		checkTextFiled(textFieldRestaurantName, lblrequiredRestName);
 		checkTextFiled(textFieldRestaurantType, lblrequiredRestType);
 		checkTextFiled(textFieldRestaurantAddress, lblrequiredRestAdderss);
+		checkTextFiled(textFieldRestaurantDescription, lblrequiredRestName);
 
 		if (textFieldModeratorUsername.getText() != null) { // if the user decided to add moderator
 			checkTextFiled(textFieldModeratorUsername, lblrequiredModeratorUsername);
-			checkTextFiled(textFieldModeratorID, lblrequiredModeratorID);
+			checkTextFiled(textFieldModeratorID, lblrequiredRestDescription);
 			moderator = true;
 		}
 
@@ -336,10 +367,11 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			String restaurantName = textFieldRestaurantName.getText();
 			String restaurantType = textFieldRestaurantType.getText();
 			String restaurantAddress = textFieldRestaurantAddress.getText();
+			String restaurantDescription = textFieldRestaurantDescription.getText();
 
 			Restaurant restaurant = new Restaurant(0, false, BranchManagerController.branchManager.getUserID(),
 					restaurantName, BranchManagerController.branchManager.getArea(), restaurantType, supplierUserame,
-					photo, restaurantAddress, "");
+					photo, restaurantAddress, restaurantDescription);
 			Account supplier = new Account(supplierID, supplierUserame, null, null, null, null, "Supplier", null,
 					"status", false, BranchManagerController.branchManager.getUserID(),
 					BranchManagerController.branchManager.getArea(), 0);
@@ -354,7 +386,33 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 	@FXML
 	void update(ActionEvent event) {
+		String restaurantName = textFieldRestaurantName.getText();
+		String restaurantType = textFieldRestaurantType.getText();
+		String restaurantAddress = textFieldRestaurantAddress.getText();
+		String restaurantDescription = textFieldRestaurantDescription.getText();
+		photo = restaurant.getPhoto();
 
+		restaurant = new Restaurant(restaurant.getId(), restaurant.isApproved(), restaurant.getBranchManagerID(),
+				restaurantName, restaurant.getArea(), restaurantType, restaurant.getUserName(), photo,
+				restaurantAddress, restaurantDescription);
+
+		Gson gson = new Gson();
+		JsonElement body = gson.toJsonTree(new Object());
+		body.getAsJsonObject().addProperty("userName", supplierAccount.getUserName());
+		body.getAsJsonObject().add("restaurant", gson.toJsonTree(restaurant));
+		branchManagerFunctions.sentToJson("/branch_managers/restaurants", "PUT", body,
+				"Edit restaurant - new ClientController didn't work");
+
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201) {
+			lableSuccessMsg.setText("");
+			lableErrorMsg.setText(response.getDescription());// error massage
+		} else {
+			btnReturnHome.setVisible(true);
+			lableErrorMsg.setText("");
+			lableSuccessMsg.setText(response.getDescription());// error massage
+			btnUpdate.setVisible(false);
+		}
 	}
 
 	void sentToJson(Restaurant restaurant, Account supplier, Account supplierModorator) {
@@ -365,6 +423,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 		jsonElemModorator.getAsJsonObject().addProperty("userName", supplierModorator.getUserName());
 		jsonElemModorator.getAsJsonObject().addProperty("userID", supplierModorator.getUserID());
+		jsonElemModorator.getAsJsonObject().addProperty("supplierUserName", supplier.getUserName());
 		jsonElemSupplier.getAsJsonObject().addProperty("userName", supplier.getUserName());
 		jsonElemSupplier.getAsJsonObject().addProperty("userID", supplier.getUserID());
 
@@ -377,9 +436,13 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 	void response() {
 		Response response = ChatClient.serverAns;
-//		if (response.getCode() != 200 && response.getCode() != 201)
-		System.out.println("response.getDescription()" + response.getDescription());
-		lableErrorMag.setText(response.getDescription());// error massage
+		if (response.getCode() != 200 && response.getCode() != 201) {
+			lableErrorMsg.setText(response.getDescription());// error massage
+			lableSuccessMsg.setText("");
+		} else {
+			lableSuccessMsg.setText(response.getDescription());
+			btnReturnHome.setVisible(true);
+		}
 	}
 
 	void checkTextFiled(TextField textField, Label lblrequired) {

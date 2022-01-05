@@ -31,47 +31,35 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import logic.Account;
 
+
+/**
+ * This class is for the branch manager main page.
+ * From here you can get to all the functionality of the branch manager
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
+
 public class BranchManagerController implements Initializable {
 	public static Account branchManager;
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 
-	@FXML
-	private HBox Nav;
+    @FXML
+    private HBox Nav;
 
-	@FXML
-	private Button btnOrderFood;
+    @FXML
+    private Label lableHello;
 
-	@FXML
-	private Button btnViewReports;
-
-	@FXML
-	private Button btnOpenAccount;
-
-	@FXML
-	private Button btnEditPersonalInfo;
-
-	@FXML
-	private Button btnCreateReports;
-
-	@FXML
-	private Button btnRegisterationApprovalSupplier;
-
-	@FXML
-	private HBox Nav1;
-
-	@FXML
-	private Hyperlink linkApprovals;
-	@FXML
-	private Hyperlink btnHome;
-
-	@FXML
-	private Button btnLogout;
-
-	@FXML
-	private Label lableHello;
+    @FXML
+    private Hyperlink linkApprovals;
 	
 /**
- * Get the Approvals of the BM
+ * The method receiving notifications for the branch manager, and he can approve them.
  * @param event
  */
 	@FXML
@@ -79,21 +67,38 @@ public class BranchManagerController implements Initializable {
 		branchManagerFunctions.reload(event, "/branchManager/ApprovalsPage.fxml", "Branch manager - Approvals Page");
 	}
 
+	/**
+	 * A method Allows the user to logout from the system.
+	 * @param event
+	 */
 	@FXML
 	void logout(ActionEvent event) {
 		branchManagerFunctions.logout(event);
 	}
 
+	/**
+	 * A method that allow to the branch manager to edit user info:
+	 * edit private account, edit business account and edit restaurant 
+	 * @param event
+	 */
 	@FXML
 	void editPersonalInfo(ActionEvent event) {
 		branchManagerFunctions.reload(event, "/branchManager/EditPersonalInfo.fxml", "Branch manager - Edit Personal Info");
 	}
 
+	/**
+	 * A method that creates a report 
+	 * @param event
+	 */
 	@FXML
 	void createReports(ActionEvent event) {
 
 	}
 
+	/**
+	 * A method for choose   
+	 * @param event
+	 */
 	@FXML
 	void openAccount(ActionEvent event) {
 		branchManagerFunctions.reload(event, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");

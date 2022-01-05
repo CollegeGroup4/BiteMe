@@ -28,7 +28,7 @@ public class DisplayReportController {
 
     @FXML
     void back(ActionEvent event) {
-
+//    	ceoFunctions.reload(event, "/CEO/DisplayReport.fxml", "CEO- Dispaly report");
     }
 
     @FXML

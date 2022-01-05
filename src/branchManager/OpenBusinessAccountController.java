@@ -33,6 +33,19 @@ import javafx.stage.Stage;
 import logic.Account;
 import logic.BusinessAccount;
 
+/**
+ * This class is for the branch manager main page.
+ * From here you can get to all the functionality of the branch manager
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
+
 public class OpenBusinessAccountController implements Initializable {
 	public static Boolean isEdit = false;
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
@@ -188,7 +201,7 @@ public class OpenBusinessAccountController implements Initializable {
 		String businessName = textFieldBusinessName.getText();
 		float monthBillingCeiling = Integer.parseInt(textFieldMonthBlling.getText());
 		BusinessAccount businessAccount = new BusinessAccount(account.getUserID(), account.getUserName(), null, null,
-				null, null, "Not Assigned", null, account.getStatus(), true,
+				null, null, account.getRole(), null, account.getStatus(), true,
 				BranchManagerController.branchManager.getUserID(), BranchManagerController.branchManager.getArea(), 0,
 				null, monthBillingCeiling, false, businessName, 0);
 		sentToJson(businessAccount);

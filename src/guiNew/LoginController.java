@@ -35,6 +35,8 @@ import logic.BranchManager;
 public class LoginController {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 
+	public static String role;
+
 	@FXML
 	private TextField textFieldUsername;
 
@@ -67,7 +69,7 @@ public class LoginController {
 		// need to get response from the server hear!
 		if (flag && account != null) {
 			try {
-				String role = account.getRole(); // = "CEO";
+				role = account.getRole(); // = "CEO";
 				if (role != "") {
 					FXMLLoader loader = new FXMLLoader();
 					((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window

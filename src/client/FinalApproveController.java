@@ -11,9 +11,12 @@ import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 
+import CEO.CEOFunctions;
 import Server.EchoServer;
 import Server.Response;
+import branchManager.BranchManagerFunctions;
 import common.Request;
+import guiNew.LoginController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -215,8 +218,32 @@ public class FinalApproveController implements Initializable {
 
 	@FXML
 	void home(ActionEvent event) {
-		//check the role of the account and with that we  go to the home page
-		customerFunctions.home(event);
+		String role = LoginController.role;
+		switch (role) {
+		case "CEO":
+			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+			branchManagerFunctions.home(event);
+			break;
+		case "Branch Manager":
+			CEOFunctions ceoFunctions = new CEOFunctions();
+			ceoFunctions.home(event);
+			break;
+		case "Supplier":
+//			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+//			branchManagerFunctions.home(event);
+			break;
+		case "Moderator":
+//			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+//			branchManagerFunctions.home(event);
+			break;
+		case "HR":
+//			CustomerFunctions customerFunctions = new CustomerFunctions();
+//			customerFunctions.home(event);
+			break;
+		case "Client":
+			customerFunctions.home(event);
+			break;
+		}
 	}
 
 	@FXML

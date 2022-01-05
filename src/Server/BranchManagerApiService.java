@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import common.Response;
+import common.imageUtils;
 import logic.*;
 
 /**
@@ -112,19 +114,16 @@ public class BranchManagerApiService {
 	 * This can only be done by the logged in branch manager.
 	 *
 	 */
-	public static void registerSupplierModerator(String userName, int userID, String role, Restaurant restaurant,
+	public static void registerSupplier(String userName, int userID, String role, Restaurant restaurant,
 			Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
 		try {
-			stmt = EchoServer.con.prepareStatement(
-					"SELECT * FROM biteme.restaurant WHERE UserName = ? AND RestaurantName = ?;");
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM " + "biteme.restaurant WHERE UserName = ?;");
 			stmt.setString(1, userName);
-			stmt.setString(2, userName);
 			rs = stmt.executeQuery();
-
 			if (rs.next()) {
-				throw new SQLException("Restaurant " + restaurant.getName() + " is already exist", "400", 400);
+				throw new SQLException("UserName " + userName + " already has a restaurant", "400", 400);
 			}
 		} catch (SQLException e) {
 			response.setCode(e.getErrorCode());
@@ -141,16 +140,17 @@ public class BranchManagerApiService {
 			stmt.setString(4, userName);
 			stmt.setInt(5, userID);
 			stmt.executeUpdate();
-
 		} catch (SQLException e) {
 			response.setCode(400);
-			response.setDescription("User " + userName + "does Not found");
+			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName "
+					+ restaurant.getName());
 			return;
 		}
 		try {
 			stmt = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.restaurant (RestaurantName, IsApproved, BranchManagerID, Area, Image, "
-							+ "UserName, Type, Address, Description) VALUES (?,?,?,?,?,?,?,?,?);");
+							+ "UserName, Type, Address, Description) VALUES (?,?,?,?,?,?,?,?,?);",
+							Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, restaurant.getName());
 			stmt.setBoolean(2, restaurant.isApproved());
 			stmt.setInt(3, restaurant.getBranchManagerID());
@@ -161,24 +161,91 @@ public class BranchManagerApiService {
 			stmt.setString(8, restaurant.getAddress());
 			stmt.setString(9, restaurant.getDescription());
 			stmt.executeUpdate();
+			rs = stmt.getGeneratedKeys();
+			rs.next();
+			int restaurantID = rs.getInt(1);
+			if (restaurant.getRestaurantImage() != null) {
+				String[] split = restaurant.getRestaurantImage().getFileName().split(".");
+				String sufix = split[split.length - 1];
+				String imageFileName = "restaurant_" + restaurantID + "." + sufix;
+				restaurant.getRestaurantImage().setFileName(imageFileName);
+				imageUtils.receiver(restaurant.getRestaurantImage(), QueryConsts.FILE_PATH_RESTAURANTS);
+				stmt = EchoServer.con.prepareStatement("UPDATE biteme.restaurant SET Image = ? WHERE RestaurantNum = ?;");
+				stmt.setString(1, imageFileName);
+				stmt.setInt(2, restaurantID);
+				stmt.executeUpdate();
+			}
 		} catch (SQLException ex) {
 			response.setCode(400);
-			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName" + userName);
+			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName " + userName);
 			try {
-				stmt = EchoServer.con.prepareStatement(
-						"UPDATE biteme.account SET Role = 'Not Assigned' WHERE " + "UserName = ? AND UserID = ?;");
+				stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = 'Not Assigned' WHERE "
+						+ "UserName = ? AND UserID = ?;");
 				stmt.setString(1, userName);
 				stmt.setInt(2, userID);
 				stmt.executeUpdate();
-
-				stmt.executeUpdate();
 			} catch (SQLException e) {
+				response.setCode(400);
+				response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());
 			}
 			return;
 		}
 		response.setCode(200);
 		response.setDescription("Success in registering a new restaurant -> role: " + role + ", restaurantName "
 				+ restaurant.getName());
+	}
+
+	/**
+	 * Register a resturant - mind that the supplier shcema isn&#x27;t finish
+	 *
+	 * This can only be done by the logged in branch manager.
+	 *
+	 */
+	public static void registerModerator(String userName, String supplierUserName,int userID, String role, Restaurant restaurant,Response response) {
+		PreparedStatement stmt;
+		ResultSet rs;
+		try {
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM "
+					+ "biteme.restaurant WHERE UserName = ? AND ModeratorUserName = ?;");
+			stmt.setString(1, supplierUserName);
+			stmt.setString(2, userName);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				throw new SQLException("UserName " + userName + " already has a restaurant", "400", 400);
+			}
+		} catch (SQLException e) {
+			response.setCode(e.getErrorCode());
+			response.setDescription(e.getMessage());
+			return;
+		}
+		try {
+			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ?, BranchManagerID = ?, Area = ? WHERE "
+					+ "UserName = ? AND UserID = ?;");
+			stmt.setString(1, role);
+			stmt.setInt(2, restaurant.getBranchManagerID());
+			stmt.setString(3, restaurant.getArea());
+			stmt.setString(4, userName);
+			stmt.setInt(5, userID);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());	
+			return;
+		}
+		try {
+			stmt = EchoServer.con.prepareStatement("UPDATE biteme.restaurant SET ModeratorUserName = ? WHERE "
+					+ "UserName = ? AND RestaurantName = ?;");
+			stmt.setString(1, userName);
+			stmt.setString(2, supplierUserName);
+			stmt.setString(3, restaurant.getName());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());	
+			return;
+		}
+		response.setCode(200);
+		response.setDescription("Success in registering a new moderator -> role: " + role + ", restaurantName " + restaurant.getName());
 	}
 
 	/**
@@ -353,8 +420,7 @@ public class BranchManagerApiService {
 				PreparedStatement getRestaurants = EchoServer.con.prepareStatement(
 						"SELECT DISTINCT RestaurantID FROM biteme.restaurant WHERE BranchManagerID = ?;");
 				getRestaurants.setInt(1, i);
-				getRestaurants.executeQuery();
-				rs = getRestaurants.getResultSet();
+				rs = getRestaurants.executeQuery();
 				while (rs.next()) {
 					res_id.add(rs.getInt(1));
 				}
@@ -365,8 +431,7 @@ public class BranchManagerApiService {
 					PreparedStatement getOrders = EchoServer.con.prepareStatement(
 							"SELECT OrderTime, Check_out_price, RestaurantID, RestaurantName, OrderNum FROM biteme.order WHERE RestaurantID = ?;");
 					getOrders.setInt(1, j);
-					getOrders.executeQuery();
-					rs = getOrders.getResultSet();
+					rs = getOrders.executeQuery();
 					PreparedStatement getItems = EchoServer.con
 							.prepareStatement("SELECT IIM.Course, I.Category FROM biteme.item_in_menu_in_order IIMIO, "
 									+ "biteme.item_in_menu IIM, biteme.item I WHERE IIMIO.OrderNum = ? AND IIMIO.ItemID = IIM.ItemID AND IIM.RestaurantID = ?"
@@ -480,13 +545,13 @@ public class BranchManagerApiService {
 	}
 
 	/**
-	 * Approve a business
+	 * Approve an Employer
 	 *
 	 * This can only be done by the logged in branch manager.
 	 *
 	 */
 	public static void approveEmployer(String businessName, int branchManagerID, Response response) {
-		PreparedStatement postEmployer;
+		PreparedStatement postEmployer;		
 		try {
 			postEmployer = EchoServer.con.prepareStatement(
 					"UPDATE biteme.employer SET isApproved = 1 WHERE businessName = ? AND BranchManagerID = ?");
@@ -497,6 +562,39 @@ public class BranchManagerApiService {
 			response.setCode(400);
 			response.setDescription("Couldn't approve a new employer -> BusinessName: " + businessName);
 		}
+		response.setCode(200);
 		response.setDescription("Success in approving a new employer -> BusinessName: " + businessName);
+	}
+
+	/**
+	 * Get All unapproved employer
+	 *
+	 * This can only be done by the logged in branch manager.
+	 *
+	 */
+	public static void getAllUnapprovedEmployer(int branchManagerID, Response response) {
+		PreparedStatement postEmployer;
+		ResultSet rs;
+		ArrayList<Employer> employers = new ArrayList<>();
+		try {
+			postEmployer = EchoServer.con
+					.prepareStatement("SELECT * FROM biteme.employer WHERE BranchManagerID = ? AND isApproved = 0;");
+			postEmployer.setInt(1, branchManagerID);
+			rs = postEmployer.executeQuery();
+			while (rs.next()) {
+				employers.add(new Employer(rs.getString(QueryConsts.EMPLOYER_BUSINESS_NAME),
+						rs.getBoolean(QueryConsts.EMPLOYER_IS_APPROVED), rs.getString(QueryConsts.EMPLOYER_HR_NAME),
+						rs.getString(QueryConsts.EMPLOYER_HR_USER_NAME),
+						rs.getInt(QueryConsts.EMPLOYER_BRANCH_MANAGER_ID)));
+			}
+		} catch (SQLException e) {
+			response.setCode(400);
+			response.setDescription(
+					"Couldn't fetch all unapproved employers -> branchManagerID: " + Integer.toString(branchManagerID));
+		}
+		response.setCode(200);
+		response.setDescription("Success in fetching all unapproved employers -> branchManagerID: "
+				+ Integer.toString(branchManagerID));
+		response.setBody(EchoServer.gson.toJson(employers.toArray()));
 	}
 }

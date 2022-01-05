@@ -43,32 +43,32 @@
                   <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <Button fx:id="btnOrderFood" layoutX="81.0" layoutY="219.0" mnemonicParsing="false" onAction="#orderFood" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Order food" textFill="WHITE">
+            <Button layoutX="81.0" layoutY="219.0" mnemonicParsing="false" onAction="#orderFood" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Order food" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnViewReports" layoutX="328.0" layoutY="219.0" mnemonicParsing="false" onAction="#viewReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="View reports" textFill="WHITE">
+            <Button layoutX="328.0" layoutY="219.0" mnemonicParsing="false" onAction="#viewReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="View reports" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnOpenAccount" layoutX="577.0" layoutY="219.0" mnemonicParsing="false" onAction="#openAccount" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Open an account" textFill="WHITE">
+            <Button layoutX="577.0" layoutY="219.0" mnemonicParsing="false" onAction="#openAccount" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Open an account" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnEditPersonalInfo" layoutX="81.0" layoutY="398.0" mnemonicParsing="false" onAction="#editPersonalInfo" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Edit personal info" textFill="WHITE">
+            <Button layoutX="81.0" layoutY="398.0" mnemonicParsing="false" onAction="#editPersonalInfo" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Edit personal info" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnCreateReports" layoutX="328.0" layoutY="398.0" mnemonicParsing="false" onAction="#createReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Create new report" textFill="WHITE">
+            <Button layoutX="328.0" layoutY="398.0" mnemonicParsing="false" onAction="#createReports" prefHeight="78.0" prefWidth="216.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Create new report" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
             </Button>
-            <Button fx:id="btnRegisterationApprovalSupplier" layoutX="577.0" layoutY="398.0" mnemonicParsing="false" onAction="#RegisterationRestaurant" prefHeight="78.0" prefWidth="225.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Registeration Restaurant" textFill="WHITE">
+            <Button layoutX="577.0" layoutY="398.0" mnemonicParsing="false" onAction="#RegisterationRestaurant" prefHeight="78.0" prefWidth="225.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30;" text="Registeration Restaurant" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="17.0" />
                </font>
