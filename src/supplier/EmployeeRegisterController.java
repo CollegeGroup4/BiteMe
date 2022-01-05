@@ -135,6 +135,15 @@ public class EmployeeRegisterController implements Initializable {
 	void LogOut(ActionEvent event) {
 		HRF.logout(event);
 	}
+	/**
+	 * This Method made to allow us to get back to the home screen
+	 * 
+	 * @param action
+	 */
+	@FXML
+	void Home(ActionEvent action) {
+		HRF.home(action);
+	}
 
 	/**
 	 * Method to set Employer values and send to DB
@@ -167,6 +176,8 @@ public class EmployeeRegisterController implements Initializable {
 		UserText.setText(HRPageController.Hmanger.getUserName());
 		NameText.setText(HRPageController.Hmanger.getFirstName());
 		BranchName.setText(String.valueOf(HRPageController.Hmanger.getBranch_manager_ID()));
+		
+		HRF.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
 }

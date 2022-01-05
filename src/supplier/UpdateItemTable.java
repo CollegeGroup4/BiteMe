@@ -241,7 +241,7 @@ public class UpdateItemTable implements Initializable {
 		resturantid.setCellValueFactory(new PropertyValueFactory<Item, Integer>("restaurantID"));
 		ItemID.setCellValueFactory(new PropertyValueFactory<Item, Integer>("ItemID"));
 		Table.setItems(ItemList);
-
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 	/**
 	 * This Method made to get all the restaurant items from DB

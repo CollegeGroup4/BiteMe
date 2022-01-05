@@ -308,7 +308,7 @@ public class CreatAndEditMenuController implements Initializable {
 
 		NameTableColum2.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		TypeColum2.setCellValueFactory(new PropertyValueFactory<Item, String>("category"));
-
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
 	/**

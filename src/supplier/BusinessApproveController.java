@@ -123,7 +123,7 @@ public class BusinessApproveController implements Initializable {
 		tableColRole.setCellValueFactory(new PropertyValueFactory<Account, String>("role"));
 		tableColStatus.setCellValueFactory(new PropertyValueFactory<Account, String>("status"));
 		tableViewMsg.setItems(messagesList);
-
+		HRF.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
 	/**

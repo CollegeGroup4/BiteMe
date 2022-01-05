@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 
 import Server.Response;
 import client.ChatClient;
+import client.CustomerPageController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -91,16 +92,7 @@ public class SupplierController implements Initializable {
 		}
 	}
 
-	/**
-	 * This Method made to allow us to get back to the home screen
-	 * 
-	 * @param action
-	 */
-	@FXML
-	void Home(ActionEvent action) {
-		supplierfunction.home(action);
-	}
-
+	
 	/**
 	 * This Method made to logout from system
 	 * 
@@ -145,7 +137,8 @@ public class SupplierController implements Initializable {
 	 */
 	@FXML
 	void Order(ActionEvent event) {
-
+		CustomerPageController.client = supplier;
+		supplierfunction.reload(event, "/client/ChooseRestaurant.fxml", "Branch manager- Order food");
 	}
 
 	/**

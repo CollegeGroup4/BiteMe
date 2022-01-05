@@ -215,6 +215,7 @@ public class ApproveOrderController implements Initializable {
 
 		OrdersTable.setItems(OrderList);
 
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
 }

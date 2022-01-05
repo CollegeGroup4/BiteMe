@@ -522,7 +522,7 @@ public class UdateMenuPageController implements Initializable {
 		NameTableColum2.setCellValueFactory(new PropertyValueFactory<Item, String>("Name"));
 		TypeColum2.setCellValueFactory(new PropertyValueFactory<Item, String>("category"));
 		TableCourse.setItems(Courselist1);
-
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 	}
 
 }

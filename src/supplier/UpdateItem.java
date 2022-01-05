@@ -238,6 +238,7 @@ public class UpdateItem implements Initializable {
 		pricecol.setCellValueFactory(new PropertyValueFactory<OptionRow, TextField>("pricetextop"));
 
 		OptionTable.setItems(optionrow);
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 
 	}
 	/**

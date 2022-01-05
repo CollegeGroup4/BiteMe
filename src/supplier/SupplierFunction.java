@@ -167,7 +167,7 @@ public class SupplierFunction {
 	public void logoutSentToJson() {
 		Gson gson = new Gson();
 		JsonElement jsonElem = gson.toJsonTree(new Object());
-		jsonElem.getAsJsonObject().addProperty("userName", BranchManagerController.branchManager.getUserName());
+		jsonElem.getAsJsonObject().addProperty("userName", SupplierController.supplier.getUserName());
 
 		Request request = new Request();
 		request.setPath("/users/logout");

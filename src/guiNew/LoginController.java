@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
 import CEO.CEOController;
+import CEO.CEOFunctions;
 import Server.EchoServer;
 import Server.Response;
 import branchManager.BranchManagerController;
@@ -15,6 +16,7 @@ import branchManager.BranchManagerFunctions;
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
+import client.CustomerFunctions;
 import client.CustomerPageController;
 import common.Request;
 import javafx.event.ActionEvent;
@@ -31,8 +33,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import logic.Account;
 import logic.BranchManager;
+import supplier.HRFunction;
 import supplier.HRPageController;
 import supplier.SupplierController;
+import supplier.SupplierFunction;
 
 public class LoginController {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
@@ -172,7 +176,41 @@ public class LoginController {
 
 	@FXML
 	void Exit(ActionEvent event) throws UnknownHostException {
-		branchManagerFunctions.exit(event);
+		switch (role) {
+		case "CEO":
+			System.out.println("exit CEO");
+			CEOFunctions ceoFunctions = new CEOFunctions();
+			ceoFunctions.exit(event);
+			break;
+		case "Branch Manager":
+			System.out.println("exit manager");
+			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
+			branchManagerFunctions.exit(event);
+			break;
+		case "Supplier":
+			System.out.println("exit supplier");
+			SupplierFunction supplierfunction = new SupplierFunction();
+			supplierfunction.exit(event);
+			break;
+		case "Moderator":
+			System.out.println("exit supplier moderator");
+			SupplierFunction supplierfunctionM = new SupplierFunction();
+			supplierfunctionM.exit(event);
+			break;
+		case "HR":
+			System.out.println("exit HR");
+			HRFunction hrFunction = new HRFunction();
+			hrFunction.exit(event);
+			break;
+		case "Client":
+			System.out.println("exit client");
+			CustomerFunctions customerFunctions = new CustomerFunctions();
+			customerFunctions.exit(event);
+			break;
+		default:
+			Navigation_SidePanelController.role = "";
+			System.out.println("defult - error DB the user does not have a file");
+		}
 	}
 
 	@FXML

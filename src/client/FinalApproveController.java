@@ -36,6 +36,8 @@ import logic.Item;
 import logic.Menu;
 import logic.Order;
 import logic.Shippment;
+import supplier.HRFunction;
+import supplier.SupplierFunction;
 
 /**
  * This class made for display all order details at the final of the process and
@@ -249,25 +251,25 @@ public class FinalApproveController implements Initializable {
 	void home(ActionEvent event) {
 		String role = LoginController.role;
 		switch (role) {
-		case "CEO":
+		case "Branch Manager":
 			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 			branchManagerFunctions.home(event);
 			break;
-		case "Branch Manager":
+		case "CEO":
 			CEOFunctions ceoFunctions = new CEOFunctions();
 			ceoFunctions.home(event);
 			break;
 		case "Supplier":
-//			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
-//			branchManagerFunctions.home(event);
+			SupplierFunction supplierfunction = new SupplierFunction();
+			supplierfunction.home(event);
 			break;
 		case "Moderator":
-//			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
-//			branchManagerFunctions.home(event);
+			SupplierFunction supplierfunctionM = new SupplierFunction();
+			supplierfunctionM.home(event);
 			break;
 		case "HR":
-//			CustomerFunctions customerFunctions = new CustomerFunctions();
-//			customerFunctions.home(event);
+			HRFunction hrFunction = new HRFunction();
+			hrFunction.home(event);
 			break;
 		case "Client":
 			customerFunctions.home(event);

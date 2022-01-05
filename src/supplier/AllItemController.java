@@ -158,6 +158,8 @@ public class AllItemController implements Initializable {
 		resturantid.setCellValueFactory(new PropertyValueFactory<Item, Integer>("restaurantID"));
 		ItemID.setCellValueFactory(new PropertyValueFactory<Item, Integer>("ItemID"));
 		Table.setItems(ItemList);
+		
+		supplierfunction.initializeNavigation_SidePanel(myHamburger, drawer);
 
 	}
 

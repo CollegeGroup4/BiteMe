@@ -18,10 +18,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import supplier.SupplierFunction;
 
 public class Navigation_SidePanelController extends Application implements Initializable {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 	private CustomerFunctions customerFunctions = new CustomerFunctions();
+	private SupplierFunction suplier = new SupplierFunction();
 
 	public static String role;
 	@FXML
@@ -38,7 +40,7 @@ public class Navigation_SidePanelController extends Application implements Initi
 			root = FXMLLoader.load(getClass().getResource("/branchManager/OpenAccountPage.fxml"));
 			break;
 		case "Supplier":
-			initSidePanelSupplier(); // not ready!!!
+			initSidePanelSupplier();
 			break;
 		case "Moderator":
 			initSidePanelModerator(); // not ready!!!
@@ -116,7 +118,8 @@ public class Navigation_SidePanelController extends Application implements Initi
 		createButtonBranchManager(buttons[0], "/client/ChooseRestaurant.fxml", "Branch manager - Order food");
 
 		buttons[1] = new JFXButton("Edit personal info");
-		createButtonBranchManager(buttons[1], "/branchManager/EditPersonalInfo.fxml", "Branch manager - Edit Personal Info");
+		createButtonBranchManager(buttons[1], "/branchManager/EditPersonalInfo.fxml",
+				"Branch manager - Edit Personal Info");
 
 		buttons[2] = new JFXButton("View reports");
 		createButtonBranchManager(buttons[2], "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
@@ -137,6 +140,7 @@ public class Navigation_SidePanelController extends Application implements Initi
 		});
 		vBoxManu.getChildren().addAll(buttons);
 	}
+
 	private void createButtonBranchManager(JFXButton button, String path, String titleStage) {
 		Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
 		button.setFont(font);
@@ -146,105 +150,76 @@ public class Navigation_SidePanelController extends Application implements Initi
 	}
 
 	private void initSidePanelSupplier() {
-		JFXButton[] buttons = new JFXButton[7];
-		buttons[0] = new JFXButton("Order food");
+		JFXButton[] buttons = new JFXButton[9];
+		buttons[0] = new JFXButton("All items");
 		buttons[0].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/gui/MainScreen.fxml", "Branch manager - Order food");
+			suplier.reload(e, "/supplier/ALL_Items.fxml", "supplier all item table");
+			;
 		});
-		buttons[1] = new JFXButton("Edit personal info");
+		buttons[1] = new JFXButton("Create Menu");
 		buttons[1].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/EditPersonalInfo.fxml",
-					"Branch manager - Edit Personal Info");
+			suplier.reload(e, "/supplier/CreatAndEditMenu.fxml", "supplier creat menu ");
 		});
-		buttons[2] = new JFXButton("View reports");
+		buttons[2] = new JFXButton("Create Item");
 		buttons[2].addEventHandler(ActionEvent.ACTION, (e) -> {
-			///////
+			suplier.reload(e, "/supplier/CreatItem.fxml", "supplier create item ");
 		});
-		buttons[3] = new JFXButton("Create new report");
+		buttons[3] = new JFXButton("Update Menu");
 		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
-			//////
+			suplier.reload(e, "/supplier/UpdateMenuPage.fxml", "supplier Update Menu ");
 		});
-		buttons[4] = new JFXButton("open account");
+		buttons[4] = new JFXButton("Update Item");
 		buttons[4].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
+			suplier.reload(e, "/supplier/UpdateItemTable.fxml", "Update Items Table");
 		});
-		buttons[5] = new JFXButton("Registeration Restaurant");
+		buttons[5] = new JFXButton("Approve Order");
 		buttons[5].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/RegisterationApprovalSupplier.fxml",
-					"Branch manager - registeration & Approval Supplier");
+			suplier.reload(e, "/supplier/ApproveOrder.fxml", "Approve order by Supplier");
 		});
-		buttons[6] = new JFXButton("Exit");
+
+		buttons[6] = new JFXButton("Order");
 		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.exit(e);
+			suplier.exit(e);
+		});
+		buttons[7] = new JFXButton("Update");
+		buttons[7].addEventHandler(ActionEvent.ACTION, (e) -> {
+			suplier.reload(e, "/supplier/UpdateItem.fxml", "Update Item Screen");
+		});
+
+		buttons[8] = new JFXButton("Exit");
+		buttons[8].addEventHandler(ActionEvent.ACTION, (e) -> {
+			suplier.exit(e);
 		});
 		vBoxManu.getChildren().addAll(buttons);
 	}
 
 	private void initSidePanelModerator() {
-		JFXButton[] buttons = new JFXButton[7];
-		buttons[0] = new JFXButton("Order food");
+		JFXButton[] buttons = new JFXButton[2];
+
+		buttons[0] = new JFXButton("Update Menu");
 		buttons[0].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/gui/MainScreen.fxml", "Branch manager - Order food");
+			suplier.reload(e, "/supplier/UpdateMenuPage.fxml", "supplier Update Menu ");
 		});
-		buttons[1] = new JFXButton("Edit personal info");
+
+		buttons[1] = new JFXButton("Exit");
 		buttons[1].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/EditPersonalInfo.fxml",
-					"Branch manager - Edit Personal Info");
-		});
-		buttons[2] = new JFXButton("View reports");
-		buttons[2].addEventHandler(ActionEvent.ACTION, (e) -> {
-			///////
-		});
-		buttons[3] = new JFXButton("Create new report");
-		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
-			//////
-		});
-		buttons[4] = new JFXButton("open account");
-		buttons[4].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
-		});
-		buttons[5] = new JFXButton("Registeration Restaurant");
-		buttons[5].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/RegisterationApprovalSupplier.fxml",
-					"Branch manager - registeration & Approval Supplier");
-		});
-		buttons[6] = new JFXButton("Exit");
-		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.exit(e);
+			suplier.exit(e);
 		});
 		vBoxManu.getChildren().addAll(buttons);
 	}
 
 	private void initSidePanelHR() {
-		JFXButton[] buttons = new JFXButton[7];
-		buttons[0] = new JFXButton("Order food");
+		JFXButton[] buttons = new JFXButton[3];
+		buttons[0] = new JFXButton("approve");
 		buttons[0].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/gui/MainScreen.fxml", "Branch manager - Order food");
+			branchManagerFunctions.reload(e, "/supplier/BusinessApprove.fxml", "H.R manager - Approve Business");
 		});
-		buttons[1] = new JFXButton("Edit personal info");
+		buttons[1] = new JFXButton("employeebutton");
 		buttons[1].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/EditPersonalInfo.fxml",
-					"Branch manager - Edit Personal Info");
+			branchManagerFunctions.reload(e, "/supplier/EmployeeRegister.fxml", "H.R manager - Employee Register page");
 		});
-		buttons[2] = new JFXButton("View reports");
+		buttons[2] = new JFXButton("Exit");
 		buttons[2].addEventHandler(ActionEvent.ACTION, (e) -> {
-			///////
-		});
-		buttons[3] = new JFXButton("Create new report");
-		buttons[3].addEventHandler(ActionEvent.ACTION, (e) -> {
-			//////
-		});
-		buttons[4] = new JFXButton("open account");
-		buttons[4].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/OpenAccountPage.fxml", "Branch manager - open account");
-		});
-		buttons[5] = new JFXButton("Registeration Restaurant");
-		buttons[5].addEventHandler(ActionEvent.ACTION, (e) -> {
-			branchManagerFunctions.reload(e, "/branchManager/RegisterationApprovalSupplier.fxml",
-					"Branch manager - registeration & Approval Supplier");
-		});
-		buttons[6] = new JFXButton("Exit");
-		buttons[6].addEventHandler(ActionEvent.ACTION, (e) -> {
 			branchManagerFunctions.exit(e);
 		});
 		vBoxManu.getChildren().addAll(buttons);
@@ -257,7 +232,7 @@ public class Navigation_SidePanelController extends Application implements Initi
 			customerFunctions.reload(e, path, titleStage);
 		});
 	}
-	
+
 	private void initSidePanelClient() {
 		JFXButton[] buttons = new JFXButton[3];
 

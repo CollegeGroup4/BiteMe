@@ -16,7 +16,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="supplier.EmployeeRegisterController">
    <children>
-      <AnchorPane layoutX="10.0" layoutY="85.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+      <AnchorPane layoutX="10.0" layoutY="93.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
             <Label fx:id="dishname" alignment="CENTER" contentDisplay="CENTER" layoutX="198.0" layoutY="120.0" prefHeight="76.0" prefWidth="314.0" text="Business Name:" textAlignment="CENTER">
                <font>
@@ -73,14 +73,14 @@
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Button>
-            <Hyperlink prefHeight="27.0" prefWidth="70.0" text="Home" textFill="WHITE">
+            <Hyperlink onAction="#Home" prefHeight="27.0" prefWidth="70.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
             <ImageView fitHeight="102.0" fitWidth="269.0">
                <image>
-                  <Image url="file:/C:/Users/orbit/eclipse-workspace/BiteMeold/img/biteMe.png" />
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/BiteMe/src/images/biteMe.png" />
                </image>
             </ImageView>
          </children>
