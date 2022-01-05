@@ -1,8 +1,6 @@
 package client;
 
 import java.net.URL;
-import java.sql.Time;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import com.google.gson.Gson;
@@ -12,28 +10,55 @@ import com.jfoenix.controls.JFXHamburger;
 
 import Server.EchoServer;
 import Server.Response;
-import branchManager.BranchManagerController;
+import guiNew.Messages;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import logic.Account;
-import logic.Order;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import logic.Account;
+import logic.Employer;
+import logic.Order;
+
+/**
+ * This class made for showing all user orders
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
 
 public class MyOrdersController implements Initializable {
-	private CustomerFunctions customerFunctions = new CustomerFunctions();
+	CustomerFunctions customerFunctions = new CustomerFunctions();
+
+	@FXML
+	private TableView<Order> tableView;
+
+	@FXML
+	private TableColumn<Order, Integer> orderNum;
+
+	@FXML
+	private TableColumn<Order, String> restaurant;
+
+	@FXML
+	private TableColumn<Order, String> orderTime;
+
+	@FXML
+	private TableColumn<Order, String> orderType;
+
+	@FXML
+	private Label lableErrorMsg;
 
 	@FXML
 	private HBox Nav;
@@ -42,120 +67,90 @@ public class MyOrdersController implements Initializable {
 	private Label welcomeLabel;
 
 	@FXML
-	private ImageView imageBiteme1;
-
-	@FXML
-	private HBox Nav1;
-
-	@FXML
-	private ImageView imageBiteme2;
-
-	@FXML
-	private ImageView imageFacebook;
-
-	@FXML
-	private ImageView imageInstergram;
-
-	@FXML
-	private ImageView imageWhatsapp;
-
-	@FXML
-	private Button btnBack;
-
-	@FXML
-	private TableView<Order> tblID;
-
-	@FXML
-	private TableColumn<Order, Integer> OrderNum;
-
-	@FXML
-	private TableColumn<Order, String> Restaurant;
-
-	@FXML
-	private TableColumn<Order, Time> OrderTime;
-
-	@FXML
-	private TableColumn<Order, String> OrderType;
-
-	@FXML
-	private TableColumn<Order, String> OrderAddress;
-	@FXML
 	private JFXHamburger myHamburger;
 
 	@FXML
 	private JFXDrawer drawer;
-	
-    @FXML
-    private Label lableErrorMag;
 
-	private ObservableList<Order> orderList = FXCollections.observableArrayList();
+	@FXML
+	private Button btnApprove;
+	@FXML
+	private Label lableSlectedOrder;
+
+	private ObservableList<Order> ordersList = FXCollections.observableArrayList();
+	private ObservableList<Order> orderEditSelect;
+	private Order[] orders;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
-		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
-
-//		orderList.clear();
-//		Gson gson = new Gson();
-//		JsonElement jsonElem = gson.toJsonTree(new Object());
-//		jsonElem.getAsJsonObject().addProperty("userName", CustomerPageController.client.getUserName());
-//		customerFunctions.sentToJson("/accounts", "GET", jsonElem,
-//				"Edit personal info - new ClientController didn't work");
+		sentToJson();
 		response();
 
-		OrderNum.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderNum"));
-		Restaurant.setCellValueFactory(new PropertyValueFactory<Order, String>("resturant"));
-		OrderTime.setCellValueFactory(new PropertyValueFactory<Order, Time>("orderTime"));
-		OrderType.setCellValueFactory(new PropertyValueFactory<Order, String>("orderType"));
-		OrderAddress.setCellValueFactory(new PropertyValueFactory<Order, String>("orderAddress"));
-		tblID.setItems(orderList);
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+
+		orderNum.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderID"));
+		restaurant.setCellValueFactory(new PropertyValueFactory<Order, String>("restaurantName"));
+		orderTime.setCellValueFactory(new PropertyValueFactory<Order, String>("time_taken"));
+		orderType.setCellValueFactory(new PropertyValueFactory<Order, String>("type_of_order"));
+
+		tableView.setItems(ordersList);
 
 	}
 
-	void response() {
-//		Response response = ChatClient.serverAns;
-//		if (response.getCode() != 200 && response.getCode() != 201)
-//			lableErrorMag.setText(response.getDescription());// error massage
-//		else {
-//			Account[] account = EchoServer.gson.fromJson((String) response.getBody(), Account[].class);
-//			for (Account a : account) { // update the list of users to be the response from the DB
-//				orderList.add(a);
-//			}
-//		}
+	private void sentToJson() {
+		Gson gson = new Gson();
+		JsonElement body = gson.toJsonTree(new Object());
+		body.getAsJsonObject().addProperty("userName", CustomerPageController.client.getUserName());
+		customerFunctions.sentToJson("/orders/getOrderByUserName", "GET", body,
+				"Edit personal info - new ClientController didn't work");
 
 	}
 
-	@FXML
-	void goBack(ActionEvent event) {
-		((Node) event.getSource()).getScene().getWindow().hide();
-		Stage primaryStage = new Stage();
-		CustomerPageController aFrame = new CustomerPageController();
-		try {
-			aFrame.start(primaryStage);
-		} catch (Exception e) {
-			e.printStackTrace();
+	private void response() {
+		// TODO Auto-generated method stub
+		Gson gson = new Gson();
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201)
+			lableErrorMsg.setText(response.getDescription());// error massage
+		else {
+			orders = gson.fromJson((String) response.getBody(), Order[].class);
+			for (Order o : orders) { // update the list of users to be the response from the DB
+				ordersList.add(o);
+
+			}
 		}
 
 	}
 
-	public void insertOrdersToTbl() {
-//		String[] id = new String[2];
-//		id[0] = new String("GETALL");
-//		id[1] = new String("ORDER");
-//		ClientUI.chat.accept(id);
-//
-//		if (ChatClient.serverAns.get(2).equals("Error")) {
-//			System.out.println("Can't find any orders");
-//
-//		} else {
-//			ArrayList<String> orders = ChatClient.serverAns;
-//			for (int i = 2; i < orders.size(); i++) {
-// 				String[] result = orders.get(i).split(",");
-//				Order temp = new Order(result[0], result[1], result[2], Time.valueOf(result[3]), result[4]);
-//				temp.setOrderNum(Integer.valueOf(result[5]));
-//				orderList.add(temp);
-//			}
-//		}
+	/**
+	 * A method that updates the selected user - userEditSelect by clicking on the
+	 * table
+	 * 
+	 * @param event
+	 */
+	@FXML
+	void ClickOnTable(MouseEvent event) {
+		orderEditSelect = tableView.getSelectionModel().getSelectedItems();
+		lableSlectedOrder.setText("Restaurant name: " + orderEditSelect.get(0).getRestaurantName() + ", order num:"
+				+ orderEditSelect.get(0).getOrderID() + ""
+				+ String.format(",  Price: $ %.2f", orderEditSelect.get(0).getCheck_out_price()));
+	}
+
+	@FXML
+	void approve(ActionEvent event) {
+		Order order = orderEditSelect.get(0);
+		if (!lableSlectedOrder.getText().equals("")) {
+			customerFunctions.sentToJson("/orders/approveOrder", "POST", order,
+					"clint myOrder - new ClientController didn't work");
+
+
+			Response response = ChatClient.serverAns;
+			if (response.getCode() != 200 && response.getCode() != 201)
+				lableSlectedOrder.setText(response.getDescription());
+			else
+				ordersList.remove(order);
+		}
+
 	}
 
 	@FXML
@@ -167,4 +162,5 @@ public class MyOrdersController implements Initializable {
 	void logout(ActionEvent event) {
 		customerFunctions.logout(event);
 	}
+
 }

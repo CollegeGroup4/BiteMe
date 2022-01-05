@@ -6,12 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
@@ -19,9 +17,7 @@ import com.jfoenix.controls.JFXTextArea;
 
 import Server.EchoServer;
 import Server.Response;
-import common.Request;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,14 +25,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -48,23 +39,30 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import logic.Account;
 import logic.Restaurant;
 
+/**
+ * This class made for display and select restaurants
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
 public class ChooseRestaurantController implements Initializable {
 
 	public ArrayList<Restaurant> restaurantsFromData;
 	public static Restaurant restaurantSelected;
 	private CustomerFunctions customerFunctions = new CustomerFunctions();
-
-	String projectPath = System.getProperty("user.dir") + "\\src\\images\\"; // locate the Path of the current project
-																				// directory
-
+	String projectPath = System.getProperty("user.dir") + "\\src\\images\\"; // locate the Path of the current project//
+																				// director
 	@FXML
 	private VBox restaurantsContainer;
 
@@ -92,15 +90,15 @@ public class ChooseRestaurantController implements Initializable {
 	@FXML
 	private Label lableErrorMag;
 
+	/**
+	 * Setting initial display values for the page
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
 		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
-
-		areas.getItems().addAll("north", "south", "East", "West");
-		areas.setValue(CustomerPageController.client.getArea()); // TODO
-		System.out.println("client: " + CustomerPageController.client);
-		System.out.println("area: " + CustomerPageController.client.getArea());
+		areas.getItems().addAll("North", "South", "East", "West");
+		areas.setValue(CustomerPageController.client.getArea());
 		sentToServer();
 		response();
 		try {
@@ -110,6 +108,11 @@ public class ChooseRestaurantController implements Initializable {
 		}
 	}
 
+	/**
+	 * A function that is activated when selecting the restaurant area
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onClickArea(ActionEvent event) {
 		try {
@@ -119,6 +122,11 @@ public class ChooseRestaurantController implements Initializable {
 		}
 	}
 
+	/**
+	 * A function that is activated when selecting the restaurant type
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void onClickType(ActionEvent event) {
 		try {
@@ -128,6 +136,11 @@ public class ChooseRestaurantController implements Initializable {
 		}
 	}
 
+	/**
+	 * Creates the restaurants display component
+	 * 
+	 * @throws FileNotFoundException
+	 */
 	void reSetContainer() throws FileNotFoundException {
 		ArrayList<HBox> restaurantList = new ArrayList<>();
 		String areaSelected = areas.getValue();
@@ -138,13 +151,11 @@ public class ChooseRestaurantController implements Initializable {
 				Label name = new Label(restaurantsFromData.get(i).getName());
 				Font font = Font.font("Berlin Sans FB Demi", FontWeight.BOLD, 20);
 				name.setFont(font);
-
 				Label type = new Label(restaurantsFromData.get(i).getType());
-
 				Label address = new Label(restaurantsFromData.get(i).getAddress());
 				address.setFont(Font.font("Verdana", FontPosture.ITALIC, 10));
-
 				InputStream stream = new FileInputStream(projectPath + "" + restaurantsFromData.get(i).getPhoto());
+
 				Image logo = new Image(stream);
 				ImageView logoImage = new ImageView();
 				logoImage.setImage(logo);
@@ -186,6 +197,14 @@ public class ChooseRestaurantController implements Initializable {
 		restaurantsContainer.getChildren().addAll(restaurantList);
 	}
 
+	/**
+	 * The function is activated when clicking on a restaurant. The purpose of the
+	 * function is to save the selected restaurant and move on to the dish selection
+	 * process
+	 * 
+	 * @param event
+	 * @param name
+	 */
 	private void handeleClick(MouseEvent event, String name) {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -196,7 +215,6 @@ public class ChooseRestaurantController implements Initializable {
 		try {
 			root = loader.load(getClass().getResource("/client/ChooseADish.fxml").openStream());
 			ChooseADishController.chooseADishController = loader.getController();
-
 			Scene scene = new Scene(root);
 			primaryStage.setTitle("Prepare A Dish Page");
 			primaryStage.setScene(scene);
@@ -207,17 +225,22 @@ public class ChooseRestaurantController implements Initializable {
 
 	}
 
+	/**
+	 * Sends the type and area of the restaurant to the server, in order to get the
+	 * appropriate restaurants
+	 */
 	void sentToServer() {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
 		body.getAsJsonObject().addProperty("area", areas.getValue());
-		
 		customerFunctions.sentToJson("/restaurants/areas", "GET", body, "get restaurants by area didn't work");
-	
 	}
 
+	/**
+	 * Received restaurants information from the server and arrangements for the
+	 * data structures
+	 */
 	private void response() {
-
 		restaurantsFromData = new ArrayList<Restaurant>();
 		Response response = ChatClient.serverAns;
 		if (response.getCode() != 200 && response.getCode() != 201) // if there was an error then need to print an error
@@ -233,49 +256,31 @@ public class ChooseRestaurantController implements Initializable {
 		}
 	}
 
-//	private void getInformation(String area, String type) {// getting and arranging the data from the
-//															// server
-//		restaurantsFromData = new ArrayList<Restaurant>();
-//
-//		Restaurant res0 = new Restaurant(0, true, 0, "McDonald's", "North", "Burgers", null, "M.png",
-//				"Carmiel, kalnit 1",
-//				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
-//		Restaurant res1 = new Restaurant(1, true, 0, "Ruben", "North", "Burgers", null, "ruben.png",
-//				"Carmiel, hasalom 33",
-//				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
-//		Restaurant res2 = new Restaurant(2, true, 0, "BBB", "North", "Burgers", null, "BBB.png", "Carmiel, yefe 22",
-//				"Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and");
-//		restaurantsFromData.add(res0);
-//		restaurantsFromData.add(res1);
-//		restaurantsFromData.add(res2);
-//
-//	}
-
-	public void start(Stage primaryStage) throws IOException {
-		Parent root = FXMLLoader.load(getClass().getResource("/client/ChooseRestaurant.fxml"));
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Restaurants Page");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-
+	/**
+	 * Loading the previous screen (CustomerPage)
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void goBack(ActionEvent event) {
-		((Node) event.getSource()).getScene().getWindow().hide();
-		Stage primaryStage = new Stage();
-		CustomerPageController aFrame = new CustomerPageController();
-		try {
-			aFrame.start(primaryStage);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		customerFunctions.reload(event, "CustomerPage.fxml", "Customer Page");
 	}
 
+	/**
+	 * Loading home page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void home(ActionEvent event) {
 		customerFunctions.home(event);
 	}
 
+	/**
+	 * Disconnect the user from the system
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void logout(ActionEvent event) {
 		customerFunctions.logout(event);

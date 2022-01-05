@@ -18,23 +18,32 @@
    <children>
       <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <TableView fx:id="tblID" layoutX="167.0" layoutY="151.0" prefHeight="291.0" prefWidth="534.0">
+            <TableView fx:id="tableView" layoutX="173.0" layoutY="164.0" onMouseClicked="#ClickOnTable" prefHeight="291.0" prefWidth="534.0">
                <columns>
-                  <TableColumn fx:id="OrderNum" prefWidth="92.0" text="Order Number" />
-                  <TableColumn fx:id="Restaurant" prefWidth="69.0" text="Restaurant" />
-                  <TableColumn fx:id="OrderTime" prefWidth="90.0" text="Order Time" />
-                  <TableColumn fx:id="OrderType" prefWidth="109.0" text="Type Of Order" />
-                  <TableColumn fx:id="OrderAddress" prefWidth="173.0" text="Order Address" />
+                  <TableColumn fx:id="orderNum" prefWidth="111.0" text="Order Number" />
+                  <TableColumn fx:id="restaurant" prefWidth="160.0" text="Restaurant" />
+                  <TableColumn fx:id="orderTime" prefWidth="121.0" text="Order Time" />
+                  <TableColumn fx:id="orderType" prefWidth="141.0" text="Type Of Order" />
                </columns>
             </TableView>
-            <Label layoutX="349.0" layoutY="43.0" text="My Orders">
+            <Label layoutX="349.0" layoutY="71.0" text="My Orders">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <Label fx:id="lableErrorMag" alignment="CENTER" layoutX="6.0" layoutY="502.0" prefHeight="37.0" prefWidth="870.0" textFill="RED">
+            <Label fx:id="lableErrorMsg" alignment="CENTER" layoutX="6.0" layoutY="502.0" prefHeight="37.0" prefWidth="870.0" textFill="RED">
                <font>
                   <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnApprove" layoutX="405.0" layoutY="539.0" mnemonicParsing="false" onAction="#approve" prefHeight="25.0" prefWidth="72.0" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="Approve">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="13.0" />
+               </font>
+            </Button>
+            <Label fx:id="lableSlectedOrder" alignment="CENTER" layoutX="11.0" layoutY="471.0" prefHeight="23.0" prefWidth="861.0">
+               <font>
+                  <Font name="David Bold" size="18.0" />
                </font>
             </Label>
          </children>

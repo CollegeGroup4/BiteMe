@@ -122,6 +122,14 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </Label>
+                        <Label fx:id="lblEmail" text="Email:">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Arial" size="12.0" />
+                           </font>
+                        </Label>
                         <Label text="Payment info">
                            <font>
                               <Font name="Arial Bold" size="15.0" />

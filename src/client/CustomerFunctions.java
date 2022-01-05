@@ -6,26 +6,31 @@ import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.transitions.hamburger.HamburgerBackArrowBasicTransition;
 
 import Server.Response;
-import client.ChatClient;
-import client.ClientUI;
 import common.Request;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import logic.Account;
-
+/**
+ * This class contain common functions
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
 public class CustomerFunctions {
 
 	/**
@@ -50,17 +55,18 @@ public class CustomerFunctions {
 			e.printStackTrace();
 		}
 	}
-
+/**
+ * Initialize navigation bar that switch between pages
+ * @param myHamburger
+ * @param drawer
+ */
 	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
-
 		try {
 			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
-
 			drawer.setSidePane(anchorPane);
 		} catch (IOException e) {
 			Logger.getLogger(Navigation_SidePanelController.class.getName()).log(Level.SEVERE, null, e);
 		}
-
 		// transition animation of hamburger icon
 		HamburgerBackArrowBasicTransition transition = new HamburgerBackArrowBasicTransition(myHamburger);
 		drawer.setVisible(false);
@@ -82,6 +88,13 @@ public class CustomerFunctions {
 		});
 	}
 
+	/**
+	 * Sending data to the database
+	 * @param String path
+	 * @param String method
+	 * @param object
+	 * @param String errorMsg
+	 */
 	public void sentToJson(String path, String method, Object object, String errorMsg) {
 		Gson gson = new Gson();
 		Request request = new Request();
@@ -95,7 +108,11 @@ public class CustomerFunctions {
 			System.out.println(errorMsg);
 		}
 	}
-
+	
+/**
+ * Returning home
+ * @param event
+ */
 	public void home(ActionEvent event) {
 		reload(event, "/client/CustomerPage.fxml", "Customer - home");
 	}
@@ -115,13 +132,18 @@ public class CustomerFunctions {
 		}
 		System.exit(0);
 	}
-
+/**
+ * Logout functionalities
+ * @param event
+ */
 	public void logout(ActionEvent event) {
 		logoutSentToJson();
 		logoutResponse();
 		reload(event, "/guiNew/HomePage.fxml", "Home page");
 	}
-
+/**
+ * Disconnect the user from the system
+ */
 	public void logoutSentToJson() {
 		Gson gson = new Gson();
 		JsonElement jsonElem = gson.toJsonTree(new Object());
@@ -138,6 +160,9 @@ public class CustomerFunctions {
 		}
 	}
 
+/**
+ * Receiving response to the logout request
+ */
 	public void logoutResponse() {
 		Response response = ChatClient.serverAns;
 		System.out.println("-->>" + response.getDescription()); // Description from server

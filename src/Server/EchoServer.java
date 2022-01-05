@@ -111,6 +111,15 @@ public class EchoServer extends AbstractServer {
 				break;
 			}
 			break;
+		case "/orders/approveOrder":
+			switch (method) {
+			case POST:
+				Order updateOrder = gson.fromJson((String) m.getBody(), Order.class);
+				OrderApiService.deliveredOrder(updateOrder, response);
+				break;
+			}
+			break;
+
 		case "/orders/paymentApproval/business":
 			switch (method) {
 			case GET:

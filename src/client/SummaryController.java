@@ -14,9 +14,19 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import logic.Item;
-
+/**
+ * This class made for showing summary of the order
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
 public class SummaryController implements Initializable {
-	public static boolean withRemoveBtn; 
+	public static boolean withRemoveBtn;
 	@FXML
 	private TableView<Item> table;
 
@@ -35,6 +45,9 @@ public class SummaryController implements Initializable {
 	private ObservableList<Item> itemsList = FXCollections.observableArrayList();
 	private ObservableList<Item> itemSelect;
 
+	/**
+	 * Initialize Table View
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		insertitemsToTbl();
@@ -45,22 +58,36 @@ public class SummaryController implements Initializable {
 		btnRemove.setVisible(withRemoveBtn);
 	}
 
+	/**
+	 * Insert items to the table
+	 */
 	public void insertitemsToTbl() {
 		for (int i = 0; i < ChooseADishController.itemsSelectedArr.size(); i++) {
 			itemsList.add(ChooseADishController.itemsSelectedArr.get(i));
-
 		}
 	}
 
+	/**
+	 * Event for clicking on a row
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void ClickOnTable(MouseEvent event) {
 		itemSelect = table.getSelectionModel().getSelectedItems();
 	}
 
+	/**
+	 * Remove item from the shopping cart
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void removeItem(ActionEvent event) {
-		if (itemSelect != null)
+		if (itemSelect != null) {
 			itemsList.remove(itemSelect.get(0));
+			ChooseADishController.itemsSelectedArr.remove(itemSelect.get(0));
+		}
+		
 	}
-
 }

@@ -8,13 +8,10 @@ import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -25,9 +22,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import logic.Shippment;
-
+/**
+ * This class made for enter payment method
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
 public class PaymentController implements Initializable {
 
 	public static PaymentSaved payment; //
@@ -150,40 +155,9 @@ public class PaymentController implements Initializable {
 	@FXML
 	private JFXDrawer drawer;
 
-	public void start(Stage primaryStage) throws IOException {
-		Parent root = FXMLLoader.load(getClass().getResource("/client/Payment.fxml"));
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Payment Page");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-
-	@FXML
-	void goBack(ActionEvent event) throws IOException {
-		((Node) event.getSource()).getScene().getWindow().hide();
-		Stage primaryStage = new Stage();
-		DeliveryAndTimeController aFrame = new DeliveryAndTimeController();
-		aFrame.start(primaryStage);
-	}
-
-	@FXML
-	void next(ActionEvent event) {
-		checkValidInputes();
-		if (!errorOccurred)
-			insertValues();
-		else {
-			errorOccurred = false;
-			return;
-		}
-		((Node) event.getSource()).getScene().getWindow().hide();
-		FinalApproveController aFrame = new FinalApproveController();
-		try {
-			aFrame.start(new Stage());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+	/**
+	 * Checks for valid inputs or empty fields
+	 */
 	private void checkValidInputes() {
 		if (creditCard.isSelected()) {
 			if (cardNumber.getText().equals("")) {
@@ -214,6 +188,9 @@ public class PaymentController implements Initializable {
 
 	}
 
+	/**
+	 * Initialize display functionalities and values
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
@@ -230,9 +207,11 @@ public class PaymentController implements Initializable {
 		visa.setOnAction(e -> visaSelected());
 		masterCard.setOnAction(e -> masterCardSelected());
 		americanExpress.setOnAction(e -> americanExpressSelected());
-		setOrderDetailsLabels();
 	}
 
+	/**
+	 * Save payment details from the fields
+	 */
 	private void insertValues() {
 		payment.cardNum = cardNumber.getText();
 		payment.expMonth = expMonth.getValue();
@@ -240,23 +219,11 @@ public class PaymentController implements Initializable {
 		payment.cardSecurity = securityCode.getText();
 	}
 
-	private void setOrderDetailsLabels() {
-		// lblDate.setText(lblDate.getText() + " " +
-		// DeliveryAndTimeController.orderToSend.required_time);
-		// lblOrderType.setText(lblOrderType.getText() + " " +
-		// DeliveryAndTimeController.orderToSend.type_of_order);
-		// lblAddress.setText(lblAddress.getText() + " " +
-		// DeliveryAndTimeController.shippment.getAddress());
-		// lblWorkplace.setText(lblWorkplace.getText() + " " +
-		// DeliveryAndTimeController.shippment.getWork_place());
-		// lblID.setText(lblID.getText() + " " + CustomerPageController.user.getId());
-		// *** Implement when connect to the DB
-		// lblName.setText(lblName.getText() + " " +
-		// CustomerPageController.user.getName()); *** Implement when connect to the DB
-		// lblPhone.setText(lblPhone.getText()+"
-		// "+DeliveryAndTimeController.shippment.getPhone());
-	}
-
+	/**
+	 * Function to display Shopping cart
+	 * 
+	 * @param event
+	 */
 	public void handeleClickShoppingCart(MouseEvent event) {
 		if (isOpen) {
 			orderDetails.setCenter(null);
@@ -274,24 +241,37 @@ public class PaymentController implements Initializable {
 		isOpen = !isOpen;
 	}
 
+	/**
+	 * Functionality when selected AmericanExpress Credit Card
+	 */
 	private void americanExpressSelected() {
 		payment.cardType = "American Express";
 		visa.setSelected(false);
 		masterCard.setSelected(false);
 	}
 
+	/**
+	 * Functionality when selected MasterCard Credit Card
+	 */
 	private void masterCardSelected() {
 		payment.cardType = "Master Card";
 		visa.setSelected(false);
 		americanExpress.setSelected(false);
 	}
 
+	/**
+	 * Functionality when selected visa Credit Card
+	 */
 	private void visaSelected() {
 		payment.cardType = "Visa";
 		masterCard.setSelected(false);
 		americanExpress.setSelected(false);
 	}
 
+	/**
+	 * Displays the prices that the user should pay (Sub Total price,
+	 * Shipment,Discount, Total price)
+	 */
 	private void setPrices() {
 		float discount = DeliveryAndTimeController.orderToSend.discount_for_early_order / (float) 100;
 		float sumAfterDiscount = DeliveryAndTimeController.orderToSend.check_out_price;
@@ -304,12 +284,20 @@ public class PaymentController implements Initializable {
 		totalPrice.setText(String.format(" $ %.2f", sumAfterDiscount));
 	}
 
+	/**
+	 * Setting adaptable error message
+	 * 
+	 * @param errorMsg
+	 */
 	private void errorLabelFunc(String errorMsg) {
 		errorLabel.setVisible(true);
 		errorLabel.setText(errorMsg);
 		errorOccurred = true;
 	}
 
+	/**
+	 * Calculate shipment price
+	 */
 	private void checkShippmentPrice() {
 		if (DeliveryAndTimeController.orderToSend.type_of_order.equals("Take-Away"))
 			priceOfShippment = 0;
@@ -326,6 +314,9 @@ public class PaymentController implements Initializable {
 
 	}
 
+	/*
+	 * Turn On/Off credit card options when selected
+	 */
 	private void turnOnOfCreditCard() {
 		boolean b = true;
 		if (creditCard.isSelected())
@@ -338,14 +329,51 @@ public class PaymentController implements Initializable {
 		expLabel.setDisable(b);
 		expMonth.setDisable(b);
 		expYear.setDisable(b);
-
 	}
 
+	/**
+	 * Loading the previous screen (Delivery And Time)
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
+	@FXML
+	void goBack(ActionEvent event) throws IOException {
+		customerFunctions.reload(event, "DeliveryAndTime.fxml", "Delivery And Time");
+	}
+
+	/**
+	 * Loading the next screen (Final Approve)
+	 * 
+	 * @param event
+	 */
+	@FXML
+	void next(ActionEvent event) {
+		checkValidInputes();
+		if (!errorOccurred)
+			insertValues();
+		else {
+			errorOccurred = false;
+			return;
+		}
+		customerFunctions.reload(event, "FinalApprove.fxml", "Final Approve");
+	}
+
+	/**
+	 * Loading home page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void home(ActionEvent event) {
 		customerFunctions.home(event);
 	}
 
+	/**
+	 * Disconnect the user from the system
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void logout(ActionEvent event) {
 		customerFunctions.logout(event);

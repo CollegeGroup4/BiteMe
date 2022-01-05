@@ -61,7 +61,7 @@
             </Label>
             <ImageView fitHeight="263.0" fitWidth="286.0" layoutX="481.0" layoutY="172.0">
                <image>
-                  <Image url="@../images/Package%20delivery.png" />
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/BiteMe/src/images/Package%20delivery.png" />
                </image>
             </ImageView>
             <Button fx:id="btnBack" layoutX="48.0" layoutY="586.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">

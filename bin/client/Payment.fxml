@@ -77,17 +77,17 @@
             </TextField>
             <ImageView fitHeight="44.0" fitWidth="67.0" layoutX="253.0" layoutY="450.0">
                <image>
-                  <Image url="@../images/Visa.png" />
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/BiteMe/src/images/Visa.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="44.0" fitWidth="67.0" layoutX="358.0" layoutY="450.0">
                <image>
-                  <Image url="@../images/MasterCard_Logo.png" />
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/BiteMe/src/images/MasterCard_Logo.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="44.0" fitWidth="54.0" layoutX="461.0" layoutY="452.0">
                <image>
-                  <Image url="@../images/American_Express_logo.png" />
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/BiteMe/src/images/American_Express_logo.png" />
                </image>
             </ImageView>
             <CheckBox fx:id="visa" disable="true" layoutX="226.0" layoutY="464.0" mnemonicParsing="false" />
