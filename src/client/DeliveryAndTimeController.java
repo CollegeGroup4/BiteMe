@@ -3,38 +3,41 @@ package client;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import logic.Item;
 import logic.Shippment;
 
 public class DeliveryAndTimeController implements Initializable {
-
+	private CustomerFunctions customerFunctions = new CustomerFunctions();
+	/**
+	 * This class made for enter delivery informations
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 	public static Shippment shippment;
 
 	public class OrderToSend {
@@ -106,35 +109,32 @@ public class DeliveryAndTimeController implements Initializable {
 	private Label errorLabel;
 
 	@FXML
-	void goBack(ActionEvent event) throws IOException {
-		((Node) event.getSource()).getScene().getWindow().hide();
-		Stage primaryStage = new Stage();
-		ChooseADishController aFrame = new ChooseADishController();
-		aFrame.start(primaryStage);
-	}
+	private JFXHamburger myHamburger;
 
 	@FXML
-	void next(ActionEvent event) throws ParseException {
-		checkValidInputes();
-		if (!errorOccurred)
-			insertValues();
-		else {
-			errorOccurred = false;
-			return;
-		}
-		((Node) event.getSource()).getScene().getWindow().hide();
-		PaymentController aFrame = new PaymentController();
-		try {
-			aFrame.start(new Stage());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private JFXDrawer drawer;
 
-	}
-
+	/**
+	 * Check for valid inputs (empty fields, past date)
+	 */
 	private void checkValidInputes() {
 		if (dpDate.getValue() == null) {
-			errorLabelFunc("Please insert  date");
+			errorLabelFunc("Please insert date");
+			return;
+		}
+		int yearSelected = dpDate.getValue().getYear();
+		int monthSelected = dpDate.getValue().getMonthValue();
+		int daySelected = dpDate.getValue().getDayOfMonth();
+
+		LocalDateTime now = LocalDateTime.now();
+		int yearNow = now.getYear();
+		int monthNow = now.getMonthValue();
+		int dayNow = now.getDayOfMonth();
+
+		if (yearSelected - yearNow < 0 || (yearSelected - yearNow >= 0 && monthSelected - monthNow < 0)
+				|| (yearSelected - yearNow >= 0 && monthSelected - monthNow >= 0 && daySelected - dayNow < 0)) {
+
+			errorLabelFunc("Please insert  valid  date");
 			return;
 		}
 		if (cbTime.getValue() == null) {
@@ -145,30 +145,40 @@ public class DeliveryAndTimeController implements Initializable {
 			errorLabelFunc("Please insert type of order");
 			return;
 		}
-		if (workplace.getText().equals("")) {
+		if (workplace.getText().equals("") && !workplace.isDisable()) {
 			errorLabelFunc("Please insert workplace");
 			return;
 		}
-		if (address.getText().equals("")) {
+		if (address.getText().equals("") && !address.isDisable()) {
 			errorLabelFunc("Please insert address");
 			return;
 		}
-		if (name.getText().equals("")) {
+		if (name.getText().equals("") && !name.isDisable()) {
 			errorLabelFunc("Please insert name");
 			return;
 		}
-		if (phoneNumber.getText().equals("")) {
+		if (phoneNumber.getText().equals("") && !phoneNumber.isDisable()) {
 			errorLabelFunc("Please insert phone number");
 			return;
 		}
 	}
 
+	/**
+	 * Setting adaptable error message
+	 * 
+	 * @param String
+	 */
 	private void errorLabelFunc(String errorMsg) {
 		errorLabel.setVisible(true);
 		errorLabel.setText(errorMsg);
 		errorOccurred = true;
 	}
 
+	/**
+	 * Arranging the entered values
+	 * 
+	 * @throws ParseException
+	 */
 	private void insertValues() throws ParseException {
 		shippment = new Shippment(0, workplace.getText(), address.getText(), name.getText(), cbType.getValue(),
 				phoneNumber.getText());
@@ -180,27 +190,34 @@ public class DeliveryAndTimeController implements Initializable {
 		orderToSend.time_taken = now.format(formatter);
 		orderToSend.required_time = dpDate.getValue() + " " + cbTime.getValue();
 		orderToSend.type_of_order = cbType.getValue();
-		// orderToSend.userID=CustomerPageController.user.getId(); ** implement when
-		// connected to database
+		orderToSend.userID = CustomerPageController.client.getUserID();
 		orderToSend.phone = shippment.getPhone();
 		orderToSend.discount_for_early_order = calculateDiscount();
 		orderToSend.check_out_price = calculateCheckOutPrice();
 		orderToSend.items = castItems();
 		if (cbType.getValue().equals("Shared Delivery"))
 			orderToSend.num_of_people = Integer.valueOf(numOfPeople.getText());
-
 	}
 
+	/**
+	 * Cast from ArrayList to an array of items
+	 * 
+	 * @return
+	 */
 	private Item[] castItems() {
-
 		Item[] items = new Item[ChooseADishController.itemsSelectedArr.size()];
 		for (int i = 0; i < items.length; i++) {
 			items[i] = ChooseADishController.itemsSelectedArr.get(i);
 		}
-
 		return items;
 	}
 
+	/**
+	 * Check if the user is allowed to discount because of the pre-order time
+	 * 
+	 * @return
+	 * @throws ParseException
+	 */
 	private int calculateDiscount() throws ParseException {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		LocalDateTime d1 = LocalDateTime.parse(orderToSend.required_time, formatter);
@@ -211,6 +228,11 @@ public class DeliveryAndTimeController implements Initializable {
 		return 0;
 	}
 
+	/**
+	 * Calculate the order price including the discount (if needed)
+	 * 
+	 * @return
+	 */
 	private float calculateCheckOutPrice() {
 		float sum = 0;
 		for (int i = 0; i < ChooseADishController.itemsSelectedArr.size(); i++) {
@@ -220,17 +242,14 @@ public class DeliveryAndTimeController implements Initializable {
 		return sum;
 	}
 
-	public void start(Stage primaryStage) throws IOException {
-		Parent root = FXMLLoader.load(getClass().getResource("/client/DeliveryAndTime.fxml"));
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Delivery And Time Page");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-
-	}
-
+	/**
+	 * Initialize display functionalities and values
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
+
 		errorLabel.setVisible(false);
 		cbTime.getItems().addAll("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00",
 				"04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30",
@@ -239,17 +258,78 @@ public class DeliveryAndTimeController implements Initializable {
 				"21:00", "21:30", "22:00", "22:30", "23:00", "23:30");
 
 		cbType.getItems().addAll("Take-Away", "Regular Delivery", "Shared Delivery", "Deliver By Robot");
-		cbType.setOnAction(e -> sharedTypeFunc());
+		cbType.setOnAction(e -> typeFunc());
 	}
 
-	private void sharedTypeFunc() {
+	/**
+	 * Function for selecting values of Type's ComboBox
+	 */
+	private void typeFunc() {
 		if (cbType.getValue().equals("Shared Delivery")) {
 			anchorSharedDelivery.setVisible(true);
 		} else {
 			anchorSharedDelivery.setVisible(false);
 			numOfPeople.setText(null);
 		}
-
+		if (cbType.getValue().equals("Take-Away")) {
+			workplace.setDisable(true);
+			address.setDisable(true);
+			name.setDisable(true);
+			phoneNumber.setDisable(true);
+		} else {
+			workplace.setDisable(false);
+			address.setDisable(false);
+			name.setDisable(false);
+			phoneNumber.setDisable(false);
+		}
 	}
 
+	/**
+	 * Loading home page
+	 * 
+	 * @param event
+	 */
+	@FXML
+	void home(ActionEvent event) {
+		customerFunctions.home(event);
+	}
+
+	/**
+	 * Loading the previous screen (Choose A Dish)
+	 * 
+	 * @param event
+	 * @throws IOException
+	 */
+	@FXML
+	void goBack(ActionEvent event) throws IOException {
+		customerFunctions.reload(event, "ChooseADish.fxml", "Choose A Dish");
+	}
+
+	/**
+	 * Loading the next screen (Payment)
+	 * 
+	 * @param event
+	 * @throws ParseException
+	 */
+	@FXML
+	void next(ActionEvent event) throws ParseException {
+		checkValidInputes();
+		if (!errorOccurred)
+			insertValues();
+		else {
+			errorOccurred = false;
+			return;
+		}
+		customerFunctions.reload(event, "Payment.fxml", "Payment");
+	}
+
+	/**
+	 * Disconnect the user from the system
+	 * 
+	 * @param event
+	 */
+	@FXML
+	void logout(ActionEvent event) {
+		customerFunctions.logout(event);
+	}
 }

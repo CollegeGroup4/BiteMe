@@ -8,22 +8,31 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import temporaryDatabase.UserTemp;
-import temporaryDatabase.myOwnDatabase;
+import logic.Account;
 
-public class CustomerPageController /* implements Initializable */ {
-
+public class CustomerPageController implements Initializable {
+	public static Account client;
+	CustomerFunctions customerFunctions=new CustomerFunctions();
+	/**
+	 * This is the main screen for the customer
+	 * made for display all options to the customer
+	 *
+	 * @author Or Biton
+	 * @author Einan Choen
+	 * @author Tal Yehoshua
+	 * @author Moshe Pretze;
+	 * @author Tal-chen Ben-Eliyahu
+	 * @version January 2022
+	 * 
+	 */
 	@FXML
 	private HBox Nav;
 
@@ -33,8 +42,8 @@ public class CustomerPageController /* implements Initializable */ {
 	@FXML
 	private Hyperlink btnHome;
 
-    @FXML
-    private Label welcomeLabel;
+	@FXML
+	private Label welcomeLabel;
 
 	@FXML
 	private Button btnMyOrders;
@@ -61,51 +70,39 @@ public class CustomerPageController /* implements Initializable */ {
 	private ImageView imageWhatsapp;
 
 	FXMLLoader loader = new FXMLLoader();
-	public static UserTemp user;
-
-	public void start(Stage primaryStage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/client/CustomerPage.fxml"));
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Customer Page");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+/**
+ * 	Setting value for the welcome label
+ */
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
 	}
-
+/**
+ * A function that opens a page to view all orders for the user
+ * @param event
+ * @throws Exception
+ */
 	@FXML
 	void MyOrders(ActionEvent event) throws Exception {
-		FXMLLoader loader = new FXMLLoader();
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/client/MyOrders.fxml").openStream());
-		MyOrdersController myOrdersController = loader.getController();
-		myOrdersController.insertOrdersToTbl();
-		myOrdersController.setName();
-
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("My Orders Page");
-
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		customerFunctions.reload(event, "ChooseADish.fxml", "Choose A Dish");
 	}
-
+	/**
+	 * Beginning of the ordering process
+	 * @param event
+	 * @throws Exception
+	 */
 	@FXML
 	void OrderFood(ActionEvent event) throws Exception {
-		FXMLLoader loader = new FXMLLoader();
-		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-		Stage primaryStage = new Stage();
-		Pane root = loader.load(getClass().getResource("/client/ChooseRestaurant.fxml").openStream());
-		ChooseRestaurantController chooseRestaurantController = loader.getController();
-		chooseRestaurantController.setName();
-
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Choose Restaurant Page");
-
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		customerFunctions.reload(event, "CustomerPage.fxml", "Customer Page");
 	}
-	public void setUser(UserTemp user) {
-		CustomerPageController.user = user;
-		welcomeLabel.setText("Welcome, " + CustomerPageController.user.getName());
-	}
+	/**
+	 * Disconnect the user from the system
+	 * @param event
+	 */
+    @FXML
+    void logout(ActionEvent event) {
+    	customerFunctions.logout(event);
+
+    }
 
 }

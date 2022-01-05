@@ -47,6 +47,11 @@ public class PrivateAccount extends Account {
 
 	public void setW4C(String w4c) {
 		W4C = w4c;
-	}	
-	
+	}
+
+	@Override
+	public String toString() {
+		return "PrivateAccount [creditCardNumber=" + creditCardNumber + ", creditCardCVV=" + creditCardCVV
+				+ ", creditCardExpDate=" + creditCardExpDate + ", W4C=" + W4C + "]";
+	}
 }

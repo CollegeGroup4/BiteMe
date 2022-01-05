@@ -7,10 +7,10 @@ public class MyPhoto implements Serializable {
 	private String Description = null;
 	private String fileName = null;
 	private int size = 0;
-	public byte[] mybytearray;
+	public byte[] myByteArray;
 
 	public void initArray(int size) {
-		mybytearray = new byte[size];
+		myByteArray = new byte[size];
 	}
 
 	public MyPhoto(String fileName) {
@@ -34,17 +34,17 @@ public class MyPhoto implements Serializable {
 	}
 
 	public byte[] getMybytearray() {
-		return mybytearray;
+		return myByteArray;
 	}
 
 	public byte getMybytearray(int i) {
-		return mybytearray[i];
+		return myByteArray[i];
 	}
 
 	public void setMybytearray(byte[] mybytearray) {
 
 		for (int i = 0; i < mybytearray.length; i++)
-			this.mybytearray[i] = mybytearray[i];
+			this.myByteArray[i] = mybytearray[i];
 	}
 
 	public String getDescription() {

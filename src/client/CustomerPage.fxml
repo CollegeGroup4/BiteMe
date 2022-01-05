@@ -3,24 +3,24 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.CustomerPageController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="90.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="288.0" layoutY="24.0" prefHeight="46.0" prefWidth="305.0" text="Customer Page" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="213.0" layoutY="79.0" prefHeight="46.0" prefWidth="447.0" text="Customer Page" textAlignment="CENTER">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="40.0" />
                </font>
             </Label>
-            <Button fx:id="btnMyOrders" layoutX="342.0" layoutY="193.0" mnemonicParsing="false" onAction="#MyOrders" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="My Orders" textFill="WHITE">
+            <Button fx:id="btnMyOrders" layoutX="339.0" layoutY="362.0" mnemonicParsing="false" onAction="#MyOrders" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="My Orders" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -28,7 +28,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="btnOrderFood" layoutX="342.0" layoutY="106.0" mnemonicParsing="false" onAction="#OrderFood" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Order food" textFill="WHITE">
+            <Button fx:id="btnOrderFood" layoutX="339.0" layoutY="220.0" mnemonicParsing="false" onAction="#OrderFood" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Order food" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>
@@ -36,6 +36,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+            <Line endX="-100.0" endY="274.4000244140625" layoutX="734.0" layoutY="-144.0" startX="-473.0" startY="274.4000244140625" stroke="#968b8bbd" />
          </children>
       </AnchorPane>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="92.0" prefWidth="884.0" spacing="50.0" style="-fx-background-radius: 50px;">
@@ -48,12 +49,8 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink fx:id="btnHome" prefHeight="27.0" prefWidth="53.0" text="Home" textFill="WHITE">
-               <font>
-                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
-               </font>
-            </Hyperlink>
-            <Button fx:id="btnLogout" mnemonicParsing="false" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+            <Label prefHeight="17.0" prefWidth="142.0" text=" " />
+            <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#logout" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>

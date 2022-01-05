@@ -7,6 +7,9 @@ package client;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+
+import common.Response;
 import common.ChatIF;
 import ocsf.client.AbstractClient;
 
@@ -27,8 +30,9 @@ public class ChatClient extends AbstractClient {
 	 * method in the client.
 	 */
 	ChatIF clientUI;
-	public static ArrayList<String> serverAns = new ArrayList<String>();
+	public static Response serverAns;// = new ArrayList<String>();
 	public static boolean awaitResponse = false;
+	public static Gson gson = new Gson();
 
 	// Constructors ****************************************************
 
@@ -39,7 +43,7 @@ public class ChatClient extends AbstractClient {
 	 * @param port     The port number to connect on.
 	 * @param clientUI The interface type variable.
 	 */
-	
+
 	public ChatClient(String host, int port, ChatIF clientUI) throws IOException {
 		super(host, port); // Call the superclass constructor
 		this.clientUI = clientUI;
@@ -53,12 +57,12 @@ public class ChatClient extends AbstractClient {
 	 * @param msg The message from the server.
 	 */
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void handleMessageFromServer(Object msg) {
 		System.out.println("--> handleMessageFromServer");
 		awaitResponse = false;
-		serverAns = (ArrayList<String>) msg;
+		serverAns = gson.fromJson((String) msg, Response.class);
+		System.out.println("-->>" + serverAns.getDescription());
 	}
 
 	/**

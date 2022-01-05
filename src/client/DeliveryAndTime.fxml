@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -59,7 +61,7 @@
             </Label>
             <ImageView fitHeight="263.0" fitWidth="286.0" layoutX="481.0" layoutY="172.0">
                <image>
-                  <Image url="@../images/Package%20delivery.png" />
+                  <Image url="file:/C:/Users/einan/git/BiteMe/src/images/Package%20delivery.png" />
                </image>
             </ImageView>
             <Button fx:id="btnBack" layoutX="48.0" layoutY="586.0" mnemonicParsing="false" onAction="#goBack" prefHeight="39.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Back" textFill="WHITE">
@@ -147,12 +149,12 @@
                   <Insets left="10.0" top="50.0" />
                </padding>
             </Label>
-            <Hyperlink fx:id="btnHome" prefHeight="27.0" prefWidth="53.0" text="Home" textFill="WHITE">
+            <Hyperlink onAction="#home" prefHeight="27.0" prefWidth="53.0" text="Home" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
             </Hyperlink>
-            <Button fx:id="btnLogout" mnemonicParsing="false" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+            <Button mnemonicParsing="false" onAction="#logout" prefHeight="22.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="16.0" />
                </font>
@@ -164,5 +166,7 @@
             </ImageView>
          </children>
       </HBox>
+      <JFXHamburger fx:id="myHamburger" layoutX="859.0" layoutY="40.0" />
+      <JFXDrawer fx:id="drawer" layoutX="1.0" prefHeight="770.0" prefWidth="300.0" />
    </children>
 </AnchorPane>

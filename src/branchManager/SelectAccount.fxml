@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDrawer?>
+<?import com.jfoenix.controls.JFXHamburger?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="branchManager.EditPersonalInfoController">
+   <children>
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="102.0" prefWidth="784.0" spacing="50.0" style="-fx-background-radius: 50px;">
+         <children>
+            <Label fx:id="lableHello" prefHeight="88.0" prefWidth="202.0" styleClass="f" text="Hello, BManager">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" top="50.0" />
+               </padding>
+            </Label>
+            <Hyperlink onAction="#homeAndback" prefHeight="27.0" prefWidth="65.0" text="Home" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <Button mnemonicParsing="false" onAction="#logout" prefHeight="38.0" prefWidth="82.0" style="-fx-background-color: orange; -fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30;" text="LogOut" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="64.0" fitWidth="200.0">
+               <image>
+                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <AnchorPane layoutX="10.0" layoutY="91.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="270.0" layoutY="56.0" prefHeight="43.0" prefWidth="378.0" text="Edit Personal Info" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="40.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1.0" layoutY="131.0" prefHeight="43.0" prefWidth="378.0" text="Who would you like to edit ?" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="28.0" />
+               </font>
+            </Label>
+            <TableView fx:id="tableViewUsers" layoutX="45.0" layoutY="362.0" onMouseClicked="#ClickOnTable" prefHeight="200.0" prefWidth="792.0">
+               <columns>
+                  <TableColumn fx:id="tableColRole" prefWidth="90.0" text="Role" />
+                  <TableColumn fx:id="tableColID" prefWidth="110.0" text="Username" />
+                  <TableColumn fx:id="tableColFirstname" prefWidth="110.0" text="First name" />
+                  <TableColumn fx:id="tableColLastName" prefWidth="110.0" text="Last name" />
+                  <TableColumn fx:id="tableColArea" prefWidth="110.0" text="area" />
+                  <TableColumn fx:id="tableColPhonenum" prefWidth="150.0" text="phone number" />
+                  <TableColumn fx:id="tableColStatus" prefWidth="110.0" text="status" />
+               </columns>
+            </TableView>
+            <TextField fx:id="textFiledSearchUsername" layoutX="175.0" layoutY="193.0" prefHeight="25.0" prefWidth="175.0" />
+            <Button layoutX="363.0" layoutY="190.0" mnemonicParsing="false" onAction="#editByUsername" prefHeight="21.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="52.0" />
+               </font>
+            </Button>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="183.0" prefHeight="43.0" prefWidth="138.0" text="Enter username:" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="33.0" layoutY="244.0" prefHeight="43.0" prefWidth="307.0" text="Select user from the table to edit:" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="19.0" />
+               </font>
+            </Label>
+            <Button layoutX="50.0" layoutY="616.0" mnemonicParsing="false" onAction="#homeAndback" prefHeight="37.0" prefWidth="72.0" style="-fx-background-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-background-radius: 30;" text="back" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <AnchorPane layoutX="93.0" layoutY="274.0" prefHeight="67.0" prefWidth="463.0">
+               <children>
+                  <JFXComboBox fx:id="coboBoxRole" layoutX="84.0" layoutY="36.0" onAction="#onChengedRole" prefHeight="26.0" prefWidth="98.0" />
+                  <JFXComboBox fx:id="coboBoxStatus" layoutX="267.0" layoutY="37.0" onAction="#onChengedStatus" prefHeight="26.0" prefWidth="98.0" />
+                  <Label layoutX="14.0" layoutY="14.0" text="Select Your Filter:">
+                     <font>
+                        <Font name="David Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="24.0" layoutY="41.0" text="Role:">
+                     <font>
+                        <Font name="David Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="211.0" layoutY="40.0" text="Status:">
+                     <font>
+                        <Font name="David Bold" size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <Label fx:id="lableSlectedUser" alignment="CENTER" layoutX="11.0" layoutY="562.0" prefHeight="23.0" prefWidth="861.0">
+               <font>
+                  <Font name="David Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblrequiredEnterid" alignment="CENTER" layoutX="176.0" layoutY="174.0" prefHeight="18.0" prefWidth="171.0" textFill="RED">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="lableErrorMsg" alignment="CENTER" layoutX="9.0" layoutY="585.0" prefHeight="18.0" prefWidth="862.0" textFill="RED">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="lableErrorMsgID" alignment="CENTER" layoutX="445.0" layoutY="197.0" prefHeight="18.0" prefWidth="425.0" textFill="RED">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Label>
+            <Button layoutX="411.0" layoutY="603.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="66.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 14;" text="Edit" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="52.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <JFXHamburger fx:id="myHamburger" layoutX="858.0" layoutY="40.0" />
+      <JFXDrawer fx:id="drawer" layoutX="2.0" prefHeight="770.0" prefWidth="300.0" />
+   </children>
+</AnchorPane>

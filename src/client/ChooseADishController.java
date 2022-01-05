@@ -7,58 +7,53 @@ import java.io.InputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
-
-import com.jfoenix.controls.JFXButton;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTextArea;
 
+import common.Response;
+import common.Request;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 import logic.Item;
 import logic.Menu;
-import logic.Options;
-import logic.Restaurant;
 import logic.item_in_menu;
-import temporaryDatabase.myOwnDatabase;
-
+/**
+ * This class made for the dish chosen process
+ *
+ * @author Or Biton
+ * @author Einan Choen
+ * @author Tal Yehoshua
+ * @author Moshe Pretze;
+ * @author Tal-chen Ben-Eliyahu
+ * @version January 2022
+ * 
+ */
 public class ChooseADishController implements Initializable {
 
 	public static ChooseADishController chooseADishController = null;
+	private CustomerFunctions customerFunctions = new CustomerFunctions();
 	public static Menu menuSelected;
 	public static ArrayList<Menu> menusArr;
 	public HashMap<Integer, Item> allItems;
@@ -97,35 +92,38 @@ public class ChooseADishController implements Initializable {
 	private HBox Nav;
 
 	@FXML
+	private JFXHamburger myHamburger;
+
+	@FXML
+	private JFXDrawer drawer;
+
+	@FXML
 	private Label welcomeLabel;
+	@FXML
+	private Label lableErrorMag;
 
-	public void start(Stage primaryStage) throws IOException {
-		Parent root = FXMLLoader.load(getClass().getResource("/client/ChooseADish.fxml"));
-		Scene scene = new Scene(root);
-		primaryStage.setTitle("Prepare A Dish Page");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-
+	/**
+	 * Setting initial display values and data structures for the page
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		welcomeLabel.setText("Welcome, " + CustomerPageController.client.getFirstName());
+		customerFunctions.initializeNavigation_SidePanel(myHamburger, drawer);
 		/// ---------------------------------------------
 		System.out.println("path:" + System.getProperty("user.dir"));
 		/// ---------------------------------------------
-
-		requstFromServer();
+		sentToServer();
+		response();
 		if (itemsSelectedArr == null)
 			itemsSelectedArr = new ArrayList<>();
 		paneForSelections.setVisible(false);
 		setComboBoxMenu();// --create menu list--
 		comboBoxMenu.setValue(menusArr.get(0).getName());
-
 		setComboBoxCourses();// --create course list--
 		setComboBoxCategory();// --create category list--
-		setItemsInCategory();// --create item in category list--
 		comboBoxCategory.setDisable(true);
 		shoppingCart.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClickShoppingCart(e));
-
+		SummaryController.withRemoveBtn = true;
 		try {
 			setItemContainer();
 		} catch (FileNotFoundException e1) {
@@ -133,6 +131,12 @@ public class ChooseADishController implements Initializable {
 		}
 	}
 
+	/**
+	 * A function that is activated when selecting a menu
+	 * 
+	 * @param event
+	 * @throws FileNotFoundException
+	 */
 	@FXML
 	void onClickMenu(ActionEvent event) throws FileNotFoundException {
 		setComboBoxCourses();
@@ -141,6 +145,12 @@ public class ChooseADishController implements Initializable {
 		comboBoxCategory.setDisable(true);
 	}
 
+	/**
+	 * A function that is activated when selecting a course
+	 * 
+	 * @param event
+	 * @throws FileNotFoundException
+	 */
 	@FXML
 	void onClickCourse(ActionEvent event) throws FileNotFoundException {
 		setComboBoxCategory();
@@ -148,11 +158,22 @@ public class ChooseADishController implements Initializable {
 		comboBoxCategory.setDisable(false);
 	}
 
+	/**
+	 * A function that is activated when selecting category
+	 * 
+	 * @param event
+	 * @throws FileNotFoundException
+	 */
 	@FXML
 	void onClickCategory(ActionEvent event) throws FileNotFoundException {
 		setItemContainer();
 	}
 
+	/**
+	 * Displays the order summary for the selected items
+	 * 
+	 * @param event
+	 */
 	public void handeleClickShoppingCart(MouseEvent event) {
 		if (isOpen) {
 			paneForSummary.setCenter(null);
@@ -170,6 +191,11 @@ public class ChooseADishController implements Initializable {
 		isOpen = !isOpen;
 	}
 
+	/**
+	 * Creates the items display component
+	 * 
+	 * @throws FileNotFoundException
+	 */
 	private void setItemContainer() throws FileNotFoundException {
 		ArrayList<VBox> itemList = new ArrayList<>();
 		String selectedCourse = comboBoxCourse.getValue();
@@ -179,6 +205,7 @@ public class ChooseADishController implements Initializable {
 			item_in_menu itemInMenu = menuSelected.getItems()[i];
 			if (selectedCourse == null || (itemInMenu.getCourse()).equals(selectedCourse)) {
 				Item item = allItems.get(itemInMenu.getItemID());
+
 				if (selectedCategory == null || (item.getCategory()).equals(selectedCategory)) {
 					// ---get the img of the dish---//
 					InputStream stream;
@@ -218,7 +245,7 @@ public class ChooseADishController implements Initializable {
 					dishes.setPadding(new Insets(10, 0, 50, 10));
 					dishes.setCursor(Cursor.HAND);
 
-					dishes.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClickDish(e, item));
+					dishes.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> handeleClickDish(e, item.getItemID()));
 					itemList.add(dishes);
 					ItemContainer.getChildren().clear();
 					ItemContainer.getChildren().addAll(itemList);
@@ -227,11 +254,19 @@ public class ChooseADishController implements Initializable {
 		}
 	}
 
-	private void handeleClickDish(MouseEvent event, Item item) {
-
+	/**
+	 * Activate when clicking on item, in order to select item details
+	 * 
+	 * @param event
+	 * @param itemID
+	 */
+	private void handeleClickDish(MouseEvent event, int itemID) {
 		setVisibleItemContainer(false);
-		itemSelected = item;
-		setItemsInCategory();
+		itemSelected = allItems.get(itemID);
+		Item temp = new Item(itemSelected.getCategory(), itemSelected.getSubcategory(), itemID,
+				itemSelected.getRestaurantID(), itemSelected.getName(), itemSelected.getPrice(),
+				itemSelected.getDescription(), itemSelected.getIngrediants(), itemSelected.getOptions(),
+				itemSelected.getPhoto(), itemSelected.getAmount());
 		Parent root = null;
 		try {
 			root = FXMLLoader.load(getClass().getResource("Selections.fxml"));
@@ -239,8 +274,12 @@ public class ChooseADishController implements Initializable {
 			e.printStackTrace();
 		}
 		paneForSelections.setCenter(root);
+		allItems.put(itemID, temp);
 	}
 
+	/**
+	 * Insert menus options to a ComboBox
+	 */
 	private void setComboBoxMenu() {
 		String[] manuList = new String[menusArr.size()];
 		for (int i = 0; i < menusArr.size(); i++)
@@ -248,6 +287,9 @@ public class ChooseADishController implements Initializable {
 		comboBoxMenu.getItems().setAll(manuList);
 	}
 
+	/**
+	 * insert courses options to a ComboBox
+	 */
 	private void setComboBoxCourses() {
 		getMenuName();// ===== get the menu name =====
 		HashMap<String, Integer> courseList = new HashMap<>();
@@ -255,10 +297,13 @@ public class ChooseADishController implements Initializable {
 			courseList.put(menuSelected.getItems()[i].getCourse(), null);
 		}
 		comboBoxCourse.getItems().clear();
-		for (String course : courseList.keySet()) // enter courses to the comboBox
+		for (String course : courseList.keySet())
 			comboBoxCourse.getItems().add(course);
 	}
 
+	/**
+	 * Search for the selected menu from all the menus
+	 */
 	private void getMenuName() {
 		for (int i = 0; i < menusArr.size(); i++) {
 			if (menusArr.get(i).getName().equals(comboBoxMenu.getValue()))
@@ -266,6 +311,9 @@ public class ChooseADishController implements Initializable {
 		}
 	}
 
+	/**
+	 * insert categories options to a ComboBox
+	 */
 	private void setComboBoxCategory() {
 		setCategoriesInformation();
 		comboBoxCategory.getItems().clear();
@@ -274,7 +322,10 @@ public class ChooseADishController implements Initializable {
 		}
 	}
 
-	private void setCategoriesInformation() {// find all categories for a specific menu
+	/**
+	 * Find all categories for a specific menu
+	 */
+	private void setCategoriesInformation() {
 		categories = new HashMap<>();
 		item_in_menu[] itemsInMenu = menuSelected.getItems();
 
@@ -282,141 +333,113 @@ public class ChooseADishController implements Initializable {
 			categories.put(allItems.get(itemsInMenu[i].getItemID()).getCategory(), null);
 	}
 
-	private void setItemsInCategory() {
-		ArrayList<Item> itemsInCategory = new ArrayList<>();
-		for (int i = 0; i < menuSelected.getItems().length; i++) {
-			if (menuSelected.getItems()[i].getCourse().equals(comboBoxCourse.getValue())) {
-				Item item = allItems.get(menuSelected.getItems()[i].getItemID());
+	/**
+	 * Sends the restaurantID to the server, to get its items and menus
+	 */
+	void sentToServer() {
+		Gson gson = new Gson();
+		Request request = new Request();
+		request.setPath("/restaurants/menus");
+		request.setMethod("GET");
+		JsonElement body = gson.toJsonTree(new Object());
+		body.getAsJsonObject().addProperty("restaurantID", ChooseRestaurantController.restaurantSelected.getId());
+		request.setBody(gson.toJson(body));
+		String jsonUser = gson.toJson(request);
+		try {
+			ClientUI.chat.accept(jsonUser);
+		} catch (NullPointerException e) {
+			System.out.println("get menus by restaurand ID didn't work");
+		}
+	}
 
-				if (item.getCategory().equals(comboBoxCategory.getValue()))
-					itemsInCategory.add(item);
+	/**
+	 * Received restaurant's data (items,menus) the divide into data structures
+	 */
+	private void response() {
+		Gson gson = new Gson();
+		menusArr = new ArrayList<Menu>();
+		allItems = new HashMap<>();
+		Response response = ChatClient.serverAns;
+		if (response.getCode() != 200 && response.getCode() != 201)
+			lableErrorMag.setText(response.getDescription());
+		else {
+			JsonElement a = gson.fromJson((String) response.getBody(), JsonElement.class);
+			Menu[] menuList = gson.fromJson(a.getAsJsonObject().get("menues"), Menu[].class);
+			Item[] itemList = gson.fromJson(a.getAsJsonObject().get("items"), Item[].class);
+			for (Menu r : menuList)
+				menusArr.add(r);
+			for (Item i : itemList) {
+				allItems.put(i.getItemID(), i);
 			}
 		}
 	}
 
-	void requstFromServer() {
-		menusArr = new ArrayList<Menu>();
-		allItems = new HashMap<>();
-		// TODO - need to get menus and items list
-		setTempDatabase();
-	}
-
+	/**
+	 * Turn on/off items container
+	 * 
+	 * @param boolean variable
+	 */
 	public void setVisibleItemContainer(boolean visible) {
 		ItemContainer.setVisible(visible);
 		scrolePaneListItems.setVisible(visible);
 		paneForSelections.setVisible(!visible);
 	}
 
+	/**
+	 * Loading the previous screen (Choose Restaurant)
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void goBack(ActionEvent event) {
-		((Node) event.getSource()).getScene().getWindow().hide();
-		Stage primaryStage = new Stage();
-		ChooseRestaurantController aFrame = new ChooseRestaurantController();
-		try {
-			aFrame.start(primaryStage);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		customerFunctions.reload(event, "ChooseRestaurant.fxml", "Choose Restaurant");
 	}
 
+	/**
+	 * Loading the next screen (DeliveryAndTime)
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void next(ActionEvent event) {
-		((Node) event.getSource()).getScene().getWindow().hide();
-		DeliveryAndTimeController aFrame = new DeliveryAndTimeController();
-		try {
-			aFrame.start(new Stage());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		SummaryController.withRemoveBtn = false;
+		customerFunctions.reload(event, "DeliveryAndTime.fxml", "Delivery And Time");
 	}
 
-	public void setName() {
-		welcomeLabel.setText("Welcome, " + CustomerPageController.user.getName());
-
-	}
-
+	/**
+	 * Loading home page
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void home(ActionEvent event) {
-
+		customerFunctions.home(event);
 	}
 
+	/**
+	 * Disconnect the user from the system
+	 * 
+	 * @param event
+	 */
 	@FXML
 	void logout(ActionEvent event) {
-
+		customerFunctions.logout(event);
 	}
 
-	public void setRestName() {
-//		displayRestName.setText("You chose to dine at: " + ChooseRestaurantController.restaurantSelected.getName());
-
-	}
-
-	private void setTempDatabase() {
-
-		Options op0[] = { new Options("Size", "Regular", 0, 0), new Options("Size", "Big", 15, 0),
-				new Options("Select", "Not tomatoes", 0, 0), new Options("Select", "No onions", 0, 0) };
-
-		Options op1[] = { new Options("Cook Size", "Medium", 0, 1), new Options("Cook Size", "Medium Well", 0, 1),
-				new Options("Cook Size", "Well Done", 0, 1) };
-//========Day menu =======//
-		Item item0 = new Item("Italiano", null, 0, 0, "Regular Pizza", 40,
-				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
-				"regular-pizza.jpg", 5);
-		Item item2 = new Item("Italiano", null, 2, 0, "Margherita Pizza", 47,
-				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
-				"margherita-pizza.jpg", 5);
-		Item item3 = new Item("Italiano", null, 3, 0, "Special Pizza", 52,
-				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
-				"agg-pizza.jpeg", 5);
-		Item item6 = new Item("Salads", null, 6, 0, "Greek Salad", 52,
-				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
-				"GreekSalad.jpg", 5);
-//		Item item3 = new Item("Italiano", null, 3, 0, "Special Pizza", 52,
-//				"High-quality margherita pizza, comes with the addition of tomatoes, olives and onions.", null, op0,
-//				"C:\\Users\\talch\\OneDrive\\שולחן העבודה\\לימודים\\שיטות הנדסיות לפיתוח מערכות תוכנה\\פרוייקט\\חלק 2\\BiteMe\\src\\images\\agg-pizza.jpeg",
-//				5);
-		allItems.put(item0.getItemID(), item0);
-		allItems.put(item2.getItemID(), item2);
-		allItems.put(item3.getItemID(), item3);
-		allItems.put(item6.getItemID(), item6);
-
-		item_in_menu[] item_in_Daymenu = new item_in_menu[4];
-		item_in_Daymenu[0] = new item_in_menu(6, 0, "Day", "First Course");
-		item_in_Daymenu[1] = new item_in_menu(0, 0, "Day", "Second Course");
-		item_in_Daymenu[2] = new item_in_menu(2, 0, "Day", "Second Course");
-		item_in_Daymenu[3] = new item_in_menu(3, 0, "Day", "Second Course");
-
-//		item_in_menu item_in_Daymenu= new item_in_menu(1, 0, "Day", "Second Course");
-
-		// ========Night menu =======//
-		Item item1 = new Item("Steaks", null, 1, 0, "Entrecote", 85, "A classic 300 gram slice of entrecote", null, op1,
-				"meat-bar.jpg", 3);
-		Item item4 = new Item("Steaks", null, 4, 0, "Hamburger", 60, "A classic 300 gram slice of entrecote", null, op1,
-				"hamburger.jpg", 3);
-		Item item5 = new Item("Steaks", null, 5, 0, "Fries", 15, "A classic 300 gram slice of entrecote", null, op1,
-				"fries.jpg", 3);
-		allItems.put(item1.getItemID(), item1);
-		allItems.put(item4.getItemID(), item4);
-		allItems.put(item5.getItemID(), item5);
-		item_in_menu[] item_in_Nightmenu = new item_in_menu[3];
-		item_in_Nightmenu[0] = new item_in_menu(1, 0, "Night", "Second Course");
-		item_in_Nightmenu[1] = new item_in_menu(4, 0, "Night", "Second Course");
-		item_in_Nightmenu[2] = new item_in_menu(0, 0, "Night", "Second Course");
-
-		// items_in_menuArr.add(item_in_menu0);
-		// items_in_menuArr.add(item_in_menu1);
-
-		Menu dayMenu = new Menu("Day", 0, item_in_Daymenu);
-		Menu nightMenu = new Menu("Night", 0, item_in_Nightmenu);
-		menusArr = new ArrayList<Menu>();
-		menusArr.add(dayMenu);
-		menusArr.add(nightMenu);
-	}
-
+	/**
+	 * Returns the Border Pane that displays the summary table
+	 * 
+	 * @return
+	 */
 	public BorderPane getPaneForSummary() {
 		return paneForSummary;
 	}
 
+	/**
+	 * Returns the Border Pane that displays the item's options to choose
+	 * 
+	 * @return
+	 */
 	public BorderPane getPaneForSelections() {
 		return paneForSelections;
 	}
