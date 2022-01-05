@@ -31,6 +31,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import logic.Account;
 import logic.BranchManager;
+import supplier.HRPageController;
+import supplier.SupplierController;
 
 public class LoginController {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
@@ -93,21 +95,27 @@ public class LoginController {
 					case "Supplier":
 						System.out.println("go to supplier");
 						Navigation_SidePanelController.role = "Supplier";
-						
+						SupplierController.supplier=account;
+						SupplierController supliercontroller=new SupplierController();
+						supliercontroller.callrespone();
 						root = loader
-								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+								.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
 						break;
 					case "Moderator":
 						System.out.println("go to supplier moderator");
 						Navigation_SidePanelController.role = "Moderator";
+						SupplierController.supplier=account;
+						SupplierController supliercontroller2=new SupplierController();
+						supliercontroller2.callrespone();
 						root = loader
-								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+								.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
 						break;
 					case "HR":
 						System.out.println("go to HR");
 						Navigation_SidePanelController.role = "HR";
+						HRPageController.Hmanger=account;
 						root = loader
-								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
+								.load(getClass().getResource("/supplier/H.R.fxml").openStream());
 						break;
 					case "Client":
 						System.out.println("go to ordinary client");

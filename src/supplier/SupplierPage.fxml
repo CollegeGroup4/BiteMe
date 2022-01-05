@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="900.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="supplier.SupplierController">
+   <children>
+      <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="102.0" prefWidth="784.0" spacing="50.0" style="-fx-background-radius: 50px;">
+         <children>
+            <Label prefHeight="88.0" prefWidth="183.0" styleClass="f" text="Hello, Supplier">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" top="50.0" />
+               </padding>
+            </Label>
+            <Button fx:id="LogOut" mnemonicParsing="false" onAction="#LogOut" prefHeight="37.0" prefWidth="83.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange;" text="LogOut" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Button>
+            <Hyperlink prefHeight="27.0" prefWidth="61.0" text="Home" textFill="WHITE">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="16.0" />
+               </font>
+            </Hyperlink>
+            <ImageView fitHeight="102.0" fitWidth="301.0">
+               <image>
+                  <Image url="file:/C:/Users/orbit/eclipse-workspace/BiteMeold/img/biteMe.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <AnchorPane layoutX="11.0" layoutY="102.0" prefHeight="670.0" prefWidth="880.0" style="-fx-background-color: white; -fx-background-radius: 50px;">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="270.0" layoutY="22.0" prefHeight="43.0" prefWidth="227.0" text="Supplier Page" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="36.0" />
+               </font>
+            </Label>
+            <Button fx:id="creatandeditmenu" layoutX="342.0" layoutY="146.0" mnemonicParsing="false" onAction="#CreatMenu" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Create Menu">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="creatitem" layoutX="580.0" layoutY="146.0" mnemonicParsing="false" onAction="#CreatItem" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Create Item">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="allitems" layoutX="85.0" layoutY="146.0" mnemonicParsing="false" onAction="#AllItems" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="All items">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="19.0" layoutY="92.0" prefHeight="43.0" prefWidth="227.0" text="Menu Actions" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="29.0" layoutY="319.0" prefHeight="43.0" prefWidth="227.0" text="Order Actions" textAlignment="CENTER">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Label>
+            <Button fx:id="approveorder" layoutX="85.0" layoutY="371.0" mnemonicParsing="false" onAction="#ApproveOrder" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Approve Order">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
+            <Button id="orderbutton" fx:id="orderbutton" layoutX="324.0" layoutY="371.0" mnemonicParsing="false" onAction="#Order" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Order">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="UpdateButton" layoutX="342.0" layoutY="236.0" mnemonicParsing="false" onAction="#UpdateMenu" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Update Menu">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="UpdateItem" layoutX="580.0" layoutY="236.0" mnemonicParsing="false" onAction="#UpdateItem" prefHeight="67.0" prefWidth="196.0" style="-fx-border-color: #FFF3B0; -fx-font-family: Berlin Sans FB Demi; -fx-font-weight: bold; -fx-border-radius: 30; -fx-background-color: orange; -fx-background-radius: 30; -fx-font-size: 18;" text="Update Item">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

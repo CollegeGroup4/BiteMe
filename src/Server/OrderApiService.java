@@ -592,7 +592,7 @@ public class OrderApiService {
 		long timeBetweenTakenToReq, timeBetweenNowAndApproved;
 		try {
 			deliveredOrder = EchoServer.con.prepareStatement(
-					"UPDATE biteme.order SET hasArrived = 1" + " WHERE OrderNum = ? AND UserName = ?;");
+					"UPDATE biteme.order SET hasArrived = 1" + " WHERE OrderNum = ? AND UserName = ? AND isApproved = 1;");
 			deliveredOrder.setInt(1, order.getOrderID());
 			deliveredOrder.setString(2, order.getUserName());
 			// deliveredOrder.setInt(3, order.getOrderID());

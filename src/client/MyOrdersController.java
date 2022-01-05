@@ -90,7 +90,7 @@ public class MyOrdersController implements Initializable {
 
 		orderNum.setCellValueFactory(new PropertyValueFactory<Order, Integer>("orderID"));
 		restaurant.setCellValueFactory(new PropertyValueFactory<Order, String>("restaurantName"));
-		orderTime.setCellValueFactory(new PropertyValueFactory<Order, String>("time_taken"));
+		orderTime.setCellValueFactory(new PropertyValueFactory<Order, String>("approved_time"));
 		orderType.setCellValueFactory(new PropertyValueFactory<Order, String>("type_of_order"));
 
 		tableView.setItems(ordersList);

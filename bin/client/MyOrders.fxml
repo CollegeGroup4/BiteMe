@@ -22,7 +22,7 @@
                <columns>
                   <TableColumn fx:id="orderNum" prefWidth="111.0" text="Order Number" />
                   <TableColumn fx:id="restaurant" prefWidth="160.0" text="Restaurant" />
-                  <TableColumn fx:id="orderTime" prefWidth="121.0" text="Order Time" />
+                  <TableColumn fx:id="orderTime" prefWidth="121.0" text="Approved Time" />
                   <TableColumn fx:id="orderType" prefWidth="141.0" text="Type Of Order" />
                </columns>
             </TableView>
