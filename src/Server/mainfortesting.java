@@ -77,7 +77,7 @@ public class mainfortesting {
 		BranchManagerApiService.getReportForRestaurantByCategory();
 		BranchManagerApiService.getReportForRestaurantPerformence();
 		BranchManagerApiService.getReportForRestaurantSales();
-		BranchManagerApiService.sendPdfToCEO(1);
+		BranchManagerApiService.sendPdfToCEO(2);
 		
 //		Document doc = new Document();
 //

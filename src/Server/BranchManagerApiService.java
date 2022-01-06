@@ -795,14 +795,17 @@ public class BranchManagerApiService {
 		BranchManagerApiService.ifileManager = ifileManager;
 	}
 
+	// For mock!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!?!?!
 	public static void setPage(Page page) {
 		BranchManagerApiService.page = page;
 	}
 
+	// For mock!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	public static void setImage1(Image image1) {
 		BranchManagerApiService.image1 = image1;
 	}
 
+	// For mock!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	public static void setFs(FileInputStream fs) {
 		BranchManagerApiService.fs = fs;
 	}
@@ -868,33 +871,33 @@ public class BranchManagerApiService {
 
 		String last = "";
 
-		for (String temp : selectedImages) {
-			if (!flag) {
-				last = temp;
-				flag = true;
-			} else {
-				// TODO
-				mergedImages.add(mergeTwoImages(last, temp));
+//		for (String temp : selectedImages) {
+//			if (!flag) {
+//				last = temp;
+//				flag = true;
+//			} else {
+//				// TODO
+//				mergedImages.add(mergeTwoImages(last, temp));
+//
+//				flag = false;
+//				last = "";
+//			}
+//		}
 
-				flag = false;
-				last = "";
-			}
-		}
-
-		if (!last.equals(""))
-			mergedImages.add(QueryConsts.FILE_PATH_REPORTS + last);
-
-		for (String fileName : mergedImages) {
-
+//		if (!last.equals(""))
+//			mergedImages.add(QueryConsts.FILE_PATH_REPORTS + last);
+		int amount = 0;
+		for (String fileName : selectedImages) { // mergeTwoImages
+			amount++;
+			if (amount > 4)
+				break;
 			// TODO mock!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			FileInputStream fs = null;
 			try {
-				fs = new FileInputStream(fileName);
+				fs = new FileInputStream(QueryConsts.FILE_PATH_REPORTS + fileName);
 			} catch (FileNotFoundException e) {
-
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-
 			}
 
 			// Add a page to pages collection of document
@@ -941,45 +944,43 @@ public class BranchManagerApiService {
 		// sendCEO(email, absPath);
 	}
 
-	public static String mergeTwoImages(String first, String second) {
-		try {
-			// Loading an existing document
-			
-			BufferedImage img1 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + first));
-			BufferedImage img2 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + second));
-			BufferedImage joinedImg = joinBufferedImage(img1, img2);
-			boolean success = ImageIO.write(joinedImg, "png", new File(
-					QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png"));
-			System.out.println("saved success? " + success);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png";
-	}
-
-	public static BufferedImage joinBufferedImage(BufferedImage img1, BufferedImage img2) {
-
-		// do some calculate first
-		int offset = 5;
-		int wid = Math.max(img1.getWidth(), img2.getWidth()) + offset;
-		int height = img1.getHeight() + img2.getHeight() + offset;
-		// int wid = img1.getWidth() + img2.getWidth() + offset;
-		// int height = Math.max(img1.getHeight(), img2.getHeight()) + offset;
-		// create a new buffer and draw two image into the new image
-		BufferedImage newImage = new BufferedImage(wid, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = newImage.createGraphics();
-		Color oldColor = g2.getColor();
-		// fill background
-		g2.setPaint(Color.WHITE);
-		g2.fillRect(0, 0, wid, height);
-		// draw image
-		g2.setColor(oldColor);
-		g2.drawImage(img1, null, 0, 0);
-		g2.drawImage(img2, null, 0, img1.getHeight() + offset);
-		g2.dispose();
-		return newImage;
-	}
+//	public static String mergeTwoImages(String first, String second) {
+//		try {
+//			// Loading an existing document
+//			
+//			BufferedImage img1 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + first));
+//			BufferedImage img2 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + second));
+//			BufferedImage joinedImg = joinBufferedImage(img1, img2);
+//			boolean success = ImageIO.write(joinedImg, "png", new File(
+//					QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png"));
+//			System.out.println("saved success? " + success);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png";
+//	}
+//
+//	public static BufferedImage joinBufferedImage(BufferedImage img1, BufferedImage img2) {
+//
+//		// do some calculate first
+//		int offset = 5;
+//		int wid = Math.max(img1.getWidth(), img2.getWidth()) + offset;
+//		int height = img1.getHeight() + img2.getHeight() + offset;
+//
+//		BufferedImage newImage = new BufferedImage(wid, height, BufferedImage.TYPE_INT_ARGB);
+//		Graphics2D g2 = newImage.createGraphics();
+//		Color oldColor = g2.getColor();
+//		// fill background
+//		g2.setPaint(Color.WHITE);
+//		g2.fillRect(0, 0, wid, height);
+//		// draw image
+//		g2.setColor(oldColor);
+//		g2.drawImage(img1, null, 0, 0);
+//		g2.drawImage(img2, null, 0, img1.getHeight() + offset);
+//		g2.dispose();
+//		return newImage;
+//	}
 
 //	public static void sendCEO(String to, String filename) {
 //		final String user = System.getenv("MyEmail");
