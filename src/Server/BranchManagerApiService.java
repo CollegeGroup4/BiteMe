@@ -32,6 +32,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.sql.DataSource;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
@@ -838,15 +839,7 @@ public class BranchManagerApiService {
 		doc.save(QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf");
 		String absPath = System.getProperty("user.dir");
 		absPath = absPath + "\\" + QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf";
-		System.out.println(absPath);
-		String email;
-		try {
-			PreparedStatement getCEOMail = EchoServer.con.prepareStatement("SELECT Email FROM account WHERE Role = 'CEO';");
-			ResultSet rs = getCEOMail.executeQuery();
-			email = rs.getString(1);
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
+
 	}
 	
 	private static String mergeTwoImages(String first, String second) {
@@ -884,52 +877,6 @@ public class BranchManagerApiService {
 		g2.drawImage(img2, null, img1.getWidth() + offset, 0);
 		g2.dispose();
 		return newImage;
-	}
-	
-	private static void sendCEO(String to, String filename) {
-		final String user = System.getenv("MyEmail");;// change accordingly
-		final String password = System.getenv("MyPassEmail");// change accordingly
-
-		// 1) get the session object
-		Properties properties = System.getProperties();
-		 properties.put("mail.smtp.auth", "true");
-	     properties.put("mail.smtp.starttls.enable", "true");
-	     properties.put("mail.smtp.host", "smtp.gmail.com");
-	     properties.put("mail.smtp.port", "587");
-
-		Session session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(user, password);
-			}
-		});
-
-		try {
-			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(user));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			message.setSubject("A PDF File with A quarter report");
-
-			BodyPart messageBodyPart1 = new MimeBodyPart();
-			messageBodyPart1.setText("This is message body");
-
-			MimeBodyPart messageBodyPart2 = new MimeBodyPart();
-
-			DataSource source = new FileDataSource(filename);
-			messageBodyPart2.setDataHandler(new DataHandler(source));
-			messageBodyPart2.setFileName(filename);
-
-			Multipart multipart = new MimeMultipart();
-			multipart.addBodyPart(messageBodyPart1);
-			multipart.addBodyPart(messageBodyPart2);
-
-			message.setContent(multipart);
-
-			Transport.send(message);
-
-			System.out.println("message sent....");
-		} catch (MessagingException ex) {
-			ex.printStackTrace();
-		}
 	}
 }
 

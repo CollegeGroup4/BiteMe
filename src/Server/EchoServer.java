@@ -298,7 +298,7 @@ public class EchoServer extends AbstractServer {
 			case GET:
 				body = gson.fromJson((String) m.getBody(), JsonElement.class);
 				String area = gson.fromJson(body.getAsJsonObject().get("area"), String.class);
-				String type = gson.fromJson(body.getAsJsonObject().get("type"), String.class);
+				type = gson.fromJson(body.getAsJsonObject().get("type"), String.class);
 				RestaurantApiService.getRestaurantsByTypeAndArea(area, type, response);
 				break;
 			}
@@ -433,7 +433,7 @@ public class EchoServer extends AbstractServer {
 			switch (method) {
 			case GET:
 				body = gson.fromJson((String) m.getBody(), JsonElement.class);
-				int branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
+				branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
 				AccountApiService.getAllAccounts(branchManagerID, response);
 				break;
 			}
@@ -481,7 +481,7 @@ public class EchoServer extends AbstractServer {
 			switch (method) {
 			case GET:
 				body = gson.fromJson((String) m.getBody(), JsonElement.class);
-				int branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
+				branchManagerID = gson.fromJson(body.getAsJsonObject().get("branchManagerID"), Integer.class);
 				HrApiService.getAllUnapprovedBusinessAccount(branchManagerID, response);
 				break;
 			}
