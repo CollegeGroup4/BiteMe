@@ -57,7 +57,7 @@ public class mainfortesting {
 	}
 	public static void setUp() throws Exception {
 		EchoServer.con = DBController.getMySQLConnection("jdbc:mysql://localhost/biteme?serverTimezone=IST", "root",
-				"MoshPe2969999");
+				"Tal4EvEr");
 		//response = new Response();
 	}
 	public static void main(String[] args) {
@@ -73,7 +73,12 @@ public class mainfortesting {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		CEOApiService.generateQuarterlyReports();
+		
+		BranchManagerApiService.getReportForRestaurantByCategory();
+		BranchManagerApiService.getReportForRestaurantPerformence();
+		BranchManagerApiService.getReportForRestaurantSales();
+		BranchManagerApiService.sendPdfToCEO(1);
+		
 //		Document doc = new Document();
 //
 //		// Access image files in the folder

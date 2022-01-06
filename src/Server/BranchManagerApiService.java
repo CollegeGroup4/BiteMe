@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +22,9 @@ import java.util.Properties;
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
+//import javax.activation.DataHandler;
+//import javax.activation.DataSource;
+//import javax.activation.FileDataSource;
 import javax.imageio.ImageIO;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -32,7 +37,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.sql.DataSource;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
@@ -44,6 +48,17 @@ import com.aspose.pdf.Document;
 import com.aspose.pdf.Image;
 import com.aspose.pdf.Page;
 
+import ClassForTests.DateTimeManager;
+import ClassForTests.DbManager;
+import ClassForTests.FileManager;
+import ClassForTests.ImageManager;
+import ClassForTests.PageManager;
+import ClassForTests.iDateTimeManager;
+import ClassForTests.iDbManager;
+import ClassForTests.iFileManager;
+import ClassForTests.iImageManager;
+import ClassForTests.iPageManager;
+import common.DBController;
 import common.MyPhoto;
 import common.Response;
 import common.imageUtils;
@@ -212,7 +227,7 @@ public class BranchManagerApiService {
 			stmt = EchoServer.con.prepareStatement(
 					"INSERT INTO biteme.restaurant (RestaurantName, IsApproved, BranchManagerID, Area, Image, "
 							+ "UserName, Type, Address, Description) VALUES (?,?,?,?,?,?,?,?,?);",
-							Statement.RETURN_GENERATED_KEYS);
+					Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, restaurant.getName());
 			stmt.setBoolean(2, restaurant.isApproved());
 			stmt.setInt(3, restaurant.getBranchManagerID());
@@ -232,7 +247,8 @@ public class BranchManagerApiService {
 				String imageFileName = "restaurant_" + restaurantID + "." + sufix;
 				restaurant.getRestaurantImage().setFileName(imageFileName);
 				imageUtils.receiver(restaurant.getRestaurantImage(), QueryConsts.FILE_PATH_RESTAURANTS);
-				stmt = EchoServer.con.prepareStatement("UPDATE biteme.restaurant SET Image = ? WHERE RestaurantNum = ?;");
+				stmt = EchoServer.con
+						.prepareStatement("UPDATE biteme.restaurant SET Image = ? WHERE RestaurantNum = ?;");
 				stmt.setString(1, imageFileName);
 				stmt.setInt(2, restaurantID);
 				stmt.executeUpdate();
@@ -241,14 +257,15 @@ public class BranchManagerApiService {
 			response.setCode(400);
 			response.setDescription("Fail in registering a new restaurant -> role: " + role + ", userName " + userName);
 			try {
-				stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = 'Not Assigned' WHERE "
-						+ "UserName = ? AND UserID = ?;");
+				stmt = EchoServer.con.prepareStatement(
+						"UPDATE biteme.account SET Role = 'Not Assigned' WHERE " + "UserName = ? AND UserID = ?;");
 				stmt.setString(1, userName);
 				stmt.setInt(2, userID);
 				stmt.executeUpdate();
 			} catch (SQLException e) {
 				response.setCode(400);
-				response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());
+				response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName "
+						+ restaurant.getName());
 			}
 			return;
 		}
@@ -268,14 +285,13 @@ public class BranchManagerApiService {
 	 * @param restaurant
 	 * @param response
 	 */
-	public static void registerModerator(String userName, String supplierUserName,int userID, String role, Restaurant restaurant,Response response) {
+	public static void registerModerator(String userName, String supplierUserName, int userID, String role,
+			Restaurant restaurant, Response response) {
 		PreparedStatement stmt;
 		ResultSet rs;
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT * FROM "
-					+ "biteme.restaurant WHERE UserName = ? AND ModeratorUserName = ?;");
-			stmt.setString(1, supplierUserName);
-			stmt.setString(2, userName);
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM " + "biteme.restaurant WHERE ModeratorUserName = ?;");
+			stmt.setString(1, userName);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				throw new SQLException("UserName " + userName + " already has a restaurant", "400", 400);
@@ -286,8 +302,9 @@ public class BranchManagerApiService {
 			return;
 		}
 		try {
-			stmt = EchoServer.con.prepareStatement("UPDATE biteme.account SET Role = ?, BranchManagerID = ?, Area = ? WHERE "
-					+ "UserName = ? AND UserID = ?;");
+			stmt = EchoServer.con
+					.prepareStatement("UPDATE biteme.account SET Role = ?, BranchManagerID = ?, Area = ? WHERE "
+							+ "UserName = ? AND UserID = ?;");
 			stmt.setString(1, role);
 			stmt.setInt(2, restaurant.getBranchManagerID());
 			stmt.setString(3, restaurant.getArea());
@@ -296,7 +313,8 @@ public class BranchManagerApiService {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			response.setCode(400);
-			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());	
+			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName "
+					+ restaurant.getName());
 			return;
 		}
 		try {
@@ -308,11 +326,13 @@ public class BranchManagerApiService {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			response.setCode(400);
-			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName " + restaurant.getName());	
+			response.setDescription("Error in registering a new restaurant -> role: " + role + ", restaurantName "
+					+ restaurant.getName());
 			return;
 		}
 		response.setCode(200);
-		response.setDescription("Success in registering a new moderator -> role: " + role + ", restaurantName " + restaurant.getName());
+		response.setDescription(
+				"Success in registering a new moderator -> role: " + role + ", restaurantName " + restaurant.getName());
 	}
 
 	/**
@@ -420,6 +440,8 @@ public class BranchManagerApiService {
 		LocalDateTime orderTime;
 		DefaultCategoryDataset dataset;
 		HashMap<String, Double> dateToSales = new HashMap<>();
+		Calendar c = Calendar.getInstance();
+		int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 		try {
 
 			PreparedStatement getBMId = EchoServer.con
@@ -442,37 +464,47 @@ public class BranchManagerApiService {
 				for (Integer j : res_id) {
 					dateToSales.clear();
 					dataset = new DefaultCategoryDataset();
+
+//					for (int k = 1; k < monthMaxDays; k++) {
+//						if (k < 10)
+//							dateToSales.put(String.format("0%s", k), 0.0);
+//						else
+//							dateToSales.put(String.format("%s", k), 0.0);
+//					}
+
 					PreparedStatement getOrders = EchoServer.con.prepareStatement(
-							"SELECT OrderTime, Check_out_price, RestaurantID, RestaurantName FROM biteme.order WHERE RestaurantID = ? AND hasArrived = 1;");
+							"SELECT OrderTime, Check_out_price, RestaurantID, RestaurantName FROM biteme.order WHERE RestaurantID = ?;");
 					getOrders.setInt(1, j);
 					rs.close();
 					rs = getOrders.executeQuery();
 					if (rs.next())
 						res = rs.getString(3) + "_" + rs.getString(4);
 					else
-						break;
+						continue;
 					do {
 						orderTime = LocalDateTime.parse(rs.getString(1), formatter);
 						if (orderTime.format(year).equals(now.format(year)))
 							if (orderTime.format(month).equals(now.format(month))) {
 								orderPrice = rs.getDouble(2);
-								try {
-									dataset.incrementValue(orderPrice, res, orderTime.format(day));
-								} catch (Exception e) {
-									dataset.addValue(orderPrice, res, orderTime.format(day));
-								}
-//								if (dateToSales.containsKey(orderTime.format(day))) {
-//									tempPrice = dateToSales.get(orderTime.format(day));
-//									dateToSales.put(orderTime.format(day), tempPrice + orderPrice);
-//								} else
-//									dateToSales.put(orderTime.format(day), orderPrice);
+//								try {
+//									dataset.incrementValue(orderPrice, res, orderTime.format(day));
+//								} catch (Exception e) {
+//									dataset.addValue(orderPrice, res, orderTime.format(day));
+//								}
+								if (dateToSales.containsKey(orderTime.format(day))) {
+									tempPrice = dateToSales.get(orderTime.format(day));
+									dateToSales.put(orderTime.format(day), tempPrice + orderPrice);
+								} else
+									dateToSales.put(orderTime.format(day), orderPrice);
 
 								total += orderPrice;
 							}
 					} while (rs.next());
-//					for (String date : dateToSales.keySet()) {
-//						dataset.addValue(dateToSales.get(date), res, date);
-//					}
+
+					for (String date : dateToSales.keySet()) {
+						dataset.addValue(dateToSales.get(date), res, date);
+					}
+
 					header = "Income Report for restaurant id:" + j + " Total sales: " + String.format("%.2f$", total);
 					total = 0.0;
 					fromDataSetToReportImage(dataset, "Sales", i, now.format(year) + "_" + now.format(month), j, "$",
@@ -680,14 +712,12 @@ public class BranchManagerApiService {
 		path = QueryConsts.FILE_PATH_REPORTS + type + "_" + BranchManagerID + "_" + monthAndYear
 				+ ((RestaurantID == 0) ? "" : "_" + RestaurantID) + ".png";
 		try {
-			ChartUtils.saveChartAsPNG(new File(path), barChart, 600, 400);
+			ChartUtils.saveChartAsPNG(new File(path), barChart, 1000, 400);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 	/**
 	 * Approve an Employer
@@ -696,7 +726,7 @@ public class BranchManagerApiService {
 	 *
 	 */
 	public static void approveEmployer(String businessName, int branchManagerID, Response response) {
-		PreparedStatement postEmployer;		
+		PreparedStatement postEmployer;
 		try {
 			postEmployer = EchoServer.con.prepareStatement(
 					"UPDATE biteme.employer SET isApproved = 1 WHERE businessName = ? AND BranchManagerID = ?");
@@ -742,7 +772,51 @@ public class BranchManagerApiService {
 				+ Integer.toString(branchManagerID));
 		response.setBody(EchoServer.gson.toJson(employers.toArray()));
 	}
-	
+
+	// TODO getter setter
+	private static iDbManager idbManager = new DbManager();
+	private static iFileManager ifileManager = new FileManager();
+
+	private static LocalDateTime now = LocalDateTime.now();
+
+	private static Document doc = new Document();
+
+	private static Page page;
+
+	private static Image image1 = new Image();
+
+	private static FileInputStream fs;
+
+	public static void setIdbManager(iDbManager idbManager) {
+		BranchManagerApiService.idbManager = idbManager;
+	}
+
+	public static void setIfileManager(iFileManager ifileManager) {
+		BranchManagerApiService.ifileManager = ifileManager;
+	}
+
+	public static void setPage(Page page) {
+		BranchManagerApiService.page = page;
+	}
+
+	public static void setImage1(Image image1) {
+		BranchManagerApiService.image1 = image1;
+	}
+
+	public static void setFs(FileInputStream fs) {
+		BranchManagerApiService.fs = fs;
+	}
+
+	// For mock!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	public static void setDocument(Document doc) {
+		BranchManagerApiService.doc = doc;
+	}
+
+	// For mock!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	public static void setLocalDateTime(LocalDateTime now) {
+		BranchManagerApiService.now = now;
+	}
+
 	/**
 	 * Approve a business
 	 *
@@ -750,64 +824,81 @@ public class BranchManagerApiService {
 	 *
 	 */
 	public static void sendPdfToCEO(int BranchManagerID) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyy");
+
+		// TODO setup to sql
+		idbManager.setUp();
+
+		// TODO mock?
 		DateTimeFormatter month = DateTimeFormatter.ofPattern("MM");
-		LocalDateTime now = LocalDateTime.now();
+
 		String rep_month;
+
 		int curMonth, repMonth;
-		// CEOApiService.generateQuarterlyReports();
-		Document doc = new Document();
 
 		// Access image files in the folder
 		String imageDir = QueryConsts.FILE_PATH_REPORTS;
-		File file = new File(imageDir);
-		file.mkdir();
-		String[] fileList = file.list();
+		// TODO
+		String[] fileList = ifileManager.getFileListFromDir(imageDir);
+
 		ArrayList<String> selectedImages = new ArrayList<>();
+
 		ArrayList<String> mergedImages = new ArrayList<>();
+
 		String[] FileNameCut;
+
 		for (String fileName : fileList) {
+
 			FileNameCut = fileName.split("_");
 			if (!FileNameCut[0].equals("temp") && !FileNameCut[0].equals("quarter") && !FileNameCut[0].equals("pdf"))
 				if (FileNameCut[1].equals(String.valueOf(BranchManagerID))) {
+
 					curMonth = Integer.parseInt(now.format(month));
+
 					if (FileNameCut[0].equals("Performence"))
 						repMonth = Integer.parseInt(FileNameCut[3].split("\\.")[0]);
 					else
 						repMonth = Integer.parseInt(FileNameCut[3]);
+
 					if (curMonth - repMonth < 3 && curMonth - repMonth >= 0)
 						selectedImages.add(fileName);
 				}
 		}
+
 		boolean flag = false;
+
 		String last = "";
+
 		for (String temp : selectedImages) {
 			if (!flag) {
 				last = temp;
 				flag = true;
 			} else {
+				// TODO
 				mergedImages.add(mergeTwoImages(last, temp));
+
 				flag = false;
 				last = "";
 			}
 		}
+
 		if (!last.equals(""))
 			mergedImages.add(QueryConsts.FILE_PATH_REPORTS + last);
+
 		for (String fileName : mergedImages) {
+
+			// TODO mock!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			FileInputStream fs = null;
+			try {
+				fs = new FileInputStream(fileName);
+			} catch (FileNotFoundException e) {
+
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+
+			}
 
 			// Add a page to pages collection of document
 			Page page = doc.getPages().add();
-
-			// Load the source image file to Stream object
-			java.io.FileInputStream fs = null;
-			try {
-				fs = new java.io.FileInputStream(fileName);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
 			// Set margins so image will fit, etc.
 			page.getPageInfo().getMargin().setBottom(0);
 			page.getPageInfo().getMargin().setTop(0);
@@ -815,14 +906,14 @@ public class BranchManagerApiService {
 			page.getPageInfo().getMargin().setRight(0);
 			page.setCropBox(new com.aspose.pdf.Rectangle(0, 0, 800, 600));
 
-			// Create an image object
-			Image image1 = new Image();
+			// TODO mock?
+			image1.setImageStream(fs);
 
-			// Add the image into paragraphs collection of the section
+			// TODO
 			page.getParagraphs().add(image1);
 
 			// Set the image file stream
-			image1.setImageStream(fs);
+
 		}
 		int quarter = Integer.parseInt(now.format(month));
 		if (quarter > 3) {
@@ -835,16 +926,25 @@ public class BranchManagerApiService {
 				quarter = 2;
 		} else
 			quarter = 1;
+
 		// Save resultant PDF file
 		doc.save(QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf");
+
 		String absPath = System.getProperty("user.dir");
 		absPath = absPath + "\\" + QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf";
+		System.out.println(absPath);
+		String email = null;
 
+		// TODO
+		email = idbManager.getCeoEmail(email);
+
+		// sendCEO(email, absPath);
 	}
-	
-	private static String mergeTwoImages(String first, String second) {
+
+	public static String mergeTwoImages(String first, String second) {
 		try {
 			// Loading an existing document
+			
 			BufferedImage img1 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + first));
 			BufferedImage img2 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + second));
 			BufferedImage joinedImg = joinBufferedImage(img1, img2);
@@ -857,13 +957,15 @@ public class BranchManagerApiService {
 		}
 		return QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png";
 	}
-	
-	private static BufferedImage joinBufferedImage(BufferedImage img1, BufferedImage img2) {
+
+	public static BufferedImage joinBufferedImage(BufferedImage img1, BufferedImage img2) {
 
 		// do some calculate first
 		int offset = 5;
-		int wid = img1.getWidth() + img2.getWidth() + offset;
-		int height = Math.max(img1.getHeight(), img2.getHeight()) + offset;
+		int wid = Math.max(img1.getWidth(), img2.getWidth()) + offset;
+		int height = img1.getHeight() + img2.getHeight() + offset;
+		// int wid = img1.getWidth() + img2.getWidth() + offset;
+		// int height = Math.max(img1.getHeight(), img2.getHeight()) + offset;
 		// create a new buffer and draw two image into the new image
 		BufferedImage newImage = new BufferedImage(wid, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = newImage.createGraphics();
@@ -874,9 +976,55 @@ public class BranchManagerApiService {
 		// draw image
 		g2.setColor(oldColor);
 		g2.drawImage(img1, null, 0, 0);
-		g2.drawImage(img2, null, img1.getWidth() + offset, 0);
+		g2.drawImage(img2, null, 0, img1.getHeight() + offset);
 		g2.dispose();
 		return newImage;
 	}
-}
 
+//	public static void sendCEO(String to, String filename) {
+//		final String user = System.getenv("MyEmail");
+//		;// change accordingly
+//		final String password = System.getenv("MyPassEmail");// change accordingly
+//
+//		// 1) get the session object
+//		Properties properties = System.getProperties();
+//		properties.put("mail.smtp.auth", "true");
+//		properties.put("mail.smtp.starttls.enable", "true");
+//		properties.put("mail.smtp.host", "smtp.gmail.com");
+//		properties.put("mail.smtp.port", "587");
+//
+//		Session session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
+//			protected PasswordAuthentication getPasswordAuthentication() {
+//				return new PasswordAuthentication(user, password);
+//			}
+//		});
+//
+//		try {
+//			MimeMessage message = new MimeMessage(session);
+//			message.setFrom(new InternetAddress(user));
+//			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+//			message.setSubject("A PDF File with A quarter report");
+//
+//			BodyPart messageBodyPart1 = new MimeBodyPart();
+//			messageBodyPart1.setText("This is message body");
+//
+//			MimeBodyPart messageBodyPart2 = new MimeBodyPart();
+//
+//			DataSource source = new FileDataSource(filename);
+//			messageBodyPart2.setDataHandler(new DataHandler(source));
+//			messageBodyPart2.setFileName(filename);
+//
+//			Multipart multipart = new MimeMultipart();
+//			multipart.addBodyPart(messageBodyPart1);
+//			multipart.addBodyPart(messageBodyPart2);
+//
+//			message.setContent(multipart);
+//
+//			Transport.send(message);
+//
+//			System.out.println("message sent....");
+//		} catch (MessagingException ex) {
+//			ex.printStackTrace();
+//		}
+//	}
+}

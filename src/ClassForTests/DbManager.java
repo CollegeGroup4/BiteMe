@@ -25,7 +25,7 @@ public class DbManager implements iDbManager {
 
 	public void setUp() {
 		EchoServer.con = DBController.getMySQLConnection("jdbc:mysql://localhost/biteme?serverTimezone=IST", "root",
-				"MoshPe2969999");
+				"Tal4EvEr");
 	}
 
 }
