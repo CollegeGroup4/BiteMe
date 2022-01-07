@@ -892,7 +892,7 @@ public class BranchManagerApiService {
 			if (amount > 4)
 				break;
 			// TODO mock!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			FileInputStream fs = null;
+			//FileInputStream fs = null;
 			try {
 				fs = new FileInputStream(QueryConsts.FILE_PATH_REPORTS + fileName);
 			} catch (FileNotFoundException e) {
@@ -932,14 +932,6 @@ public class BranchManagerApiService {
 
 		// Save resultant PDF file
 		doc.save(QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf");
-
-		String absPath = System.getProperty("user.dir");
-		absPath = absPath + "\\" + QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf";
-		System.out.println(absPath);
-		String email = null;
-
-		// TODO
-		email = idbManager.getCeoEmail(email);
 
 		// sendCEO(email, absPath);
 	}

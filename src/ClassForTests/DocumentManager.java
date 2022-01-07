@@ -2,20 +2,14 @@ package ClassForTests;
 
 import com.aspose.pdf.Document;
 
-public class DocumentManager {
+public class DocumentManager extends com.aspose.pdf.Document{
+	public DocumentManager(com.aspose.pdf.internal.html.lj context) {
+		super(context);
+		// TODO Auto-generated constructor stub
+	}
+
 	Document doc;
 
-	public DocumentManager(Document doc) {
-		super();
-		this.doc = doc;
-	}
-
-	public Document getDoc() {
-		return doc;
-	}
-
-	public void setDoc(Document doc) {
-		this.doc = doc;
-	}
+	
 	
 }
