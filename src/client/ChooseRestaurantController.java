@@ -16,7 +16,9 @@ import com.jfoenix.controls.JFXHamburger;
 import com.jfoenix.controls.JFXTextArea;
 
 import Server.EchoServer;
+import Server.QueryConsts;
 import Server.Response;
+import common.imageUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,8 +63,9 @@ public class ChooseRestaurantController implements Initializable {
 	public ArrayList<Restaurant> restaurantsFromData;
 	public static Restaurant restaurantSelected;
 	private CustomerFunctions customerFunctions = new CustomerFunctions();
-	String projectPath = System.getProperty("user.dir") + "\\src\\images\\"; // locate the Path of the current project//
+	//String projectPath = System.getProperty("user.dir") +"\\"+ QueryConsts.FILE_PATH_RESTAURANTS; // locate the Path of the current project//
 																				// director
+	String projectPath = System.getProperty("user.dir") + "\\src\\images\\";
 	@FXML
 	private VBox restaurantsContainer;
 
@@ -154,7 +157,9 @@ public class ChooseRestaurantController implements Initializable {
 				Label type = new Label(restaurantsFromData.get(i).getType());
 				Label address = new Label(restaurantsFromData.get(i).getAddress());
 				address.setFont(Font.font("Verdana", FontPosture.ITALIC, 10));
-				InputStream stream = new FileInputStream(projectPath + "" + restaurantsFromData.get(i).getPhoto());
+				//imageUtils.receiver(restaurantsFromData.get(i).getRestaurantImage(), QueryConsts.FILE_PATH_RESTAURANTS);
+				System.out.println(projectPath + restaurantsFromData.get(i).getPhoto());
+				InputStream stream = new FileInputStream(projectPath + restaurantsFromData.get(i).getPhoto());
 
 				Image logo = new Image(stream);
 				ImageView logoImage = new ImageView();
@@ -232,7 +237,7 @@ public class ChooseRestaurantController implements Initializable {
 	void sentToServer() {
 		Gson gson = new Gson();
 		JsonElement body = gson.toJsonTree(new Object());
-		body.getAsJsonObject().addProperty("area", areas.getValue());
+		body.getAsJsonObject().addProperty("area", areas.getValue() == null ? "North":"All");
 		customerFunctions.sentToJson("/restaurants/areas", "GET", body, "get restaurants by area didn't work");
 	}
 

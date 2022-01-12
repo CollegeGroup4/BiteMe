@@ -2,8 +2,6 @@ package client;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import com.google.gson.Gson;
@@ -11,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.jfoenix.controls.JFXDrawer;
 import com.jfoenix.controls.JFXHamburger;
 
-import CEO.CEOFunctions;
 import Server.EchoServer;
 import Server.Response;
 import branchManager.BranchManagerFunctions;
@@ -21,23 +18,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import logic.Account;
 import logic.Item;
-import logic.Menu;
+import logic.Options;
 import logic.Order;
-import logic.Shippment;
-import supplier.HRFunction;
-import supplier.SupplierFunction;
 
 /**
  * This class made for display all order details at the final of the process and
@@ -192,10 +182,13 @@ public class FinalApproveController implements Initializable {
 	 * 
 	 */
 	void sentToServer() {
-		Gson gson = new Gson();
-		Request request = new Request();
-		request.setPath("/orders");
-		request.setMethod("POST");
+		for (Item item : DeliveryAndTimeController.orderToSend.items) {
+			if(item.getOptions() == null) {
+				Options[] option = new Options[1];
+				option[0] = new Options("None", "None", 0, item.getItemID(), false);
+				item.setOptions(option);
+			}
+		}
 		Order order = new Order(DeliveryAndTimeController.orderToSend.orderId,
 				DeliveryAndTimeController.orderToSend.restaurantId,
 				ChooseRestaurantController.restaurantSelected.getName(),
@@ -205,6 +198,12 @@ public class FinalApproveController implements Initializable {
 				CustomerPageController.client.getPhone(),
 				DeliveryAndTimeController.orderToSend.discount_for_early_order,
 				DeliveryAndTimeController.orderToSend.items, DeliveryAndTimeController.shippment, null, false, false);
+		
+		Gson gson = new Gson();
+		Request request = new Request();
+		request.setPath("/orders");
+		request.setMethod("POST");
+
 		request.setBody(gson.toJson(order));
 		try {
 			ClientUI.chat.accept(gson.toJson(request));
@@ -254,22 +253,6 @@ public class FinalApproveController implements Initializable {
 		case "Branch Manager":
 			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 			branchManagerFunctions.home(event);
-			break;
-		case "CEO":
-			CEOFunctions ceoFunctions = new CEOFunctions();
-			ceoFunctions.home(event);
-			break;
-		case "Supplier":
-			SupplierFunction supplierfunction = new SupplierFunction();
-			supplierfunction.home(event);
-			break;
-		case "Moderator":
-			SupplierFunction supplierfunctionM = new SupplierFunction();
-			supplierfunctionM.home(event);
-			break;
-		case "HR":
-			HRFunction hrFunction = new HRFunction();
-			hrFunction.home(event);
 			break;
 		case "Client":
 			customerFunctions.home(event);

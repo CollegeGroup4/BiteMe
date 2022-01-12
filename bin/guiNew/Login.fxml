@@ -40,7 +40,7 @@
                   </Label>
                   <ImageView fitHeight="102.0" fitWidth="115.0" layoutX="147.0" layoutY="51.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/283-2833820_user-icon-orange-png.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/283-2833820_user-icon-orange-png.png" />
                      </image>
                   </ImageView>
                   <Button fx:id="btnLogin" layoutX="153.0" layoutY="291.0" mnemonicParsing="false" onAction="#Login" prefHeight="37.0" prefWidth="104.0" style="-fx-background-color: orange; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-radius: 30; -fx-background-radius: 30; -fx-border-color: #FFF3B0;" text="Login">
@@ -62,7 +62,7 @@
             <Button fx:id="btnLoginw4c" layoutX="346.0" layoutY="438.0" mnemonicParsing="false" onAction="#loginw4c" style="-fx-border-color: orange; -fx-font-family: Berlin Sans FB Demi; -fx-border-radius: 10; -fx-background-color: white;" text="Login with W4C" />
             <ImageView fx:id="QRcode" fitHeight="200.0" fitWidth="199.0" layoutX="303.0" layoutY="158.0" visible="false">
                <image>
-                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/BiteMe/src/images/QR_code.jpg" />
+                  <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/QR_code.jpg" />
                </image>
             </ImageView>
             <Label layoutX="355.0" layoutY="60.0" text="Login">
@@ -76,7 +76,7 @@
          <children>
             <ImageView fitHeight="71.0" fitWidth="193.0">
                <image>
-                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+                  <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/biteMe.png" />
                </image>
             </ImageView>
             <AnchorPane prefHeight="107.0" prefWidth="91.0">
@@ -88,17 +88,17 @@
                   </Hyperlink>
                   <ImageView fitHeight="26.0" fitWidth="24.0" layoutX="39.0" layoutY="51.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/facebook-icon-preview-1.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/facebook-icon-preview-1.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="19.0" fitWidth="21.0" layoutX="66.0" layoutY="55.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/instagram.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/instagram.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="91.0" layoutY="54.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/WhatsApp.svg.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/WhatsApp.svg.png" />
                      </image>
                   </ImageView>
                   <Line endX="-20.0" layoutX="101.0" layoutY="47.0" startX="-100.0" stroke="WHITE" />
@@ -153,7 +153,7 @@
             </Hyperlink>
             <ImageView fitHeight="102.0" fitWidth="301.0">
                <image>
-                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+                  <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/biteMe.png" />
                </image>
             </ImageView>
          </children>

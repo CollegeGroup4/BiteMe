@@ -1,22 +1,16 @@
 package guiNew;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
-import CEO.CEOController;
-import CEO.CEOFunctions;
-import Server.EchoServer;
-import Server.Response;
+import common.Response;
 import branchManager.BranchManagerController;
 import branchManager.BranchManagerFunctions;
 import client.ChatClient;
-import client.ClientController;
 import client.ClientUI;
-import client.CustomerFunctions;
 import client.CustomerPageController;
 import client.PaymentController;
 import common.Request;
@@ -24,7 +18,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,15 +28,11 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import logic.Account;
 import logic.BusinessAccount;
-import logic.BranchManager;
-import supplier.HRFunction;
-import supplier.HRPageController;
-import supplier.SupplierController;
-import supplier.SupplierFunction;
 
 public class LoginController {
 	private BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
-
+	private IsendToJson isendToJson;
+	private IResponse iresponse;
 	public static String role;
 
 	@FXML
@@ -77,6 +66,26 @@ public class LoginController {
 	private static boolean isOpen = false;
 
 	private boolean flag;
+	
+	public LoginController() {
+		isendToJson = new BranchManagerFunctions();
+	}
+	
+	public void setSendToJson(IsendToJson isendToJson) {
+		this.isendToJson = isendToJson;
+	}
+	
+	public IsendToJson getSendToJson() {
+		return isendToJson;
+	}
+	
+	public void setResponse(IResponse iresponse) {
+		this.iresponse = iresponse;
+	}
+	
+	public IResponse getResponse() {
+		return iresponse;
+	}
 
 	@FXML
 	void Login(ActionEvent event) {
@@ -99,40 +108,12 @@ public class LoginController {
 					AnchorPane root = null;
 					HomeController.role = role;
 					switch (role) {
-					case "CEO":
-						System.out.println("go to CEO");
-						CEOController.CEO = account;
-						Navigation_SidePanelController.role = "CEO";
-						root = loader.load(getClass().getResource("/CEO/CEOPage.fxml").openStream());
-						break;
 					case "Branch Manager":
 						System.out.println("go to barnch manager");
 						Navigation_SidePanelController.role = "Branch Manager";
 						BranchManagerController.branchManager = account;
 						root = loader
 								.load(getClass().getResource("/branchManager/BranchManagerPage.fxml").openStream());
-						break;
-					case "Supplier":
-						System.out.println("go to supplier");
-						Navigation_SidePanelController.role = "Supplier";
-						SupplierController.supplier = account;
-						SupplierController supliercontroller = new SupplierController();
-						supliercontroller.callrespone();
-						root = loader.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
-						break;
-					case "Moderator":
-						System.out.println("go to supplier moderator");
-						Navigation_SidePanelController.role = "Moderator";
-						SupplierController.supplier = account;
-						SupplierController supliercontroller2 = new SupplierController();
-						supliercontroller2.callrespone();
-						root = loader.load(getClass().getResource("/supplier/SupplierPage.fxml").openStream());
-						break;
-					case "HR":
-						System.out.println("go to HR");
-						Navigation_SidePanelController.role = "HR";
-						HRPageController.Hmanger = account;
-						root = loader.load(getClass().getResource("/supplier/H.R.fxml").openStream());
 						break;
 					case "Client":
 						System.out.println("go to ordinary client");
@@ -154,6 +135,9 @@ public class LoginController {
 			} catch (IOException e) {
 			}
 		}
+		else {
+			lableErrorMag.setText(iresponse.getDescription());// error massage
+		}
 	}
 
 	private void sentToJson(String username, String password) {
@@ -161,18 +145,17 @@ public class LoginController {
 		JsonElement body = gson.toJsonTree(new Object());
 		body.getAsJsonObject().addProperty("userName", username);
 		body.getAsJsonObject().addProperty("password", password);
-		branchManagerFunctions.sentToJson("/users/login", "GET", body, "new ClientController didn't work");
+		isendToJson.sentToJson("/users/login", "GET", body, "new ClientController didn't work");
 	}
 
-	private Account response() {
+	public Account response() {
 		Account account = null;
-		Response response = ChatClient.serverAns;
 		Gson gson = new Gson();
-		if (response.getCode() != 200 && response.getCode() != 201)
-			lableErrorMag.setText(response.getDescription());// error massage
+		if (iresponse.getCode() != 200 && iresponse.getCode() != 201)
+			return null;
 		else {
-			System.out.println("-->>" + response.getDescription()); // Description from server
-			JsonElement j = gson.fromJson((String) response.getBody(), JsonElement.class);
+			System.out.println("-->>" + iresponse.getDescription()); // Description from server
+			JsonElement j = gson.fromJson((String) iresponse.getBody(), JsonElement.class);
 			account = gson.fromJson(j.getAsJsonObject().get("account"), Account.class);
 			PaymentController.businessAccount = gson.fromJson(j.getAsJsonObject().get("businessAccount"), BusinessAccount.class);
 		}

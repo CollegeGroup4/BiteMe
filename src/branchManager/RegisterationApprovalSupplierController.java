@@ -14,6 +14,8 @@ import com.jfoenix.controls.JFXHamburger;
 import Server.EchoServer;
 import Server.Response;
 import client.ChatClient;
+import common.MyPhoto;
+import common.imageUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -55,6 +57,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 	public static Account supplierAccount;
 	private String photo;
 	private boolean flag, validField, moderator;
+	MyPhoto m;
 
 	@FXML
 	private Label labelTitle;
@@ -344,6 +347,8 @@ public class RegisterationApprovalSupplierController implements Initializable {
 
 		if (selectedFile != null) {
 			photo = selectedFile.getName();
+			MyPhoto m = new MyPhoto(selectedFile.getAbsolutePath());
+			imageUtils.sender(m);
 			listView.getItems().add(selectedFile.getName());
 		} else
 			System.out.println("File is not valid");
@@ -358,11 +363,13 @@ public class RegisterationApprovalSupplierController implements Initializable {
 		checkTextFiled(textFieldRestaurantName, lblrequiredRestName);
 		checkTextFiled(textFieldRestaurantType, lblrequiredRestType);
 		checkTextFiled(textFieldRestaurantAddress, lblrequiredRestAdderss);
-		checkTextFiled(textFieldRestaurantDescription, lblrequiredRestName);
+		checkTextFiled(textFieldRestaurantDescription, lblrequiredRestDescription);
+
 
 		if (textFieldModeratorUsername.getText() != null) { // if the user decided to add moderator
 			checkTextFiled(textFieldModeratorUsername, lblrequiredModeratorUsername);
-			checkTextFiled(textFieldModeratorID, lblrequiredRestDescription);
+			checkTextFiled(textFieldModeratorID, lblrequiredModeratorID);
+
 			moderator = true;
 		}
 
@@ -376,9 +383,10 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			String restaurantAddress = textFieldRestaurantAddress.getText();
 			String restaurantDescription = textFieldRestaurantDescription.getText();
 
-			Restaurant restaurant = new Restaurant(0, false, BranchManagerController.branchManager.getUserID(),
+			Restaurant restaurant = new Restaurant(0, true, BranchManagerController.branchManager.getUserID(),
 					restaurantName, BranchManagerController.branchManager.getArea(), restaurantType, supplierUserame,
 					photo, restaurantAddress, restaurantDescription);
+			restaurant.setRestaurantImage(m);
 			Account supplier = new Account(supplierID, supplierUserame, null, null, null, null, "Supplier", null,
 					"status", false, BranchManagerController.branchManager.getUserID(),
 					BranchManagerController.branchManager.getArea(), 0);
@@ -428,6 +436,7 @@ public class RegisterationApprovalSupplierController implements Initializable {
 			lableSuccessMsg.setText("");
 		} else {
 			lableSuccessMsg.setText(response.getDescription());
+			lableErrorMsg.setText("");
 			btnReturnHome.setVisible(true);
 		}
 	}

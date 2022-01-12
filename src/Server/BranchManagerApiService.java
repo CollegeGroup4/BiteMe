@@ -1,10 +1,6 @@
 package Server;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,32 +12,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.imageio.ImageIO;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-import com.aspose.pdf.Document;
-import com.aspose.pdf.Image;
-import com.aspose.pdf.Page;
 
 import common.MyPhoto;
 import common.Response;
@@ -272,9 +248,8 @@ public class BranchManagerApiService {
 		ResultSet rs;
 		try {
 			stmt = EchoServer.con.prepareStatement("SELECT * FROM "
-					+ "biteme.restaurant WHERE UserName = ? AND ModeratorUserName = ?;");
-			stmt.setString(1, supplierUserName);
-			stmt.setString(2, userName);
+					+ "biteme.restaurant WHERE ModeratorUserName = ?;");
+			stmt.setString(1, userName);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				throw new SQLException("UserName " + userName + " already has a restaurant", "400", 400);
@@ -442,36 +417,36 @@ public class BranchManagerApiService {
 					dateToSales.clear();
 					dataset = new DefaultCategoryDataset();
 					PreparedStatement getOrders = EchoServer.con.prepareStatement(
-							"SELECT OrderTime, Check_out_price, RestaurantID, RestaurantName FROM biteme.order WHERE RestaurantID = ? AND hasArrived = 1;");
+							"SELECT OrderTime, Check_out_price, RestaurantID, RestaurantName FROM biteme.order WHERE RestaurantID = ?;");
 					getOrders.setInt(1, j);
 					rs.close();
 					rs = getOrders.executeQuery();
 					if (rs.next())
 						res = rs.getString(3) + "_" + rs.getString(4);
 					else
-						break;
+						continue;
 					do {
 						orderTime = LocalDateTime.parse(rs.getString(1), formatter);
 						if (orderTime.format(year).equals(now.format(year)))
 							if (orderTime.format(month).equals(now.format(month))) {
 								orderPrice = rs.getDouble(2);
-								try {
-									dataset.incrementValue(orderPrice, res, orderTime.format(day));
-								} catch (Exception e) {
-									dataset.addValue(orderPrice, res, orderTime.format(day));
-								}
-//								if (dateToSales.containsKey(orderTime.format(day))) {
-//									tempPrice = dateToSales.get(orderTime.format(day));
-//									dateToSales.put(orderTime.format(day), tempPrice + orderPrice);
-//								} else
-//									dateToSales.put(orderTime.format(day), orderPrice);
+//								try {
+//									dataset.incrementValue(orderPrice, res, orderTime.format(day));
+//								} catch (Exception e) {
+//									dataset.addValue(orderPrice, res, orderTime.format(day));
+//								}
+								if (dateToSales.containsKey(orderTime.format(day))) {
+									tempPrice = dateToSales.get(orderTime.format(day));
+									dateToSales.put(orderTime.format(day), tempPrice + orderPrice);
+								} else
+									dateToSales.put(orderTime.format(day), orderPrice);
 
 								total += orderPrice;
 							}
 					} while (rs.next());
-//					for (String date : dateToSales.keySet()) {
-//						dataset.addValue(dateToSales.get(date), res, date);
-//					}
+					for (String date : dateToSales.keySet()) {
+						dataset.addValue(dateToSales.get(date), res, date);
+					}
 					header = "Income Report for restaurant id:" + j + " Total sales: " + String.format("%.2f$", total);
 					total = 0.0;
 					fromDataSetToReportImage(dataset, "Sales", i, now.format(year) + "_" + now.format(month), j, "$",
@@ -742,194 +717,194 @@ public class BranchManagerApiService {
 		response.setBody(EchoServer.gson.toJson(employers.toArray()));
 	}
 	
-	/**
-	 * Approve a business
-	 *
-	 * This can only be done by the logged in branch manager.
-	 *
-	 */
-	public static void sendPdfToCEO(int BranchManagerID) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyy");
-		DateTimeFormatter month = DateTimeFormatter.ofPattern("MM");
-		LocalDateTime now = LocalDateTime.now();
-		String rep_month;
-		int curMonth, repMonth;
-		// CEOApiService.generateQuarterlyReports();
-		Document doc = new Document();
-
-		// Access image files in the folder
-		String imageDir = QueryConsts.FILE_PATH_REPORTS;
-		File file = new File(imageDir);
-		file.mkdir();
-		String[] fileList = file.list();
-		ArrayList<String> selectedImages = new ArrayList<>();
-		ArrayList<String> mergedImages = new ArrayList<>();
-		String[] FileNameCut;
-		for (String fileName : fileList) {
-			FileNameCut = fileName.split("_");
-			if (!FileNameCut[0].equals("temp") && !FileNameCut[0].equals("quarter") && !FileNameCut[0].equals("pdf"))
-				if (FileNameCut[1].equals(String.valueOf(BranchManagerID))) {
-					curMonth = Integer.parseInt(now.format(month));
-					if (FileNameCut[0].equals("Performence"))
-						repMonth = Integer.parseInt(FileNameCut[3].split("\\.")[0]);
-					else
-						repMonth = Integer.parseInt(FileNameCut[3]);
-					if (curMonth - repMonth < 3 && curMonth - repMonth >= 0)
-						selectedImages.add(fileName);
-				}
-		}
-		boolean flag = false;
-		String last = "";
-		for (String temp : selectedImages) {
-			if (!flag) {
-				last = temp;
-				flag = true;
-			} else {
-				mergedImages.add(mergeTwoImages(last, temp));
-				flag = false;
-				last = "";
-			}
-		}
-		if (!last.equals(""))
-			mergedImages.add(QueryConsts.FILE_PATH_REPORTS + last);
-		for (String fileName : mergedImages) {
-
-			// Add a page to pages collection of document
-			Page page = doc.getPages().add();
-
-			// Load the source image file to Stream object
-			java.io.FileInputStream fs = null;
-			try {
-				fs = new java.io.FileInputStream(fileName);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// Set margins so image will fit, etc.
-			page.getPageInfo().getMargin().setBottom(0);
-			page.getPageInfo().getMargin().setTop(0);
-			page.getPageInfo().getMargin().setLeft(0);
-			page.getPageInfo().getMargin().setRight(0);
-			page.setCropBox(new com.aspose.pdf.Rectangle(0, 0, 800, 600));
-
-			// Create an image object
-			Image image1 = new Image();
-
-			// Add the image into paragraphs collection of the section
-			page.getParagraphs().add(image1);
-
-			// Set the image file stream
-			image1.setImageStream(fs);
-		}
-		int quarter = Integer.parseInt(now.format(month));
-		if (quarter > 3) {
-			if (quarter > 6) {
-				if (quarter > 9)
-					quarter = 4;
-				else
-					quarter = 3;
-			} else
-				quarter = 2;
-		} else
-			quarter = 1;
-		// Save resultant PDF file
-		doc.save(QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf");
-		String absPath = System.getProperty("user.dir");
-		absPath = absPath + "\\" + QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf";
-		System.out.println(absPath);
-		String email;
-		try {
-			PreparedStatement getCEOMail = EchoServer.con.prepareStatement("SELECT Email FROM account WHERE Role = 'CEO';");
-			ResultSet rs = getCEOMail.executeQuery();
-			email = rs.getString(1);
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private static String mergeTwoImages(String first, String second) {
-		try {
-			// Loading an existing document
-			BufferedImage img1 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + first));
-			BufferedImage img2 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + second));
-			BufferedImage joinedImg = joinBufferedImage(img1, img2);
-			boolean success = ImageIO.write(joinedImg, "png", new File(
-					QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png"));
-			System.out.println("saved success? " + success);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png";
-	}
-	
-	private static BufferedImage joinBufferedImage(BufferedImage img1, BufferedImage img2) {
-
-		// do some calculate first
-		int offset = 5;
-		int wid = img1.getWidth() + img2.getWidth() + offset;
-		int height = Math.max(img1.getHeight(), img2.getHeight()) + offset;
-		// create a new buffer and draw two image into the new image
-		BufferedImage newImage = new BufferedImage(wid, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = newImage.createGraphics();
-		Color oldColor = g2.getColor();
-		// fill background
-		g2.setPaint(Color.WHITE);
-		g2.fillRect(0, 0, wid, height);
-		// draw image
-		g2.setColor(oldColor);
-		g2.drawImage(img1, null, 0, 0);
-		g2.drawImage(img2, null, img1.getWidth() + offset, 0);
-		g2.dispose();
-		return newImage;
-	}
-	
-	private static void sendCEO(String to, String filename) {
-		final String user = System.getenv("MyEmail");;// change accordingly
-		final String password = System.getenv("MyPassEmail");// change accordingly
-
-		// 1) get the session object
-		Properties properties = System.getProperties();
-		 properties.put("mail.smtp.auth", "true");
-	     properties.put("mail.smtp.starttls.enable", "true");
-	     properties.put("mail.smtp.host", "smtp.gmail.com");
-	     properties.put("mail.smtp.port", "587");
-
-		Session session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(user, password);
-			}
-		});
-
-		try {
-			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(user));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			message.setSubject("A PDF File with A quarter report");
-
-			BodyPart messageBodyPart1 = new MimeBodyPart();
-			messageBodyPart1.setText("This is message body");
-
-			MimeBodyPart messageBodyPart2 = new MimeBodyPart();
-
-			DataSource source = new FileDataSource(filename);
-			messageBodyPart2.setDataHandler(new DataHandler(source));
-			messageBodyPart2.setFileName(filename);
-
-			Multipart multipart = new MimeMultipart();
-			multipart.addBodyPart(messageBodyPart1);
-			multipart.addBodyPart(messageBodyPart2);
-
-			message.setContent(multipart);
-
-			Transport.send(message);
-
-			System.out.println("message sent....");
-		} catch (MessagingException ex) {
-			ex.printStackTrace();
-		}
-	}
+//	/**
+//	 * Approve a business
+//	 *
+//	 * This can only be done by the logged in branch manager.
+//	 *
+//	 */
+//	public static void sendPdfToCEO(int BranchManagerID) {
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//		DateTimeFormatter year = DateTimeFormatter.ofPattern("yyyy");
+//		DateTimeFormatter month = DateTimeFormatter.ofPattern("MM");
+//		LocalDateTime now = LocalDateTime.now();
+//		String rep_month;
+//		int curMonth, repMonth;
+//		// CEOApiService.generateQuarterlyReports();
+//		Document doc = new Document();
+//
+//		// Access image files in the folder
+//		String imageDir = QueryConsts.FILE_PATH_REPORTS;
+//		File file = new File(imageDir);
+//		file.mkdir();
+//		String[] fileList = file.list();
+//		ArrayList<String> selectedImages = new ArrayList<>();
+//		ArrayList<String> mergedImages = new ArrayList<>();
+//		String[] FileNameCut;
+//		for (String fileName : fileList) {
+//			FileNameCut = fileName.split("_");
+//			if (!FileNameCut[0].equals("temp") && !FileNameCut[0].equals("quarter") && !FileNameCut[0].equals("pdf"))
+//				if (FileNameCut[1].equals(String.valueOf(BranchManagerID))) {
+//					curMonth = Integer.parseInt(now.format(month));
+//					if (FileNameCut[0].equals("Performence"))
+//						repMonth = Integer.parseInt(FileNameCut[3].split("\\.")[0]);
+//					else
+//						repMonth = Integer.parseInt(FileNameCut[3]);
+//					if (curMonth - repMonth < 3 && curMonth - repMonth >= 0)
+//						selectedImages.add(fileName);
+//				}
+//		}
+//		boolean flag = false;
+//		String last = "";
+//		for (String temp : selectedImages) {
+//			if (!flag) {
+//				last = temp;
+//				flag = true;
+//			} else {
+//				mergedImages.add(mergeTwoImages(last, temp));
+//				flag = false;
+//				last = "";
+//			}
+//		}
+//		if (!last.equals(""))
+//			mergedImages.add(QueryConsts.FILE_PATH_REPORTS + last);
+//		for (String fileName : mergedImages) {
+//
+//			// Add a page to pages collection of document
+//			Page page = doc.getPages().add();
+//
+//			// Load the source image file to Stream object
+//			java.io.FileInputStream fs = null;
+//			try {
+//				fs = new java.io.FileInputStream(fileName);
+//			} catch (FileNotFoundException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//			// Set margins so image will fit, etc.
+//			page.getPageInfo().getMargin().setBottom(0);
+//			page.getPageInfo().getMargin().setTop(0);
+//			page.getPageInfo().getMargin().setLeft(0);
+//			page.getPageInfo().getMargin().setRight(0);
+//			page.setCropBox(new com.aspose.pdf.Rectangle(0, 0, 800, 600));
+//
+//			// Create an image object
+//			Image image1 = new Image();
+//
+//			// Add the image into paragraphs collection of the section
+//			page.getParagraphs().add(image1);
+//
+//			// Set the image file stream
+//			image1.setImageStream(fs);
+//		}
+//		int quarter = Integer.parseInt(now.format(month));
+//		if (quarter > 3) {
+//			if (quarter > 6) {
+//				if (quarter > 9)
+//					quarter = 4;
+//				else
+//					quarter = 3;
+//			} else
+//				quarter = 2;
+//		} else
+//			quarter = 1;
+//		// Save resultant PDF file
+//		doc.save(QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf");
+//		String absPath = System.getProperty("user.dir");
+//		absPath = absPath + "\\" + QueryConsts.FILE_PATH_REPORTS + "pdf_" + quarter + "_" + BranchManagerID + ".pdf";
+//		System.out.println(absPath);
+//		String email;
+//		try {
+//			PreparedStatement getCEOMail = EchoServer.con.prepareStatement("SELECT Email FROM account WHERE Role = 'CEO';");
+//			ResultSet rs = getCEOMail.executeQuery();
+//			email = rs.getString(1);
+//		}catch(SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	private static String mergeTwoImages(String first, String second) {
+//		try {
+//			// Loading an existing document
+//			BufferedImage img1 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + first));
+//			BufferedImage img2 = ImageIO.read(new File(QueryConsts.FILE_PATH_REPORTS + second));
+//			BufferedImage joinedImg = joinBufferedImage(img1, img2);
+//			boolean success = ImageIO.write(joinedImg, "png", new File(
+//					QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png"));
+//			System.out.println("saved success? " + success);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return QueryConsts.FILE_PATH_REPORTS + "temp_" + 7 * first.length() + 31 * second.length() + ".png";
+//	}
+//	
+//	private static BufferedImage joinBufferedImage(BufferedImage img1, BufferedImage img2) {
+//
+//		// do some calculate first
+//		int offset = 5;
+//		int wid = img1.getWidth() + img2.getWidth() + offset;
+//		int height = Math.max(img1.getHeight(), img2.getHeight()) + offset;
+//		// create a new buffer and draw two image into the new image
+//		BufferedImage newImage = new BufferedImage(wid, height, BufferedImage.TYPE_INT_ARGB);
+//		Graphics2D g2 = newImage.createGraphics();
+//		Color oldColor = g2.getColor();
+//		// fill background
+//		g2.setPaint(Color.WHITE);
+//		g2.fillRect(0, 0, wid, height);
+//		// draw image
+//		g2.setColor(oldColor);
+//		g2.drawImage(img1, null, 0, 0);
+//		g2.drawImage(img2, null, img1.getWidth() + offset, 0);
+//		g2.dispose();
+//		return newImage;
+//	}
+//	
+//	private static void sendCEO(String to, String filename) {
+//		final String user = System.getenv("MyEmail");;// change accordingly
+//		final String password = System.getenv("MyPassEmail");// change accordingly
+//
+//		// 1) get the session object
+//		Properties properties = System.getProperties();
+//		 properties.put("mail.smtp.auth", "true");
+//	     properties.put("mail.smtp.starttls.enable", "true");
+//	     properties.put("mail.smtp.host", "smtp.gmail.com");
+//	     properties.put("mail.smtp.port", "587");
+//
+//		Session session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
+//			protected PasswordAuthentication getPasswordAuthentication() {
+//				return new PasswordAuthentication(user, password);
+//			}
+//		});
+//
+//		try {
+//			MimeMessage message = new MimeMessage(session);
+//			message.setFrom(new InternetAddress(user));
+//			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+//			message.setSubject("A PDF File with A quarter report");
+//
+//			BodyPart messageBodyPart1 = new MimeBodyPart();
+//			messageBodyPart1.setText("This is message body");
+//
+//			MimeBodyPart messageBodyPart2 = new MimeBodyPart();
+//
+//			DataSource source = new FileDataSource(filename);
+//			messageBodyPart2.setDataHandler(new DataHandler(source));
+//			messageBodyPart2.setFileName(filename);
+//
+//			Multipart multipart = new MimeMultipart();
+//			multipart.addBodyPart(messageBodyPart1);
+//			multipart.addBodyPart(messageBodyPart2);
+//
+//			message.setContent(multipart);
+//
+//			Transport.send(message);
+//
+//			System.out.println("message sent....");
+//		} catch (MessagingException ex) {
+//			ex.printStackTrace();
+//		}
+//	}
 }
 

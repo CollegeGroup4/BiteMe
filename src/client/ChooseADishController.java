@@ -61,7 +61,7 @@ public class ChooseADishController implements Initializable {
 	public static Item itemSelected;
 	public HashMap<String, Integer> categories;
 	public boolean isOpen = false;
-	String projectPath = System.getProperty("user.dir") + "\\src\\images\\"; // locate the Path of the current project
+	String projectPath = System.getProperty("user.dir") + "\\projectImages\\Items\\"; // locate the Path of the current project
 	// directory
 
 	@FXML
@@ -205,11 +205,11 @@ public class ChooseADishController implements Initializable {
 			item_in_menu itemInMenu = menuSelected.getItems()[i];
 			if (selectedCourse == null || (itemInMenu.getCourse()).equals(selectedCourse)) {
 				Item item = allItems.get(itemInMenu.getItemID());
-
+				
 				if (selectedCategory == null || (item.getCategory()).equals(selectedCategory)) {
 					// ---get the img of the dish---//
 					InputStream stream;
-					stream = new FileInputStream(projectPath + "" + item.getPhoto());
+					stream = new FileInputStream(projectPath + item.getPhoto());
 
 					Image logo = new Image(stream);
 					ImageView logoImage = new ImageView();

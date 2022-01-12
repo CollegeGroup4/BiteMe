@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import common.DBController;
 import common.MyPhoto;
 import common.Response;
 import common.imageUtils;
@@ -102,6 +103,8 @@ public class CEOApiService {
 	}
 
 	public static void generateQuarterlyReports() {
+		EchoServer.con = DBController.getMySQLConnection("jdbc:mysql://localhost/biteme?serverTimezone=IST", "root",
+				"MoshPe2969999");
 		PreparedStatement getBR;
 		ResultSet rs;
 		try {

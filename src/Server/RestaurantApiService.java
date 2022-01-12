@@ -401,7 +401,7 @@ public class RestaurantApiService {
 		items = EchoServer.gson.fromJson((String) response.getBody(), Item[].class);
 		try {
 			PreparedStatement getMenus = EchoServer.con
-					.prepareStatement("SELECT * FROM biteme.menu WHERE RestaurantID = ?");
+					.prepareStatement("SELECT * FROM biteme.menu WHERE RestaurantID = ?;");
 			getMenus.setInt(1, restaurantID);
 			rs1 = getMenus.executeQuery();
 			while (rs1.next()) {
@@ -539,7 +539,7 @@ public class RestaurantApiService {
 			itemID = rs.getInt(1);
 			if (item.getOptions() != null) {
 				if (item.getItemImage() != null) {
-					String[] split = item.getItemImage().getFileName().split(".");
+					String[] split = item.getItemImage().getFileName().split("\\.");
 					String sufix = split[split.length-1];
 					String imageFileName = "item_" + itemID + "."+sufix;
 					item.getItemImage().setFileName(imageFileName);
@@ -549,6 +549,11 @@ public class RestaurantApiService {
 					postItem.setInt(2, itemID);
 					postItem.executeUpdate();
 				}
+				postOptions = EchoServer.con.prepareStatement(
+						"INSERT INTO biteme.optional_category (ItemID)"
+								+ " VALUES (?);");
+				postOptions.setInt(1, itemID);
+				postOptions.executeUpdate();
 				for (Options temp : item.getOptions()) {
 					try { // just in case
 						postOptions = EchoServer.con.prepareStatement(
@@ -595,13 +600,13 @@ public class RestaurantApiService {
 	 *
 	 */
 	public static void createMenu(Menu menu, Response response) {
-		try {
-			checkMenu(menu);
-		} catch (SQLException e1) {
-			response.setCode(e1.getErrorCode());
-			response.setDescription(e1.getMessage());
-			return;
-		}
+//		try {
+//			checkMenu(menu);
+//		} catch (SQLException e1) {
+//			response.setCode(e1.getErrorCode());
+//			response.setDescription(e1.getMessage());
+//			return;
+//		}
 		PreparedStatement postIIM, postMenu;
 		try {
 			postMenu = EchoServer.con.prepareStatement("INSERT INTO biteme.menu (RestaurantID, MenuName) VALUES(?,?);");
@@ -651,10 +656,22 @@ public class RestaurantApiService {
 	 * This can only be done by the logged in supplier/moderator
 	 *
 	 */
-	public static void editMenu(Menu oldMenu, Menu newMenu, Response response) {
-		deleteMenu(oldMenu.getName(), oldMenu.getRestaurantID(), response);
-		if (newMenu != null)
-			createMenu(newMenu, response);
+	public static void editMenu(Menu menu, Response response) {
+		PreparedStatement postIIM;
+		for (item_in_menu temp : menu.getItems()) {
+			try {
+				postIIM = EchoServer.con.prepareStatement("INSERT INTO biteme.item_in_menu (ItemID, "
+						+ "RestaurantID, MenuName, Course) VALUES(?,?,?,?);");
+				postIIM.setInt(1, temp.getItemID());
+				postIIM.setInt(2, menu.getRestaurantID());
+				postIIM.setString(3, menu.getName());
+				postIIM.setString(4, temp.getCourse());
+				postIIM.executeUpdate();
+			} catch (SQLException e) {
+			}
+		}
+		response.setCode(200);
+		response.setDescription("Success in creating menu -> menuName:  " + menu.getName());
 	}
 
 	/**
@@ -816,12 +833,12 @@ public class RestaurantApiService {
 								+ " WHERE RestaurantNum = ? AND a.UserName = UserName);");
 				getOrders.setInt(1, i);
 				rs = getOrders.executeQuery();
-				try {
-					OrderApiService.sendMail(rs.getString(1), "Fee for order via BiteMe system", "<div><h2>Total sales"
-							+ " "+Double.toString(totalIncome/0.93)+" Fee to pay is " + Double.toString((totalIncome/0.93)- totalIncome)
-							+" Total Income: " +totalIncome+ "</h2></div>");
-				} catch (Exception e) {
-				}
+//				try {
+//					OrderApiService.sendMail(rs.getString(1), "Fee for order via BiteMe system", "<div><h2>Total sales"
+//							+ " "+Double.toString(totalIncome/0.93)+" Fee to pay is " + Double.toString((totalIncome/0.93)- totalIncome)
+//							+" Total Income: " +totalIncome+ "</h2></div>");
+//				} catch (Exception e) {
+//				}
 			}
 		} catch (SQLException e) {
 

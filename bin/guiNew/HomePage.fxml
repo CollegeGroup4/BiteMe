@@ -30,7 +30,7 @@
                </font></Hyperlink>
             <ImageView fitHeight="102.0" fitWidth="301.0">
                <image>
-                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+                  <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/biteMe.png" />
                </image>
             </ImageView>
          </children>
@@ -41,12 +41,12 @@
                <children>
                   <ImageView fitHeight="99.0" fitWidth="133.0" layoutX="564.0" layoutY="63.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/BBB.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/BBB.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="102.0" fitWidth="118.0" layoutX="485.0" layoutY="91.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/Atza.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/Atza.png" />
                      </image>
                   </ImageView>
                   <Label layoutX="253.0" layoutY="20.0" prefHeight="54.0" prefWidth="240.0" text="Our restaurants">
@@ -54,30 +54,28 @@
                         <Font name="Berlin Sans FB Demi Bold" size="30.0" />
                      </font>
                   </Label>
-                  <Button layoutX="462.0" layoutY="141.0" mnemonicParsing="false" text="&gt;&gt;" />
                   <ImageView fitHeight="87.0" fitWidth="105.0" layoutX="27.0" layoutY="79.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/M.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/M.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="91.0" fitWidth="153.0" layoutX="115.0" layoutY="98.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/PizzaHut.jpg" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/PizzaHut.jpg" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="102.0" fitWidth="190.0" layoutX="272.0" layoutY="101.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/ruben.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/ruben.png" />
                      </image>
                   </ImageView>
-                  <Button layoutX="239.0" layoutY="140.0" mnemonicParsing="false" text="&lt;&lt;" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="16.0" layoutY="249.0" prefHeight="200.0" prefWidth="720.0" style="-fx-background-radius: 50px;">
                <children>
                   <ImageView fitHeight="120.0" fitWidth="701.0" layoutX="42.0" layoutY="63.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/Aboutus.jpg" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/Aboutus.jpg" />
                      </image>
                   </ImageView>
                   <Label layoutX="20.0" layoutY="35.0" prefHeight="36.0" prefWidth="141.0" text="About us:">
@@ -98,7 +96,7 @@
          <children>
             <ImageView fitHeight="71.0" fitWidth="193.0">
                <image>
-                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+                  <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/biteMe.png" />
                </image>
             </ImageView>
             <AnchorPane prefHeight="107.0" prefWidth="91.0">
@@ -110,17 +108,17 @@
                   </Hyperlink>
                   <ImageView fitHeight="26.0" fitWidth="24.0" layoutX="39.0" layoutY="51.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/facebook-icon-preview-1.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/instagram.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="19.0" fitWidth="21.0" layoutX="66.0" layoutY="55.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/instagram.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/WhatsApp.svg.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="22.0" fitWidth="24.0" layoutX="91.0" layoutY="54.0">
                      <image>
-                        <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/WhatsApp.svg.png" />
+                        <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/facebook-icon-preview-1.png" />
                      </image>
                   </ImageView>
                   <Line endX="-20.0" layoutX="101.0" layoutY="47.0" startX="-100.0" stroke="WHITE" />

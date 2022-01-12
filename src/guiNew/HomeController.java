@@ -1,19 +1,10 @@
 package guiNew;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.google.gson.Gson;
-
-import CEO.CEOController;
-import CEO.CEOFunctions;
-import branchManager.BranchManagerController;
 import branchManager.BranchManagerFunctions;
-import client.ClientUI;
 import client.CustomerFunctions;
-import client.CustomerPageController;
-import common.Request;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,8 +16,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import supplier.HRFunction;
-import supplier.SupplierFunction;
 
 public class HomeController {
 
@@ -81,30 +70,10 @@ public class HomeController {
 	void Exit(ActionEvent event) throws UnknownHostException {
 		
 	switch (role) {
-		case "CEO":
-			System.out.println("exit CEO");
-			CEOFunctions ceoFunctions = new CEOFunctions();
-			ceoFunctions.exit(event);
-			break;
 		case "Branch Manager":
 			System.out.println("exit manager");
 			BranchManagerFunctions branchManagerFunctions = new BranchManagerFunctions();
 			branchManagerFunctions.exit(event);
-			break;
-		case "Supplier":
-			System.out.println("exit supplier");
-			SupplierFunction supplierfunction = new SupplierFunction();
-			supplierfunction.exit(event);
-			break;
-		case "Moderator":
-			System.out.println("exit supplier moderator");
-			SupplierFunction supplierfunctionM = new SupplierFunction();
-			supplierfunctionM.exit(event);
-			break;
-		case "HR":
-			System.out.println("exit HR");
-			HRFunction hrFunction = new HRFunction();
-			hrFunction.exit(event);
 			break;
 		case "Client":
 			System.out.println("exit client");

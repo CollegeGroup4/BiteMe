@@ -16,7 +16,7 @@
    <children>
       <HBox fx:id="Nav" alignment="CENTER" layoutX="10.0" prefHeight="102.0" prefWidth="784.0" spacing="50.0" style="-fx-background-radius: 50px;">
          <children>
-            <Label fx:id="lableHello" prefHeight="88.0" prefWidth="202.0" styleClass="f" text="Hello, CEO">
+            <Label fx:id="lableHello" prefHeight="88.0" prefWidth="202.0" styleClass="f" text="Hello, Tal-Chen">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="24.0" />
                </font>

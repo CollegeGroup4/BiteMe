@@ -306,7 +306,7 @@
             </Button>
             <ImageView fitHeight="64.0" fitWidth="200.0">
                <image>
-                  <Image url="file:/C:/Users/talch/OneDrive/שולחן%20העבודה/לימודים/שיטות%20הנדסיות%20לפיתוח%20מערכות%20תוכנה/פרוייקט/חלק%202/BiteMe/img/biteMe.png" />
+                  <Image url="file:/C:/Users/MoshPe/Documents/OOP/Bite_Me/src/images/biteMe.png" />
                </image>
             </ImageView>
          </children>

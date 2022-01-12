@@ -341,9 +341,7 @@ public class AccountApiService {
 					body.getAsJsonObject().add("restaurant", temp);
 				}
 			}
-
 		} catch (
-
 		SQLException e) {
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
@@ -362,6 +360,9 @@ public class AccountApiService {
 		ResultSet rs;
 		Account account = null;
 		try {
+			if(userName.equals("") || password.equals("")) {
+				throw new SQLException("Invalid Fields", "402", 402);
+			}
 			PreparedStatement loginAccount = EchoServer.con
 					.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ? AND Password = ?;");
 			loginAccount.setString(1, userName);
@@ -395,6 +396,10 @@ public class AccountApiService {
 			loginAccount.setString(1, userName);
 			loginAccount.executeUpdate();
 		} catch (SQLException e) {
+//			if(e.getErrorCode() != 400 && e.getErrorCode() != 403 && e.getErrorCode() != 402 && e.getErrorCode() != 401) {
+//				response.setCode(e.getErrorCode());
+//				response.setDescription("Invalid Fields");
+//			}
 			response.setCode(e.getErrorCode());
 			response.setDescription(e.getMessage());
 			return;

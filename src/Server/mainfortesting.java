@@ -74,6 +74,9 @@ public class mainfortesting {
 			e.printStackTrace();
 		}
 		CEOApiService.generateQuarterlyReports();
+		BranchManagerApiService.getReportForRestaurantPerformence();
+		BranchManagerApiService.getReportForRestaurantByCategory();
+		BranchManagerApiService.getReportForRestaurantSales();
 //		Document doc = new Document();
 //
 //		// Access image files in the folder

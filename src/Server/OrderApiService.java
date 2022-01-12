@@ -38,7 +38,7 @@ import logic.Shippment;
  *
  */
 public class OrderApiService {
-	
+
 	/**
 	 * Add a new order
 	 *
@@ -128,7 +128,7 @@ public class OrderApiService {
 			return;
 		}
 		// check if the order have shipment
-		if (order.getShippment() != null && order.getShippment().getDelivery().equals("Shared delivery")) {
+		if (order.getShippment() != null && order.getShippment().getDelivery().equals("Shared Delivery")) {
 			try {
 				PreparedStatement getShipID = EchoServer.con
 						.prepareStatement("SELECT ShippmentID FROM biteme.shipment WHERE "
@@ -181,28 +181,28 @@ public class OrderApiService {
 							rs.close();
 							rs = getMails.executeQuery();
 							while (rs.next()) {
-								try {
-									sendMail(rs.getString(2),
-											"BiteMe Order ID Shipment Update: " + Integer.toString(orderID),
-											"" + "    		<div style=\"align:center;line-height:24px\">\r\n"
-													+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange\"></span><br>\r\n"
-													+ "                <span style=\"font-size:35px;line-height:40px\"><strongShipment Price Update<br><br><br></strong></span><br>\r\n"
-													+ "\r\n"
-													+ "        <div class=\"m_1113311250331273147receipt-body\">\r\n"
-													+ "            <div style=\"text-align:center;line-height:14px\">&nbsp;</div>\r\n"
-													+ "            <div style=\"text-align:center;line-height:24px\">\r\n"
-													+ "                <span style=\"font-size:18px;font-weight:bold\">\r\n"
-													+ "                    Hi " + rs.getString(1) + "!\r\n"
-													+ "                </span>\r\n" + "                <br>\r\n"
-													+ "                <span style=\"font-size:16px;\">\r\n"
-													+ "                   You shipment price has been update to $"
-													+ price + " due to increase of orders via Shared Shipment at "
-													+ order.getShippment().getWork_place() + "\r\n"
-													+ "                </span>\r\n<br><br>\r\n"
-													+ "            </div>\r\n");
-								} catch (Exception e) {
-									// setting Mail is needed
-								}
+//								try {
+//									sendMail(rs.getString(2),
+//											"BiteMe Order ID Shipment Update: " + Integer.toString(orderID),
+//											"" + "    		<div style=\"align:center;line-height:24px\">\r\n"
+//													+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange\"></span><br>\r\n"
+//													+ "                <span style=\"font-size:35px;line-height:40px\"><strongShipment Price Update<br><br><br></strong></span><br>\r\n"
+//													+ "\r\n"
+//													+ "        <div class=\"m_1113311250331273147receipt-body\">\r\n"
+//													+ "            <div style=\"text-align:center;line-height:14px\">&nbsp;</div>\r\n"
+//													+ "            <div style=\"text-align:center;line-height:24px\">\r\n"
+//													+ "                <span style=\"font-size:18px;font-weight:bold\">\r\n"
+//													+ "                    Hi " + rs.getString(1) + "!\r\n"
+//													+ "                </span>\r\n" + "                <br>\r\n"
+//													+ "                <span style=\"font-size:16px;\">\r\n"
+//													+ "                   You shipment price has been update to $"
+//													+ price + " due to increase of orders via Shared Shipment at "
+//													+ order.getShippment().getWork_place() + "\r\n"
+//													+ "                </span>\r\n<br><br>\r\n"
+//													+ "            </div>\r\n");
+//								} catch (Exception e) {
+//									// setting Mail is needed
+//								}
 							}
 						}
 					}
@@ -228,11 +228,12 @@ public class OrderApiService {
 		body.getAsJsonObject().addProperty("orderID", orderID);
 		response.setBody(EchoServer.gson.toJson(body));
 		try {
-			invoiceSender(order, orderID);
+			//invoiceSender(order, orderID);
 		} catch (Exception e) {
 			// setting Mail is needed
 		}
 	}
+
 	private static void insertShipment(Order order, int orderID) throws SQLException {
 		PreparedStatement setShipment = EchoServer.con.prepareStatement(
 				"INSERT INTO biteme.shipment (workPlace, Address, reciever_name, reciever_phone_number"
@@ -320,7 +321,7 @@ public class OrderApiService {
 	}
 
 	public static void AllOrdersByUserName(String UserName, Response response) {
-		allOrders("UserName = "  + "'" + UserName+ "'", response);
+		allOrders("UserName = " + "'" + UserName + "'", response);
 	}
 
 	/**
@@ -352,7 +353,7 @@ public class OrderApiService {
 		PreparedStatement stmt;
 		Order order = null;
 		try {
-			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE OrderNum = ?");
+			stmt = EchoServer.con.prepareStatement("SELECT * FROM biteme.order WHERE OrderNum = ?;");
 			stmt.setInt(1, orderId);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
@@ -596,8 +597,8 @@ public class OrderApiService {
 		ResultSet rs;
 		long timeBetweenTakenToReq, timeBetweenNowAndApproved;
 		try {
-			deliveredOrder = EchoServer.con.prepareStatement(
-					"UPDATE biteme.order SET hasArrived = 1" + " WHERE OrderNum = ? AND UserName = ? AND isApproved = 1;");
+			deliveredOrder = EchoServer.con.prepareStatement("UPDATE biteme.order SET hasArrived = 1"
+					+ " WHERE OrderNum = ? AND UserName = ? AND isApproved = 1;");
 			deliveredOrder.setInt(1, order.getOrderID());
 			deliveredOrder.setString(2, order.getUserName());
 			// deliveredOrder.setInt(3, order.getOrderID());
@@ -646,7 +647,7 @@ public class OrderApiService {
 		response.setDescription(
 				"Success in approving order as delivered -> orderID: " + Integer.toString(order.getOrderID()));
 	}
-	
+
 	private static void insertCredit(Order order, Response response) {
 		PreparedStatement insertCredit;
 		try {
@@ -695,211 +696,208 @@ public class OrderApiService {
 		response.setDescription("Success in updating credit for: " + UserName);
 		return;
 	}
-	private static void invoiceSender(Order order, int orderID) {
-		PreparedStatement getAccount;
-		ResultSet rs;
-		StringBuilder invoice = new StringBuilder();
-		Account account = null;
-		try {
-			getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ?;");
-			getAccount.setString(1, order.getUserName());
-			rs = getAccount.executeQuery();
-			if (rs.next()) {
-				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID),
-						rs.getString(QueryConsts.ACCOUNT_USER_NAME), rs.getString(QueryConsts.ACCOUNT_PASSWORD),
-						rs.getString(QueryConsts.ACCOUNT_FIRST_NAME), rs.getString(QueryConsts.ACCOUNT_LAST_NAME),
-						rs.getString(QueryConsts.ACCOUNT_EMAIL), rs.getString(QueryConsts.ACCOUNT_ROLE),
-						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
-						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
-						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
-						rs.getInt(QueryConsts.ACCOUNT_DEBT));
-			}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		String shipment = "";
-		String items = "";
-		for (Item item : order.getItems()) {
-			items += "<tr>";
-			items += addItem(item.getName());
-			items += addItem(item.getCategory());
-			items += addItem(order.getRestaurantName());
-			items += addItem(Float.toString(item.getPrice()));
-			items += addItem(Integer.toString(item.getAmount()));
-			String options = "";
-			for (Options option : item.getOptions()) {
-				options += option.toString();
-			}
-			items += addItem(options) + "</tr>";
-		}
-		if(order.getShippment() != null) {
-			shipment = shipmentParser(order.getShippment().getAddress() == null ? "" : order.getShippment().getAddress(),
-					order.getShippment().getWork_place() == null ? "" : order.getShippment().getWork_place(), order.getShippment().getReceiver_name(),
-							order.getShippment().getPhone(), order.getShippment().getDelivery());
-		}
-		String test = fixParser(account.getFirstName(), account.getLastName(), account.getEmail(), account.getRole(),
-				account.getPhone(), order.getTime_taken(), Integer.toString(orderID),
-				Double.toString(order.getCheck_out_price()), items,
-				Integer.toString(order.getDiscount_for_early_order()),
-				String.format("%.2f", order.getCheck_out_price() * (1 + order.getDiscount_for_early_order() / 100.0)),shipment);
-		try {
-			sendMail(account.getEmail(), "BiteMe Order ID: " + Integer.toString(orderID), test);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static String addItem(String itemColVal) {
-		return "<td class=\"m_1113311250331273147amount-field m_1113311250331273147last-column\">" + itemColVal
-				+ "</td>\r\n";
-
-	}
-
-	public static void sendMail(String recepient, String subject, String message) throws Exception {
-		Properties properties = new Properties();
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
-
-		final String myAccountEmail = System.getenv("MyEmail");
-		final String password = System.getenv("MyPassEmail");
-
-		Session session = Session.getInstance(properties, new Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(myAccountEmail, password);
-			}
-		});
-		Message msg = prepareMessage(session, myAccountEmail, recepient, subject, message);
-		javax.mail.Transport.send(msg);
-		System.out.println("Invoice was Sent successfully to " + recepient);
-	}
-
-	private static Message prepareMessage(Session session, String myEmail, String recepient, String subject,
-			String message) {
-		try {
-			Message msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress("BITEME_SERVER"));
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient));
-			msg.setSubject(subject);
-			msg.setText(message);
-			msg.setContent(message, "text/html");
-			return msg;
-		} catch (Exception e) {
-			Logger.getLogger(OrderApiService.class.getName()).log(Level.SEVERE, null, e);
-		}
-		return null;
-	}
-
-	private static String fixParser(String firstName, String lastName, String email, String role, String phone,
-			String orderDate, String orderID, String checkOutPrice, String items, String discount, String listPrice, String shipment) {
-		String INVOICE_HEADER = "<div>\r\n" + "<div class=\"m_1113311250331273147receipt-ctn-wrapper\">\r\n"
-				+ "    <div style=\"text-align:center;line-height:24px\">\r\n"
-				+ "    		<div style=\"align:center;line-height:24px\">\r\n"
-				+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange;height:120px;width:360px\"></span><br>\r\n"
-				+ "                <span style=\"font-size:35px;line-height:40px\"><strong>Thank You.<br><br><br></strong></span><br>\r\n"
-				+ "\r\n" + "        <div class=\"m_1113311250331273147receipt-body\">\r\n"
-				+ "            <div style=\"text-align:center;line-height:14px\">&nbsp;</div>\r\n"
-				+ "            <div style=\"text-align:center;line-height:24px\">\r\n"
-				+ "                <span style=\"font-size:18px;font-weight:bold\">\r\n" + "                    Hi "
-				+ firstName + "!\r\n" + "                </span>\r\n" + "                <br>\r\n"
-				+ "                Thanks for your purchase from <strong>BiteMe</strong><br><br>\r\n"
-				+ "                <span style=\"font-size:35px;line-height:40px\"><strong>INVOICE ID: <br>" + orderID
-				+ "</strong></span><br>\r\n" + "\r\n"
-				+ "                <span style=\"font-size:14px;color:#b2b2b2;line-height:40px\">( Please keep a copy of this receipt for your records. )</span><br><br><br>\r\n"
-				+ "            </div>\r\n"
-				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left\">\r\n"
-				+ "                <strong>YOUR ORDER INFORMATION:</strong>\r\n" + "            </div>\r\n"
-				+ "            <table class=\"m_1113311250331273147order-info\">\r\n"
-				+ "                <tbody><tr>\r\n"
-				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
-				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n" + "                </tr>\r\n"
-				+ "                <tr>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>First Name:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Last Name:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top\"><strong>Bill To:</strong></td>\r\n"
-				+ "                </tr>\r\n" + "                <tr>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-				+ firstName + "</td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-				+ lastName + "</td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value m_1113311250331273147email\"><a href=\"mailto:fghghf98@gmail.com\" target=\"_blank\">"
-				+ email + "</a></td>\r\n" + "                </tr>\r\n" + "                <tr>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Role:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Phone:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top\"><strong>Order Date:</strong></td>\r\n"
-				+ "                </tr>\r\n" + "                <tr>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-				+ role + "</td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-				+ phone + "</td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-				+ orderDate + "</td>\r\n" + "                </tr>\r\n" + "            </tbody></table>\r\n" + "\r\n"
-				+ "\r\n <tr><td><hr style=\"border-top:2px solid #bbb\"></td></tr>"
-				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left;margin-top:10px\">\r\n"
-				+ "                <strong>HERE'S WHAT YOU ORDERED:</strong>\r\n" + "            </div>\r\n"
-				+ "            <table class=\"m_1113311250331273147order-item\">\r\n"
-				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
-				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
-				+ "                <tbody><tr>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Item Name:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Item Category:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Restaurant Name:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Price:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Quantity:</strong></td>\r\n"
-				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Options</strong></td>\r\n"
-				+ "					<tr>\r\n" + "						" + items + "" + "                </tr>\r\n"
-				+ "            </tbody></table>\r\n"
-				+ " 			<tr></tr><tr><td><hr style=\"border-top:2px solid #bbb\"></td></tr>\r\n"
-				+ "            <table class=\"m_1113311250331273147payment-info\">\r\n"
-				+ "                <tbody><tr>\r\n" + "                    <th></th>\r\n"
-				+ "                    <th style=\"width:1%\"></th>\r\n" + "                </tr>\r\n"
-				+ "                <tr>\r\n"
-				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">List Price: <span style=\"color:#313131\"> [USD]: $ "
-				+ listPrice + "</span></td>\r\n" + "                <tr>\r\n" + "                <tr>\r\n"
-				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">DISCOUNT FOR EARLY ORDER: <span style=\"color:#313131\"> %"
-				+ discount + "</span></td>\r\n" + "                <tr>\r\n" + "                <tr>\r\n"
-				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">TOTAL: <span style=\"color:#313131\"> [USD]: $ "
-				+ checkOutPrice + "</span></td>\r\n" + "                <tr>\r\n"
-				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-size:14px;color:#313131;text-align:center;line-height:26px\" colspan=\"2\">\r\n"
-				+ "\r\n" + "\r\n" + "                    </td>\r\n" + "                </tr>\r\n"
-				+ "            </tbody></table>\r\n"
-				+ "			</div><div style=\"text-align:center;line-height:24px\">\r\n"
-				+ "    		<div style=\"line-height:24px\">\r\n"
-				+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://ci3.googleusercontent.com/proxy/btfRiFqNXnB0loMFpxgDbN6yueB3sFMLF0jI47Q7hbkLmWD96pxDQzu9huo1v_lO3IQ43gJL=s0-d-e1-ft#https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange\" class=\"CToWUd a6T\" tabindex=\"0\"><div class=\"a6S\" dir=\"ltr\" style=\"opacity: 0.01; left: 696.511px; top: 1193.21px;\"><div id=\":1eb\" class=\"T-I J-J5-Ji aQv T-I-ax7 L3 a5q\" role=\"button\" tabindex=\"0\" aria-label=\"Download attachment \" data-tooltip-class=\"a1V\" data-tooltip=\"Download\"><div class=\"akn\"><div class=\"aSK J-J5-Ji aYr\"></div></div></div></div></span><div class=\"yj6qo\"></div><div class=\"adL\"><br>\r\n"
-				+ "            </div></div><div class=\"adL\">\r\n" + "</div></div>"
-				+ shipment;
-
-		return INVOICE_HEADER;
-	}
-
-	private static String shipmentParser(String address, String workPlace, String receiverName, String phone, String delivery) {
-		String INVOICE_HEADER = "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left\">\r\n"
-		+ "                <strong>SHIPMENT DETAILS:</strong>\r\n" + "            </div>\r\n"
-		+ "            <table class=\"m_1113311250331273147order-info\">\r\n"
-		+ "                <tbody><tr>\r\n"
-		+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
-		+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n" + "                </tr>\r\n"
-		+ "                <tr>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Address:</strong></td>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Workplace:</strong></td>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top\"><strong>Receiver Name:</strong></td>\r\n"
-		+ "                </tr>\r\n" + "                <tr>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-		+ address + "</td>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-		+ workPlace + "</td>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value m_1113311250331273147email\"><a href=\"mailto:fghghf98@gmail.com\" target=\"_blank\">"
-		+ receiverName + "</a></td>\r\n" + "                </tr>\r\n" + "                <tr>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Receiver Phone:</strong></td>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Delivery Type</strong></td>\r\n"
-		+ "                </tr>\r\n" + "                <tr>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-		+ phone + "</td>\r\n"
-		+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
-		+ delivery + "</td>\r\n";
-		return INVOICE_HEADER;
-	}
+//	private static void invoiceSender(Order order, int orderID) {
+//		PreparedStatement getAccount;
+//		ResultSet rs;
+//		StringBuilder invoice = new StringBuilder();
+//		Account account = null;
+//		try {
+//			getAccount = EchoServer.con.prepareStatement("SELECT * FROM biteme.account WHERE UserName = ?;");
+//			getAccount.setString(1, order.getUserName());
+//			rs = getAccount.executeQuery();
+//			if (rs.next()) {
+//				account = new Account(rs.getInt(QueryConsts.ACCOUNT_USER_ID),
+//						rs.getString(QueryConsts.ACCOUNT_USER_NAME), rs.getString(QueryConsts.ACCOUNT_PASSWORD),
+//						rs.getString(QueryConsts.ACCOUNT_FIRST_NAME), rs.getString(QueryConsts.ACCOUNT_LAST_NAME),
+//						rs.getString(QueryConsts.ACCOUNT_EMAIL), rs.getString(QueryConsts.ACCOUNT_ROLE),
+//						rs.getString(QueryConsts.ACCOUNT_PHONE), rs.getString(QueryConsts.ACCOUNT_STATUS),
+//						rs.getBoolean(QueryConsts.ACCOUNT_IS_BUSINESS),
+//						rs.getInt(QueryConsts.ACCOUNT_BRANCH_MANAGER_ID), rs.getString(QueryConsts.ACCOUNT_AREA),
+//						rs.getInt(QueryConsts.ACCOUNT_DEBT));
+//			}
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		String items = "";
+//		for (Item item : order.getItems()) {
+//			items += "<tr>";
+//			items += addItem(item.getName());
+//			items += addItem(item.getCategory());
+//			items += addItem(order.getRestaurantName());
+//			items += addItem(Float.toString(item.getPrice()));
+//			items += addItem(Integer.toString(item.getAmount()));
+//			String options = "";
+//			if (item.getOptions() != null) {
+//				for (Options option : item.getOptions()) {
+//					options += option.toString();
+//				}
+//			}
+//			items += addItem(options) + "</tr>";
+//		}
+//		String test = fixParser(account.getFirstName(), account.getLastName(), account.getEmail(), account.getRole(),
+//				account.getPhone(), order.getTime_taken(), Integer.toString(orderID),
+//				Double.toString(order.getCheck_out_price()), items,
+//				Integer.toString(order.getDiscount_for_early_order()),
+//				String.format("%.2f", order.getCheck_out_price() * (1 + order.getDiscount_for_early_order() / 100.0)));
+//		try {
+//			sendMail(account.getEmail(), "BiteMe Order ID: " + Integer.toString(orderID), test);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	private static String addItem(String itemColVal) {
+//		return "<td class=\"m_1113311250331273147amount-field m_1113311250331273147last-column\">" + itemColVal
+//				+ "</td>\r\n";
+//
+//	}
+//
+//	public static void sendMail(String recepient, String subject, String message) throws Exception {
+//		Properties properties = new Properties();
+//		properties.put("mail.smtp.auth", "true");
+//		properties.put("mail.smtp.starttls.enable", "true");
+//		properties.put("mail.smtp.host", "smtp.gmail.com");
+//		properties.put("mail.smtp.port", "587");
+//
+//		final String myAccountEmail = System.getenv("MyEmail");
+//		final String password = System.getenv("MyPassEmail");
+//
+//		Session session = Session.getInstance(properties, new Authenticator() {
+//			@Override
+//			protected PasswordAuthentication getPasswordAuthentication() {
+//				return new PasswordAuthentication(myAccountEmail, password);
+//			}
+//		});
+//		Message msg = prepareMessage(session, myAccountEmail, recepient, subject, message);
+//		javax.mail.Transport.send(msg);
+//		System.out.println("Invoice was Sent successfully to " + recepient);
+//	}
+//
+//	private static Message prepareMessage(Session session, String myEmail, String recepient, String subject,
+//			String message) {
+//		try {
+//			Message msg = new MimeMessage(session);
+//			msg.setFrom(new InternetAddress("BITEME_SERVER"));
+//			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(recepient));
+//			msg.setSubject(subject);
+//			msg.setText(message);
+//			msg.setContent(message, "text/html");
+//			return msg;
+//		} catch (Exception e) {
+//			Logger.getLogger(OrderApiService.class.getName()).log(Level.SEVERE, null, e);
+//		}
+//		return null;
+//	}
+//
+//	private static String fixParser(String firstName, String lastName, String email, String role, String phone,
+//			String orderDate, String orderID, String checkOutPrice, String items, String discount, String listPrice) {
+//		String INVOICE_HEADER = "<div>\r\n" + "<div class=\"m_1113311250331273147receipt-ctn-wrapper\">\r\n"
+//				+ "    <div style=\"text-align:center;line-height:24px\">\r\n"
+//				+ "    		<div style=\"align:center;line-height:24px\">\r\n"
+//				+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange;height:120px;width:360px\"></span><br>\r\n"
+//				+ "                <span style=\"font-size:35px;line-height:40px\"><strong>Thank You.<br><br><br></strong></span><br>\r\n"
+//				+ "\r\n" + "        <div class=\"m_1113311250331273147receipt-body\">\r\n"
+//				+ "            <div style=\"text-align:center;line-height:14px\">&nbsp;</div>\r\n"
+//				+ "            <div style=\"text-align:center;line-height:24px\">\r\n"
+//				+ "                <span style=\"font-size:18px;font-weight:bold\">\r\n" + "                    Hi "
+//				+ firstName + "!\r\n" + "                </span>\r\n" + "                <br>\r\n"
+//				+ "                Thanks for your purchase from <strong>BiteMe</strong><br><br>\r\n"
+//				+ "                <span style=\"font-size:35px;line-height:40px\"><strong>INVOICE ID: <br>" + orderID
+//				+ "</strong></span><br>\r\n" + "\r\n"
+//				+ "                <span style=\"font-size:14px;color:#b2b2b2;line-height:40px\">( Please keep a copy of this receipt for your records. )</span><br><br><br>\r\n"
+//				+ "            </div>\r\n"
+//				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left\">\r\n"
+//				+ "                <strong>YOUR ORDER INFORMATION:</strong>\r\n" + "            </div>\r\n"
+//				+ "            <table class=\"m_1113311250331273147order-info\">\r\n"
+//				+ "                <tbody><tr>\r\n"
+//				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
+//				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n" + "                </tr>\r\n"
+//				+ "                <tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>First Name:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Last Name:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top\"><strong>Bill To:</strong></td>\r\n"
+//				+ "                </tr>\r\n" + "                <tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ firstName + "</td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ lastName + "</td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value m_1113311250331273147email\"><a href=\"mailto:fghghf98@gmail.com\" target=\"_blank\">"
+//				+ email + "</a></td>\r\n" + "                </tr>\r\n" + "                <tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Role:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Phone:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top\"><strong>Order Date:</strong></td>\r\n"
+//				+ "                </tr>\r\n" + "                <tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ role + "</td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ phone + "</td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ orderDate + "</td>\r\n" + "                </tr>\r\n" + "            </tbody></table>\r\n" + "\r\n"
+//				+ "\r\n <tr><td><hr style=\"border-top:2px solid #bbb\"></td></tr>"
+//				+ "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left;margin-top:10px\">\r\n"
+//				+ "                <strong>HERE'S WHAT YOU ORDERED:</strong>\r\n" + "            </div>\r\n"
+//				+ "            <table class=\"m_1113311250331273147order-item\">\r\n"
+//				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
+//				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
+//				+ "                <tbody><tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Item Name:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Item Category:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Restaurant Name:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Price:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Quantity:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Options</strong></td>\r\n"
+//				+ "					<tr>\r\n" + "						" + items + "" + "                </tr>\r\n"
+//				+ "            </tbody></table>\r\n"
+//				+ " 			<tr></tr><tr><td><hr style=\"border-top:2px solid #bbb\"></td></tr>\r\n"
+//				+ "            <table class=\"m_1113311250331273147payment-info\">\r\n"
+//				+ "                <tbody><tr>\r\n" + "                    <th></th>\r\n"
+//				+ "                    <th style=\"width:1%\"></th>\r\n" + "                </tr>\r\n"
+//				+ "                <tr>\r\n"
+//				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">List Price: <span style=\"color:#313131\"> [USD]: $ "
+//				+ listPrice + "</span></td>\r\n" + "                <tr>\r\n" + "                <tr>\r\n"
+//				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">DISCOUNT FOR EARLY ORDER: <span style=\"color:#313131\"> %"
+//				+ discount + "</span></td>\r\n" + "                <tr>\r\n" + "                <tr>\r\n"
+//				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-weight:bold;text-transform:uppercase;font-size:14px;color:#b2b2b2;text-align:left;line-height:26px\">TOTAL: <span style=\"color:#313131\"> [USD]: $ "
+//				+ checkOutPrice + "</span></td>\r\n" + "                <tr>\r\n"
+//				+ "                    <td style=\"font-family:Ariel,Helvetica,sans-serif;font-size:14px;color:#313131;text-align:center;line-height:26px\" colspan=\"2\">\r\n"
+//				+ "\r\n" + "\r\n" + "                    </td>\r\n" + "                </tr>\r\n"
+//				+ "            </tbody></table>\r\n"
+//				+ "			</div><div style=\"text-align:center;line-height:24px\">\r\n"
+//				+ "    		<div style=\"line-height:24px\">\r\n"
+//				+ "                <span style=\"font-size:35px;line-height:40px\"><img src=\"https://ci3.googleusercontent.com/proxy/btfRiFqNXnB0loMFpxgDbN6yueB3sFMLF0jI47Q7hbkLmWD96pxDQzu9huo1v_lO3IQ43gJL=s0-d-e1-ft#https://i.ibb.co/z7sTJhT/BiteMe.png\" style=\"background-color:orange\" class=\"CToWUd a6T\" tabindex=\"0\"><div class=\"a6S\" dir=\"ltr\" style=\"opacity: 0.01; left: 696.511px; top: 1193.21px;\"><div id=\":1eb\" class=\"T-I J-J5-Ji aQv T-I-ax7 L3 a5q\" role=\"button\" tabindex=\"0\" aria-label=\"Download attachment \" data-tooltip-class=\"a1V\" data-tooltip=\"Download\"><div class=\"akn\"><div class=\"aSK J-J5-Ji aYr\"></div></div></div></div></span><div class=\"yj6qo\"></div><div class=\"adL\"><br>\r\n"
+//				+ "            </div></div><div class=\"adL\">\r\n" + "</div></div>";
+//
+//		return INVOICE_HEADER;
+//	}
+//
+//	private static String shipmentParser(String address, String workPlace, String receiverName, String phone,
+//			String delivery) {
+//		String INVOICE_HEADER = "            <div style=\"font-family:arial,helvetica,sans-serif;font-size:14px;color:#b2b2b2;text-align:left\">\r\n"
+//				+ "                <strong>SHIPMENT DETAILS:</strong>\r\n" + "            </div>\r\n"
+//				+ "            <table class=\"m_1113311250331273147order-info\">\r\n"
+//				+ "                <tbody><tr>\r\n"
+//				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n"
+//				+ "                    <th style=\"height:1px;min-width:12px\"></th>\r\n" + "                </tr>\r\n"
+//				+ "                <tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Address:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Workplace:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top\"><strong>Receiver Name:</strong></td>\r\n"
+//				+ "                </tr>\r\n" + "                <tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ address + "</td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ workPlace + "</td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value m_1113311250331273147email\"><a href=\"mailto:fghghf98@gmail.com\" target=\"_blank\">"
+//				+ receiverName + "</a></td>\r\n" + "                </tr>\r\n" + "                <tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Receiver Phone:</strong></td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword\" style=\"vertical-align:top;min-width:120px\"><strong>Delivery Type</strong></td>\r\n"
+//				+ "                </tr>\r\n" + "                <tr>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ phone + "</td>\r\n"
+//				+ "                    <td class=\"m_1113311250331273147wrapword m_1113311250331273147order-info-value\">"
+//				+ delivery + "</td>\r\n";
+//		return INVOICE_HEADER;
+//	}
 }

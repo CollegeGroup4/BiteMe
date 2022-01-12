@@ -16,8 +16,7 @@ public class Options {
 	
 	@Override
 	public String toString() {
-		return "Options [option_category=" + option_category + ", specify_option=" + specify_option + ", price=" + price
-				+ ", isDuplicatable=" + isDuplicatable + ", itemID=" + itemID + "]";
+		return option_category + ": " +specify_option;
 	}
 
 	public String getOption_category() {

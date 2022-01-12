@@ -1,6 +1,8 @@
 package common;
 
-public class Response {
+import guiNew.IResponse;
+
+public class Response implements IResponse{
 	private Integer code;
 	private String description;
 	private Object body;

@@ -14,6 +14,7 @@ import Server.Response;
 import client.ChatClient;
 import client.ClientUI;
 import common.Request;
+import guiNew.IsendToJson;
 import guiNew.Navigation_SidePanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -35,7 +36,7 @@ import javafx.stage.Stage;
  * 
  */
 
-public class BranchManagerFunctions {
+public class BranchManagerFunctions implements IsendToJson{
 
 	/**
 	 * function that replace the pages
@@ -90,6 +91,7 @@ public class BranchManagerFunctions {
 	 * @param myHamburger
 	 * @param drawer
 	 */
+	@SuppressWarnings({ "restriction", "restriction", "restriction", "restriction" })
 	public void initializeNavigation_SidePanel(JFXHamburger myHamburger, JFXDrawer drawer) {
 		try {
 			AnchorPane anchorPane = FXMLLoader.load(getClass().getResource("/guiNew/Navigation_SidePanel.fxml"));
